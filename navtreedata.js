@@ -26,12 +26,6 @@ var NAVTREE =
 [
   [ "Recast Navigation", "index.html", [
     [ "Introduction", "md_Docs_2__1__Introduction.html", [
-      [ "🚀 Features", "index.html#autotoc_md-features", null ],
-      [ "⚡ Getting Started", "index.html#autotoc_md-getting-started", null ],
-      [ "⚙ How it Works", "index.html#autotoc_md-how-it-works", null ],
-      [ "📚 Documentation & Links", "index.html#autotoc_md-documentation--links", null ],
-      [ "❤ Community", "index.html#autotoc_md-community", null ],
-      [ "⚖ License", "index.html#autotoc_md-license", null ],
       [ "What is a Navmesh and how does it work?", "md_Docs_2__1__Introduction.html#what-is-a-navmesh-and-how-does-it-work", [
         [ "Agent Attributes", "md_Docs_2__1__Introduction.html#agent-attributes", null ]
       ] ],
@@ -491,26 +485,26 @@ var NAVTREEINDEX =
 "imgui__internal_8h.html#a9f7b0e6985ccdee270c611d68d95a06b",
 "imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177caf1dbfe6fa1c428b0936af5ffe9bb53c9",
 "imgui__widgets_8cpp.html#a662633518bb4fb262fc93329df1fa548",
-"md_Docs_2__1__Introduction.html#what-is-recast-navigation",
-"structExampleAppConsole.html#ab30accde81ae6833bd2ecf35f43f01ab",
-"structImDrawList.html#a67a4b5cc4c83bc3b81d96c46cbd38a07",
-"structImFontBaked.html#a5325b5b45fdc2bb2f52296002b4ea31f",
-"structImGuiContext.html#a690482b0c6feaa96810d09aafcac6922",
-"structImGuiDockContext.html#a1317113993b592eeeb4ffda00f0e17a5",
-"structImGuiIO.html#ac88dcffd1c6785d00eedd5616315e48c",
-"structImGuiMultiSelectTempData.html",
-"structImGuiStackLevelInfo.html#a54555db636b1247dd9e0ebcdd781f46f",
-"structImGuiTable.html#aa90d00342e8c46396854b44101c7355d",
-"structImGuiViewportP.html#a53ba392f90f0017017ad0f1e922d6fa4",
-"structImGui__ImplDX10__Data.html#a2357d6381f5c5ca7ed0585f2b2b40dc0",
-"structImGui__ImplSDL3__ViewportData.html#aa135006ef1e52df058aa99c698d219f3",
-"structImRect.html#af8f3fbf7ec983e03548b88e14ba68aa8",
-"structNavMeshDefinition.html#a7bcffbcc4b7ce4dae540fffb7cf0333d",
-"structSDL__FPoint.html#ac03695801666f08ee04b9d2e83f079ee",
-"structSDL__QuitEvent.html#a7acd4fa42ca96da8edac146baaa0b433",
-"structVERTEX__CONSTANT__BUFFER__DX11.html",
-"structrcChunkyTriMeshNode.html",
-"unionImGL3WProcs.html#a816123c6fdd99c5ef1252659f47cd559"
+"md_Docs_2__2__BuildingAndIntegrating.html#integration",
+"structExampleAppDocuments.html#a0bed64b7460ee84b430b990053f293b6",
+"structImDrawList.html#a77d48ed5b33ccdd908824c0a3bebfff8",
+"structImFontBaked.html#aaec3b9e1f7bf7a999b1b79da9ce47fb1",
+"structImGuiContext.html#a6d47f2c0021ce0e60df093c560bd8160",
+"structImGuiDockContextPruneNodeData.html#a2f81d51d64fa6332bda7fca3630d1c96",
+"structImGuiIO.html#ad2e9e547cb4d2abe8e7d27407efffeb8",
+"structImGuiMultiSelectTempData.html#a629e215572982f8f81babb87639963d5",
+"structImGuiStorage.html#a0f51ef327f7e548d003b0e006967c1eb",
+"structImGuiTable.html#ab4489c846e156db6107fa86adff1d177",
+"structImGuiViewportP.html#a81ce56c54e1ef413620ea80a1a7ae42a",
+"structImGui__ImplDX10__Data.html#abd32108792422384e84094842b484185",
+"structImGui__ImplSDLGPU3__Data.html#a9bbec4c06adb47e771566eca38845fab",
+"structImSpan.html#a3290bb3b3a0525cd156a68c2b10413c1",
+"structNavMeshDefinition.html#adb7246edf6f53f6ec0a8c34d90030dbd",
+"structSDL__Finger.html",
+"structSDL__RWops.html#a45f66dbb683a88281d96f83ca18c525f",
+"structdtBVNode.html#aa7de4b9e1151b9f4bf02154cfb24a45a",
+"structrcCompactCell.html#a70bb509654a28a8c9d67bcb469d0b3ce",
+"unionImGL3WProcs.html#a983556e8b26aac2754267ef526d78008"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

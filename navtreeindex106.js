@@ -1,11 +1,5 @@
 var NAVTREEINDEX106 =
 {
-"structVERTEX__CONSTANT__BUFFER__DX11.html":[43,0,470],
-"structVERTEX__CONSTANT__BUFFER__DX11.html#a60d5a5fdfbc0fa9455b591ea77dfb8e7":[43,0,470,0],
-"structVERTEX__CONSTANT__BUFFER__DX12.html":[43,0,471],
-"structVERTEX__CONSTANT__BUFFER__DX12.html#af977128a020d49a3a5478a59e4229274":[43,0,471,0],
-"structdtBVNode.html":[43,0,14],
-"structdtBVNode.html#a4f03eda2f4ae838eed627db41ebea292":[43,0,14,1],
 "structdtBVNode.html#aa7de4b9e1151b9f4bf02154cfb24a45a":[43,0,14,2],
 "structdtBVNode.html#aba981174ad61a601f743d986142ee504":[43,0,14,0],
 "structdtCompressedTile.html":[43,0,16],
@@ -241,13 +235,19 @@ var NAVTREEINDEX106 =
 "structimguiGfxText.html#ad7bf3cc0e24e63d997c335b7a5e15d25":[43,0,199,2],
 "structimguiGfxText.html#aeed4f7559be7abbfa0b5a49adaedbd0f":[43,0,199,0],
 "structrcChunkyTriMesh.html":[43,0,320],
-"structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,320,2],
 "structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,320,0],
+"structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,320,2],
 "structrcChunkyTriMesh.html#a3a942f046287998abef40650d3b590f4":[43,0,320,6],
 "structrcChunkyTriMesh.html#a6ae1d3f004dd90ddf9a60e55095592a0":[43,0,320,8],
 "structrcChunkyTriMesh.html#a72fed74ea56cac960cd9eb282e312d87":[43,0,320,7],
 "structrcChunkyTriMesh.html#a93638e22b53882b6bdc700b8c35ecd05":[43,0,320,4],
 "structrcChunkyTriMesh.html#aaf4b64877b4d7e95d037e5c8e7480420":[43,0,320,5],
 "structrcChunkyTriMesh.html#abd0bad171797ff8785f0483fc95e260f":[43,0,320,3],
-"structrcChunkyTriMesh.html#abd0bad171797ff8785f0483fc95e260f":[43,0,320,1]
+"structrcChunkyTriMesh.html#abd0bad171797ff8785f0483fc95e260f":[43,0,320,1],
+"structrcChunkyTriMeshNode.html":[43,0,321],
+"structrcChunkyTriMeshNode.html#a21461e9717fa41aede9a197e82c2fab8":[43,0,321,3],
+"structrcChunkyTriMeshNode.html#a21ef3b8a9cf348497ed1c6a9c01c403e":[43,0,321,1],
+"structrcChunkyTriMeshNode.html#aef4c1c5ae3d3e688449598791f65483c":[43,0,321,2],
+"structrcChunkyTriMeshNode.html#af5cca78d669f19c5b712238f30a58847":[43,0,321,0],
+"structrcCompactCell.html":[43,0,322]
 };

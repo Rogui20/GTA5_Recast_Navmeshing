@@ -1,11 +1,5 @@
 var NAVTREEINDEX104 =
 {
-"structSDL__FPoint.html#ac03695801666f08ee04b9d2e83f079ee":[43,0,381,1],
-"structSDL__FRect.html":[43,0,382],
-"structSDL__FRect.html#a23dacbd4579fa5a425435124b197a183":[43,0,382,0],
-"structSDL__FRect.html#a7dff6b929b472aa0c3989bec52bd01e0":[43,0,382,2],
-"structSDL__FRect.html#a8be19bcef20d0dc94302bfc092583bd7":[43,0,382,1],
-"structSDL__FRect.html#a9c7105750c0b4b1d27ee86ecd29835b3":[43,0,382,3],
 "structSDL__Finger.html":[43,0,380],
 "structSDL__Finger.html#a0a2c7a06ae641940111e03801c672cf9":[43,0,380,3],
 "structSDL__Finger.html#a0ecb50c7fd699d59899ac60c941bdee6":[43,0,380,1],
@@ -249,5 +243,11 @@ var NAVTREEINDEX104 =
 "structSDL__Point.html#a2ee987d59888024771c8d83aec43056c":[43,0,413,0],
 "structSDL__Point.html#aaa68aefa869f6bdf46367a70bd9414b0":[43,0,413,1],
 "structSDL__QuitEvent.html":[43,0,414],
-"structSDL__QuitEvent.html#a51ab0279e6de40249ba93971a8757cf0":[43,0,414,1]
+"structSDL__QuitEvent.html#a51ab0279e6de40249ba93971a8757cf0":[43,0,414,1],
+"structSDL__QuitEvent.html#a7acd4fa42ca96da8edac146baaa0b433":[43,0,414,0],
+"structSDL__RWops.html":[43,0,417],
+"structSDL__RWops.html#a099017bfceaac24ced0e4d08a4e0a023":[43,0,417,19],
+"structSDL__RWops.html#a354b4677b722f11060fb7c4a0125ed37":[43,0,417,9],
+"structSDL__RWops.html#a3f68b93789331775de802d51a2934f0a":[43,0,417,14],
+"structSDL__RWops.html#a4108a41afa8b62e75b0f160de4b56103":[43,0,417,18]
 };
