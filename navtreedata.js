@@ -463,7 +463,7 @@ var NAVTREEINDEX =
 "SDL__test__fuzzer_8h.html#a9f3159422e964a51f17243ce86b6eef6",
 "SDL__video_8h.html#a8d969b660fee270f84cb403c8b75ded6",
 "begin__code_8h.html#a81faf4ba0455dc75f2e0507eddb79401",
-"classRendererGL.html#a9aece0adc235e659b45152bdb6dada17",
+"classRendererGL.html#a8e69c5979908d6ad8fb9a2592460492e",
 "classTempObstacleHilightTool.html#a18662a3c7ada140b16aa40cdf678caf5",
 "classrcVectorBase.html#a44e70e9744a1c6e3dcaab2a89a7a2c65",
 "functions_k.html",

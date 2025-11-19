@@ -1157,7 +1157,7 @@ var searchData=
   ['sortitems_1154',['SortItems',['../structExampleDualListBox.html#a62c365982dcd29b71bf6589801b40099',1,'ExampleDualListBox']]],
   ['sortwithsortspecs_1155',['SortWithSortSpecs',['../structExampleAsset.html#a304852db06783ad79fbb0cb6aa66bb89',1,'ExampleAsset']]],
   ['spacing_1156',['Spacing',['../namespaceImGui.html#a2659e2bfe84b4cad0facd65d5c1ac90d',1,'ImGui']]],
-  ['split_1157',['split',['../structImGuiTextFilter_1_1ImGuiTextRange.html#ace58f9b4795033f695344a0e660ee2af',1,'ImGuiTextFilter::ImGuiTextRange::split()'],['../structImDrawListSplitter.html#aa491c5b1e10b2f5340e7db4949d31255',1,'ImDrawListSplitter::Split()']]],
+  ['split_1157',['split',['../structImDrawListSplitter.html#aa491c5b1e10b2f5340e7db4949d31255',1,'ImDrawListSplitter::Split()'],['../structImGuiTextFilter_1_1ImGuiTextRange.html#ace58f9b4795033f695344a0e660ee2af',1,'ImGuiTextFilter::ImGuiTextRange::split()']]],
   ['splitterbehavior_1158',['SplitterBehavior',['../namespaceImGui.html#a285913cd915ee715cd6a804e1b83814c',1,'ImGui']]],
   ['startmousemovingwindow_1159',['StartMouseMovingWindow',['../namespaceImGui.html#afd03199380411a711c74893434d91258',1,'ImGui']]],
   ['startmousemovingwindowornode_1160',['StartMouseMovingWindowOrNode',['../namespaceImGui.html#aa2e0aae7c6deb71ddb9086e9a03adbe7',1,'ImGui']]],

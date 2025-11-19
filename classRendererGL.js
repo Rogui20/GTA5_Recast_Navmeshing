@@ -12,7 +12,6 @@ var classRendererGL =
     [ "DrawTriangleHighlight", "classRendererGL.html#a07af41d57107f1e075c74199870e3377", null ],
     [ "End", "classRendererGL.html#a378e345ffd46eadd4a840eddbd547f9b", null ],
     [ "ExtractDebugMesh", "classRendererGL.html#a1a3f8eb7ddf00ff88a9c7bd759a86324", null ],
-    [ "GetNavMesh", "classRendererGL.html#a9aece0adc235e659b45152bdb6dada17", null ],
     [ "GetShader", "classRendererGL.html#a8c2123b185378f97c254fa731c9b14b3", null ],
     [ "Load", "classRendererGL.html#ad87cf803d491a4693869e5a0ea0a03bf", null ]
 ];
