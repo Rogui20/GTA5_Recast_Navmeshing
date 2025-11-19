@@ -1,0 +1,10 @@
+var structSDL__AssertData =
+[
+    [ "always_ignore", "structSDL__AssertData.html#a825e1c7772fe24afad33d0afc42cf04c", null ],
+    [ "condition", "structSDL__AssertData.html#aec6d372462fa8c94a9d04c1168cd38c9", null ],
+    [ "filename", "structSDL__AssertData.html#acf27f593e6a436386d2cbcf826cf1ef7", null ],
+    [ "function", "structSDL__AssertData.html#a4913c57d4affb813feea82fc5f48a25c", null ],
+    [ "linenum", "structSDL__AssertData.html#ad026d8573970d2402230d5fa3c550b0f", null ],
+    [ "next", "structSDL__AssertData.html#a2081dcf06dce4df497e423bccddfc099", null ],
+    [ "trigger_count", "structSDL__AssertData.html#a230bbcc2d115aab04cf817773e08eb5b", null ]
+];

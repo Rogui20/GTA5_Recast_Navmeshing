@@ -1,0 +1,25 @@
+var structImGui__ImplDX12__Data =
+[
+    [ "ImGui_ImplDX12_Data", "structImGui__ImplDX12__Data.html#a2dc01db87c392f50d408e5bb4135206d", null ],
+    [ "commandQueueOwned", "structImGui__ImplDX12__Data.html#a74e21d58b51dc0bfb7a30d80910f036b", null ],
+    [ "DSVFormat", "structImGui__ImplDX12__Data.html#aa745c784b64c5dd64f5fa2017f4fa7ee", null ],
+    [ "Fence", "structImGui__ImplDX12__Data.html#a18255be10fad1dbe043f05a3bb8251c3", null ],
+    [ "FenceEvent", "structImGui__ImplDX12__Data.html#a187dbc4571e1edac8d8dbe6a653b8eb2", null ],
+    [ "FenceLastSignaledValue", "structImGui__ImplDX12__Data.html#ad3586af65e162ffb10897a3d2e72ca8e", null ],
+    [ "InitInfo", "structImGui__ImplDX12__Data.html#a6f74010b81268b3bb3ff525fcbc52541", null ],
+    [ "LegacySingleDescriptorUsed", "structImGui__ImplDX12__Data.html#aab34c5ec81da10226909a837765befa9", null ],
+    [ "numFramesInFlight", "structImGui__ImplDX12__Data.html#a6a541239da42836b2127d1428032cf7d", null ],
+    [ "pCommandQueue", "structImGui__ImplDX12__Data.html#a707d5d6da5b5754db9067a47b0a195f0", null ],
+    [ "pd3dDevice", "structImGui__ImplDX12__Data.html#a1c8a790e04e775e3dc8e3f9b5a8f886e", null ],
+    [ "pd3dSrvDescHeap", "structImGui__ImplDX12__Data.html#a470d80e9fd5c7b77c19640654466721b", null ],
+    [ "pdxgiFactory", "structImGui__ImplDX12__Data.html#a20ce85204d95322c7b258580bfe2dfe9", null ],
+    [ "pPipelineState", "structImGui__ImplDX12__Data.html#a56ca2ec999af6c639ad32f7204248500", null ],
+    [ "pRootSignature", "structImGui__ImplDX12__Data.html#a5ec586be9457edb382e26db52b84bba5", null ],
+    [ "pTexCmdAllocator", "structImGui__ImplDX12__Data.html#a82645fbd0feced54f0bb600cd18c174b", null ],
+    [ "pTexCmdList", "structImGui__ImplDX12__Data.html#aea4e0263f27011f0174efda6bebc2bb1", null ],
+    [ "pTexUploadBuffer", "structImGui__ImplDX12__Data.html#a3d14785a755125fc3b084d15eca4650e", null ],
+    [ "pTexUploadBufferMapped", "structImGui__ImplDX12__Data.html#a514832521523557012a3d8df61d68a0f", null ],
+    [ "pTexUploadBufferSize", "structImGui__ImplDX12__Data.html#a1a82495a0db7010acb79157b74ae0aa4", null ],
+    [ "RTVFormat", "structImGui__ImplDX12__Data.html#ac51215a8aa27a0c0fa095abc87e0a80b", null ],
+    [ "tearingSupport", "structImGui__ImplDX12__Data.html#a3bfa9b57f0b6250b2d9bc1d7e02e7ec9", null ]
+];

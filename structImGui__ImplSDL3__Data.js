@@ -1,0 +1,26 @@
+var structImGui__ImplSDL3__Data =
+[
+    [ "ImGui_ImplSDL3_Data", "structImGui__ImplSDL3__Data.html#a65b1b516e4357ce34960d74f023b2d50", null ],
+    [ "BackendPlatformName", "structImGui__ImplSDL3__Data.html#aab1c1533a1a3bf8ac4a8060951fccaec", null ],
+    [ "ClipboardTextData", "structImGui__ImplSDL3__Data.html#ad0b42f05faf0f97e53af430da1865c35", null ],
+    [ "GamepadMode", "structImGui__ImplSDL3__Data.html#a844e29c21cb8fa1d21e48f7b47dc12a3", null ],
+    [ "Gamepads", "structImGui__ImplSDL3__Data.html#aa0cb944dad2ecf18a37da544e3cd051d", null ],
+    [ "ImeData", "structImGui__ImplSDL3__Data.html#a6c8f44264c6002a54561fa0654bcc94f", null ],
+    [ "ImeDirty", "structImGui__ImplSDL3__Data.html#a417fd7c950feafde3b74dc1f58c593e0", null ],
+    [ "ImeWindow", "structImGui__ImplSDL3__Data.html#a7121e9e60789fb732ca6f7682f4a83f4", null ],
+    [ "MouseButtonsDown", "structImGui__ImplSDL3__Data.html#a2e8936be362fc88fccba677a7e7c4c27", null ],
+    [ "MouseCanReportHoveredViewport", "structImGui__ImplSDL3__Data.html#a94b82b384a363200ebdfbb12b212291e", null ],
+    [ "MouseCanUseCapture", "structImGui__ImplSDL3__Data.html#aac9342052369756c49ccd2e0d984aed4", null ],
+    [ "MouseCanUseGlobalState", "structImGui__ImplSDL3__Data.html#a6d94eb5f6fca2c72f4a2e597862d8a8e", null ],
+    [ "MouseCursors", "structImGui__ImplSDL3__Data.html#acdc327a53f1157fd71c2f948a39dc137", null ],
+    [ "MouseLastCursor", "structImGui__ImplSDL3__Data.html#a6952a0069b70808ee58ff65152cc401c", null ],
+    [ "MousePendingLeaveFrame", "structImGui__ImplSDL3__Data.html#a9db5414c6cdec9b8a447d5b6f9516f5b", null ],
+    [ "MouseWindowID", "structImGui__ImplSDL3__Data.html#aed284c05802b6443567ed3c1646b9a03", null ],
+    [ "Renderer", "structImGui__ImplSDL3__Data.html#a1082e4b98694ff6d198f5b4bc5297e22", null ],
+    [ "Time", "structImGui__ImplSDL3__Data.html#acf68a508d393cc156a981c6e7852cdad", null ],
+    [ "UseVulkan", "structImGui__ImplSDL3__Data.html#a16887ea0c333b24818e2c13c9cb32111", null ],
+    [ "WantUpdateGamepadsList", "structImGui__ImplSDL3__Data.html#a45708c21d3f0b48340ddd894af611ade", null ],
+    [ "WantUpdateMonitors", "structImGui__ImplSDL3__Data.html#a2c123f0798dbf8a314a06e0b8f5a49e0", null ],
+    [ "Window", "structImGui__ImplSDL3__Data.html#ae50aeb95c54eafefcf9cfbd8fa15b956", null ],
+    [ "WindowID", "structImGui__ImplSDL3__Data.html#a970654f0a901585cde2090d4f7c04300", null ]
+];

@@ -1,0 +1,25 @@
+var imgui__impl__sdlgpu3_8cpp =
+[
+    [ "ImGui_ImplSDLGPU3_FrameData", "structImGui__ImplSDLGPU3__FrameData.html", "structImGui__ImplSDLGPU3__FrameData" ],
+    [ "ImGui_ImplSDLGPU3_Data", "structImGui__ImplSDLGPU3__Data.html", "structImGui__ImplSDLGPU3__Data" ],
+    [ "CreateOrResizeBuffers", "imgui__impl__sdlgpu3_8cpp.html#ab8da9d08c482d3eeb767d547639851ad", null ],
+    [ "ImGui_ImplSDLGPU3_CreateDeviceObjects", "imgui__impl__sdlgpu3_8cpp.html#a82c59b45974ee8890d7baad7f73090a8", null ],
+    [ "ImGui_ImplSDLGPU3_CreateGraphicsPipeline", "imgui__impl__sdlgpu3_8cpp.html#ad6dee295bac678ef21c434ba01ab30a5", null ],
+    [ "ImGui_ImplSDLGPU3_CreateShaders", "imgui__impl__sdlgpu3_8cpp.html#a5732aa07eb48d446905cd1e947f54a41", null ],
+    [ "ImGui_ImplSDLGPU3_CreateWindow", "imgui__impl__sdlgpu3_8cpp.html#a9797b1fb626623946e625a7c368414dc", null ],
+    [ "ImGui_ImplSDLGPU3_DestroyDeviceObjects", "imgui__impl__sdlgpu3_8cpp.html#acf118da030935d6ff243aa0a528b44d8", null ],
+    [ "ImGui_ImplSDLGPU3_DestroyFrameData", "imgui__impl__sdlgpu3_8cpp.html#aa7b3248e3026d15645de83f38b5df63b", null ],
+    [ "ImGui_ImplSDLGPU3_DestroyTexture", "imgui__impl__sdlgpu3_8cpp.html#a289b296d20eed76101e58d267024bbcc", null ],
+    [ "ImGui_ImplSDLGPU3_DestroyWindow", "imgui__impl__sdlgpu3_8cpp.html#a9d9d3109eb358fcda5716d1ca55d62e0", null ],
+    [ "ImGui_ImplSDLGPU3_GetBackendData", "imgui__impl__sdlgpu3_8cpp.html#a20e572c031490f2b62959a848ff416d6", null ],
+    [ "ImGui_ImplSDLGPU3_Init", "imgui__impl__sdlgpu3_8cpp.html#a575f6955375a5784d5123329ecd02be5", null ],
+    [ "ImGui_ImplSDLGPU3_InitMultiViewportSupport", "imgui__impl__sdlgpu3_8cpp.html#a4a3f1594553058de6f0079092142fb54", null ],
+    [ "ImGui_ImplSDLGPU3_NewFrame", "imgui__impl__sdlgpu3_8cpp.html#a7aa52502e212cb17787f9ce85f24fdb5", null ],
+    [ "ImGui_ImplSDLGPU3_PrepareDrawData", "imgui__impl__sdlgpu3_8cpp.html#a667b99dc6e3dcfe3ceacaf19adec1021", null ],
+    [ "ImGui_ImplSDLGPU3_RenderDrawData", "imgui__impl__sdlgpu3_8cpp.html#a77e1cbe2ec06bde1d36fbc962e0cfb23", null ],
+    [ "ImGui_ImplSDLGPU3_RenderWindow", "imgui__impl__sdlgpu3_8cpp.html#a3bb78b94901040680b1616a5e7717311", null ],
+    [ "ImGui_ImplSDLGPU3_SetupRenderState", "imgui__impl__sdlgpu3_8cpp.html#a06777e812d52acdcc2de477bfa76b43c", null ],
+    [ "ImGui_ImplSDLGPU3_Shutdown", "imgui__impl__sdlgpu3_8cpp.html#a20f931855e94856f61f45e393e155366", null ],
+    [ "ImGui_ImplSDLGPU3_ShutdownMultiViewportSupport", "imgui__impl__sdlgpu3_8cpp.html#af31d0b543347f12d8946a466cf30dd39", null ],
+    [ "ImGui_ImplSDLGPU3_UpdateTexture", "imgui__impl__sdlgpu3_8cpp.html#afc6b77ee59f8140d077f179898edcaef", null ]
+];

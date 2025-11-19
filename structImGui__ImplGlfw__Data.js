@@ -1,0 +1,25 @@
+var structImGui__ImplGlfw__Data =
+[
+    [ "ImGui_ImplGlfw_Data", "structImGui__ImplGlfw__Data.html#ae3a69538a90536f112b99b968d385be7", null ],
+    [ "BackendPlatformName", "structImGui__ImplGlfw__Data.html#a69e40ca01e6f7d90628377a6c393e548", null ],
+    [ "CallbacksChainForAllWindows", "structImGui__ImplGlfw__Data.html#a2a8575611eb554c3acb0e8c8228cdc44", null ],
+    [ "ClientApi", "structImGui__ImplGlfw__Data.html#a089d00194b9c811ee8da7a4976ea6ab9", null ],
+    [ "Context", "structImGui__ImplGlfw__Data.html#ab8d83ff3b163b2bee9781dc3e62020e5", null ],
+    [ "InstalledCallbacks", "structImGui__ImplGlfw__Data.html#a2cd25c9a1afd831a20c9ec5a6dc52b91", null ],
+    [ "IsWayland", "structImGui__ImplGlfw__Data.html#ab7220c01a4223d851e2181601ad30ffe", null ],
+    [ "KeyOwnerWindows", "structImGui__ImplGlfw__Data.html#a1f72881be454c26f948dcc10a9516bd3", null ],
+    [ "LastValidMousePos", "structImGui__ImplGlfw__Data.html#a71c8194d82a00e458884c50552e21933", null ],
+    [ "MouseIgnoreButtonUp", "structImGui__ImplGlfw__Data.html#accf1425ac667261133618e6592444fed", null ],
+    [ "MouseIgnoreButtonUpWaitForFocusLoss", "structImGui__ImplGlfw__Data.html#af07f2da712584810231b876223e7756c", null ],
+    [ "MouseWindow", "structImGui__ImplGlfw__Data.html#a0cd83054e5f18b548ad7030e56e44fa7", null ],
+    [ "PrevUserCallbackChar", "structImGui__ImplGlfw__Data.html#a537697690bd14a0a11be72f3ef874793", null ],
+    [ "PrevUserCallbackCursorEnter", "structImGui__ImplGlfw__Data.html#a0bb12cf6a91ce6e42900a5c1fb58369e", null ],
+    [ "PrevUserCallbackCursorPos", "structImGui__ImplGlfw__Data.html#a58577fb2f4a4f9657802712f728e5d17", null ],
+    [ "PrevUserCallbackKey", "structImGui__ImplGlfw__Data.html#a61c7fb5bae79f2296c361912ef0c7179", null ],
+    [ "PrevUserCallbackMonitor", "structImGui__ImplGlfw__Data.html#a874ea29cb2f17f07255a738b9eda8118", null ],
+    [ "PrevUserCallbackMousebutton", "structImGui__ImplGlfw__Data.html#a4f072029ab315c801b69849648bd5e86", null ],
+    [ "PrevUserCallbackScroll", "structImGui__ImplGlfw__Data.html#a37a806957eff842793b1010bf55b3a49", null ],
+    [ "PrevUserCallbackWindowFocus", "structImGui__ImplGlfw__Data.html#ab2d6f0997eee54b310ab657e48b50033", null ],
+    [ "Time", "structImGui__ImplGlfw__Data.html#a63f538471c9e5113975333df9494d526", null ],
+    [ "Window", "structImGui__ImplGlfw__Data.html#aad8ecdab1cb486c427254f2032214da7", null ]
+];

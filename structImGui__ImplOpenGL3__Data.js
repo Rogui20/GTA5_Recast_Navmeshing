@@ -1,0 +1,26 @@
+var structImGui__ImplOpenGL3__Data =
+[
+    [ "ImGui_ImplOpenGL3_Data", "structImGui__ImplOpenGL3__Data.html#a6bc713060002e1ac64f1daa7b7cecb59", null ],
+    [ "AttribLocationProjMtx", "structImGui__ImplOpenGL3__Data.html#a0fe508e011d4b62e6a27883c1fc0b19a", null ],
+    [ "AttribLocationTex", "structImGui__ImplOpenGL3__Data.html#af2b8d0074411d6ddc4a8b33e092aa297", null ],
+    [ "AttribLocationVtxColor", "structImGui__ImplOpenGL3__Data.html#abf21e94d95a5faec538d101f0cd941de", null ],
+    [ "AttribLocationVtxPos", "structImGui__ImplOpenGL3__Data.html#a9b6dcb44ef2b2bcfaa1415973b8bbe0b", null ],
+    [ "AttribLocationVtxUV", "structImGui__ImplOpenGL3__Data.html#ab02168ff54e9054e1dcc662861ac20ab", null ],
+    [ "ElementsHandle", "structImGui__ImplOpenGL3__Data.html#aa32b349732369524312429a49cedd7d6", null ],
+    [ "GlProfileIsCompat", "structImGui__ImplOpenGL3__Data.html#a509c50b6469ce2b9a6db8b70acf49199", null ],
+    [ "GlProfileIsES2", "structImGui__ImplOpenGL3__Data.html#a87f73a98eed8bef47bf268113ab1e487", null ],
+    [ "GlProfileIsES3", "structImGui__ImplOpenGL3__Data.html#a471c9bee70d528144387b4f9dc44c240", null ],
+    [ "GlProfileMask", "structImGui__ImplOpenGL3__Data.html#ab4506489dfe51ddf5c978f6d072d6956", null ],
+    [ "GlslVersionString", "structImGui__ImplOpenGL3__Data.html#a207e0bc0e956f26b8a3279e7242707c5", null ],
+    [ "GlVersion", "structImGui__ImplOpenGL3__Data.html#ad26fc0f928dab8b5e47fc5c8d7226314", null ],
+    [ "HasBindSampler", "structImGui__ImplOpenGL3__Data.html#aed73fae96a05a6a0d00c459970866b5d", null ],
+    [ "HasClipOrigin", "structImGui__ImplOpenGL3__Data.html#a2778e5caad83bc7b69981c53d5e9ed5e", null ],
+    [ "HasPolygonMode", "structImGui__ImplOpenGL3__Data.html#a2c1913777648318ae2e5b2d25b897549", null ],
+    [ "IndexBufferSize", "structImGui__ImplOpenGL3__Data.html#a4fff755aff6cc130aab106a8b20e3041", null ],
+    [ "MaxTextureSize", "structImGui__ImplOpenGL3__Data.html#a29c0f955e5c0f2b183bc67a11169a43c", null ],
+    [ "ShaderHandle", "structImGui__ImplOpenGL3__Data.html#ab3fde53e314b2d7e6192c2bdb33c1a2c", null ],
+    [ "TempBuffer", "structImGui__ImplOpenGL3__Data.html#a836fce172a5b586aa755d6a111fa15f0", null ],
+    [ "UseBufferSubData", "structImGui__ImplOpenGL3__Data.html#a7e52bd10bd4d2688df2fbdc915f0e075", null ],
+    [ "VboHandle", "structImGui__ImplOpenGL3__Data.html#a53b57a562a470fa751e2f8fe78576ebd", null ],
+    [ "VertexBufferSize", "structImGui__ImplOpenGL3__Data.html#a8f348c0ed41f34ec5ca6032537526491", null ]
+];

@@ -1,0 +1,26 @@
+var structImFontBaked =
+[
+    [ "ImFontBaked", "structImFontBaked.html#ab801595c8add49feb043537caf09f265", null ],
+    [ "ClearOutputData", "structImFontBaked.html#ab97e16ef7ce03a16d79bceffd409b762", null ],
+    [ "FindGlyph", "structImFontBaked.html#a785a4f3372cd8258f17ede065ee3cbad", null ],
+    [ "FindGlyphNoFallback", "structImFontBaked.html#a3669f0bfbacc00ac7d4982c07f40824b", null ],
+    [ "GetCharAdvance", "structImFontBaked.html#a4aa1c5f921bd4c0c90458b8613f6a51c", null ],
+    [ "IsGlyphLoaded", "structImFontBaked.html#a0492533ff66e22262532a384efac4116", null ],
+    [ "Ascent", "structImFontBaked.html#a691d399162e486390e24fbd27bb9739e", null ],
+    [ "BakedId", "structImFontBaked.html#a513f8cce38945b233e9645987b2d547b", null ],
+    [ "Descent", "structImFontBaked.html#abbb5072bae93cb08364ed22284604cb5", null ],
+    [ "FallbackAdvanceX", "structImFontBaked.html#aa695e190c4f0c2b8dac14473f9fa0671", null ],
+    [ "FallbackGlyphIndex", "structImFontBaked.html#aaf04ebab6eb1991b7c7cf84f5b136dea", null ],
+    [ "FontLoaderDatas", "structImFontBaked.html#ab31828ccb1cadb2e9185ae3292cdc6e5", null ],
+    [ "Glyphs", "structImFontBaked.html#a42c8a11e68fd31a3dba9d676a6a3275c", null ],
+    [ "IndexAdvanceX", "structImFontBaked.html#a37b9de4acb80914d7b8824ccb3ac92ef", null ],
+    [ "IndexLookup", "structImFontBaked.html#aebb4a92afcafbc6fbd1c99f4f253874f", null ],
+    [ "LastUsedFrame", "structImFontBaked.html#a9ada02bc5f43115d83b1f71d155474ef", null ],
+    [ "LoadNoFallback", "structImFontBaked.html#aaec3b9e1f7bf7a999b1b79da9ce47fb1", null ],
+    [ "LoadNoRenderOnLayout", "structImFontBaked.html#a5325b5b45fdc2bb2f52296002b4ea31f", null ],
+    [ "MetricsTotalSurface", "structImFontBaked.html#a16c0f97d7f790bdb32263cd837b71d32", null ],
+    [ "OwnerFont", "structImFontBaked.html#ae15ee1d965099e538d8174f83deb0912", null ],
+    [ "RasterizerDensity", "structImFontBaked.html#a0f5240ec3a2074111c6159c4731e99b6", null ],
+    [ "Size", "structImFontBaked.html#a7e6fa03b5efe75c2817b88f73392837c", null ],
+    [ "WantDestroy", "structImFontBaked.html#a1e0839bf39f125ec5e40966a157d0d8b", null ]
+];

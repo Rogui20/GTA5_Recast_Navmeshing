@@ -1,0 +1,27 @@
+var structNavMeshContext =
+[
+    [ "buildCtx", "structNavMeshContext.html#a751c7b76194d33b9e21be66f1093050c", null ],
+    [ "combinedTris", "structNavMeshContext.html#abc3691cf3d40c5862e4e2c4da2183835", null ],
+    [ "combinedVerts", "structNavMeshContext.html#a757d58054a9cb0bc3ce680e70d470fa7", null ],
+    [ "dynamicBMax", "structNavMeshContext.html#abcd0555ead49affc973edcf914736415", null ],
+    [ "dynamicBMin", "structNavMeshContext.html#a915336fe9ab5534f5f680dc988ddf494", null ],
+    [ "dynamicTris", "structNavMeshContext.html#a2c5784239d91811b6e05bc3a4f11b498", null ],
+    [ "dynamicVerts", "structNavMeshContext.html#a1953153b0a38e916c988ef404cdf32e9", null ],
+    [ "geom", "structNavMeshContext.html#a29590ee60174451f3c6469e3bf4c9048", null ],
+    [ "mapID", "structNavMeshContext.html#ae6064d5b280a562725ace92367554a97", null ],
+    [ "navDef", "structNavMeshContext.html#a5a0f67c9b231ad6a361b14ffdc64af13", null ],
+    [ "navMesh", "structNavMeshContext.html#a18f60886d9fb7b3070c14c669d6a691e", null ],
+    [ "navmeshGenerated", "structNavMeshContext.html#a1e72f813d5e76b9df15ea7a200e825b7", null ],
+    [ "navmeshType", "structNavMeshContext.html#a1586d80093eb8ad23d4a1c1d27dd46e2", null ],
+    [ "navQuery", "structNavMeshContext.html#ab198b49e5636f296e3409b9b31d9bd9a", null ],
+    [ "nextPropID", "structNavMeshContext.html#ab1f609735b64e430b93610df24cc62d9", null ],
+    [ "propCache", "structNavMeshContext.html#aabb649fe42a645ea76d6f892d29b9de8", null ],
+    [ "props", "structNavMeshContext.html#a3568f1335c8a0f1382af8c50595cc51a", null ],
+    [ "staticBMax", "structNavMeshContext.html#aa134014be7e38ddcc698d785d369c8f3", null ],
+    [ "staticBMin", "structNavMeshContext.html#a1b0a5ea7fc2ba52c11767a3905e3a4d6", null ],
+    [ "staticBuilt", "structNavMeshContext.html#a28d8b1cc236ee59f6f555ad29f63aa4f", null ],
+    [ "staticCache", "structNavMeshContext.html#a89b7ecf9af518cc016f364d86267800b", null ],
+    [ "staticList", "structNavMeshContext.html#ace432d358f08ab26fd653028a339a081", null ],
+    [ "staticTris", "structNavMeshContext.html#aeb7b4526a52b31f1e566eabc1f584d22", null ],
+    [ "staticVerts", "structNavMeshContext.html#a70d5f8385e7a4425bcbf1dcdeb9ff437", null ]
+];

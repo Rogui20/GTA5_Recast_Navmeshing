@@ -1,0 +1,25 @@
+var structSDL__RWops =
+[
+    [ "int", "structSDL__RWops.html#ab303bcbb0f6742a141ba8b2998923f47", null ],
+    [ "Sint64", "structSDL__RWops.html#a767114391a3d1b4a7c214da3e164acf5", null ],
+    [ "Sint64", "structSDL__RWops.html#a45f66dbb683a88281d96f83ca18c525f", null ],
+    [ "size_t", "structSDL__RWops.html#acd9a3c6e840d285c1e30cadaf99097b2", null ],
+    [ "size_t", "structSDL__RWops.html#a5f12fd517afffba5bfaff4643d6792b1", null ],
+    [ "base", "structSDL__RWops.html#af9b489d7342296ce197b911cfa93b2ab", null ],
+    [ "data1", "structSDL__RWops.html#ab89d27b4312c0b9d664c81bc92917fc8", null ],
+    [ "data2", "structSDL__RWops.html#aca073130e2e262eb11e86e1be993e215", null ],
+    [ "here", "structSDL__RWops.html#a6fc84601c17e347c6ef24c63a79deb57", null ],
+    [ "hidden", "structSDL__RWops.html#a354b4677b722f11060fb7c4a0125ed37", null ],
+    [ "maxnum", "structSDL__RWops.html#a7786282ec28451085908f70048ee32c8", null ],
+    [ "mem", "structSDL__RWops.html#aa2f5b6d7a5009c7bb6ae6bb664261df0", null ],
+    [ "num", "structSDL__RWops.html#a630921d5c84cf48a4a10f9a75e1caa10", null ],
+    [ "offset", "structSDL__RWops.html#ab1ee9d9e4f61b3b30f26160c282ae416", null ],
+    [ "ptr", "structSDL__RWops.html#a3f68b93789331775de802d51a2934f0a", null ],
+    [ "ptr", "structSDL__RWops.html#a51baff579726790887a4ca41ce14873c", null ],
+    [ "size", "structSDL__RWops.html#ab078bcf43a916d469ff550c60ab4b3f2", null ],
+    [ "size", "structSDL__RWops.html#a74d37eb068407bd5cdbdb845e4c4663a", null ],
+    [ "stop", "structSDL__RWops.html#a4108a41afa8b62e75b0f160de4b56103", null ],
+    [ "type", "structSDL__RWops.html#a099017bfceaac24ced0e4d08a4e0a023", null ],
+    [ "unknown", "structSDL__RWops.html#af3c7cb1f8890ce2ccf3ff29ad6341085", null ],
+    [ "whence", "structSDL__RWops.html#a95b96dcc6690897bfaf2d059f4378ed2", null ]
+];
