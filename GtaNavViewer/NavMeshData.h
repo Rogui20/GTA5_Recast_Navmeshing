@@ -7,6 +7,7 @@ class dtNavMesh;
 class NavMeshData
 {
 public:
+    ~NavMeshData();
     bool Load(const char* path);
     bool IsLoaded() const { return m_nav != nullptr; }
     // NOVO: constrói navmesh direto da malha
