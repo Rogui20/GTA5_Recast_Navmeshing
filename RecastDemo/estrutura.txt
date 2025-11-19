@@ -1,0 +1,78 @@
+Listagem de caminhos de pasta para o volume Novo volume
+O n£mero de s‚rie do volume ‚ FC7C-341E
+E:.
+|   CMakeLists.txt
+|   estrutura.txt
+|   premake5.lua
+|   
++---Bin
+|   |   .gitignore
+|   |   DroidSans.ttf
+|   |   
+|   +---Meshes
+|   |       dungeon.obj
+|   |       nav_test.obj
+|   |       undulating.obj
+|   |       
+|   \---TestCases
+|           movement_test.txt
+|           nav_mesh_test.txt
+|           raycast_test.txt
+|           
++---cmake
+|       FindSDL2.cmake
+|       
++---Contrib
+|   |   readme-sdl.txt
+|   |   stb_truetype.h
+|   |   
+|   \---fastlz
+|           fastlz.c
+|           fastlz.h
+|           README.TXT
+|           
++---Include
+|       ChunkyTriMesh.h
+|       ConvexVolumeTool.h
+|       CrowdTool.h
+|       Filelist.h
+|       imgui.h
+|       imguiRenderGL.h
+|       InputGeom.h
+|       MeshLoaderObj.h
+|       NavMeshPruneTool.h
+|       NavMeshTesterTool.h
+|       OffMeshConnectionTool.h
+|       PerfTimer.h
+|       Sample.h
+|       SampleInterfaces.h
+|       Sample_Debug.h
+|       Sample_SoloMesh.h
+|       Sample_TempObstacles.h
+|       Sample_TileMesh.h
+|       TestCase.h
+|       ValueHistory.h
+|       
+\---Source
+        ChunkyTriMesh.cpp
+        ConvexVolumeTool.cpp
+        CrowdTool.cpp
+        Filelist.cpp
+        imgui.cpp
+        imguiRenderGL.cpp
+        InputGeom.cpp
+        main.cpp
+        MeshLoaderObj.cpp
+        NavMeshPruneTool.cpp
+        NavMeshTesterTool.cpp
+        OffMeshConnectionTool.cpp
+        PerfTimer.cpp
+        Sample.cpp
+        SampleInterfaces.cpp
+        Sample_Debug.cpp
+        Sample_SoloMesh.cpp
+        Sample_TempObstacles.cpp
+        Sample_TileMesh.cpp
+        TestCase.cpp
+        ValueHistory.cpp
+        

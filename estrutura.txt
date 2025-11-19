@@ -1,0 +1,1496 @@
+Listagem de caminhos de pasta para o volume Novo volume
+O n£mero de s‚rie do volume ‚ FC7C-341E
+E:.
+|   .editorconfig
+|   .gitignore
+|   Build.bat
+|   CHANGELOG.md
+|   CMakeLists.txt
+|   CODE_OF_CONDUCT.md
+|   CONTRIBUTING.md
+|   Doxyfile
+|   estrutura.txt
+|   License.txt
+|   README.md
+|   recastnavigation-config.cmake.in
+|   recastnavigation.pc.in
+|   version.h.in
+|   
++---.github
+|   \---workflows
+|           Build.yaml
+|           Docs.yaml
+|           Tests.yaml
+|           
++---.vscode
+|       settings.json
+|       
++---build
+|   |   ALL_BUILD.vcxproj
+|   |   ALL_BUILD.vcxproj.filters
+|   |   CMakeCache.txt
+|   |   cmake_install.cmake
+|   |   CTestTestfile.cmake
+|   |   INSTALL.vcxproj
+|   |   INSTALL.vcxproj.filters
+|   |   recastnavigation-config-version.cmake
+|   |   recastnavigation-config.cmake
+|   |   recastnavigation-targets.cmake
+|   |   recastnavigation.pc
+|   |   RecastNavigation.sln
+|   |   RUN_TESTS.vcxproj
+|   |   RUN_TESTS.vcxproj.filters
+|   |   version.h
+|   |   ZERO_CHECK.vcxproj
+|   |   ZERO_CHECK.vcxproj.filters
+|   |   
+|   +---ALL_BUILD.dir
+|   |   +---Debug
+|   |   +---MinSizeRel
+|   |   +---Release
+|   |   \---RelWithDebInfo
+|   +---CMakeFiles
+|   |   |   cmake.check_cache
+|   |   |   CMakeConfigureLog.yaml
+|   |   |   generate.stamp
+|   |   |   generate.stamp.depend
+|   |   |   generate.stamp.list
+|   |   |   InstallScripts.json
+|   |   |   TargetDirectories.txt
+|   |   |   
+|   |   +---0ec554b0cc44c82c83cee9f36f1b8c65
+|   |   |       INSTALL_force.rule
+|   |   |       RUN_TESTS_force.rule
+|   |   |       
+|   |   +---2008c851c762660e174d77e81ddebe6d
+|   |   |       INSTALL_force.rule
+|   |   |       RUN_TESTS_force.rule
+|   |   |       
+|   |   +---345fba7a82b29553ef908ba03f789aab
+|   |   |       INSTALL_force.rule
+|   |   |       RUN_TESTS_force.rule
+|   |   |       
+|   |   +---370480582a596a0bed2da08c29373a6b
+|   |   |       INSTALL_force.rule
+|   |   |       RUN_TESTS_force.rule
+|   |   |       
+|   |   +---38f733a9d93ee904019a7c086dddcda0
+|   |   |       INSTALL_force.rule
+|   |   |       RUN_TESTS_force.rule
+|   |   |       
+|   |   +---4.2.0-rc1
+|   |   |   |   CMakeCCompiler.cmake
+|   |   |   |   CMakeCXXCompiler.cmake
+|   |   |   |   CMakeDetermineCompilerABI_C.bin
+|   |   |   |   CMakeDetermineCompilerABI_CXX.bin
+|   |   |   |   CMakeRCCompiler.cmake
+|   |   |   |   CMakeSystem.cmake
+|   |   |   |   VCTargetsPath.txt
+|   |   |   |   VCTargetsPath.vcxproj
+|   |   |   |   
+|   |   |   +---CompilerIdC
+|   |   |   |   |   CMakeCCompilerId.c
+|   |   |   |   |   CompilerIdC.exe
+|   |   |   |   |   CompilerIdC.vcxproj
+|   |   |   |   |   
+|   |   |   |   +---Debug
+|   |   |   |   |   |   CMakeCCompilerId.obj
+|   |   |   |   |   |   CompilerIdC.exe.recipe
+|   |   |   |   |   |   
+|   |   |   |   |   \---CompilerIdC.tlog
+|   |   |   |   |           CL.command.1.tlog
+|   |   |   |   |           Cl.items.tlog
+|   |   |   |   |           CL.read.1.tlog
+|   |   |   |   |           CL.write.1.tlog
+|   |   |   |   |           CompilerIdC.lastbuildstate
+|   |   |   |   |           link.command.1.tlog
+|   |   |   |   |           link.read.1.tlog
+|   |   |   |   |           link.secondary.1.tlog
+|   |   |   |   |           link.write.1.tlog
+|   |   |   |   |           
+|   |   |   |   \---tmp
+|   |   |   +---CompilerIdCXX
+|   |   |   |   |   CMakeCXXCompilerId.cpp
+|   |   |   |   |   CompilerIdCXX.exe
+|   |   |   |   |   CompilerIdCXX.vcxproj
+|   |   |   |   |   
+|   |   |   |   +---Debug
+|   |   |   |   |   |   CMakeCXXCompilerId.obj
+|   |   |   |   |   |   CompilerIdCXX.exe.recipe
+|   |   |   |   |   |   
+|   |   |   |   |   \---CompilerIdCXX.tlog
+|   |   |   |   |           CL.command.1.tlog
+|   |   |   |   |           Cl.items.tlog
+|   |   |   |   |           CL.read.1.tlog
+|   |   |   |   |           CL.write.1.tlog
+|   |   |   |   |           CompilerIdCXX.lastbuildstate
+|   |   |   |   |           link.command.1.tlog
+|   |   |   |   |           link.read.1.tlog
+|   |   |   |   |           link.secondary.1.tlog
+|   |   |   |   |           link.write.1.tlog
+|   |   |   |   |           
+|   |   |   |   \---tmp
+|   |   |   +---VCTargetsPath
+|   |   |   |   \---x64
+|   |   |   |       \---Debug
+|   |   |   |           |   VCTargetsPath.recipe
+|   |   |   |           |   
+|   |   |   |           \---VCTargetsPath.tlog
+|   |   |   |                   VCTargetsPath.lastbuildstate
+|   |   |   |                   
+|   |   |   \---x64
+|   |   |       \---Debug
+|   |   +---68ce39ca3d3641012771b5149f2aeb63
+|   |   |       INSTALL_force.rule
+|   |   |       RUN_TESTS_force.rule
+|   |   |       
+|   |   +---a675a08822b9348b1c06a0c6f226f636
+|   |   |       generate.stamp.rule
+|   |   |       INSTALL_force.rule
+|   |   |       RUN_TESTS_force.rule
+|   |   |       
+|   |   +---ce33fd63545e146d5a0cf746a9c72622
+|   |   |       INSTALL_force.rule
+|   |   |       RUN_TESTS_force.rule
+|   |   |       
+|   |   +---ef236f9b8622b3e6f9eacd0fb41d3f31
+|   |   |       INSTALL_force.rule
+|   |   |       RUN_TESTS_force.rule
+|   |   |       
+|   |   +---Export
+|   |   |   \---4924bdfd16b98d877c245a9bd0ffe4a4
+|   |   |           recastnavigation-targets-debug.cmake
+|   |   |           recastnavigation-targets-minsizerel.cmake
+|   |   |           recastnavigation-targets-release.cmake
+|   |   |           recastnavigation-targets-relwithdebinfo.cmake
+|   |   |           recastnavigation-targets.cmake
+|   |   |           
+|   |   \---pkgRedirects
+|   +---DebugUtils
+|   |   |   cmake_install.cmake
+|   |   |   DebugUtils.vcxproj
+|   |   |   DebugUtils.vcxproj.filters
+|   |   |   INSTALL.vcxproj
+|   |   |   INSTALL.vcxproj.filters
+|   |   |   RUN_TESTS.vcxproj
+|   |   |   RUN_TESTS.vcxproj.filters
+|   |   |   
+|   |   +---CMakeFiles
+|   |   |       generate.stamp
+|   |   |       generate.stamp.depend
+|   |   |       
+|   |   +---DebugUtils.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   |   |   DebugDraw.obj
+|   |   |   |   |   DebugUtils.lib.recipe
+|   |   |   |   |   DetourDebugDraw.obj
+|   |   |   |   |   RecastDebugDraw.obj
+|   |   |   |   |   RecastDump.obj
+|   |   |   |   |   
+|   |   |   |   \---DebugUtils.tlog
+|   |   |   |           CL.command.1.tlog
+|   |   |   |           Cl.items.tlog
+|   |   |   |           CL.read.1.tlog
+|   |   |   |           CL.write.1.tlog
+|   |   |   |           CustomBuild.command.1.tlog
+|   |   |   |           CustomBuild.read.1.tlog
+|   |   |   |           CustomBuild.write.1.tlog
+|   |   |   |           DebugUtils.lastbuildstate
+|   |   |   |           Lib-link.read.1.tlog
+|   |   |   |           Lib-link.write.1.tlog
+|   |   |   |           Lib.command.1.tlog
+|   |   |   |           
+|   |   |   \---RelWithDebInfo
+|   |   +---INSTALL.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   \---RelWithDebInfo
+|   |   +---Release
+|   |   |       DebugUtils.lib
+|   |   |       
+|   |   \---RUN_TESTS.dir
+|   |       +---Debug
+|   |       +---MinSizeRel
+|   |       +---Release
+|   |       \---RelWithDebInfo
+|   +---Detour
+|   |   |   cmake_install.cmake
+|   |   |   Detour.vcxproj
+|   |   |   Detour.vcxproj.filters
+|   |   |   INSTALL.vcxproj
+|   |   |   INSTALL.vcxproj.filters
+|   |   |   RUN_TESTS.vcxproj
+|   |   |   RUN_TESTS.vcxproj.filters
+|   |   |   
+|   |   +---CMakeFiles
+|   |   |       generate.stamp
+|   |   |       generate.stamp.depend
+|   |   |       
+|   |   +---Detour.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   |   |   Detour.lib.recipe
+|   |   |   |   |   DetourAlloc.obj
+|   |   |   |   |   DetourAssert.obj
+|   |   |   |   |   DetourCommon.obj
+|   |   |   |   |   DetourNavMesh.obj
+|   |   |   |   |   DetourNavMeshBuilder.obj
+|   |   |   |   |   DetourNavMeshQuery.obj
+|   |   |   |   |   DetourNode.obj
+|   |   |   |   |   
+|   |   |   |   \---Detour.tlog
+|   |   |   |           CL.command.1.tlog
+|   |   |   |           Cl.items.tlog
+|   |   |   |           CL.read.1.tlog
+|   |   |   |           CL.write.1.tlog
+|   |   |   |           CustomBuild.command.1.tlog
+|   |   |   |           CustomBuild.read.1.tlog
+|   |   |   |           CustomBuild.write.1.tlog
+|   |   |   |           Detour.lastbuildstate
+|   |   |   |           Lib-link.read.1.tlog
+|   |   |   |           Lib-link.write.1.tlog
+|   |   |   |           Lib.command.1.tlog
+|   |   |   |           
+|   |   |   \---RelWithDebInfo
+|   |   +---INSTALL.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   \---RelWithDebInfo
+|   |   +---Release
+|   |   |       Detour.lib
+|   |   |       
+|   |   \---RUN_TESTS.dir
+|   |       +---Debug
+|   |       +---MinSizeRel
+|   |       +---Release
+|   |       \---RelWithDebInfo
+|   +---DetourCrowd
+|   |   |   cmake_install.cmake
+|   |   |   DetourCrowd.vcxproj
+|   |   |   DetourCrowd.vcxproj.filters
+|   |   |   INSTALL.vcxproj
+|   |   |   INSTALL.vcxproj.filters
+|   |   |   RUN_TESTS.vcxproj
+|   |   |   RUN_TESTS.vcxproj.filters
+|   |   |   
+|   |   +---CMakeFiles
+|   |   |       generate.stamp
+|   |   |       generate.stamp.depend
+|   |   |       
+|   |   +---DetourCrowd.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   |   |   DetourCrowd.lib.recipe
+|   |   |   |   |   DetourCrowd.obj
+|   |   |   |   |   DetourLocalBoundary.obj
+|   |   |   |   |   DetourObstacleAvoidance.obj
+|   |   |   |   |   DetourPathCorridor.obj
+|   |   |   |   |   DetourPathQueue.obj
+|   |   |   |   |   DetourProximityGrid.obj
+|   |   |   |   |   
+|   |   |   |   \---DetourCrowd.tlog
+|   |   |   |           CL.command.1.tlog
+|   |   |   |           Cl.items.tlog
+|   |   |   |           CL.read.1.tlog
+|   |   |   |           CL.write.1.tlog
+|   |   |   |           CustomBuild.command.1.tlog
+|   |   |   |           CustomBuild.read.1.tlog
+|   |   |   |           CustomBuild.write.1.tlog
+|   |   |   |           DetourCrowd.lastbuildstate
+|   |   |   |           Lib-link.read.1.tlog
+|   |   |   |           Lib-link.write.1.tlog
+|   |   |   |           Lib.command.1.tlog
+|   |   |   |           
+|   |   |   \---RelWithDebInfo
+|   |   +---INSTALL.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   \---RelWithDebInfo
+|   |   +---Release
+|   |   |       DetourCrowd.lib
+|   |   |       
+|   |   \---RUN_TESTS.dir
+|   |       +---Debug
+|   |       +---MinSizeRel
+|   |       +---Release
+|   |       \---RelWithDebInfo
+|   +---DetourTileCache
+|   |   |   cmake_install.cmake
+|   |   |   DetourTileCache.vcxproj
+|   |   |   DetourTileCache.vcxproj.filters
+|   |   |   INSTALL.vcxproj
+|   |   |   INSTALL.vcxproj.filters
+|   |   |   RUN_TESTS.vcxproj
+|   |   |   RUN_TESTS.vcxproj.filters
+|   |   |   
+|   |   +---CMakeFiles
+|   |   |       generate.stamp
+|   |   |       generate.stamp.depend
+|   |   |       
+|   |   +---DetourTileCache.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   |   |   DetourTileCache.lib.recipe
+|   |   |   |   |   DetourTileCache.obj
+|   |   |   |   |   DetourTileCacheBuilder.obj
+|   |   |   |   |   
+|   |   |   |   \---DetourTileCache.tlog
+|   |   |   |           CL.command.1.tlog
+|   |   |   |           Cl.items.tlog
+|   |   |   |           CL.read.1.tlog
+|   |   |   |           CL.write.1.tlog
+|   |   |   |           CustomBuild.command.1.tlog
+|   |   |   |           CustomBuild.read.1.tlog
+|   |   |   |           CustomBuild.write.1.tlog
+|   |   |   |           DetourTileCache.lastbuildstate
+|   |   |   |           Lib-link.read.1.tlog
+|   |   |   |           Lib-link.write.1.tlog
+|   |   |   |           Lib.command.1.tlog
+|   |   |   |           
+|   |   |   \---RelWithDebInfo
+|   |   +---INSTALL.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   \---RelWithDebInfo
+|   |   +---Release
+|   |   |       DetourTileCache.lib
+|   |   |       
+|   |   \---RUN_TESTS.dir
+|   |       +---Debug
+|   |       +---MinSizeRel
+|   |       +---Release
+|   |       \---RelWithDebInfo
+|   +---GtaNavRuntime
+|   |   |   cmake_install.cmake
+|   |   |   GtaNavRuntime.vcxproj
+|   |   |   GtaNavRuntime.vcxproj.filters
+|   |   |   INSTALL.vcxproj
+|   |   |   INSTALL.vcxproj.filters
+|   |   |   RUN_TESTS.vcxproj
+|   |   |   RUN_TESTS.vcxproj.filters
+|   |   |   
+|   |   +---CMakeFiles
+|   |   |       generate.stamp
+|   |   |       generate.stamp.depend
+|   |   |       
+|   |   +---GtaNavRuntime.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   |   |   GtaNav.obj
+|   |   |   |   |   GtaNavAPI.obj
+|   |   |   |   |   GtaNavContext.obj
+|   |   |   |   |   GtaNavGeometry.obj
+|   |   |   |   |   GtaNavProps.obj
+|   |   |   |   |   GtaNavRuntime.lib.recipe
+|   |   |   |   |   GtaNavTiles.obj
+|   |   |   |   |   
+|   |   |   |   \---GtaNavRuntime.tlog
+|   |   |   |           CL.command.1.tlog
+|   |   |   |           Cl.items.tlog
+|   |   |   |           CL.read.1.tlog
+|   |   |   |           CL.write.1.tlog
+|   |   |   |           CustomBuild.command.1.tlog
+|   |   |   |           CustomBuild.read.1.tlog
+|   |   |   |           CustomBuild.write.1.tlog
+|   |   |   |           GtaNavRuntime.lastbuildstate
+|   |   |   |           Lib-link.read.1.tlog
+|   |   |   |           Lib-link.write.1.tlog
+|   |   |   |           Lib.command.1.tlog
+|   |   |   |           
+|   |   |   \---RelWithDebInfo
+|   |   +---INSTALL.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   \---RelWithDebInfo
+|   |   +---Release
+|   |   |       GtaNavRuntime.lib
+|   |   |       
+|   |   \---RUN_TESTS.dir
+|   |       +---Debug
+|   |       +---MinSizeRel
+|   |       +---Release
+|   |       \---RelWithDebInfo
+|   +---GtaNavViewer
+|   |   |   ALL_BUILD.vcxproj
+|   |   |   ALL_BUILD.vcxproj.filters
+|   |   |   cmake_install.cmake
+|   |   |   GtaNavViewer.sln
+|   |   |   GtaNavViewer.vcxproj
+|   |   |   GtaNavViewer.vcxproj.filters
+|   |   |   INSTALL.vcxproj
+|   |   |   INSTALL.vcxproj.filters
+|   |   |   RUN_TESTS.vcxproj
+|   |   |   RUN_TESTS.vcxproj.filters
+|   |   |   
+|   |   +---ALL_BUILD.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   \---RelWithDebInfo
+|   |   +---CMakeFiles
+|   |   |       generate.stamp
+|   |   |       generate.stamp.depend
+|   |   |       
+|   |   +---GtaNavViewer.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   |   |   GtaNavViewer.exe.recipe
+|   |   |   |   |   main.obj
+|   |   |   |   |   
+|   |   |   |   \---GtaNavViewer.tlog
+|   |   |   |           CL.command.1.tlog
+|   |   |   |           Cl.items.tlog
+|   |   |   |           CL.read.1.tlog
+|   |   |   |           CL.write.1.tlog
+|   |   |   |           CustomBuild.command.1.tlog
+|   |   |   |           CustomBuild.read.1.tlog
+|   |   |   |           CustomBuild.write.1.tlog
+|   |   |   |           GtaNavViewer.lastbuildstate
+|   |   |   |           link.command.1.tlog
+|   |   |   |           link.read.1.tlog
+|   |   |   |           link.secondary.1.tlog
+|   |   |   |           link.write.1.tlog
+|   |   |   |           
+|   |   |   \---RelWithDebInfo
+|   |   +---INSTALL.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   \---RelWithDebInfo
+|   |   +---Release
+|   |   |       GtaNavViewer.exe
+|   |   |       
+|   |   \---RUN_TESTS.dir
+|   |       +---Debug
+|   |       +---MinSizeRel
+|   |       +---Release
+|   |       \---RelWithDebInfo
+|   +---INSTALL.dir
+|   |   +---Debug
+|   |   +---MinSizeRel
+|   |   +---Release
+|   |   \---RelWithDebInfo
+|   +---Recast
+|   |   |   cmake_install.cmake
+|   |   |   INSTALL.vcxproj
+|   |   |   INSTALL.vcxproj.filters
+|   |   |   Recast.vcxproj
+|   |   |   Recast.vcxproj.filters
+|   |   |   RUN_TESTS.vcxproj
+|   |   |   RUN_TESTS.vcxproj.filters
+|   |   |   
+|   |   +---CMakeFiles
+|   |   |       generate.stamp
+|   |   |       generate.stamp.depend
+|   |   |       
+|   |   +---INSTALL.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   \---RelWithDebInfo
+|   |   +---Recast.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   |   |   Recast.lib.recipe
+|   |   |   |   |   Recast.obj
+|   |   |   |   |   RecastAlloc.obj
+|   |   |   |   |   RecastArea.obj
+|   |   |   |   |   RecastAssert.obj
+|   |   |   |   |   RecastContour.obj
+|   |   |   |   |   RecastFilter.obj
+|   |   |   |   |   RecastLayers.obj
+|   |   |   |   |   RecastMesh.obj
+|   |   |   |   |   RecastMeshDetail.obj
+|   |   |   |   |   RecastRasterization.obj
+|   |   |   |   |   RecastRegion.obj
+|   |   |   |   |   
+|   |   |   |   \---Recast.tlog
+|   |   |   |           CL.command.1.tlog
+|   |   |   |           Cl.items.tlog
+|   |   |   |           CL.read.1.tlog
+|   |   |   |           CL.write.1.tlog
+|   |   |   |           CustomBuild.command.1.tlog
+|   |   |   |           CustomBuild.read.1.tlog
+|   |   |   |           CustomBuild.write.1.tlog
+|   |   |   |           Lib-link.read.1.tlog
+|   |   |   |           Lib-link.write.1.tlog
+|   |   |   |           Lib.command.1.tlog
+|   |   |   |           Recast.lastbuildstate
+|   |   |   |           
+|   |   |   \---RelWithDebInfo
+|   |   +---Release
+|   |   |       Recast.lib
+|   |   |       
+|   |   \---RUN_TESTS.dir
+|   |       +---Debug
+|   |       +---MinSizeRel
+|   |       +---Release
+|   |       \---RelWithDebInfo
+|   +---RUN_TESTS.dir
+|   |   +---Debug
+|   |   +---MinSizeRel
+|   |   +---Release
+|   |   \---RelWithDebInfo
+|   +---Tests
+|   |   |   cmake_install.cmake
+|   |   |   CTestTestfile.cmake
+|   |   |   INSTALL.vcxproj
+|   |   |   INSTALL.vcxproj.filters
+|   |   |   RUN_TESTS.vcxproj
+|   |   |   RUN_TESTS.vcxproj.filters
+|   |   |   Tests.vcxproj
+|   |   |   Tests.vcxproj.filters
+|   |   |   
+|   |   +---CMakeFiles
+|   |   |       generate.stamp
+|   |   |       generate.stamp.depend
+|   |   |       
+|   |   +---INSTALL.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   \---RelWithDebInfo
+|   |   +---Release
+|   |   |       Tests.exe
+|   |   |       
+|   |   +---RUN_TESTS.dir
+|   |   |   +---Debug
+|   |   |   +---MinSizeRel
+|   |   |   +---Release
+|   |   |   \---RelWithDebInfo
+|   |   \---Tests.dir
+|   |       +---Debug
+|   |       +---MinSizeRel
+|   |       +---Release
+|   |       |   |   Bench_rcVector.obj
+|   |       |   |   catch_amalgamated.obj
+|   |       |   |   Tests.exe.recipe
+|   |       |   |   Tests_Alloc.obj
+|   |       |   |   Tests_Detour.obj
+|   |       |   |   Tests_DetourPathCorridor.obj
+|   |       |   |   Tests_Recast.obj
+|   |       |   |   Tests_RecastFilter.obj
+|   |       |   |   
+|   |       |   \---Tests.tlog
+|   |       |           CL.command.1.tlog
+|   |       |           Cl.items.tlog
+|   |       |           CL.read.1.tlog
+|   |       |           CL.write.1.tlog
+|   |       |           CustomBuild.command.1.tlog
+|   |       |           CustomBuild.read.1.tlog
+|   |       |           CustomBuild.write.1.tlog
+|   |       |           link.command.1.tlog
+|   |       |           link.read.1.tlog
+|   |       |           link.secondary.1.tlog
+|   |       |           link.write.1.tlog
+|   |       |           Tests.lastbuildstate
+|   |       |           
+|   |       \---RelWithDebInfo
+|   +---x64
+|   |   \---Release
+|   |       +---ALL_BUILD
+|   |       |   |   ALL_BUILD.recipe
+|   |       |   |   
+|   |       |   \---ALL_BUILD.tlog
+|   |       |           ALL_BUILD.lastbuildstate
+|   |       |           CustomBuild.command.1.tlog
+|   |       |           CustomBuild.read.1.tlog
+|   |       |           CustomBuild.write.1.tlog
+|   |       |           
+|   |       \---ZERO_CHECK
+|   |           |   ZERO_CHECK.recipe
+|   |           |   
+|   |           \---ZERO_CHECK.tlog
+|   |                   CustomBuild.command.1.tlog
+|   |                   CustomBuild.read.1.tlog
+|   |                   CustomBuild.write.1.tlog
+|   |                   ZERO_CHECK.lastbuildstate
+|   |                   
+|   \---ZERO_CHECK.dir
+|       +---Debug
+|       +---MinSizeRel
+|       +---Release
+|       \---RelWithDebInfo
++---DebugUtils
+|   |   CMakeLists.txt
+|   |   estrutura.txt
+|   |   
+|   +---Include
+|   |       DebugDraw.h
+|   |       DetourDebugDraw.h
+|   |       RecastDebugDraw.h
+|   |       RecastDump.h
+|   |       
+|   \---Source
+|           DebugDraw.cpp
+|           DetourDebugDraw.cpp
+|           RecastDebugDraw.cpp
+|           RecastDump.cpp
+|           
++---Detour
+|   |   CMakeLists.txt
+|   |   
+|   +---Include
+|   |       DetourAlloc.h
+|   |       DetourAssert.h
+|   |       DetourCommon.h
+|   |       DetourMath.h
+|   |       DetourNavMesh.h
+|   |       DetourNavMeshBuilder.h
+|   |       DetourNavMeshQuery.h
+|   |       DetourNode.h
+|   |       DetourStatus.h
+|   |       
+|   \---Source
+|           DetourAlloc.cpp
+|           DetourAssert.cpp
+|           DetourCommon.cpp
+|           DetourNavMesh.cpp
+|           DetourNavMeshBuilder.cpp
+|           DetourNavMeshQuery.cpp
+|           DetourNode.cpp
+|           
++---DetourCrowd
+|   |   CMakeLists.txt
+|   |   
+|   +---Include
+|   |       DetourCrowd.h
+|   |       DetourLocalBoundary.h
+|   |       DetourObstacleAvoidance.h
+|   |       DetourPathCorridor.h
+|   |       DetourPathQueue.h
+|   |       DetourProximityGrid.h
+|   |       
+|   \---Source
+|           DetourCrowd.cpp
+|           DetourLocalBoundary.cpp
+|           DetourObstacleAvoidance.cpp
+|           DetourPathCorridor.cpp
+|           DetourPathQueue.cpp
+|           DetourProximityGrid.cpp
+|           
++---DetourTileCache
+|   |   CMakeLists.txt
+|   |   
+|   +---Include
+|   |       DetourTileCache.h
+|   |       DetourTileCacheBuilder.h
+|   |       
+|   \---Source
+|           DetourTileCache.cpp
+|           DetourTileCacheBuilder.cpp
+|           
++---Docs
+|   |   DoxygenLayout.xml
+|   |   footer.html
+|   |   header.html
+|   |   Readme.md
+|   |   _1_Introduction.md
+|   |   _2_BuildingAndIntegrating.md
+|   |   _3_FAQ.md
+|   |   _99_Roadmap.md
+|   |   
+|   +---doxygen-awesome-css
+|   |   |   doxygen-awesome-darkmode-toggle.js
+|   |   |   doxygen-awesome-fragment-copy-button.js
+|   |   |   doxygen-awesome-interactive-toc.js
+|   |   |   doxygen-awesome-paragraph-link.js
+|   |   |   doxygen-awesome-sidebar-only-darkmode-toggle.css
+|   |   |   doxygen-awesome-sidebar-only.css
+|   |   |   doxygen-awesome.css
+|   |   |   LICENSE
+|   |   |   README.md
+|   |   |   
+|   |   \---doxygen-custom
+|   |           custom-alternative.css
+|   |           custom.css
+|   |           header.html
+|   |           toggle-alternative-theme.js
+|   |           
+|   +---Extern
+|   |       Recast_api.txt
+|   |       
+|   \---Images
+|           logo.png
+|           screenshot.png
+|           
++---external
+|   +---glad
+|   |   +---include
+|   |   |   +---glad
+|   |   |   |       glad.h
+|   |   |   |       
+|   |   |   \---KHR
+|   |   |           khrplatform.h
+|   |   |           
+|   |   \---src
+|   |           glad.c
+|   |           
+|   \---SDL2
+|       |   .git-hash
+|       |   BUGS.txt
+|       |   LICENSE.txt
+|       |   README-SDL.txt
+|       |   README.md
+|       |   WhatsNew.txt
+|       |   
+|       +---cmake
+|       |       sdl2-config-version.cmake
+|       |       sdl2-config.cmake
+|       |       
+|       +---docs
+|       |       CONTRIBUTING.md
+|       |       doxyfile
+|       |       README-android.md
+|       |       README-cmake.md
+|       |       README-directfb.md
+|       |       README-dynapi.md
+|       |       README-emscripten.md
+|       |       README-gdk.md
+|       |       README-gesture.md
+|       |       README-git.md
+|       |       README-hg.md
+|       |       README-ios.md
+|       |       README-kmsbsd.md
+|       |       README-linux.md
+|       |       README-macos.md
+|       |       README-n3ds.md
+|       |       README-nacl.md
+|       |       README-ngage.md
+|       |       README-os2.md
+|       |       README-pandora.md
+|       |       README-platforms.md
+|       |       README-porting.md
+|       |       README-ps2.md
+|       |       README-psp.md
+|       |       README-raspberrypi.md
+|       |       README-riscos.md
+|       |       README-touch.md
+|       |       README-versions.md
+|       |       README-visualc.md
+|       |       README-vita.md
+|       |       README-wince.md
+|       |       README-windows.md
+|       |       README-winrt.md
+|       |       README.md
+|       |       release_checklist.md
+|       |       
+|       +---include
+|       |       begin_code.h
+|       |       close_code.h
+|       |       SDL.h
+|       |       SDL_assert.h
+|       |       SDL_atomic.h
+|       |       SDL_audio.h
+|       |       SDL_bits.h
+|       |       SDL_blendmode.h
+|       |       SDL_clipboard.h
+|       |       SDL_config.h
+|       |       SDL_config_android.h
+|       |       SDL_config_emscripten.h
+|       |       SDL_config_iphoneos.h
+|       |       SDL_config_macosx.h
+|       |       SDL_config_minimal.h
+|       |       SDL_config_ngage.h
+|       |       SDL_config_os2.h
+|       |       SDL_config_pandora.h
+|       |       SDL_config_windows.h
+|       |       SDL_config_wingdk.h
+|       |       SDL_config_winrt.h
+|       |       SDL_config_xbox.h
+|       |       SDL_copying.h
+|       |       SDL_cpuinfo.h
+|       |       SDL_egl.h
+|       |       SDL_endian.h
+|       |       SDL_error.h
+|       |       SDL_events.h
+|       |       SDL_filesystem.h
+|       |       SDL_gamecontroller.h
+|       |       SDL_gesture.h
+|       |       SDL_guid.h
+|       |       SDL_haptic.h
+|       |       SDL_hidapi.h
+|       |       SDL_hints.h
+|       |       SDL_joystick.h
+|       |       SDL_keyboard.h
+|       |       SDL_keycode.h
+|       |       SDL_loadso.h
+|       |       SDL_locale.h
+|       |       SDL_log.h
+|       |       SDL_main.h
+|       |       SDL_messagebox.h
+|       |       SDL_metal.h
+|       |       SDL_misc.h
+|       |       SDL_mouse.h
+|       |       SDL_mutex.h
+|       |       SDL_name.h
+|       |       SDL_opengl.h
+|       |       SDL_opengles.h
+|       |       SDL_opengles2.h
+|       |       SDL_opengles2_gl2.h
+|       |       SDL_opengles2_gl2ext.h
+|       |       SDL_opengles2_gl2platform.h
+|       |       SDL_opengles2_khrplatform.h
+|       |       SDL_opengl_glext.h
+|       |       SDL_pixels.h
+|       |       SDL_platform.h
+|       |       SDL_power.h
+|       |       SDL_quit.h
+|       |       SDL_rect.h
+|       |       SDL_render.h
+|       |       SDL_revision.h
+|       |       SDL_rwops.h
+|       |       SDL_scancode.h
+|       |       SDL_sensor.h
+|       |       SDL_shape.h
+|       |       SDL_stdinc.h
+|       |       SDL_surface.h
+|       |       SDL_system.h
+|       |       SDL_syswm.h
+|       |       SDL_test.h
+|       |       SDL_test_assert.h
+|       |       SDL_test_common.h
+|       |       SDL_test_compare.h
+|       |       SDL_test_crc32.h
+|       |       SDL_test_font.h
+|       |       SDL_test_fuzzer.h
+|       |       SDL_test_harness.h
+|       |       SDL_test_images.h
+|       |       SDL_test_log.h
+|       |       SDL_test_md5.h
+|       |       SDL_test_memory.h
+|       |       SDL_test_random.h
+|       |       SDL_thread.h
+|       |       SDL_timer.h
+|       |       SDL_touch.h
+|       |       SDL_types.h
+|       |       SDL_version.h
+|       |       SDL_video.h
+|       |       SDL_vulkan.h
+|       |       
+|       \---lib
+|           +---x64
+|           |       SDL2.dll
+|           |       SDL2.lib
+|           |       SDL2.pdb
+|           |       SDL2main.lib
+|           |       SDL2test.lib
+|           |       
+|           \---x86
+|                   SDL2.dll
+|                   SDL2.lib
+|                   SDL2.pdb
+|                   SDL2main.lib
+|                   SDL2test.lib
+|                   
++---GtaNavRuntime
+|   |   ChunkyTriMesh.cpp
+|   |   ChunkyTriMesh.h
+|   |   CMakeLists.txt
+|   |   GtaNav.cpp
+|   |   GtaNavAPI.cpp
+|   |   GtaNavAPI.h
+|   |   GtaNavContext.cpp
+|   |   GtaNavContext.h
+|   |   GtaNavGeometry.cpp
+|   |   GtaNavGeometry.h
+|   |   GtaNavProps.cpp
+|   |   GtaNavProps.h
+|   |   GtaNavTiles.cpp
+|   |   GtaNavTiles.h
+|   |   GtaNavTransform.h
+|   |   InputGeom.cpp
+|   |   InputGeom.h
+|   |   MeshLoaderObj.cpp
+|   |   MeshLoaderObj.h
+|   |   
+|   \---glm
+|       |   CMakeLists.txt
+|       |   common.hpp
+|       |   copying.txt
+|       |   exponential.hpp
+|       |   ext.hpp
+|       |   fwd.hpp
+|       |   geometric.hpp
+|       |   glm.cppm
+|       |   glm.hpp
+|       |   integer.hpp
+|       |   mat2x2.hpp
+|       |   mat2x3.hpp
+|       |   mat2x4.hpp
+|       |   mat3x2.hpp
+|       |   mat3x3.hpp
+|       |   mat3x4.hpp
+|       |   mat4x2.hpp
+|       |   mat4x3.hpp
+|       |   mat4x4.hpp
+|       |   matrix.hpp
+|       |   packing.hpp
+|       |   trigonometric.hpp
+|       |   vec2.hpp
+|       |   vec3.hpp
+|       |   vec4.hpp
+|       |   vector_relational.hpp
+|       |   
+|       +---detail
+|       |       compute_common.hpp
+|       |       compute_vector_decl.hpp
+|       |       compute_vector_relational.hpp
+|       |       func_common.inl
+|       |       func_common_simd.inl
+|       |       func_exponential.inl
+|       |       func_exponential_simd.inl
+|       |       func_geometric.inl
+|       |       func_geometric_simd.inl
+|       |       func_integer.inl
+|       |       func_integer_simd.inl
+|       |       func_matrix.inl
+|       |       func_matrix_simd.inl
+|       |       func_packing.inl
+|       |       func_packing_simd.inl
+|       |       func_trigonometric.inl
+|       |       func_trigonometric_simd.inl
+|       |       func_vector_relational.inl
+|       |       func_vector_relational_simd.inl
+|       |       glm.cpp
+|       |       qualifier.hpp
+|       |       setup.hpp
+|       |       type_float.hpp
+|       |       type_half.hpp
+|       |       type_half.inl
+|       |       type_mat2x2.hpp
+|       |       type_mat2x2.inl
+|       |       type_mat2x3.hpp
+|       |       type_mat2x3.inl
+|       |       type_mat2x4.hpp
+|       |       type_mat2x4.inl
+|       |       type_mat3x2.hpp
+|       |       type_mat3x2.inl
+|       |       type_mat3x3.hpp
+|       |       type_mat3x3.inl
+|       |       type_mat3x4.hpp
+|       |       type_mat3x4.inl
+|       |       type_mat4x2.hpp
+|       |       type_mat4x2.inl
+|       |       type_mat4x3.hpp
+|       |       type_mat4x3.inl
+|       |       type_mat4x4.hpp
+|       |       type_mat4x4.inl
+|       |       type_mat4x4_simd.inl
+|       |       type_quat.hpp
+|       |       type_quat.inl
+|       |       type_quat_simd.inl
+|       |       type_vec1.hpp
+|       |       type_vec1.inl
+|       |       type_vec2.hpp
+|       |       type_vec2.inl
+|       |       type_vec3.hpp
+|       |       type_vec3.inl
+|       |       type_vec4.hpp
+|       |       type_vec4.inl
+|       |       type_vec4_simd.inl
+|       |       _features.hpp
+|       |       _fixes.hpp
+|       |       _noise.hpp
+|       |       _swizzle.hpp
+|       |       _swizzle_func.hpp
+|       |       _vectorize.hpp
+|       |       
+|       +---ext
+|       |       matrix_clip_space.hpp
+|       |       matrix_clip_space.inl
+|       |       matrix_common.hpp
+|       |       matrix_common.inl
+|       |       matrix_double2x2.hpp
+|       |       matrix_double2x2_precision.hpp
+|       |       matrix_double2x3.hpp
+|       |       matrix_double2x3_precision.hpp
+|       |       matrix_double2x4.hpp
+|       |       matrix_double2x4_precision.hpp
+|       |       matrix_double3x2.hpp
+|       |       matrix_double3x2_precision.hpp
+|       |       matrix_double3x3.hpp
+|       |       matrix_double3x3_precision.hpp
+|       |       matrix_double3x4.hpp
+|       |       matrix_double3x4_precision.hpp
+|       |       matrix_double4x2.hpp
+|       |       matrix_double4x2_precision.hpp
+|       |       matrix_double4x3.hpp
+|       |       matrix_double4x3_precision.hpp
+|       |       matrix_double4x4.hpp
+|       |       matrix_double4x4_precision.hpp
+|       |       matrix_float2x2.hpp
+|       |       matrix_float2x2_precision.hpp
+|       |       matrix_float2x3.hpp
+|       |       matrix_float2x3_precision.hpp
+|       |       matrix_float2x4.hpp
+|       |       matrix_float2x4_precision.hpp
+|       |       matrix_float3x2.hpp
+|       |       matrix_float3x2_precision.hpp
+|       |       matrix_float3x3.hpp
+|       |       matrix_float3x3_precision.hpp
+|       |       matrix_float3x4.hpp
+|       |       matrix_float3x4_precision.hpp
+|       |       matrix_float4x2.hpp
+|       |       matrix_float4x2_precision.hpp
+|       |       matrix_float4x3.hpp
+|       |       matrix_float4x3_precision.hpp
+|       |       matrix_float4x4.hpp
+|       |       matrix_float4x4_precision.hpp
+|       |       matrix_int2x2.hpp
+|       |       matrix_int2x2_sized.hpp
+|       |       matrix_int2x3.hpp
+|       |       matrix_int2x3_sized.hpp
+|       |       matrix_int2x4.hpp
+|       |       matrix_int2x4_sized.hpp
+|       |       matrix_int3x2.hpp
+|       |       matrix_int3x2_sized.hpp
+|       |       matrix_int3x3.hpp
+|       |       matrix_int3x3_sized.hpp
+|       |       matrix_int3x4.hpp
+|       |       matrix_int3x4_sized.hpp
+|       |       matrix_int4x2.hpp
+|       |       matrix_int4x2_sized.hpp
+|       |       matrix_int4x3.hpp
+|       |       matrix_int4x3_sized.hpp
+|       |       matrix_int4x4.hpp
+|       |       matrix_int4x4_sized.hpp
+|       |       matrix_integer.hpp
+|       |       matrix_integer.inl
+|       |       matrix_projection.hpp
+|       |       matrix_projection.inl
+|       |       matrix_relational.hpp
+|       |       matrix_relational.inl
+|       |       matrix_transform.hpp
+|       |       matrix_transform.inl
+|       |       matrix_uint2x2.hpp
+|       |       matrix_uint2x2_sized.hpp
+|       |       matrix_uint2x3.hpp
+|       |       matrix_uint2x3_sized.hpp
+|       |       matrix_uint2x4.hpp
+|       |       matrix_uint2x4_sized.hpp
+|       |       matrix_uint3x2.hpp
+|       |       matrix_uint3x2_sized.hpp
+|       |       matrix_uint3x3.hpp
+|       |       matrix_uint3x3_sized.hpp
+|       |       matrix_uint3x4.hpp
+|       |       matrix_uint3x4_sized.hpp
+|       |       matrix_uint4x2.hpp
+|       |       matrix_uint4x2_sized.hpp
+|       |       matrix_uint4x3.hpp
+|       |       matrix_uint4x3_sized.hpp
+|       |       matrix_uint4x4.hpp
+|       |       matrix_uint4x4_sized.hpp
+|       |       quaternion_common.hpp
+|       |       quaternion_common.inl
+|       |       quaternion_common_simd.inl
+|       |       quaternion_double.hpp
+|       |       quaternion_double_precision.hpp
+|       |       quaternion_exponential.hpp
+|       |       quaternion_exponential.inl
+|       |       quaternion_float.hpp
+|       |       quaternion_float_precision.hpp
+|       |       quaternion_geometric.hpp
+|       |       quaternion_geometric.inl
+|       |       quaternion_relational.hpp
+|       |       quaternion_relational.inl
+|       |       quaternion_transform.hpp
+|       |       quaternion_transform.inl
+|       |       quaternion_trigonometric.hpp
+|       |       quaternion_trigonometric.inl
+|       |       scalar_common.hpp
+|       |       scalar_common.inl
+|       |       scalar_constants.hpp
+|       |       scalar_constants.inl
+|       |       scalar_integer.hpp
+|       |       scalar_integer.inl
+|       |       scalar_int_sized.hpp
+|       |       scalar_packing.hpp
+|       |       scalar_packing.inl
+|       |       scalar_reciprocal.hpp
+|       |       scalar_reciprocal.inl
+|       |       scalar_relational.hpp
+|       |       scalar_relational.inl
+|       |       scalar_uint_sized.hpp
+|       |       scalar_ulp.hpp
+|       |       scalar_ulp.inl
+|       |       vector_bool1.hpp
+|       |       vector_bool1_precision.hpp
+|       |       vector_bool2.hpp
+|       |       vector_bool2_precision.hpp
+|       |       vector_bool3.hpp
+|       |       vector_bool3_precision.hpp
+|       |       vector_bool4.hpp
+|       |       vector_bool4_precision.hpp
+|       |       vector_common.hpp
+|       |       vector_common.inl
+|       |       vector_double1.hpp
+|       |       vector_double1_precision.hpp
+|       |       vector_double2.hpp
+|       |       vector_double2_precision.hpp
+|       |       vector_double3.hpp
+|       |       vector_double3_precision.hpp
+|       |       vector_double4.hpp
+|       |       vector_double4_precision.hpp
+|       |       vector_float1.hpp
+|       |       vector_float1_precision.hpp
+|       |       vector_float2.hpp
+|       |       vector_float2_precision.hpp
+|       |       vector_float3.hpp
+|       |       vector_float3_precision.hpp
+|       |       vector_float4.hpp
+|       |       vector_float4_precision.hpp
+|       |       vector_int1.hpp
+|       |       vector_int1_sized.hpp
+|       |       vector_int2.hpp
+|       |       vector_int2_sized.hpp
+|       |       vector_int3.hpp
+|       |       vector_int3_sized.hpp
+|       |       vector_int4.hpp
+|       |       vector_int4_sized.hpp
+|       |       vector_integer.hpp
+|       |       vector_integer.inl
+|       |       vector_packing.hpp
+|       |       vector_packing.inl
+|       |       vector_reciprocal.hpp
+|       |       vector_reciprocal.inl
+|       |       vector_relational.hpp
+|       |       vector_relational.inl
+|       |       vector_uint1.hpp
+|       |       vector_uint1_sized.hpp
+|       |       vector_uint2.hpp
+|       |       vector_uint2_sized.hpp
+|       |       vector_uint3.hpp
+|       |       vector_uint3_sized.hpp
+|       |       vector_uint4.hpp
+|       |       vector_uint4_sized.hpp
+|       |       vector_ulp.hpp
+|       |       vector_ulp.inl
+|       |       _matrix_vectorize.hpp
+|       |       
+|       +---gtc
+|       |       bitfield.hpp
+|       |       bitfield.inl
+|       |       color_space.hpp
+|       |       color_space.inl
+|       |       constants.hpp
+|       |       constants.inl
+|       |       epsilon.hpp
+|       |       epsilon.inl
+|       |       integer.hpp
+|       |       integer.inl
+|       |       matrix_access.hpp
+|       |       matrix_access.inl
+|       |       matrix_integer.hpp
+|       |       matrix_inverse.hpp
+|       |       matrix_inverse.inl
+|       |       matrix_transform.hpp
+|       |       matrix_transform.inl
+|       |       noise.hpp
+|       |       noise.inl
+|       |       packing.hpp
+|       |       packing.inl
+|       |       quaternion.hpp
+|       |       quaternion.inl
+|       |       quaternion_simd.inl
+|       |       random.hpp
+|       |       random.inl
+|       |       reciprocal.hpp
+|       |       round.hpp
+|       |       round.inl
+|       |       type_aligned.hpp
+|       |       type_precision.hpp
+|       |       type_precision.inl
+|       |       type_ptr.hpp
+|       |       type_ptr.inl
+|       |       ulp.hpp
+|       |       ulp.inl
+|       |       vec1.hpp
+|       |       
+|       +---gtx
+|       |       associated_min_max.hpp
+|       |       associated_min_max.inl
+|       |       bit.hpp
+|       |       bit.inl
+|       |       closest_point.hpp
+|       |       closest_point.inl
+|       |       color_encoding.hpp
+|       |       color_encoding.inl
+|       |       color_space.hpp
+|       |       color_space.inl
+|       |       color_space_YCoCg.hpp
+|       |       color_space_YCoCg.inl
+|       |       common.hpp
+|       |       common.inl
+|       |       compatibility.hpp
+|       |       compatibility.inl
+|       |       component_wise.hpp
+|       |       component_wise.inl
+|       |       dual_quaternion.hpp
+|       |       dual_quaternion.inl
+|       |       easing.hpp
+|       |       easing.inl
+|       |       euler_angles.hpp
+|       |       euler_angles.inl
+|       |       extend.hpp
+|       |       extend.inl
+|       |       extended_min_max.hpp
+|       |       extended_min_max.inl
+|       |       exterior_product.hpp
+|       |       exterior_product.inl
+|       |       fast_exponential.hpp
+|       |       fast_exponential.inl
+|       |       fast_square_root.hpp
+|       |       fast_square_root.inl
+|       |       fast_trigonometry.hpp
+|       |       fast_trigonometry.inl
+|       |       float_notmalize.inl
+|       |       functions.hpp
+|       |       functions.inl
+|       |       gradient_paint.hpp
+|       |       gradient_paint.inl
+|       |       handed_coordinate_space.hpp
+|       |       handed_coordinate_space.inl
+|       |       hash.hpp
+|       |       hash.inl
+|       |       integer.hpp
+|       |       integer.inl
+|       |       intersect.hpp
+|       |       intersect.inl
+|       |       io.hpp
+|       |       io.inl
+|       |       log_base.hpp
+|       |       log_base.inl
+|       |       matrix_cross_product.hpp
+|       |       matrix_cross_product.inl
+|       |       matrix_decompose.hpp
+|       |       matrix_decompose.inl
+|       |       matrix_factorisation.hpp
+|       |       matrix_factorisation.inl
+|       |       matrix_interpolation.hpp
+|       |       matrix_interpolation.inl
+|       |       matrix_major_storage.hpp
+|       |       matrix_major_storage.inl
+|       |       matrix_operation.hpp
+|       |       matrix_operation.inl
+|       |       matrix_query.hpp
+|       |       matrix_query.inl
+|       |       matrix_transform_2d.hpp
+|       |       matrix_transform_2d.inl
+|       |       mixed_product.hpp
+|       |       mixed_product.inl
+|       |       norm.hpp
+|       |       norm.inl
+|       |       normal.hpp
+|       |       normal.inl
+|       |       normalize_dot.hpp
+|       |       normalize_dot.inl
+|       |       number_precision.hpp
+|       |       optimum_pow.hpp
+|       |       optimum_pow.inl
+|       |       orthonormalize.hpp
+|       |       orthonormalize.inl
+|       |       pca.hpp
+|       |       pca.inl
+|       |       perpendicular.hpp
+|       |       perpendicular.inl
+|       |       polar_coordinates.hpp
+|       |       polar_coordinates.inl
+|       |       projection.hpp
+|       |       projection.inl
+|       |       quaternion.hpp
+|       |       quaternion.inl
+|       |       range.hpp
+|       |       raw_data.hpp
+|       |       raw_data.inl
+|       |       rotate_normalized_axis.hpp
+|       |       rotate_normalized_axis.inl
+|       |       rotate_vector.hpp
+|       |       rotate_vector.inl
+|       |       scalar_multiplication.hpp
+|       |       scalar_relational.hpp
+|       |       scalar_relational.inl
+|       |       spline.hpp
+|       |       spline.inl
+|       |       std_based_type.hpp
+|       |       std_based_type.inl
+|       |       string_cast.hpp
+|       |       string_cast.inl
+|       |       texture.hpp
+|       |       texture.inl
+|       |       transform.hpp
+|       |       transform.inl
+|       |       transform2.hpp
+|       |       transform2.inl
+|       |       type_aligned.hpp
+|       |       type_aligned.inl
+|       |       type_trait.hpp
+|       |       type_trait.inl
+|       |       vector_angle.hpp
+|       |       vector_angle.inl
+|       |       vector_query.hpp
+|       |       vector_query.inl
+|       |       vec_swizzle.hpp
+|       |       wrap.hpp
+|       |       wrap.inl
+|       |       
+|       \---simd
+|               common.h
+|               exponential.h
+|               geometric.h
+|               integer.h
+|               matrix.h
+|               neon.h
+|               packing.h
+|               platform.h
+|               trigonometric.h
+|               vector_relational.h
+|               
++---GtaNavViewer
+|   |   CMakeLists.txt
+|   |   estrutura.txt
+|   |   main.cpp
+|   |   
+|   \---imgui
+|       |   imgui.cpp
+|       |   imgui.h
+|       |   imgui_draw.cpp
+|       |   imgui_tables.cpp
+|       |   imgui_widgets.cpp
+|       |   
+|       \---backends
+|               imgui_impl_opengl3.cpp
+|               imgui_impl_opengl3.h
+|               imgui_impl_sdl2.cpp
+|               imgui_impl_sdl2.h
+|               
++---Recast
+|   |   CMakeLists.txt
+|   |   
+|   +---Include
+|   |       Recast.h
+|   |       RecastAlloc.h
+|   |       RecastAssert.h
+|   |       
+|   \---Source
+|           Recast.cpp
+|           RecastAlloc.cpp
+|           RecastArea.cpp
+|           RecastAssert.cpp
+|           RecastContour.cpp
+|           RecastFilter.cpp
+|           RecastLayers.cpp
+|           RecastMesh.cpp
+|           RecastMeshDetail.cpp
+|           RecastRasterization.cpp
+|           RecastRegion.cpp
+|           
++---RecastDemo
+|   |   CMakeLists.txt
+|   |   estrutura.txt
+|   |   premake5.lua
+|   |   
+|   +---Bin
+|   |   |   .gitignore
+|   |   |   DroidSans.ttf
+|   |   |   
+|   |   +---Meshes
+|   |   |       dungeon.obj
+|   |   |       nav_test.obj
+|   |   |       undulating.obj
+|   |   |       
+|   |   \---TestCases
+|   |           movement_test.txt
+|   |           nav_mesh_test.txt
+|   |           raycast_test.txt
+|   |           
+|   +---cmake
+|   |       FindSDL2.cmake
+|   |       
+|   +---Contrib
+|   |   |   readme-sdl.txt
+|   |   |   stb_truetype.h
+|   |   |   
+|   |   \---fastlz
+|   |           fastlz.c
+|   |           fastlz.h
+|   |           README.TXT
+|   |           
+|   +---Include
+|   |       ChunkyTriMesh.h
+|   |       ConvexVolumeTool.h
+|   |       CrowdTool.h
+|   |       Filelist.h
+|   |       imgui.h
+|   |       imguiRenderGL.h
+|   |       InputGeom.h
+|   |       MeshLoaderObj.h
+|   |       NavMeshPruneTool.h
+|   |       NavMeshTesterTool.h
+|   |       OffMeshConnectionTool.h
+|   |       PerfTimer.h
+|   |       Sample.h
+|   |       SampleInterfaces.h
+|   |       Sample_Debug.h
+|   |       Sample_SoloMesh.h
+|   |       Sample_TempObstacles.h
+|   |       Sample_TileMesh.h
+|   |       TestCase.h
+|   |       ValueHistory.h
+|   |       
+|   \---Source
+|           ChunkyTriMesh.cpp
+|           ConvexVolumeTool.cpp
+|           CrowdTool.cpp
+|           Filelist.cpp
+|           imgui.cpp
+|           imguiRenderGL.cpp
+|           InputGeom.cpp
+|           main.cpp
+|           MeshLoaderObj.cpp
+|           NavMeshPruneTool.cpp
+|           NavMeshTesterTool.cpp
+|           OffMeshConnectionTool.cpp
+|           PerfTimer.cpp
+|           Sample.cpp
+|           SampleInterfaces.cpp
+|           Sample_Debug.cpp
+|           Sample_SoloMesh.cpp
+|           Sample_TempObstacles.cpp
+|           Sample_TileMesh.cpp
+|           TestCase.cpp
+|           ValueHistory.cpp
+|           
+\---Tests
+    |   CMakeLists.txt
+    |   
+    +---Contrib
+    |   \---catch2
+    |           catch_all.hpp
+    |           catch_amalgamated.cpp
+    |           
+    +---Detour
+    |       Tests_Detour.cpp
+    |       
+    +---DetourCrowd
+    |       Tests_DetourPathCorridor.cpp
+    |       
+    \---Recast
+            Bench_rcVector.cpp
+            Tests_Alloc.cpp
+            Tests_Recast.cpp
+            Tests_RecastFilter.cpp
+            

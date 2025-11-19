@@ -1,0 +1,18 @@
+Listagem de caminhos de pasta para o volume Novo volume
+O n£mero de s‚rie do volume ‚ FC7C-341E
+E:.
+|   CMakeLists.txt
+|   estrutura.txt
+|   
++---Include
+|       DebugDraw.h
+|       DetourDebugDraw.h
+|       RecastDebugDraw.h
+|       RecastDump.h
+|       
+\---Source
+        DebugDraw.cpp
+        DetourDebugDraw.cpp
+        RecastDebugDraw.cpp
+        RecastDump.cpp
+        

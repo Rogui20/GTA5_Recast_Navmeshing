@@ -429,6 +429,7 @@ public:
 	///  @param[in]	i		The tile index. [Limit: 0 >= index < #getMaxTiles()]
 	/// @return The tile at the specified index.
 	const dtMeshTile* getTile(int i) const;
+	dtMeshTile* getTile(int i);
 
 	/// Gets the tile and polygon for the specified polygon reference.
 	///  @param[in]		ref		The reference for the a polygon.
@@ -614,7 +615,7 @@ private:
 	dtNavMesh& operator=(const dtNavMesh&);
 
 	/// Returns pointer to tile in the tile array.
-	dtMeshTile* getTile(int i);
+	//dtMeshTile* getTile(int i);
 
 	/// Returns neighbour tile based on side.
 	int getTilesAt(const int x, const int y,

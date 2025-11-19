@@ -1,0 +1,463 @@
+// ViewerApp.cpp
+#include "ViewerApp.h"
+#include "ViewerCamera.h"
+#include "RendererGL.h"
+#include "ObjLoader.h"
+#include "Mesh.h"
+#include "RenderMode.h"
+#include "NavMeshData.h"
+#include "GtaNavAPI.h"
+
+#include <glad/glad.h>
+#include <SDL.h>
+#include <SDL_opengl.h>
+
+#include <imgui.h>
+#include <backends/imgui_impl_sdl2.h>
+#include <backends/imgui_impl_opengl3.h>
+
+#include <glm/gtc/matrix_transform.hpp>
+
+ViewerApp::ViewerApp()
+{
+}
+
+ViewerApp::~ViewerApp()
+{
+}
+
+bool ViewerApp::buildNavmeshFromCurrentMesh()
+{
+    if (!loadedMesh)
+    {
+        printf("[ViewerApp] buildNavmeshFromCurrentMesh: sem mesh carregada.\n");
+        return false;
+    }
+
+    if (!navData.BuildFromMesh(loadedMesh->vertices, loadedMesh->indices))
+    {
+        printf("[ViewerApp] BuildFromMesh falhou.\n");
+        return false;
+    }
+
+    buildNavmeshDebugLines();
+    return true;
+}
+
+void ViewerApp::buildNavmeshDebugLines()
+{
+    navMeshTris.clear();
+    navMeshLines.clear();
+    m_navmeshLines.clear();
+
+    navData.ExtractDebugMesh(navMeshTris, navMeshLines);
+
+    for (size_t i = 0; i + 1 < navMeshLines.size(); i += 2)
+    {
+        DebugLine dl;
+        dl.x0 = navMeshLines[i].x;
+        dl.y0 = navMeshLines[i].y;
+        dl.z0 = navMeshLines[i].z;
+        dl.x1 = navMeshLines[i+1].x;
+        dl.y1 = navMeshLines[i+1].y;
+        dl.z1 = navMeshLines[i+1].z;
+        m_navmeshLines.push_back(dl);
+    }
+
+    printf("[ViewerApp] Linhas de navmesh: %zu segmentos.\n", m_navmeshLines.size());
+}
+
+
+bool ViewerApp::Init()
+{
+    if (!InitSDL()) return false;
+    if (!InitGL())  return false;
+    if (!InitImGui()) return false;
+
+    camera   = new ViewerCamera();
+    renderer = new RendererGL();
+
+    loadedMesh = ObjLoader::LoadObj("./undulating.obj");
+    if (!loadedMesh)
+        printf("Falha ao carregar OBJ!\n");
+    else
+        printf("OBJ carregado: %zu verts, %zu indices\n",
+               loadedMesh->vertices.size(),
+               loadedMesh->indices.size());
+
+    // AGORA: gera navmesh a partir da mesh carregada
+    if (loadedMesh)
+    {
+        buildNavmeshFromCurrentMesh();
+    }
+
+    return true;
+}
+
+
+void ViewerApp::Shutdown()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+
+    SDL_GL_DeleteContext(glContext);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    delete camera;
+    delete renderer;
+}
+
+bool ViewerApp::InitSDL()
+{
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
+    {
+        SDL_Log("SDL_Init Error: %s", SDL_GetError());
+        return false;
+    }
+
+    // OpenGL 3.3 Core
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);    
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+
+
+    window = SDL_CreateWindow(
+        "GTA NavMesh Viewer",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        1600, 900,
+        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
+    );
+
+    if (!window)
+    {
+        SDL_Log("SDL_CreateWindow Error: %s", SDL_GetError());
+        return false;
+    }
+
+    glContext = SDL_GL_CreateContext(window);
+    SDL_GL_MakeCurrent(window, glContext);
+    SDL_GL_SetSwapInterval(1); // vsync
+    printf("window = %p\n", window);
+    printf("glContext = %p\n", glContext);
+
+    return true;
+}
+
+bool ViewerApp::InitGL()
+{
+    if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
+    {
+        SDL_Log("Failed to initialize GLAD");
+        return false;
+    }
+
+    glViewport(0, 0, 1600, 900);
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glDepthFunc(GL_LESS); // já deve ser default, mas garantimos
+
+    return true;
+}
+
+bool ViewerApp::InitImGui()
+{
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    // POR ENQUANTO: sem docking nem viewports
+    // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplSDL2_InitForOpenGL(window, glContext);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
+    return true;
+}
+
+
+void ViewerApp::Run()
+{
+    while (running)
+    {
+        ProcessEvents();
+        RenderFrame();
+    }
+}
+
+bool RayTriangleIntersect(const Ray& r,
+                          const glm::vec3& v0,
+                          const glm::vec3& v1,
+                          const glm::vec3& v2,
+                          float& outDist)
+{
+    const float EPS = 0.00001f;
+    glm::vec3 e1 = v1 - v0;
+    glm::vec3 e2 = v2 - v0;
+
+    glm::vec3 p = glm::cross(r.dir, e2);
+    float det = glm::dot(e1, p);
+
+    if (fabs(det) < EPS) return false;
+
+    float inv = 1.0f / det;
+
+    glm::vec3 t = r.origin - v0;
+
+    float u = glm::dot(t, p) * inv;
+    if (u < 0 || u > 1) return false;
+
+    glm::vec3 q = glm::cross(t, e1);
+
+    float v = glm::dot(r.dir, q) * inv;
+    if (v < 0 || u + v > 1) return false;
+
+    float dist = glm::dot(e2, q) * inv;
+    if (dist < 0) return false;
+
+    outDist = dist;
+    return true;
+}
+
+int pickedTri = -1;
+
+void ViewerApp::ProcessEvents()
+{
+    SDL_Event e;
+    while (SDL_PollEvent(&e))
+    {
+        ImGui_ImplSDL2_ProcessEvent(&e);
+
+        if (e.type == SDL_QUIT)
+            running = false;
+
+        if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)
+            running = false;
+
+        if (e.type == SDL_KEYDOWN)
+        {
+            switch (e.key.keysym.sym)
+            {
+            case SDLK_F1:
+                renderMode = RenderMode::Solid;
+                break;
+
+            case SDLK_F2:
+                renderMode = RenderMode::Wireframe;
+                break;
+
+            case SDLK_F3:
+                renderMode = RenderMode::Normals;
+                break;
+
+            case SDLK_F4:
+                renderMode = RenderMode::Depth;
+                break;
+            case SDLK_F5:
+                renderMode = RenderMode::Lit;
+                break;
+
+            }
+        }
+        if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
+        {
+            int mx = e.button.x;
+            int my = e.button.y;
+
+            Ray ray = camera->GetRayFromScreen(mx, my, 1600, 900);
+
+            // MATRIZ MODEL — EXATA usada no render
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, meshPos);
+            model = glm::rotate(model, glm::radians(meshRot.x), glm::vec3(1,0,0));
+            model = glm::rotate(model, glm::radians(meshRot.y), glm::vec3(0,1,0));
+            model = glm::rotate(model, glm::radians(meshRot.z), glm::vec3(0,0,1));
+            model = glm::scale(model, glm::vec3(meshScale));
+
+            float best = FLT_MAX;
+            pickedTri = -1;
+
+            for (int i = 0; i < loadedMesh->indices.size(); i += 3)
+            {
+                int i0 = loadedMesh->indices[i+0];
+                int i1 = loadedMesh->indices[i+1];
+                int i2 = loadedMesh->indices[i+2];
+
+                // ****** TRANSFORMAR PARA ESPAÇO MUNDIAL ******
+                glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i0], 1.0f));
+                glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i1], 1.0f));
+                glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i2], 1.0f));
+
+                float dist;
+                if (RayTriangleIntersect(ray, v0, v1, v2, dist))
+                {
+                    if (dist < best)
+                    {
+                        best = dist;
+                        pickedTri = i;
+                    }
+                }
+            }
+        }
+
+
+
+        // Mouse capture toggle
+        if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_RIGHT)
+        {
+            mouseCaptured = true;
+            SDL_SetRelativeMouseMode(SDL_TRUE);
+        }
+        if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_RIGHT)
+        {
+            mouseCaptured = false;
+            SDL_SetRelativeMouseMode(SDL_FALSE);
+        }
+
+        if (mouseCaptured)
+        {
+            if (e.type == SDL_MOUSEMOTION)
+                camera->OnMouseMove(e.motion.xrel, e.motion.yrel);
+        }
+    }
+
+    const Uint8* state = SDL_GetKeyboardState(NULL);
+    camera->Update(state);
+}
+
+void ViewerApp::RenderFrame()
+{
+    // --- Iniciar nova frame ImGui ---
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+
+    // --- UI: Render Mode ---
+    ImGui::Begin("Render Mode");
+
+    int mode = (int)renderMode;
+    ImGui::RadioButton("Solid (F1)",     &mode, 0);
+    ImGui::RadioButton("Wireframe (F2)", &mode, 1);
+    ImGui::RadioButton("Normals (F3)",   &mode, 2);
+    ImGui::RadioButton("Depth (F4)",     &mode, 3);
+    ImGui::RadioButton("Lit (F5)", &mode, 4);
+
+
+    renderMode = (RenderMode)mode;
+
+    ImGui::End();
+
+
+    // --- Debug Camera ---
+    ImGui::Begin("Debug");
+    ImGui::Text("Camera: %.2f %.2f %.2f",
+        camera->pos.x, camera->pos.y, camera->pos.z);
+    ImGui::End();
+
+    // --- OpenGL ---
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0,1,1,1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Begin renderer com renderMode
+    renderer->Begin(camera, renderMode);
+    glUniform3f(glGetUniformLocation(renderer->GetShader(), "uSolidColor"), 1,1,1);
+
+    // Cubo
+    renderer->DebugCube(camera->pos + glm::vec3(0,0,-5), 1.0f);
+
+    // OBJ
+
+    if (loadedMesh)
+    {
+        ImGui::Begin("Mesh Info");
+
+        ImGui::Text("Mesh bounds:");
+        ImGui::Text("Min: %.1f %.1f %.1f",
+            loadedMesh->minBounds.x,
+            loadedMesh->minBounds.y,
+            loadedMesh->minBounds.z);
+
+        ImGui::Text("Max: %.1f %.1f %.1f",
+            loadedMesh->maxBounds.x,
+            loadedMesh->maxBounds.y,
+            loadedMesh->maxBounds.z);
+
+        glm::vec3 center = (loadedMesh->minBounds + loadedMesh->maxBounds) * 0.5f;
+        ImGui::Text("Center: %.1f %.1f %.1f",
+            center.x, center.y, center.z);
+
+        if (ImGui::Button("Teleport Camera to Mesh Center"))
+            camera->pos = center + glm::vec3(0,50,150);
+
+        if (ImGui::Button("Rebuild Navmesh"))
+        {
+            buildNavmeshFromCurrentMesh();
+        }
+
+        ImGui::End();
+
+        glm::mat4 model(1.0f);
+        model = glm::translate(model, meshPos);
+        model = glm::rotate(model, glm::radians(meshRot.x), glm::vec3(1,0,0));
+        model = glm::rotate(model, glm::radians(meshRot.y), glm::vec3(0,1,0));
+        model = glm::rotate(model, glm::radians(meshRot.z), glm::vec3(0,0,1));
+        model = glm::scale(model, glm::vec3(meshScale));
+
+        glUseProgram(renderer->GetShader());
+        glUniformMatrix4fv(
+            glGetUniformLocation(renderer->GetShader(), "uModel"),
+            1, GL_FALSE, &model[0][0]
+        );
+
+        loadedMesh->Draw();
+
+        renderer->DebugCube(meshPos, 0.5f);
+
+        if (pickedTri >= 0)
+        {
+            int i0 = loadedMesh->indices[pickedTri+0];
+            int i1 = loadedMesh->indices[pickedTri+1];
+            int i2 = loadedMesh->indices[pickedTri+2];
+
+            glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i0], 1.0f));
+            glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i1], 1.0f));
+            glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i2], 1.0f));
+
+            renderer->DrawTriangleHighlight(v0, v1, v2);
+        }
+        
+
+
+    }
+    
+    renderer->drawNavmeshLines(m_navmeshLines);
+
+    // desenhar grid e eixo sempre no modo 99
+    glDisable(GL_DEPTH_TEST);   // Gizmos ficam por cima
+
+    renderer->Begin(camera, RenderMode::None); // vai setar modo=99
+    renderer->DrawGrid();
+    renderer->DrawAxisGizmoScreen(camera, 1600, 900);
+    renderer->End();
+
+    glEnable(GL_DEPTH_TEST);
+
+
+    renderer->End();
+
+    // --- Finalizar ImGui ---
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    SDL_GL_SwapWindow(window);
+}
