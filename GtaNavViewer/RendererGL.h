@@ -41,7 +41,6 @@ public:
     void ExtractDebugMesh(std::vector<glm::vec3>& outVerts,
                           std::vector<glm::vec3>& outLines);
 
-    dtNavMesh* GetNavMesh() const { return m_nav; }
 private:
     GLuint LoadShader(const char* vs, const char* fs);
 
@@ -53,6 +52,4 @@ private:
     int gridVertexCount = 0;
     GLuint navVao = 0;
     GLuint navVbo = 0;
-
-
 };

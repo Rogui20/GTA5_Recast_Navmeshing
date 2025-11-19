@@ -198,7 +198,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     cfg.detailSampleDist     = 6.0f;
     cfg.detailSampleMaxError = 1.0f;
 
-    rcCalcGridSize(bmin, bmax, &cfg.width, &cfg.height);
+    rcCalcGridSize(bmin, bmax, cfg.cs, &cfg.width, &cfg.height);
     cfg.borderSize = 0; // pra simplificar
 
     rcContext ctx;
@@ -332,7 +332,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     unsigned char* navData = nullptr;
     int navDataSize = 0;
 
-    std::vector<unsigned char> polyFlags(pmesh->npolys);
+    std::vector<unsigned short> polyFlags(pmesh->npolys);
     for (int i = 0; i < pmesh->npolys; ++i)
     {
         if (pmesh->areas[i] != 0)
