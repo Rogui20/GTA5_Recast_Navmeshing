@@ -34,7 +34,7 @@ bool ViewerApp::buildNavmeshFromCurrentMesh()
         return false;
     }
 
-    if (!navData.BuildFromMesh(loadedMesh->vertices, loadedMesh->indices))
+    if (!navData.BuildFromMesh(loadedMesh->navmeshVertices, loadedMesh->indices))
     {
         printf("[ViewerApp] BuildFromMesh falhou.\n");
         return false;
@@ -82,7 +82,7 @@ bool ViewerApp::Init()
         printf("Falha ao carregar OBJ!\n");
     else
         printf("OBJ carregado: %zu verts, %zu indices\n",
-               loadedMesh->vertices.size(),
+               loadedMesh->renderVertices.size(),
                loadedMesh->indices.size());
 
     // AGORA: gera navmesh a partir da mesh carregada
@@ -293,9 +293,9 @@ void ViewerApp::ProcessEvents()
                 int i2 = loadedMesh->indices[i+2];
 
                 // ****** TRANSFORMAR PARA ESPAÇO MUNDIAL ******
-                glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i0], 1.0f));
-                glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i1], 1.0f));
-                glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i2], 1.0f));
+                glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i0], 1.0f));
+                glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i1], 1.0f));
+                glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i2], 1.0f));
 
                 float dist;
                 if (RayTriangleIntersect(ray, v0, v1, v2, dist))
@@ -429,9 +429,9 @@ void ViewerApp::RenderFrame()
             int i1 = loadedMesh->indices[pickedTri+1];
             int i2 = loadedMesh->indices[pickedTri+2];
 
-            glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i0], 1.0f));
-            glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i1], 1.0f));
-            glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->vertices[i2], 1.0f));
+            glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i0], 1.0f));
+            glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i1], 1.0f));
+            glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i2], 1.0f));
 
             renderer->DrawTriangleHighlight(v0, v1, v2);
         }

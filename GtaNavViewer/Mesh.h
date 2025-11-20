@@ -12,7 +12,11 @@ public:
 
     void Draw();
 
-    std::vector<glm::vec3> vertices;
+    // Vertices usados na GPU (podem estar recentralizados para renderização)
+    std::vector<glm::vec3> renderVertices;
+
+    // Vertices absolutos originais (usados para construir navmesh)
+    std::vector<glm::vec3> navmeshVertices;
     std::vector<unsigned int> indices;
     glm::vec3 minBounds;
     glm::vec3 maxBounds;
