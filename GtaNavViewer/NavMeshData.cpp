@@ -4,6 +4,7 @@
 #include <DetourNavMesh.h>
 #include <DetourNavMeshBuilder.h>
 #include <DetourMath.h>
+#include <DetourCommon.h>
 
 #include <algorithm>
 #include <cstdarg>
