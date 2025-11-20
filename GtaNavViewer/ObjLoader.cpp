@@ -68,11 +68,30 @@ Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
         }
         else if (type == "f")
         {
-            unsigned int a, b, c;
-            ss >> a >> b >> c;
-            mesh->indices.push_back(a - 1);
-            mesh->indices.push_back(b - 1);
-            mesh->indices.push_back(c - 1);
+            std::vector<TempVertex> faceVerts;
+            std::string token;
+            while (ss >> token)
+            {
+                faceVerts.push_back(ParseFaceElement(token));
+            }
+
+            if (faceVerts.size() >= 3)
+            {
+                // Triangulate a possible ngon as a fan around the first vertex
+                for (size_t i = 1; i + 1 < faceVerts.size(); ++i)
+                {
+                    const TempVertex& v0 = faceVerts[0];
+                    const TempVertex& v1 = faceVerts[i];
+                    const TempVertex& v2 = faceVerts[i + 1];
+
+                    // OBJ indices are 1-based; validate before storing
+                    if (v0.v <= 0 || v1.v <= 0 || v2.v <= 0) continue;
+
+                    mesh->indices.push_back(static_cast<unsigned int>(v0.v - 1));
+                    mesh->indices.push_back(static_cast<unsigned int>(v1.v - 1));
+                    mesh->indices.push_back(static_cast<unsigned int>(v2.v - 1));
+                }
+            }
         }
     }
 
