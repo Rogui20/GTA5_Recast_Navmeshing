@@ -85,6 +85,15 @@ var NAVTREE =
         [ "Crowd Simulation and Flowfield movement systems", "md_Docs_2__99__Roadmap.html#crowd-simulation-and-flowfield-movement-systems", null ]
       ] ]
     ] ],
+    [ "Sugestões para Organização dos Menus ImGui", "md_Docs_2ImGuiMenuOrganization.html", [
+      [ "Estrutura geral", "md_Docs_2ImGuiMenuOrganization.html#estrutura-geral", null ],
+      [ "Mesh Menu", "md_Docs_2ImGuiMenuOrganization.html#mesh-menu", null ],
+      [ "Navmesh Menu", "md_Docs_2ImGuiMenuOrganization.html#navmesh-menu", null ],
+      [ "Visibilidade e acessibilidade", "md_Docs_2ImGuiMenuOrganization.html#visibilidade-e-acessibilidade", null ],
+      [ "Escalabilidade", "md_Docs_2ImGuiMenuOrganization.html#escalabilidade", null ],
+      [ "Workflow sugerido", "md_Docs_2ImGuiMenuOrganization.html#workflow-sugerido", null ],
+      [ "Ideias futuras", "md_Docs_2ImGuiMenuOrganization.html#ideias-futuras", null ]
+    ] ],
     [ "Changelog", "md_CHANGELOG.html", [
       [ "<a href=\"https://github.com/recastnavigation/recastnavigation/compare/1.5.0...1.5.1\" >1.5.1</a> - 2016-02-22", "md_CHANGELOG.html#autotoc_md151httpsgithubcomrecastnavigationrecastnavigationcompare150151---2016-02-22", null ],
       [ "1.5.0 - 2016-01-24", "md_CHANGELOG.html#autotoc_md150---2016-01-24", null ],
@@ -485,26 +494,26 @@ var NAVTREEINDEX =
 "imgui__internal_8h.html#a9dbe18a196cc7e70f84cecfcb3b45c1b",
 "imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177cac6bd3d8b6a0586750c81cdf6ca5c8aa8",
 "imgui__widgets_8cpp.html#a5df9e72d33094eda9ddeea990432c447",
-"md_Docs_2__2__BuildingAndIntegrating.html#a-note-on-dll-exports-and-c-api",
-"structExampleAppConsole.html#acfde7d45fb733ac72d5d500168557b36",
-"structImDrawList.html#a6b16ab764160b0251d2e7b3bd08c1ffc",
-"structImFontBaked.html#a785a4f3372cd8258f17ede065ee3cbad",
-"structImGuiContext.html#a6a84bdd0fa3d29c60ba33f7438e688ad",
-"structImGuiDockContext.html#a6159a160b36e9ba855a21e4c04706938",
-"structImGuiIO.html#accd71987c895c4aec6d1a8c368cc9e0e",
-"structImGuiMultiSelectTempData.html#a0c27a4ca6dde42a3bcedf349f0088e18",
-"structImGuiStackLevelInfo.html#a8d159c0fe04c79e2db144ba668a2f7a7",
-"structImGuiTable.html#ab1e0c549a7c1de0ffbd14c18ae7bb402",
-"structImGuiViewportP.html#a639b18883f166929cb749d6d800cd967",
-"structImGui__ImplDX10__Data.html#a818d32c8d100f7a977de54c9bcf6fe50",
-"structImGui__ImplSDLGPU3__Data.html",
-"structImSpan.html",
-"structNavMeshDefinition.html#ac4a5a0ddf6c19a72dff5fde21eeea2b6",
-"structSDL__FRect.html#a23dacbd4579fa5a425435124b197a183",
-"structSDL__RWops.html#a099017bfceaac24ced0e4d08a4e0a023",
-"structVERTEX__CONSTANT__BUFFER__DX12.html",
-"structrcChunkyTriMeshNode.html#a21ef3b8a9cf348497ed1c6a9c01c403e",
-"unionImGL3WProcs.html#a83b8b2656e4b0dd5df33c68d1ad7ada2"
+"md_Docs_2ImGuiMenuOrganization.html#workflow-sugerido",
+"structExampleAppConsole.html#a5526ec74c611e1152fb13162cd01e6da",
+"structImDrawList.html#a618a5e0efdefce08daa888b45bf8a1d1",
+"structImFontBaked.html#a1e0839bf39f125ec5e40966a157d0d8b",
+"structImGuiContext.html#a64a96ad72dd7009dba134f6214a4936e",
+"structImGuiDemoWindowData.html#ab7633080628b2328d9d752190ecf995d",
+"structImGuiIO.html#ab809d14da9dca9bd5dc42c95e31d15f5",
+"structImGuiMultiSelectState.html#a610cb42c1809f657e070a4260141a465",
+"structImGuiSizeCallbackData.html#a42be6d99a279942b4f2019a4416f65ba",
+"structImGuiTable.html#a944e033f46b7729d15b8946d06dbe682",
+"structImGuiViewportP.html#a1b7c7a939cab3e1f5f17c9bcc1a5eca3",
+"structImGui__ImplAllegro5__Data.html#aadcfb048c36f97008498f66085aa4279",
+"structImGui__ImplSDL3__ViewportData.html",
+"structImRect.html#acb166afad83795305190598a7b92a185",
+"structNavMeshDefinition.html#a1392e75dfd653046599329e9ec592e0a",
+"structSDL__DropEvent.html#a02d2c81bb22db632a40cd0021ff751ab",
+"structSDL__PixelFormat.html#aeae611aba76f5eb11b696807926c5116",
+"structTileCacheTileHeader.html#aee23884943ee90ca7fcbe553ca064734",
+"structrcChunkyTriMesh.html#a6ae1d3f004dd90ddf9a60e55095592a0",
+"unionImGL3WProcs.html#a5d2756731243c11575d691c7dfa16e30"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
