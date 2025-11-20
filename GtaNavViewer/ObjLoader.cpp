@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <cfloat>
 
 struct TempVertex {
     int v = 0;
@@ -43,7 +44,7 @@ Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
     Mesh* mesh = new Mesh();
 
     std::string line;
-    std::vector<glm::vec3> tmp;
+    std::vector<glm::vec3> originalVertices;
 
     glm::vec3 minB(FLT_MAX);
     glm::vec3 maxB(-FLT_MAX);
@@ -60,7 +61,7 @@ Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
             ss >> x >> y >> z;
             glm::vec3 v(x, y, z);
 
-            tmp.push_back(v);
+            originalVertices.push_back(v);
 
             minB = glm::min(minB, v);
             maxB = glm::max(maxB, v);
@@ -75,6 +76,8 @@ Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
         }
     }
 
+    std::vector<glm::vec3> renderVertices = originalVertices;
+
     glm::vec3 center(0.0f);
     if (centerMesh)
     {
@@ -83,13 +86,13 @@ Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
         // ============================
         center = (minB + maxB) * 0.5f;
 
-        for (auto& v : tmp)
+        for (auto& v : renderVertices)
             v -= center;
 
         // recalcular bounds após recentralizar
         glm::vec3 newMin(FLT_MAX);
         glm::vec3 newMax(-FLT_MAX);
-        for (auto& v : tmp)
+        for (auto& v : renderVertices)
         {
             newMin = glm::min(newMin, v);
             newMax = glm::max(newMax, v);
@@ -99,7 +102,8 @@ Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
         maxB = newMax;
     }
 
-    mesh->vertices = tmp;
+    mesh->renderVertices = renderVertices;
+    mesh->navmeshVertices = originalVertices;
     mesh->minBounds = minB;
     mesh->maxBounds = maxB;
 
@@ -108,7 +112,7 @@ Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
 
     std::cout
         << "OBJ loaded: "
-        << mesh->vertices.size() << " verts, "
+        << mesh->renderVertices.size() << " verts, "
         << mesh->indices.size() / 3 << " tris\n"
         << "Bounds" << (centerMesh ? " (recentered)" : "") << ":\n"
         << "   Min = " << minB.x << ", " << minB.y << ", " << minB.z << "\n"

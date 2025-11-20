@@ -17,7 +17,7 @@ Mesh::~Mesh()
 
 bool Mesh::UploadToGPU()
 {
-    if (vertices.empty() || indices.empty())
+    if (renderVertices.empty() || indices.empty())
         return false;
 
     glGenVertexArrays(1, &vao);
@@ -27,8 +27,8 @@ bool Mesh::UploadToGPU()
     glBindVertexArray(vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3),
-                 vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, renderVertices.size() * sizeof(glm::vec3),
+                 renderVertices.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
