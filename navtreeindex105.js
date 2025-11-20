@@ -1,5 +1,7 @@
 var NAVTREEINDEX105 =
 {
+"structSDL__MouseWheelEvent.html#a014dc767d52e8b75ba26a5f12e1704e8":[44,0,411,7],
+"structSDL__MouseWheelEvent.html#a53fdf77a464426bc8b30e629795f044b":[44,0,411,10],
 "structSDL__MouseWheelEvent.html#a602d03699be268ecd13feb8c53e6738b":[44,0,411,1],
 "structSDL__MouseWheelEvent.html#a64b89ea00f054854f0fef03efc60d332":[44,0,411,4],
 "structSDL__MouseWheelEvent.html#a6d904eef474ea45a5b1828fcb5b0f859":[44,0,411,9],
@@ -247,7 +249,5 @@ var NAVTREEINDEX105 =
 "structSampleTool.html#a45b4ac6ce6d23449eb7c7ff3d0f1fdc5":[44,0,363,10],
 "structSampleTool.html#a8b20d1398881252989cbfeeff1a5f2f3":[44,0,363,0],
 "structSampleTool.html#a95804c3b0631cbb58edd4370e15a3af5":[44,0,363,8],
-"structSampleTool.html#ac54d34080ba5a11adff8fba1bb2a71fb":[44,0,363,6],
-"structSampleTool.html#ac861b5b1d9c1b5be2be6059c1d842cb8":[44,0,363,9],
-"structSampleTool.html#ad411c329c46227d3bd4552ab9e2fb5c3":[44,0,363,1]
+"structSampleTool.html#ac54d34080ba5a11adff8fba1bb2a71fb":[44,0,363,6]
 };

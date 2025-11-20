@@ -1,5 +1,7 @@
 var NAVTREEINDEX69 =
 {
+"classrcPermVector.html#a6bab96097aa5bc2a52ed9db6cf2bfe44":[44,0,342,2],
+"classrcPermVector.html#a89cdaf5eed318260c697bdcbe75a82f1":[44,0,342,4],
 "classrcPermVector.html#ab845b684e91805b000408677bb5f7950":[44,0,342,1],
 "classrcScopedDelete.html":[44,0,347],
 "classrcScopedDelete.html#a24d9238f78295ccbd1050247030e3741":[44,0,347,0],
@@ -244,10 +246,8 @@ var NAVTREEINDEX69 =
 "functions_enum.html":[44,3,4],
 "functions_eval.html":[44,3,5],
 "functions_f.html":[44,3,0,6],
-"functions_func.html":[44,3,1],
 "functions_func.html":[44,3,1,0],
+"functions_func.html":[44,3,1],
 "functions_func_a.html":[44,3,1,1],
-"functions_func_b.html":[44,3,1,2],
-"functions_func_c.html":[44,3,1,3],
-"functions_func_d.html":[44,3,1,4]
+"functions_func_b.html":[44,3,1,2]
 };

@@ -114,8 +114,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afcc7ca871eecfec2131711e8b32ac4de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a309f93226ce1a4576d932144c9a70363" id="r_a309f93226ce1a4576d932144c9a70363"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a309f93226ce1a4576d932144c9a70363">BuildTileAt</a> (const glm::vec3 &amp;worldPos, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, int &amp;outTileX, int &amp;outTileY)</td></tr>
 <tr class="separator:a309f93226ce1a4576d932144c9a70363"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56451182e4858ddea0ec98fef3b2a626" id="r_a56451182e4858ddea0ec98fef3b2a626"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a56451182e4858ddea0ec98fef3b2a626">CollectTilesInBounds</a> (const glm::vec3 &amp;bmin, const glm::vec3 &amp;bmax, bool onlyExistingTiles, std::vector&lt; std::pair&lt; int, int &gt; &gt; &amp;outTiles) const</td></tr>
+<tr class="separator:a56451182e4858ddea0ec98fef3b2a626"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af793fd5a445cc980578e652d3158447d" id="r_af793fd5a445cc980578e652d3158447d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#af793fd5a445cc980578e652d3158447d">RebuildTilesInBounds</a> (const glm::vec3 &amp;bmin, const glm::vec3 &amp;bmax, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, bool onlyExistingTiles, std::vector&lt; std::pair&lt; int, int &gt; &gt; *outTiles=nullptr)</td></tr>
 <tr class="separator:af793fd5a445cc980578e652d3158447d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45dd6cd6c7451cd69d01757fc18765f8" id="r_a45dd6cd6c7451cd69d01757fc18765f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a45dd6cd6c7451cd69d01757fc18765f8">RebuildSpecificTiles</a> (const std::vector&lt; std::pair&lt; int, int &gt; &gt; &amp;tiles, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, bool onlyExistingTiles, std::vector&lt; std::pair&lt; int, int &gt; &gt; *outTiles=nullptr)</td></tr>
+<tr class="separator:a45dd6cd6c7451cd69d01757fc18765f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a45cea84241aa5c00016b16ffee26d1" id="r_a5a45cea84241aa5c00016b16ffee26d1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a5a45cea84241aa5c00016b16ffee26d1">HasTiledCache</a> () const</td></tr>
 <tr class="separator:a5a45cea84241aa5c00016b16ffee26d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e3a68693ca1bb2655cc9db37a6f111f" id="r_a1e3a68693ca1bb2655cc9db37a6f111f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a1e3a68693ca1bb2655cc9db37a6f111f">ExtractDebugMesh</a> (std::vector&lt; glm::vec3 &gt; &amp;outVerts, std::vector&lt; glm::vec3 &gt; &amp;outLines)</td></tr>
@@ -220,6 +224,46 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a56451182e4858ddea0ec98fef3b2a626" name="a56451182e4858ddea0ec98fef3b2a626"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56451182e4858ddea0ec98fef3b2a626">&#9670;&#160;</a></span>CollectTilesInBounds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NavMeshData::CollectTilesInBounds </td>
+          <td>(</td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>bmin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>bmax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>onlyExistingTiles</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::pair&lt; int, int &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>outTiles</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1e3a68693ca1bb2655cc9db37a6f111f" name="a1e3a68693ca1bb2655cc9db37a6f111f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1e3a68693ca1bb2655cc9db37a6f111f">&#9670;&#160;</a></span>ExtractDebugMesh()</h2>
 
@@ -310,6 +354,46 @@ Public Member Functions</h2></td></tr>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>path</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a45dd6cd6c7451cd69d01757fc18765f8" name="a45dd6cd6c7451cd69d01757fc18765f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45dd6cd6c7451cd69d01757fc18765f8">&#9670;&#160;</a></span>RebuildSpecificTiles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NavMeshData::RebuildSpecificTiles </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::pair&lt; int, int &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tiles</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;&#160;</td>
+          <td class="paramname"><em>settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>onlyExistingTiles</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::pair&lt; int, int &gt; &gt; *&#160;</td>
+          <td class="paramname"><em>outTiles</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

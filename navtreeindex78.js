@@ -1,5 +1,7 @@
 var NAVTREEINDEX78 =
 {
+"imconfig_8h.html":[45,0,7,0,1],
+"imconfig_8h_source.html":[45,0,7,0,1],
 "imguiRenderGL_8cpp.html":[45,0,9,1,5],
 "imguiRenderGL_8cpp.html#a06ae1ffc6ae4adb308416ab8480327a9":[45,0,9,1,5,7],
 "imguiRenderGL_8cpp.html#a0c56d5717a692e41cf3f66a459ef589a":[45,0,9,1,5,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX78 =
 "imgui__draw_8cpp.html#afb984dfe621aaf80f49b6f0af469330f":[45,0,7,0,5,63],
 "imgui__draw_8cpp.html#afcf5d4f446f3dc0411abd7b5374afaea":[45,0,7,0,5,51],
 "imgui__impl__allegro5_8cpp.html":[45,0,7,0,0,0],
-"imgui__impl__allegro5_8cpp.html#a0d09ba855db6d3fdc94cc0c6eb4a032f":[45,0,7,0,0,0,8],
-"imgui__impl__allegro5_8cpp.html#a0e1712e5951f3f545d336db317cdcc6c":[45,0,7,0,0,0,10],
-"imgui__impl__allegro5_8cpp.html#a109536e8da23d4e801517f95d7f6d248":[45,0,7,0,0,0,15]
+"imgui__impl__allegro5_8cpp.html#a0d09ba855db6d3fdc94cc0c6eb4a032f":[45,0,7,0,0,0,8]
 };

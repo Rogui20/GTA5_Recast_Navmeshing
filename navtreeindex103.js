@@ -1,5 +1,7 @@
 var NAVTREEINDEX103 =
 {
+"structNavMeshContext.html#a28d8b1cc236ee59f6f555ad29f63aa4f":[44,0,306,19],
+"structNavMeshContext.html#a29590ee60174451f3c6469e3bf4c9048":[44,0,306,7],
 "structNavMeshContext.html#a2c5784239d91811b6e05bc3a4f11b498":[44,0,306,5],
 "structNavMeshContext.html#a3568f1335c8a0f1382af8c50595cc51a":[44,0,306,16],
 "structNavMeshContext.html#a5a0f67c9b231ad6a361b14ffdc64af13":[44,0,306,9],
@@ -247,7 +249,5 @@ var NAVTREEINDEX103 =
 "structSDL__ControllerButtonEvent.html#a34d3e43fc1994288b9b083c874bc0899":[44,0,373,1],
 "structSDL__ControllerButtonEvent.html#a73003712734c4d2f966db3d7c2ce826b":[44,0,373,4],
 "structSDL__ControllerButtonEvent.html#a8caf56a3921227913cfb652d5de1eec4":[44,0,373,2],
-"structSDL__ControllerButtonEvent.html#a98777e88b5d5cae83eef16ffd4bcacc1":[44,0,373,6],
-"structSDL__ControllerDeviceEvent.html":[44,0,374],
-"structSDL__ControllerDeviceEvent.html#a45b3807eaf70a5f5cf712455da277536":[44,0,374,1]
+"structSDL__ControllerButtonEvent.html#a98777e88b5d5cae83eef16ffd4bcacc1":[44,0,373,6]
 };
