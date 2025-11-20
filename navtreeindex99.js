@@ -1,5 +1,8 @@
 var NAVTREEINDEX99 =
 {
+"structImGuiViewportP.html#a080a837d8bfe1aadbac9a50d9a08015a":[44,0,275,21],
+"structImGuiViewportP.html#a0df61484c6fba2559c064f3ecd4964c3":[44,0,275,29],
+"structImGuiViewportP.html#a0ffab7b45c141b920d29beb2f8b1abf4":[44,0,275,16],
 "structImGuiViewportP.html#a1b7c7a939cab3e1f5f17c9bcc1a5eca3":[44,0,275,27],
 "structImGuiViewportP.html#a1c4bd9164298a0166679bb0eceea5978":[44,0,275,10],
 "structImGuiViewportP.html#a2110db2d3fff955d9afa36749ca4a90f":[44,0,275,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX99 =
 "structImGui__ImplAllegro5__Data.html#a4c32317a535a2345f0ecb20316a77078":[44,0,120,8],
 "structImGui__ImplAllegro5__Data.html#a5245a295ac92f1734bc344784a1bb710":[44,0,120,3],
 "structImGui__ImplAllegro5__Data.html#a5bd178f19817b2d3f8165d2278b71e8f":[44,0,120,2],
-"structImGui__ImplAllegro5__Data.html#a5d2290227b9958f5f8b9ff2b09961e0c":[44,0,120,6],
-"structImGui__ImplAllegro5__Data.html#a5d56c5f21907d9d77b7036c5d91f8c86":[44,0,120,9],
-"structImGui__ImplAllegro5__Data.html#a843e681ca72ff8e14148bdbacc600308":[44,0,120,5],
-"structImGui__ImplAllegro5__Data.html#a94e37696ba088a8513ebca7c3b143b1f":[44,0,120,4]
+"structImGui__ImplAllegro5__Data.html#a5d2290227b9958f5f8b9ff2b09961e0c":[44,0,120,6]
 };

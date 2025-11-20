@@ -1,5 +1,8 @@
 var NAVTREEINDEX96 =
 {
+"structImGuiMultiSelectState.html#a12c4fc513946a8f855c300b245bf5e3c":[44,0,226,1],
+"structImGuiMultiSelectState.html#a19532c01ea44ae58f862bb8d81a180be":[44,0,226,8],
+"structImGuiMultiSelectState.html#a23f6a0eca7ee70eee55a28cda4d52e09":[44,0,226,6],
 "structImGuiMultiSelectState.html#a610cb42c1809f657e070a4260141a465":[44,0,226,7],
 "structImGuiMultiSelectState.html#a7b92eee43669e879f2c916c838d2ce78":[44,0,226,4],
 "structImGuiMultiSelectState.html#a9d7c447e97b97f8e88fdf18cfb06452f":[44,0,226,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX96 =
 "structImGuiSettingsHandler.html#ab84610a000c843d4e303e41e260fb1df":[44,0,246,0],
 "structImGuiSettingsHandler.html#ac2dd47bdb91ae6f50afb5ac14222b552":[44,0,246,6],
 "structImGuiShrinkWidthItem.html":[44,0,247],
-"structImGuiShrinkWidthItem.html#a29ba0dc283a3f57b0725b371f73fe1ed":[44,0,247,2],
-"structImGuiShrinkWidthItem.html#a5cd3b72ecdf53f6cb6c85f9064a4e256":[44,0,247,0],
-"structImGuiShrinkWidthItem.html#ac9a3ca20449e58374963f32db20bbd87":[44,0,247,1],
-"structImGuiSizeCallbackData.html":[44,0,248]
+"structImGuiShrinkWidthItem.html#a29ba0dc283a3f57b0725b371f73fe1ed":[44,0,247,2]
 };

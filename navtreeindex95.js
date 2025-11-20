@@ -1,5 +1,8 @@
 var NAVTREEINDEX95 =
 {
+"structImGuiIO.html#ab34c141d562fc6b76203e2097de66eb3":[44,0,213,31],
+"structImGuiIO.html#ab464bf317051bbdf1c93ab36802fe3b7":[44,0,213,105],
+"structImGuiIO.html#ab6423058bbb3503c3cf66e0e45ee606d":[44,0,213,8],
 "structImGuiIO.html#ab809d14da9dca9bd5dc42c95e31d15f5":[44,0,213,34],
 "structImGuiIO.html#abd96c624dbd2fde5b121b3a8fc83c5fa":[44,0,213,59],
 "structImGuiIO.html#abdd7e183fe87d70c779c2d28ee63eb4d":[44,0,213,47],
@@ -246,8 +249,5 @@ var NAVTREEINDEX95 =
 "structImGuiMultiSelectIO.html#a9e628d471aec28be6206b7cf156b17c8":[44,0,225,3],
 "structImGuiMultiSelectIO.html#ab8a1fc2d5714e66cb40cab83ff8a3ac2":[44,0,225,1],
 "structImGuiMultiSelectIO.html#aba5e6ee0184f05432deba747ddc81d93":[44,0,225,5],
-"structImGuiMultiSelectState.html":[44,0,226],
-"structImGuiMultiSelectState.html#a12c4fc513946a8f855c300b245bf5e3c":[44,0,226,1],
-"structImGuiMultiSelectState.html#a19532c01ea44ae58f862bb8d81a180be":[44,0,226,8],
-"structImGuiMultiSelectState.html#a23f6a0eca7ee70eee55a28cda4d52e09":[44,0,226,6]
+"structImGuiMultiSelectState.html":[44,0,226]
 };

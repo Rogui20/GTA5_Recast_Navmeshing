@@ -309,6 +309,7 @@ var annotated_dup =
     [ "NavMeshData", "classNavMeshData.html", "classNavMeshData" ],
     [ "NavMeshDefinition", "structNavMeshDefinition.html", "structNavMeshDefinition" ],
     [ "NavmeshFlags", "classNavmeshFlags.html", "classNavmeshFlags" ],
+    [ "NavmeshGenerationSettings", "structNavmeshGenerationSettings.html", "structNavmeshGenerationSettings" ],
     [ "NavMeshPruneTool", "classNavMeshPruneTool.html", "classNavMeshPruneTool" ],
     [ "NavMeshSetHeader", "structNavMeshSetHeader.html", "structNavMeshSetHeader" ],
     [ "NavMeshTesterTool", "classNavMeshTesterTool.html", "classNavMeshTesterTool" ],

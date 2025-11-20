@@ -1,5 +1,8 @@
 var NAVTREEINDEX88 =
 {
+"imgui__widgets_8cpp.html#a58c3b8bbbb0042371c1c3d83d9bc72c9":[45,0,7,0,8,62],
+"imgui__widgets_8cpp.html#a591af6c724a8088d03687aba81098ae9":[45,0,7,0,8,81],
+"imgui__widgets_8cpp.html#a5d0ac25abe189c752495f2f26afea2e6":[45,0,7,0,8,91],
 "imgui__widgets_8cpp.html#a5df9e72d33094eda9ddeea990432c447":[45,0,7,0,8,57],
 "imgui__widgets_8cpp.html#a6146d78f94a9da0cf92020500693ef2c":[45,0,7,0,8,99],
 "imgui__widgets_8cpp.html#a6201ac5ca1497718dc28dd5f9cd13a3b":[45,0,7,0,8,46],
@@ -246,8 +249,5 @@ var NAVTREEINDEX88 =
 "md_Docs_2ImGuiMenuOrganization.html":[4],
 "md_Docs_2ImGuiMenuOrganization.html#escalabilidade":[4,4],
 "md_Docs_2ImGuiMenuOrganization.html#estrutura-geral":[4,0],
-"md_Docs_2ImGuiMenuOrganization.html#ideias-futuras":[4,6],
-"md_Docs_2ImGuiMenuOrganization.html#mesh-menu":[4,1],
-"md_Docs_2ImGuiMenuOrganization.html#navmesh-menu":[4,2],
-"md_Docs_2ImGuiMenuOrganization.html#visibilidade-e-acessibilidade":[4,3]
+"md_Docs_2ImGuiMenuOrganization.html#ideias-futuras":[4,6]
 };

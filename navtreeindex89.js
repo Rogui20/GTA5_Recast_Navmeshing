@@ -1,5 +1,8 @@
 var NAVTREEINDEX89 =
 {
+"md_Docs_2ImGuiMenuOrganization.html#mesh-menu":[4,1],
+"md_Docs_2ImGuiMenuOrganization.html#navmesh-menu":[4,2],
+"md_Docs_2ImGuiMenuOrganization.html#visibilidade-e-acessibilidade":[4,3],
 "md_Docs_2ImGuiMenuOrganization.html#workflow-sugerido":[4,5],
 "md_Docs_2__1__Introduction.html":[0],
 "md_Docs_2__1__Introduction.html#agent-attributes":[0,0,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX89 =
 "structExampleAppConsole.html#a1eebee69cceb0345cf9d9b6e6beb9d03":[44,0,73,13],
 "structExampleAppConsole.html#a2508db0a7d205947cea65b141d4ed589":[44,0,73,16],
 "structExampleAppConsole.html#a2ef13f00c474b16b8da2ec062d5e5cc2":[44,0,73,3],
-"structExampleAppConsole.html#a394debe3cbf3cfd93b9bfd2835a4fdec":[44,0,73,11],
-"structExampleAppConsole.html#a3a5622b2d8c52a3083df6ed9f90e7210":[44,0,73,9],
-"structExampleAppConsole.html#a3ac60d63c0eed2d3ad282fbbc1ae068a":[44,0,73,7],
-"structExampleAppConsole.html#a405521e6aa8f97954b67315baf8d6147":[44,0,73,0]
+"structExampleAppConsole.html#a394debe3cbf3cfd93b9bfd2835a4fdec":[44,0,73,11]
 };
