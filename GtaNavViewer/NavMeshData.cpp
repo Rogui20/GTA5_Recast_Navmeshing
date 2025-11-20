@@ -144,6 +144,10 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         void doLog(const rcLogCategory category, const char* msg, const int len) override
         {
             rcIgnoreUnused(len);
+        void doLog(const rcLogCategory category, const char* msg, va_list ap) override
+        {
+            char buffer[1024];
+            vsnprintf(buffer, sizeof(buffer), msg, ap);
 
             const char* prefix = "[Recast]";
             switch (category)
@@ -155,6 +159,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
             }
 
             printf("%s %s\n", prefix, msg);
+            printf("%s %s\n", prefix, buffer);
         }
     };
 
@@ -269,6 +274,11 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
            bmin[0], bmin[1], bmin[2],
            bmax[0], bmax[1], bmax[2],
            cfg.width, cfg.height, cfg.borderSize);
+    printf("[NavMeshData] BuildFromMesh: Verts=%d, Tris=%d, Bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f) Grid=%d x %d\n",
+           nverts, ntris,
+           bmin[0], bmin[1], bmin[2],
+           bmax[0], bmax[1], bmax[2],
+           cfg.width, cfg.height);
 
     // --- 4. Altura, rasterização e filtros ---
     rcHeightfield* solid = rcAllocHeightfield();
