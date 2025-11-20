@@ -17,9 +17,14 @@
 #include <backends/imgui_impl_opengl3.h>
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <filesystem>
+#include <fstream>
+#include <algorithm>
+#include <cctype>
 
 ViewerApp::ViewerApp()
 {
+    currentDirectory = std::filesystem::current_path().string();
 }
 
 ViewerApp::~ViewerApp()
@@ -77,19 +82,7 @@ bool ViewerApp::Init()
     camera   = new ViewerCamera();
     renderer = new RendererGL();
 
-    loadedMesh = ObjLoader::LoadObj("./undulating.obj");
-    if (!loadedMesh)
-        printf("Falha ao carregar OBJ!\n");
-    else
-        printf("OBJ carregado: %zu verts, %zu indices\n",
-               loadedMesh->renderVertices.size(),
-               loadedMesh->indices.size());
-
-    // AGORA: gera navmesh a partir da mesh carregada
-    if (loadedMesh)
-    {
-        buildNavmeshFromCurrentMesh();
-    }
+    LoadLastDirectory();
 
     return true;
 }
@@ -184,6 +177,71 @@ bool ViewerApp::InitImGui()
     return true;
 }
 
+bool ViewerApp::LoadMeshFromPath(const std::string& path)
+{
+    Mesh* newMesh = ObjLoader::LoadObj(path);
+    if (!newMesh)
+    {
+        printf("Falha ao carregar OBJ!\n");
+        return false;
+    }
+
+    delete loadedMesh;
+    loadedMesh = newMesh;
+    pickedTri = -1;
+
+    printf("OBJ carregado: %zu verts, %zu indices\n",
+           loadedMesh->renderVertices.size(),
+           loadedMesh->indices.size());
+
+    buildNavmeshFromCurrentMesh();
+
+    std::filesystem::path p(path);
+    SaveLastDirectory(p.parent_path());
+
+    return true;
+}
+
+std::filesystem::path ViewerApp::GetConfigFilePath() const
+{
+    char* basePath = SDL_GetBasePath();
+    if (basePath)
+    {
+        std::filesystem::path result = std::filesystem::path(basePath) / "last_directory.txt";
+        SDL_free(basePath);
+        return result;
+    }
+
+    return "last_directory.txt";
+}
+
+void ViewerApp::LoadLastDirectory()
+{
+    std::filesystem::path configPath = GetConfigFilePath();
+    std::ifstream file(configPath);
+    if (file)
+    {
+        std::string storedPath;
+        std::getline(file, storedPath);
+        if (!storedPath.empty() && std::filesystem::exists(storedPath))
+        {
+            currentDirectory = storedPath;
+        }
+    }
+}
+
+void ViewerApp::SaveLastDirectory(const std::filesystem::path& directory)
+{
+    if (directory.empty()) return;
+
+    std::filesystem::path configPath = GetConfigFilePath();
+    std::ofstream file(configPath, std::ios::trunc);
+    if (file)
+    {
+        file << directory.string();
+    }
+}
+
 
 void ViewerApp::Run()
 {
@@ -270,6 +328,9 @@ void ViewerApp::ProcessEvents()
         }
         if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
         {
+            if (!loadedMesh)
+                continue;
+
             int mx = e.button.x;
             int my = e.button.y;
 
@@ -356,6 +417,97 @@ void ViewerApp::RenderFrame()
 
     ImGui::End();
 
+    // --- UI: OBJ Browser ---
+    ImGui::Begin("Mesh Browser");
+    if (!std::filesystem::exists(currentDirectory))
+    {
+        currentDirectory = std::filesystem::current_path().string();
+    }
+
+    ImGui::Text("Diretório: %s", currentDirectory.c_str());
+
+    if (ImGui::Button("Subir"))
+    {
+        std::filesystem::path parent = std::filesystem::path(currentDirectory).parent_path();
+        if (!parent.empty())
+        {
+            currentDirectory = parent.string();
+            selectedEntry.clear();
+        }
+    }
+
+    std::error_code ec;
+    std::vector<std::filesystem::directory_entry> directories;
+    std::vector<std::filesystem::directory_entry> objFiles;
+    for (const auto& entry : std::filesystem::directory_iterator(currentDirectory, ec))
+    {
+        if (entry.is_directory())
+        {
+            directories.push_back(entry);
+        }
+        else
+        {
+            auto ext = entry.path().extension().string();
+            std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return (char)std::tolower(c); });
+            if (ext == ".obj")
+                objFiles.push_back(entry);
+        }
+    }
+
+    std::sort(directories.begin(), directories.end(), [](const auto& a, const auto& b){ return a.path().filename() < b.path().filename(); });
+    std::sort(objFiles.begin(), objFiles.end(), [](const auto& a, const auto& b){ return a.path().filename() < b.path().filename(); });
+
+    ImGui::SeparatorText("Pastas");
+    for (const auto& dir : directories)
+    {
+        std::string label = "[DIR] " + dir.path().filename().string();
+        bool selected = selectedEntry == dir.path().string();
+        if (ImGui::Selectable(label.c_str(), selected, ImGuiSelectableFlags_AllowDoubleClick))
+        {
+            selectedEntry = dir.path().string();
+            if (ImGui::IsMouseDoubleClicked(0))
+            {
+                currentDirectory = dir.path().string();
+                selectedEntry.clear();
+            }
+        }
+    }
+
+    ImGui::SeparatorText("Arquivos OBJ");
+    for (const auto& file : objFiles)
+    {
+        std::string label = file.path().filename().string();
+        bool selected = selectedEntry == file.path().string();
+        if (ImGui::Selectable(label.c_str(), selected, ImGuiSelectableFlags_AllowDoubleClick))
+        {
+            selectedEntry = file.path().string();
+            if (ImGui::IsMouseDoubleClicked(0))
+            {
+                LoadMeshFromPath(selectedEntry);
+            }
+        }
+    }
+
+    if (!ec)
+    {
+        if (ImGui::Button("Carregar OBJ selecionado"))
+        {
+            std::filesystem::path p(selectedEntry);
+            auto ext = p.extension().string();
+            std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return (char)std::tolower(c); });
+            if (ext == ".obj")
+            {
+                LoadMeshFromPath(selectedEntry);
+            }
+        }
+    }
+    else
+    {
+        ImGui::TextColored(ImVec4(1,0,0,1), "Erro ao listar diretório: %s", ec.message().c_str());
+    }
+
+    ImGui::End();
+
 
     // --- Debug Camera ---
     ImGui::Begin("Debug");
@@ -425,15 +577,22 @@ void ViewerApp::RenderFrame()
 
         if (pickedTri >= 0)
         {
-            int i0 = loadedMesh->indices[pickedTri+0];
-            int i1 = loadedMesh->indices[pickedTri+1];
-            int i2 = loadedMesh->indices[pickedTri+2];
+            if (pickedTri + 2 >= (int)loadedMesh->indices.size())
+            {
+                pickedTri = -1;
+            }
+            else
+            {
+                int i0 = loadedMesh->indices[pickedTri+0];
+                int i1 = loadedMesh->indices[pickedTri+1];
+                int i2 = loadedMesh->indices[pickedTri+2];
 
-            glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i0], 1.0f));
-            glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i1], 1.0f));
-            glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i2], 1.0f));
+                glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i0], 1.0f));
+                glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i1], 1.0f));
+                glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i2], 1.0f));
 
-            renderer->DrawTriangleHighlight(v0, v1, v2);
+                renderer->DrawTriangleHighlight(v0, v1, v2);
+            }
         }
         
 
