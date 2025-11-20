@@ -46,8 +46,8 @@ Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
     std::string line;
     std::vector<glm::vec3> originalVertices;
 
-    glm::vec3 minB(FLT_MAX);
-    glm::vec3 maxB(-FLT_MAX);
+    glm::vec3 navMinB(FLT_MAX);
+    glm::vec3 navMaxB(-FLT_MAX);
 
     while (std::getline(file, line))
     {
@@ -63,8 +63,8 @@ Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
 
             originalVertices.push_back(v);
 
-            minB = glm::min(minB, v);
-            maxB = glm::max(maxB, v);
+            navMinB = glm::min(navMinB, v);
+            navMaxB = glm::max(navMaxB, v);
         }
         else if (type == "f")
         {
@@ -78,34 +78,33 @@ Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
 
     std::vector<glm::vec3> renderVertices = originalVertices;
 
-    glm::vec3 center(0.0f);
+    glm::vec3 renderOffset(0.0f);
+    glm::vec3 renderMin(FLT_MAX);
+    glm::vec3 renderMax(-FLT_MAX);
     if (centerMesh)
     {
         // ============================
         // 🔵 RECENTRALIZAR A MESH
         // ============================
-        center = (minB + maxB) * 0.5f;
+        renderOffset = (navMinB + navMaxB) * 0.5f;
 
         for (auto& v : renderVertices)
-            v -= center;
+            v -= renderOffset;
+    }
 
-        // recalcular bounds após recentralizar
-        glm::vec3 newMin(FLT_MAX);
-        glm::vec3 newMax(-FLT_MAX);
-        for (auto& v : renderVertices)
-        {
-            newMin = glm::min(newMin, v);
-            newMax = glm::max(newMax, v);
-        }
-
-        minB = newMin;
-        maxB = newMax;
+    for (auto& v : renderVertices)
+    {
+        renderMin = glm::min(renderMin, v);
+        renderMax = glm::max(renderMax, v);
     }
 
     mesh->renderVertices = renderVertices;
     mesh->navmeshVertices = originalVertices;
-    mesh->minBounds = minB;
-    mesh->maxBounds = maxB;
+    mesh->renderOffset = renderOffset;
+    mesh->renderMinBounds = renderMin;
+    mesh->renderMaxBounds = renderMax;
+    mesh->navmeshMinBounds = navMinB;
+    mesh->navmeshMaxBounds = navMaxB;
 
     // enviar GPU
     mesh->UploadToGPU();
@@ -114,13 +113,16 @@ Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
         << "OBJ loaded: "
         << mesh->renderVertices.size() << " verts, "
         << mesh->indices.size() / 3 << " tris\n"
-        << "Bounds" << (centerMesh ? " (recentered)" : "") << ":\n"
-        << "   Min = " << minB.x << ", " << minB.y << ", " << minB.z << "\n"
-        << "   Max = " << maxB.x << ", " << maxB.y << ", " << maxB.z << "\n";
+        << "Navmesh bounds:\n"
+        << "   Min = " << navMinB.x << ", " << navMinB.y << ", " << navMinB.z << "\n"
+        << "   Max = " << navMaxB.x << ", " << navMaxB.y << ", " << navMaxB.z << "\n"
+        << "Render bounds" << (centerMesh ? " (recentered)" : "") << ":\n"
+        << "   Min = " << renderMin.x << ", " << renderMin.y << ", " << renderMin.z << "\n"
+        << "   Max = " << renderMax.x << ", " << renderMax.y << ", " << renderMax.z << "\n";
 
     if (centerMesh)
     {
-        std::cout << "   Center was = " << center.x << ", " << center.y << ", " << center.z << "\n";
+        std::cout << "   Render offset = " << renderOffset.x << ", " << renderOffset.y << ", " << renderOffset.z << "\n";
     }
 
     return mesh;

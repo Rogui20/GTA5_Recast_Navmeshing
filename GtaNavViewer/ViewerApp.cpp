@@ -58,17 +58,21 @@ void ViewerApp::buildNavmeshDebugLines()
     navMeshLines.clear();
     m_navmeshLines.clear();
 
+    glm::vec3 debugOffset(0.0f);
+    if (loadedMesh)
+        debugOffset = loadedMesh->renderOffset;
+
     navData.ExtractDebugMesh(navMeshTris, navMeshLines);
 
     for (size_t i = 0; i + 1 < navMeshLines.size(); i += 2)
     {
         DebugLine dl;
-        dl.x0 = navMeshLines[i].x;
-        dl.y0 = navMeshLines[i].y;
-        dl.z0 = navMeshLines[i].z;
-        dl.x1 = navMeshLines[i+1].x;
-        dl.y1 = navMeshLines[i+1].y;
-        dl.z1 = navMeshLines[i+1].z;
+        dl.x0 = navMeshLines[i].x - debugOffset.x;
+        dl.y0 = navMeshLines[i].y - debugOffset.y;
+        dl.z0 = navMeshLines[i].z - debugOffset.z;
+        dl.x1 = navMeshLines[i+1].x - debugOffset.x;
+        dl.y1 = navMeshLines[i+1].y - debugOffset.y;
+        dl.z1 = navMeshLines[i+1].z - debugOffset.z;
         m_navmeshLines.push_back(dl);
     }
 
@@ -532,23 +536,42 @@ void ViewerApp::RenderFrame()
     {
         ImGui::Begin("Mesh Info");
 
-        ImGui::Text("Mesh bounds:");
+        ImGui::Text("Navmesh bounds:");
         ImGui::Text("Min: %.1f %.1f %.1f",
-            loadedMesh->minBounds.x,
-            loadedMesh->minBounds.y,
-            loadedMesh->minBounds.z);
+            loadedMesh->navmeshMinBounds.x,
+            loadedMesh->navmeshMinBounds.y,
+            loadedMesh->navmeshMinBounds.z);
 
         ImGui::Text("Max: %.1f %.1f %.1f",
-            loadedMesh->maxBounds.x,
-            loadedMesh->maxBounds.y,
-            loadedMesh->maxBounds.z);
+            loadedMesh->navmeshMaxBounds.x,
+            loadedMesh->navmeshMaxBounds.y,
+            loadedMesh->navmeshMaxBounds.z);
 
-        glm::vec3 center = (loadedMesh->minBounds + loadedMesh->maxBounds) * 0.5f;
+        glm::vec3 center = (loadedMesh->navmeshMinBounds + loadedMesh->navmeshMaxBounds) * 0.5f;
         ImGui::Text("Center: %.1f %.1f %.1f",
             center.x, center.y, center.z);
 
+        ImGui::Separator();
+        ImGui::Text("Render bounds (offset: %.1f %.1f %.1f)",
+            loadedMesh->renderOffset.x,
+            loadedMesh->renderOffset.y,
+            loadedMesh->renderOffset.z);
+        ImGui::Text("Min: %.1f %.1f %.1f",
+            loadedMesh->renderMinBounds.x,
+            loadedMesh->renderMinBounds.y,
+            loadedMesh->renderMinBounds.z);
+
+        ImGui::Text("Max: %.1f %.1f %.1f",
+            loadedMesh->renderMaxBounds.x,
+            loadedMesh->renderMaxBounds.y,
+            loadedMesh->renderMaxBounds.z);
+
+        glm::vec3 renderCenter = (loadedMesh->renderMinBounds + loadedMesh->renderMaxBounds) * 0.5f;
+        ImGui::Text("Render Center: %.1f %.1f %.1f",
+            renderCenter.x, renderCenter.y, renderCenter.z);
+
         if (ImGui::Button("Teleport Camera to Mesh Center"))
-            camera->pos = center + glm::vec3(0,50,150);
+            camera->pos = renderCenter + glm::vec3(0,50,150);
 
         if (ImGui::Button("Rebuild Navmesh"))
         {
