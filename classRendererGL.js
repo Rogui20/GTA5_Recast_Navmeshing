@@ -9,6 +9,7 @@ var classRendererGL =
     [ "DrawAxisGizmoScreen", "classRendererGL.html#a8e69c5979908d6ad8fb9a2592460492e", null ],
     [ "DrawGrid", "classRendererGL.html#a381836c10724d387cec10ec5f8839ee2", null ],
     [ "drawNavmeshLines", "classRendererGL.html#a6bf0714e7776ee18a215fa9dc2534f5e", null ],
+    [ "drawNavmeshTriangles", "classRendererGL.html#a0875743db59760c69c7f3f4ff19ef332", null ],
     [ "DrawTriangleHighlight", "classRendererGL.html#a07af41d57107f1e075c74199870e3377", null ],
     [ "End", "classRendererGL.html#a378e345ffd46eadd4a840eddbd547f9b", null ],
     [ "ExtractDebugMesh", "classRendererGL.html#a1a3f8eb7ddf00ff88a9c7bd759a86324", null ],
