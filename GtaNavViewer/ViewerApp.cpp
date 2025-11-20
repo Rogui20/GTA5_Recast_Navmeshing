@@ -186,11 +186,16 @@ bool ViewerApp::ComputeRayMeshHit(int mx, int my, glm::vec3& outPoint, int* outT
     return hasHit;
 }
 
+bool ViewerApp::IsPathfindModeActive() const
+{
+    return viewportClickMode == ViewportClickMode::Pathfind_Normal || viewportClickMode == ViewportClickMode::Pathfind_MinEdge;
+}
+
 void ViewerApp::TryRunPathfind()
 {
     pathLines.clear();
 
-    if (pathfindMode == PathfindMode::None)
+    if (!IsPathfindModeActive())
         return;
 
     if (!hasPathStart || !hasPathTarget)
@@ -243,11 +248,11 @@ void ViewerApp::TryRunPathfind()
     int straightCount = 0;
 
     dtStatus straightStatus = DT_FAILURE;
-    if (pathfindMode == PathfindMode::Straight)
+    if (viewportClickMode == ViewportClickMode::Pathfind_Normal)
     {
         straightStatus = navQuery->findStraightPath(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, 0);
     }
-    else if (pathfindMode == PathfindMode::MinEdgeDistance)
+    else if (viewportClickMode == ViewportClickMode::Pathfind_MinEdge)
     {
         straightStatus = navQuery->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, 0, pathfindMinEdgeDistance);
     }
@@ -786,14 +791,10 @@ void ViewerApp::ProcessEvents()
             if (meshInstances.empty())
                 continue;
 
-            const bool needHit = pickTriangleMode || buildTileAtMode || removeTileMode || pathfindMode != PathfindMode::None;
-            if (!needHit)
-                continue;
-
             int mx = e.button.x;
             int my = e.button.y;
 
-            if (pickTriangleMode)
+            if (viewportClickMode == ViewportClickMode::PickTriangle)
             {
                 pickedTri = -1;
                 pickedMeshIndex = -1;
@@ -801,10 +802,17 @@ void ViewerApp::ProcessEvents()
 
             glm::vec3 hitPoint(0.0f);
             bool hasHit = ComputeRayMeshHit(mx, my, hitPoint,
-                                            pickTriangleMode ? &pickedTri : nullptr,
-                                            pickTriangleMode ? &pickedMeshIndex : nullptr);
+                                            viewportClickMode == ViewportClickMode::PickTriangle ? &pickedTri : nullptr,
+                                            viewportClickMode == ViewportClickMode::PickTriangle ? &pickedMeshIndex : nullptr);
 
-            if (buildTileAtMode && hasHit)
+            if (!hasHit)
+                continue;
+
+            switch (viewportClickMode)
+            {
+            case ViewportClickMode::PickTriangle:
+                break;
+            case ViewportClickMode::BuildTileAt:
             {
                 int tileX = -1;
                 int tileY = -1;
@@ -818,9 +826,9 @@ void ViewerApp::ProcessEvents()
                     printf("[ViewerApp] BuildTileAt falhou para o clique em (%.2f, %.2f, %.2f).\n",
                            hitPoint.x, hitPoint.y, hitPoint.z);
                 }
+                break;
             }
-
-            if (removeTileMode && hasHit)
+            case ViewportClickMode::RemoveTileAt:
             {
                 int tileX = -1;
                 int tileY = -1;
@@ -829,13 +837,14 @@ void ViewerApp::ProcessEvents()
                     ResetPathState();
                     buildNavmeshDebugLines();
                 }
+                break;
             }
-
-            if (pathfindMode != PathfindMode::None && hasHit)
-            {
+            case ViewportClickMode::Pathfind_Normal:
+            case ViewportClickMode::Pathfind_MinEdge:
                 pathTarget = hitPoint;
                 hasPathTarget = true;
                 TryRunPathfind();
+                break;
             }
         }
 
@@ -847,10 +856,41 @@ void ViewerApp::ProcessEvents()
             if (mouseOnUI)
                 continue;
 
-            if (pathfindMode != PathfindMode::None && !meshInstances.empty())
+            rightButtonDown = true;
+            rightButtonDragged = false;
+            rightButtonDownX = e.button.x;
+            rightButtonDownY = e.button.y;
+
+            mouseCaptured = true;
+            SDL_SetRelativeMouseMode(SDL_TRUE);
+        }
+        if (e.type == SDL_MOUSEMOTION)
+        {
+            if (rightButtonDown && (std::abs(e.motion.xrel) > 2 || std::abs(e.motion.yrel) > 2))
+            {
+                rightButtonDragged = true;
+            }
+
+            if (mouseCaptured)
+            {
+                camera->OnMouseMove(e.motion.xrel, e.motion.yrel);
+            }
+        }
+        if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_RIGHT)
+        {
+            mouseCaptured = false;
+            SDL_SetRelativeMouseMode(SDL_FALSE);
+
+            const bool shouldHandleClick = rightButtonDown && !rightButtonDragged;
+            rightButtonDown = false;
+
+            if (mouseOnUI)
+                continue;
+
+            if (shouldHandleClick && IsPathfindModeActive() && !meshInstances.empty())
             {
                 glm::vec3 hitPoint(0.0f);
-                if (ComputeRayMeshHit(e.button.x, e.button.y, hitPoint, nullptr, nullptr))
+                if (ComputeRayMeshHit(rightButtonDownX, rightButtonDownY, hitPoint, nullptr, nullptr))
                 {
                     pathStart = hitPoint;
                     hasPathStart = true;
@@ -858,19 +898,7 @@ void ViewerApp::ProcessEvents()
                 }
             }
 
-            mouseCaptured = true;
-            SDL_SetRelativeMouseMode(SDL_TRUE);
-        }
-        if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_RIGHT)
-        {
-            mouseCaptured = false;
-            SDL_SetRelativeMouseMode(SDL_FALSE);
-        }
-
-        if (mouseCaptured)
-        {
-            if (e.type == SDL_MOUSEMOTION)
-                camera->OnMouseMove(e.motion.xrel, e.motion.yrel);
+            rightButtonDragged = false;
         }
     }
 
@@ -1092,91 +1120,35 @@ void ViewerApp::RenderFrame()
                 if (ImGui::CollapsingHeader("Viewport", ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     ImGui::TextDisabled("Comportamento do clique");
-                    bool pickMode = pickTriangleMode;
-                    if (ImGui::Checkbox("pickTriangleMode", &pickMode))
-                    {
-                        pickTriangleMode = pickMode;
-                        if (pickTriangleMode)
-                        {
-                            buildTileAtMode = false;
-                            removeTileMode = false;
-                            if (pathfindMode != PathfindMode::None)
-                            {
-                                pathfindMode = PathfindMode::None;
-                                ResetPathState();
-                            }
-                        }
-                        else if (!buildTileAtMode && !removeTileMode && pathfindMode == PathfindMode::None)
-                        {
-                            pickTriangleMode = true;
-                        }
-                    }
+                    ViewportClickMode previousMode = viewportClickMode;
+                    int viewportModeValue = static_cast<int>(viewportClickMode);
 
-                    bool buildTileMode = buildTileAtMode;
-                    if (ImGui::Checkbox("buildTileAtMode", &buildTileMode))
-                    {
-                        buildTileAtMode = buildTileMode;
-                        if (buildTileAtMode)
-                        {
-                            pickTriangleMode = false;
-                            removeTileMode = false;
-                            if (pathfindMode != PathfindMode::None)
-                            {
-                                pathfindMode = PathfindMode::None;
-                                ResetPathState();
-                            }
-                        }
-                        else if (!pickTriangleMode && !removeTileMode && pathfindMode == PathfindMode::None)
-                        {
-                            pickTriangleMode = true;
-                        }
-                    }
+                    ImGui::RadioButton("pickTriangleMode", &viewportModeValue, static_cast<int>(ViewportClickMode::PickTriangle));
+                    ImGui::RadioButton("buildTileAtMode", &viewportModeValue, static_cast<int>(ViewportClickMode::BuildTileAt));
+                    ImGui::RadioButton("removeTileMode", &viewportModeValue, static_cast<int>(ViewportClickMode::RemoveTileAt));
+                    ImGui::RadioButton("Pathfind", &viewportModeValue, static_cast<int>(ViewportClickMode::Pathfind_Normal));
+                    ImGui::RadioButton("Pathfind With Min Edge Distance", &viewportModeValue, static_cast<int>(ViewportClickMode::Pathfind_MinEdge));
 
-                    bool removeMode = removeTileMode;
-                    if (ImGui::Checkbox("removeTileMode", &removeMode))
-                    {
-                        removeTileMode = removeMode;
-                        if (removeTileMode)
-                        {
-                            pickTriangleMode = false;
-                            buildTileAtMode = false;
-                            if (pathfindMode != PathfindMode::None)
-                            {
-                                pathfindMode = PathfindMode::None;
-                                ResetPathState();
-                            }
-                        }
-                        else if (!pickTriangleMode && !buildTileAtMode && pathfindMode == PathfindMode::None)
-                        {
-                            pickTriangleMode = true;
-                        }
-                    }
-
-                    int pathModeValue = static_cast<int>(pathfindMode);
-                    if (ImGui::RadioButton("Pathfind", pathModeValue == static_cast<int>(PathfindMode::Straight)))
-                    {
-                        pathfindMode = PathfindMode::Straight;
-                        pickTriangleMode = false;
-                        buildTileAtMode = false;
-                        removeTileMode = false;
-                    }
-                    if (ImGui::RadioButton("Pathfind With Min Edge Distance", pathModeValue == static_cast<int>(PathfindMode::MinEdgeDistance)))
-                    {
-                        pathfindMode = PathfindMode::MinEdgeDistance;
-                        pickTriangleMode = false;
-                        buildTileAtMode = false;
-                        removeTileMode = false;
-                    }
-                    ImGui::BeginDisabled(pathfindMode != PathfindMode::MinEdgeDistance);
+                    viewportClickMode = static_cast<ViewportClickMode>(viewportModeValue);
+                    ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::Pathfind_MinEdge);
                     ImGui::SliderFloat("Min Edge Distance", &pathfindMinEdgeDistance, 0.0f, 100.0f, "%.2f");
                     ImGui::EndDisabled();
 
+                    if (!IsPathfindModeActive() && (previousMode == ViewportClickMode::Pathfind_Normal || previousMode == ViewportClickMode::Pathfind_MinEdge))
+                    {
+                        ResetPathState();
+                    }
+
                     const char* activeMode = "";
-                    if (pickTriangleMode) activeMode = "pickTriangleMode";
-                    else if (buildTileAtMode) activeMode = "buildTileAtMode";
-                    else if (removeTileMode) activeMode = "removeTileMode";
-                    else if (pathfindMode == PathfindMode::Straight) activeMode = "Pathfind";
-                    else if (pathfindMode == PathfindMode::MinEdgeDistance) activeMode = "Pathfind With Min Edge Distance";
+                    switch (viewportClickMode)
+                    {
+                    case ViewportClickMode::PickTriangle: activeMode = "pickTriangleMode"; break;
+                    case ViewportClickMode::BuildTileAt: activeMode = "buildTileAtMode"; break;
+                    case ViewportClickMode::RemoveTileAt: activeMode = "removeTileMode"; break;
+                    case ViewportClickMode::Pathfind_Normal: activeMode = "Pathfind"; break;
+                    case ViewportClickMode::Pathfind_MinEdge: activeMode = "Pathfind With Min Edge Distance"; break;
+                    }
+                    
                     ImGui::Text("Modo ativo: %s", activeMode);
                     ImGui::Text("Start: %s | Target: %s", hasPathStart ? "definido" : "pendente", hasPathTarget ? "definido" : "pendente");
                 }
@@ -1213,9 +1185,9 @@ void ViewerApp::RenderFrame()
 
                         if (buildNavmeshFromMeshes(false))
                         {
-                            buildTileAtMode = true;
-                            pickTriangleMode = false;
-                            removeTileMode = false;
+                            if (IsPathfindModeActive())
+                                ResetPathState();
+                            viewportClickMode = ViewportClickMode::BuildTileAt;
                             printf("[ViewerApp] Navmesh tiled inicializado sem tiles. Clique na mesh para gerar tiles individuais.\n");
                         }
                         else

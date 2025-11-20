@@ -96,18 +96,16 @@ private:
     uint64_t nextMeshId = 1;
     std::unordered_map<uint64_t, MeshBoundsState> meshStateCache;
 
-    bool pickTriangleMode = true;
-    bool buildTileAtMode = false;
-    bool removeTileMode = false;
-
-    enum class PathfindMode
+    enum class ViewportClickMode
     {
-        None = 0,
-        Straight,
-        MinEdgeDistance
+        PickTriangle = 0,
+        BuildTileAt = 1,
+        RemoveTileAt = 2,
+        Pathfind_Normal = 3,
+        Pathfind_MinEdge = 4
     };
 
-    PathfindMode pathfindMode = PathfindMode::None;
+    ViewportClickMode viewportClickMode = ViewportClickMode::PickTriangle;
     float pathfindMinEdgeDistance = 0.0f;
     bool hasPathStart = false;
     bool hasPathTarget = false;
@@ -145,6 +143,7 @@ private:
     void ResetPathState();
     bool InitNavQueryForCurrentNavmesh();
     void TryRunPathfind();
+    bool IsPathfindModeActive() const;
 
     void ProcessEvents();
     void RenderFrame();
@@ -159,4 +158,8 @@ private:
 
     int pickedMeshIndex = -1;
     int pickedTri = -1;
+    bool rightButtonDown = false;
+    bool rightButtonDragged = false;
+    int rightButtonDownX = 0;
+    int rightButtonDownY = 0;
 };
