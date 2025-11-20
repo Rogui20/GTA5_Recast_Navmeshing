@@ -477,7 +477,7 @@ void RendererGL::drawNavmeshTriangles(const std::vector<glm::vec3>& tris, const 
     glBindVertexArray(0);
 }
 
-void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines)
+void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines, const glm::vec3& color)
 {
     if (lines.empty())
         return;
@@ -496,7 +496,7 @@ void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines)
 
     // Queremos um "modo linha colorida fixa"
     glUniform1i(glGetUniformLocation(shader, "uRenderMode"), 99);
-    glUniform3f(glGetUniformLocation(shader, "uSolidColor"), 0.0f, 0.0f, 0.0f); // preto (muda se quiser)
+    glUniform3f(glGetUniformLocation(shader, "uSolidColor"), color.x, color.y, color.z);
     glUniform1f(glGetUniformLocation(shader, "uSolidAlpha"), 1.0f);
 
     glm::mat4 model(1.0f);

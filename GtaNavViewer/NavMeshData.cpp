@@ -170,6 +170,61 @@ bool NavMeshData::BuildTileAt(const glm::vec3& worldPos,
     return true;
 }
 
+bool NavMeshData::RemoveTileAt(const glm::vec3& worldPos,
+                               int& outTileX,
+                               int& outTileY)
+{
+    outTileX = -1;
+    outTileY = -1;
+
+    if (!m_nav)
+    {
+        printf("[NavMeshData] RemoveTileAt: navmesh ainda nao foi construido.\n");
+        return false;
+    }
+
+    if (!m_hasTiledCache)
+    {
+        printf("[NavMeshData] RemoveTileAt: sem cache de build tiled. Gere o navmesh tiled primeiro.\n");
+        return false;
+    }
+
+    const float tileWidth = m_cachedSettings.tileSize * m_cachedBaseCfg.cs;
+    const int tx = (int)floorf((worldPos.x - m_cachedBMin[0]) / tileWidth);
+    const int ty = (int)floorf((worldPos.z - m_cachedBMin[2]) / tileWidth);
+
+    if (tx < 0 || ty < 0 || tx >= m_cachedTileWidthCount || ty >= m_cachedTileHeightCount)
+    {
+        printf("[NavMeshData] RemoveTileAt: posicao (%.2f, %.2f, %.2f) fora do grid de tiles (%d x %d).\n",
+               worldPos.x, worldPos.y, worldPos.z, m_cachedTileWidthCount, m_cachedTileHeightCount);
+        return false;
+    }
+
+    const dtTileRef tileRef = m_nav->getTileRefAt(tx, ty, 0);
+    if (tileRef == 0)
+    {
+        printf("[NavMeshData] RemoveTileAt: tile %d,%d nao esta carregada.\n", tx, ty);
+        return false;
+    }
+
+    unsigned char* tileData = nullptr;
+    int tileDataSize = 0;
+    const dtStatus status = m_nav->removeTile(tileRef, &tileData, &tileDataSize);
+    if (dtStatusFailed(status))
+    {
+        printf("[NavMeshData] RemoveTileAt: falhou ao remover tile %d,%d.\n", tx, ty);
+        return false;
+    }
+
+    if (tileData)
+        dtFree(tileData);
+
+    outTileX = tx;
+    outTileY = ty;
+    printf("[NavMeshData] RemoveTileAt: tile %d,%d removida (bytes=%d).\n", tx, ty, tileDataSize);
+    return true;
+}
+
 bool NavMeshData::RebuildTilesInBounds(const glm::vec3& bmin,
                                        const glm::vec3& bmax,
                                        const NavmeshGenerationSettings& settings,

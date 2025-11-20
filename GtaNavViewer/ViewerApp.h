@@ -9,6 +9,7 @@
 #include "GtaNavAPI.h"
 #include "NavMeshData.h"
 #include "RendererGL.h"
+#include <DetourNavMeshQuery.h>
 #include <memory>
 #include <vector>
 #include <unordered_map>
@@ -95,9 +96,25 @@ private:
     uint64_t nextMeshId = 1;
     std::unordered_map<uint64_t, MeshBoundsState> meshStateCache;
 
-    bool pickTriangleMode = true;
-    bool buildTileAtMode = false;
-    bool addRemoveTileMode = false;
+    enum class ViewportClickMode
+    {
+        PickTriangle = 0,
+        BuildTileAt = 1,
+        RemoveTileAt = 2,
+        Pathfind_Normal = 3,
+        Pathfind_MinEdge = 4
+    };
+
+    ViewportClickMode viewportClickMode = ViewportClickMode::PickTriangle;
+    float pathfindMinEdgeDistance = 0.0f;
+    bool hasPathStart = false;
+    bool hasPathTarget = false;
+    glm::vec3 pathStart{0.0f};
+    glm::vec3 pathTarget{0.0f};
+    std::vector<DebugLine> pathLines;
+    dtNavMeshQuery* navQuery = nullptr;
+    dtQueryFilter pathQueryFilter{};
+    bool navQueryReady = false;
 
     // buffers para desenhar navmesh no renderer
     std::vector<glm::vec3> navMeshTris;
@@ -122,6 +139,11 @@ private:
     MeshBoundsState ComputeMeshBounds(const MeshInstance& instance) const;
     bool HasMeshChanged(const MeshBoundsState& previous, const MeshBoundsState& current) const;
     void UpdateNavmeshTiles();
+    bool ComputeRayMeshHit(int mx, int my, glm::vec3& outPoint, int* outTri, int* outMeshIndex);
+    void ResetPathState();
+    bool InitNavQueryForCurrentNavmesh();
+    void TryRunPathfind();
+    bool IsPathfindModeActive() const;
 
     void ProcessEvents();
     void RenderFrame();
@@ -136,4 +158,8 @@ private:
 
     int pickedMeshIndex = -1;
     int pickedTri = -1;
+    bool rightButtonDown = false;
+    bool rightButtonDragged = false;
+    int rightButtonDownX = 0;
+    int rightButtonDownY = 0;
 };
