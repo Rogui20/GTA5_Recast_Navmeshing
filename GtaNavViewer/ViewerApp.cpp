@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <cctype>
 #include <cmath>
+#include <cfloat>
 #include <limits>
 #include <unordered_set>
 
@@ -33,6 +34,11 @@ ViewerApp::ViewerApp()
 
 ViewerApp::~ViewerApp()
 {
+    if (navQuery)
+    {
+        dtFreeNavMeshQuery(navQuery);
+        navQuery = nullptr;
+    }
 }
 
 glm::mat4 ViewerApp::GetModelMatrix(const MeshInstance& instance) const
@@ -93,6 +99,181 @@ bool ViewerApp::HasMeshChanged(const MeshBoundsState& previous, const MeshBounds
     return differentVec3(previous.bmin, current.bmin) || differentVec3(previous.bmax, current.bmax);
 }
 
+void ViewerApp::ResetPathState()
+{
+    hasPathStart = false;
+    hasPathTarget = false;
+    pathLines.clear();
+}
+
+bool ViewerApp::InitNavQueryForCurrentNavmesh()
+{
+    navQueryReady = false;
+
+    if (!navData.IsLoaded())
+        return false;
+
+    if (!navQuery)
+    {
+        navQuery = dtAllocNavMeshQuery();
+        if (!navQuery)
+        {
+            printf("[ViewerApp] InitNavQueryForCurrentNavmesh: dtAllocNavMeshQuery falhou.\n");
+            return false;
+        }
+    }
+
+    const dtStatus status = navQuery->init(navData.GetNavMesh(), 2048);
+    if (dtStatusFailed(status))
+    {
+        printf("[ViewerApp] InitNavQueryForCurrentNavmesh: navQuery->init falhou.\n");
+        return false;
+    }
+
+    navQueryReady = true;
+    return true;
+}
+
+bool ViewerApp::ComputeRayMeshHit(int mx, int my, glm::vec3& outPoint, int* outTri, int* outMeshIndex)
+{
+    int screenW = 1600;
+    int screenH = 900;
+    SDL_GetWindowSize(window, &screenW, &screenH);
+
+    Ray ray = camera->GetRayFromScreen(mx, my, screenW, screenH);
+
+    float best = FLT_MAX;
+    bool hasHit = false;
+    if (outTri)
+        *outTri = -1;
+    if (outMeshIndex)
+        *outMeshIndex = -1;
+
+    for (size_t meshIdx = 0; meshIdx < meshInstances.size(); ++meshIdx)
+    {
+        const auto& instance = meshInstances[meshIdx];
+        if (!instance.mesh)
+            continue;
+
+        glm::mat4 model = GetModelMatrix(instance);
+        for (int i = 0; i < instance.mesh->indices.size(); i += 3)
+        {
+            int i0 = instance.mesh->indices[i+0];
+            int i1 = instance.mesh->indices[i+1];
+            int i2 = instance.mesh->indices[i+2];
+
+            glm::vec3 v0 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i0], 1.0f));
+            glm::vec3 v1 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i1], 1.0f));
+            glm::vec3 v2 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i2], 1.0f));
+
+            float dist;
+            if (RayTriangleIntersect(ray, v0, v1, v2, dist))
+            {
+                if (dist < best)
+                {
+                    best = dist;
+                    outPoint = ray.origin + ray.dir * dist;
+                    if (outTri)
+                        *outTri = i;
+                    if (outMeshIndex)
+                        *outMeshIndex = static_cast<int>(meshIdx);
+                    hasHit = true;
+                }
+            }
+        }
+    }
+
+    return hasHit;
+}
+
+void ViewerApp::TryRunPathfind()
+{
+    pathLines.clear();
+
+    if (pathfindMode == PathfindMode::None)
+        return;
+
+    if (!hasPathStart || !hasPathTarget)
+        return;
+
+    if (!navData.IsLoaded())
+    {
+        printf("[ViewerApp] TryRunPathfind: navmesh nao carregado.\n");
+        return;
+    }
+
+    if (!navQueryReady && !InitNavQueryForCurrentNavmesh())
+    {
+        printf("[ViewerApp] TryRunPathfind: navmesh/query indisponivel.\n");
+        return;
+    }
+
+    const float startPos[3] = { pathStart.x, pathStart.y, pathStart.z };
+    const float endPos[3]   = { pathTarget.x, pathTarget.y, pathTarget.z };
+    const float extents[3]  = { navGenSettings.agentRadius * 4.0f + 0.1f, navGenSettings.agentHeight * 0.5f + 0.1f, navGenSettings.agentRadius * 4.0f + 0.1f };
+
+    dtPolyRef startRef = 0, endRef = 0;
+    float startNearest[3]{};
+    float endNearest[3]{};
+
+    if (dtStatusFailed(navQuery->findNearestPoly(startPos, extents, &pathQueryFilter, &startRef, startNearest)) || startRef == 0)
+    {
+        printf("[ViewerApp] TryRunPathfind: nao achou poly inicial pro start.\n");
+        return;
+    }
+
+    if (dtStatusFailed(navQuery->findNearestPoly(endPos, extents, &pathQueryFilter, &endRef, endNearest)) || endRef == 0)
+    {
+        printf("[ViewerApp] TryRunPathfind: nao achou poly final pro target.\n");
+        return;
+    }
+
+    dtPolyRef polys[256];
+    int polyCount = 0;
+    const dtStatus pathStatus = navQuery->findPath(startRef, endRef, startNearest, endNearest, &pathQueryFilter, polys, &polyCount, 256);
+    if (dtStatusFailed(pathStatus) || polyCount == 0)
+    {
+        printf("[ViewerApp] TryRunPathfind: findPath falhou ou nenhum poly no caminho.\n");
+        return;
+    }
+
+    float straight[256 * 3];
+    unsigned char straightFlags[256];
+    dtPolyRef straightRefs[256];
+    int straightCount = 0;
+
+    dtStatus straightStatus = DT_FAILURE;
+    if (pathfindMode == PathfindMode::Straight)
+    {
+        straightStatus = navQuery->findStraightPath(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, 0);
+    }
+    else if (pathfindMode == PathfindMode::MinEdgeDistance)
+    {
+        straightStatus = navQuery->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, 0, pathfindMinEdgeDistance);
+    }
+
+    if (dtStatusFailed(straightStatus) || straightCount == 0)
+    {
+        printf("[ViewerApp] TryRunPathfind: findStraightPath falhou.\n");
+        return;
+    }
+
+    for (int i = 0; i + 1 < straightCount; ++i)
+    {
+        DebugLine dl{};
+        dl.x0 = straight[i * 3 + 0];
+        dl.y0 = straight[i * 3 + 1];
+        dl.z0 = straight[i * 3 + 2];
+
+        dl.x1 = straight[(i + 1) * 3 + 0];
+        dl.y1 = straight[(i + 1) * 3 + 1];
+        dl.z1 = straight[(i + 1) * 3 + 2];
+        pathLines.push_back(dl);
+    }
+
+    printf("[ViewerApp] Pathfind gerou %d pontos (%zu segmentos).\n", straightCount, pathLines.size());
+}
+
 bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
 {
     if (meshInstances.empty())
@@ -101,8 +282,13 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
         navMeshTris.clear();
         navMeshLines.clear();
         m_navmeshLines.clear();
+        ResetPathState();
+        navQueryReady = false;
         return false;
     }
+
+    ResetPathState();
+    navQueryReady = false;
 
     std::vector<glm::vec3> combinedVerts;
     std::vector<unsigned int> combinedIdx;
@@ -133,6 +319,7 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
         return false;
     }
 
+    InitNavQueryForCurrentNavmesh();
     buildNavmeshDebugLines();
     return true;
 }
@@ -472,6 +659,9 @@ void ViewerApp::UpdateNavmeshTiles()
     if (!touchedTiles.empty())
     {
         buildNavmeshDebugLines();
+        navQueryReady = false;
+        if (hasPathStart && hasPathTarget)
+            TryRunPathfind();
     }
 }
 
@@ -498,6 +688,8 @@ void ViewerApp::RemoveMesh(size_t index)
         navMeshTris.clear();
         navMeshLines.clear();
         m_navmeshLines.clear();
+        ResetPathState();
+        navQueryReady = false;
     }
 }
 
@@ -552,6 +744,8 @@ void ViewerApp::ProcessEvents()
     while (SDL_PollEvent(&e))
     {
         ImGui_ImplSDL2_ProcessEvent(&e);
+        ImGuiIO& io = ImGui::GetIO();
+        const bool mouseOnUI = io.WantCaptureMouse;
 
         if (e.type == SDL_QUIT)
             running = false;
@@ -586,72 +780,62 @@ void ViewerApp::ProcessEvents()
         }
         if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
         {
+            if (mouseOnUI)
+                continue;
+
             if (meshInstances.empty())
                 continue;
 
-            if (pickTriangleMode || buildTileAtMode)
+            const bool needHit = pickTriangleMode || buildTileAtMode || removeTileMode || pathfindMode != PathfindMode::None;
+            if (!needHit)
+                continue;
+
+            int mx = e.button.x;
+            int my = e.button.y;
+
+            if (pickTriangleMode)
             {
-                int mx = e.button.x;
-                int my = e.button.y;
-
-                Ray ray = camera->GetRayFromScreen(mx, my, 1600, 900);
-
-                float best = FLT_MAX;
                 pickedTri = -1;
                 pickedMeshIndex = -1;
-                glm::vec3 bestPoint(0.0f);
-                bool hasHit = false;
+            }
 
-                for (size_t meshIdx = 0; meshIdx < meshInstances.size(); ++meshIdx)
+            glm::vec3 hitPoint(0.0f);
+            bool hasHit = ComputeRayMeshHit(mx, my, hitPoint,
+                                            pickTriangleMode ? &pickedTri : nullptr,
+                                            pickTriangleMode ? &pickedMeshIndex : nullptr);
+
+            if (buildTileAtMode && hasHit)
+            {
+                int tileX = -1;
+                int tileY = -1;
+                if (navData.BuildTileAt(hitPoint, navGenSettings, tileX, tileY))
                 {
-                    const auto& instance = meshInstances[meshIdx];
-                    if (!instance.mesh)
-                        continue;
-
-                    glm::mat4 model = GetModelMatrix(instance);
-                    for (int i = 0; i < instance.mesh->indices.size(); i += 3)
-                    {
-                        int i0 = instance.mesh->indices[i+0];
-                        int i1 = instance.mesh->indices[i+1];
-                        int i2 = instance.mesh->indices[i+2];
-
-                        glm::vec3 v0 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i0], 1.0f));
-                        glm::vec3 v1 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i1], 1.0f));
-                        glm::vec3 v2 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i2], 1.0f));
-
-                        float dist;
-                        if (RayTriangleIntersect(ray, v0, v1, v2, dist))
-                        {
-                            if (dist < best)
-                            {
-                                best = dist;
-                                pickedTri = i;
-                                pickedMeshIndex = static_cast<int>(meshIdx);
-                                bestPoint = ray.origin + ray.dir * dist;
-                                hasHit = true;
-                            }
-                        }
-                    }
+                    ResetPathState();
+                    buildNavmeshDebugLines();
                 }
-
-                if (buildTileAtMode && hasHit)
+                else
                 {
-                    int tileX = -1;
-                    int tileY = -1;
-                    if (navData.BuildTileAt(bestPoint, navGenSettings, tileX, tileY))
-                    {
-                        buildNavmeshDebugLines();
-                    }
-                    else
-                    {
-                        printf("[ViewerApp] BuildTileAt falhou para o clique em (%.2f, %.2f, %.2f).\n",
-                               bestPoint.x, bestPoint.y, bestPoint.z);
-                    }
+                    printf("[ViewerApp] BuildTileAt falhou para o clique em (%.2f, %.2f, %.2f).\n",
+                           hitPoint.x, hitPoint.y, hitPoint.z);
                 }
             }
-            else if (addRemoveTileMode)
+
+            if (removeTileMode && hasHit)
             {
-                printf("[ViewerApp] addRemoveTileMode ainda não implementado.\n");
+                int tileX = -1;
+                int tileY = -1;
+                if (navData.RemoveTileAt(hitPoint, tileX, tileY))
+                {
+                    ResetPathState();
+                    buildNavmeshDebugLines();
+                }
+            }
+
+            if (pathfindMode != PathfindMode::None && hasHit)
+            {
+                pathTarget = hitPoint;
+                hasPathTarget = true;
+                TryRunPathfind();
             }
         }
 
@@ -660,6 +844,20 @@ void ViewerApp::ProcessEvents()
         // Mouse capture toggle
         if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_RIGHT)
         {
+            if (mouseOnUI)
+                continue;
+
+            if (pathfindMode != PathfindMode::None && !meshInstances.empty())
+            {
+                glm::vec3 hitPoint(0.0f);
+                if (ComputeRayMeshHit(e.button.x, e.button.y, hitPoint, nullptr, nullptr))
+                {
+                    pathStart = hitPoint;
+                    hasPathStart = true;
+                    TryRunPathfind();
+                }
+            }
+
             mouseCaptured = true;
             SDL_SetRelativeMouseMode(SDL_TRUE);
         }
@@ -901,9 +1099,14 @@ void ViewerApp::RenderFrame()
                         if (pickTriangleMode)
                         {
                             buildTileAtMode = false;
-                            addRemoveTileMode = false;
+                            removeTileMode = false;
+                            if (pathfindMode != PathfindMode::None)
+                            {
+                                pathfindMode = PathfindMode::None;
+                                ResetPathState();
+                            }
                         }
-                        else if (!buildTileAtMode && !addRemoveTileMode)
+                        else if (!buildTileAtMode && !removeTileMode && pathfindMode == PathfindMode::None)
                         {
                             pickTriangleMode = true;
                         }
@@ -916,29 +1119,66 @@ void ViewerApp::RenderFrame()
                         if (buildTileAtMode)
                         {
                             pickTriangleMode = false;
-                            addRemoveTileMode = false;
+                            removeTileMode = false;
+                            if (pathfindMode != PathfindMode::None)
+                            {
+                                pathfindMode = PathfindMode::None;
+                                ResetPathState();
+                            }
                         }
-                        else if (!pickTriangleMode && !addRemoveTileMode)
+                        else if (!pickTriangleMode && !removeTileMode && pathfindMode == PathfindMode::None)
                         {
                             pickTriangleMode = true;
                         }
                     }
 
-                    ImGui::BeginDisabled(true);
-                    bool addRemoveMode = addRemoveTileMode;
-                    if (ImGui::Checkbox("addRemoveTileMode (em breve)", &addRemoveMode))
+                    bool removeMode = removeTileMode;
+                    if (ImGui::Checkbox("removeTileMode", &removeMode))
                     {
-                        addRemoveTileMode = addRemoveMode;
-                        if (addRemoveTileMode)
+                        removeTileMode = removeMode;
+                        if (removeTileMode)
                         {
                             pickTriangleMode = false;
                             buildTileAtMode = false;
+                            if (pathfindMode != PathfindMode::None)
+                            {
+                                pathfindMode = PathfindMode::None;
+                                ResetPathState();
+                            }
+                        }
+                        else if (!pickTriangleMode && !buildTileAtMode && pathfindMode == PathfindMode::None)
+                        {
+                            pickTriangleMode = true;
                         }
                     }
+
+                    int pathModeValue = static_cast<int>(pathfindMode);
+                    if (ImGui::RadioButton("Pathfind", pathModeValue == static_cast<int>(PathfindMode::Straight)))
+                    {
+                        pathfindMode = PathfindMode::Straight;
+                        pickTriangleMode = false;
+                        buildTileAtMode = false;
+                        removeTileMode = false;
+                    }
+                    if (ImGui::RadioButton("Pathfind With Min Edge Distance", pathModeValue == static_cast<int>(PathfindMode::MinEdgeDistance)))
+                    {
+                        pathfindMode = PathfindMode::MinEdgeDistance;
+                        pickTriangleMode = false;
+                        buildTileAtMode = false;
+                        removeTileMode = false;
+                    }
+                    ImGui::BeginDisabled(pathfindMode != PathfindMode::MinEdgeDistance);
+                    ImGui::SliderFloat("Min Edge Distance", &pathfindMinEdgeDistance, 0.0f, 100.0f, "%.2f");
                     ImGui::EndDisabled();
 
-                    const char* activeMode = pickTriangleMode ? "pickTriangleMode" : (buildTileAtMode ? "buildTileAtMode" : "addRemoveTileMode");
+                    const char* activeMode = "";
+                    if (pickTriangleMode) activeMode = "pickTriangleMode";
+                    else if (buildTileAtMode) activeMode = "buildTileAtMode";
+                    else if (removeTileMode) activeMode = "removeTileMode";
+                    else if (pathfindMode == PathfindMode::Straight) activeMode = "Pathfind";
+                    else if (pathfindMode == PathfindMode::MinEdgeDistance) activeMode = "Pathfind With Min Edge Distance";
                     ImGui::Text("Modo ativo: %s", activeMode);
+                    ImGui::Text("Start: %s | Target: %s", hasPathStart ? "definido" : "pendente", hasPathTarget ? "definido" : "pendente");
                 }
 
                 if (ImGui::CollapsingHeader("Navmesh Tests"))
@@ -975,7 +1215,7 @@ void ViewerApp::RenderFrame()
                         {
                             buildTileAtMode = true;
                             pickTriangleMode = false;
-                            addRemoveTileMode = false;
+                            removeTileMode = false;
                             printf("[ViewerApp] Navmesh tiled inicializado sem tiles. Clique na mesh para gerar tiles individuais.\n");
                         }
                         else
@@ -1299,6 +1539,7 @@ void ViewerApp::RenderFrame()
     bool drawLines = navmeshVisible && navmeshShowLines &&
         navmeshRenderMode != NavmeshRenderMode::FacesOnly &&
         !m_navmeshLines.empty();
+    bool drawPath = !pathLines.empty();
 
     if (drawFaces)
     {
@@ -1309,6 +1550,11 @@ void ViewerApp::RenderFrame()
     if (drawLines)
     {
         renderer->drawNavmeshLines(m_navmeshLines);
+    }
+
+    if (drawPath)
+    {
+        renderer->drawNavmeshLines(pathLines, glm::vec3(1.0f, 0.0f, 0.0f));
     }
 
     // desenhar grid e eixo sempre no modo 99
