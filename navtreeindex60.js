@@ -1,5 +1,13 @@
 var NAVTREEINDEX60 =
 {
+"SDL__pixels_8h.html#a0a65fc19d5122dd3c544f283553ad42c":[45,0,5,2,1,56,6],
+"SDL__pixels_8h.html#a11eb1848a5ecbc9033855a3d7fabcf83":[45,0,5,2,1,56,15],
+"SDL__pixels_8h.html#a157cf64c250c578722b939ea11a85b39":[45,0,5,2,1,56,36],
+"SDL__pixels_8h.html#a26dc44b5dac11825abb4b59ac5af76e3":[45,0,5,2,1,56,34],
+"SDL__pixels_8h.html#a29855dc8b3cd34b288ec4ba50fd4ca0c":[45,0,5,2,1,56,14],
+"SDL__pixels_8h.html#a31d328d11619b5f5ed0a14612cbb429a":[45,0,5,2,1,56,32],
+"SDL__pixels_8h.html#a355a9ed42dcc4f61e525ca4a5987fe44":[45,0,5,2,1,56,27],
+"SDL__pixels_8h.html#a355a9ed42dcc4f61e525ca4a5987fe44a398eb1cc76c533c659297ef9dcd28d74":[45,0,5,2,1,56,27,0],
 "SDL__pixels_8h.html#a355a9ed42dcc4f61e525ca4a5987fe44a67c5722471c0b2eaf7f029967559a1fd":[45,0,5,2,1,56,27,8],
 "SDL__pixels_8h.html#a355a9ed42dcc4f61e525ca4a5987fe44a77cb3159b4926b3c234bb6e2bc99a83a":[45,0,5,2,1,56,27,6],
 "SDL__pixels_8h.html#a355a9ed42dcc4f61e525ca4a5987fe44a7c719906b6c42a7935fc32032874f64b":[45,0,5,2,1,56,27,12],
@@ -241,13 +249,5 @@ var NAVTREEINDEX60 =
 "SDL__render_8h.html#a969ee973fd8f686777f151aa2d9275bc":[45,0,5,2,1,61,92],
 "SDL__render_8h.html#a987fe30e64168702f1dfa6407fbe8bec":[45,0,5,2,1,61,60],
 "SDL__render_8h.html#aa26234da40f87f4b16d715564242a341":[45,0,5,2,1,61,86],
-"SDL__render_8h.html#aa4497fd1ab833b5b6badd2a086603b19":[45,0,5,2,1,61,84],
-"SDL__render_8h.html#aa52b062e271226c5ec8cdb8aa6dc69eb":[45,0,5,2,1,61,80],
-"SDL__render_8h.html#aa566ba52ac01bd13f6fdfcdfc3af217f":[45,0,5,2,1,61,67],
-"SDL__render_8h.html#aa62bd2597d5a7650e7ad666c2a15e688":[45,0,5,2,1,61,51],
-"SDL__render_8h.html#aa70e4ce3a875399d4291dca23e687b11":[45,0,5,2,1,61,33],
-"SDL__render_8h.html#aa9a7e1ca629863212c2c1b17112f65bd":[45,0,5,2,1,61,26],
-"SDL__render_8h.html#aac58837d42510e6e0472538dbcbc2ffe":[45,0,5,2,1,61,91],
-"SDL__render_8h.html#aad2bf04e82a6fb8df44c0b6791321cb5":[45,0,5,2,1,61,96],
-"SDL__render_8h.html#aade777757bfc3b98bf3ef742b1d8a052":[45,0,5,2,1,61,40]
+"SDL__render_8h.html#aa4497fd1ab833b5b6badd2a086603b19":[45,0,5,2,1,61,84]
 };

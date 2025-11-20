@@ -404,6 +404,7 @@ var hierarchy =
     [ "InputGeom", "classInputGeom.html", null ],
     [ "Mesh", "classMesh.html", null ],
     [ "MyDocument", "structMyDocument.html", null ],
+    [ "NavmeshBuildInput", "structNavmeshBuildInput.html", null ],
     [ "NavMeshContext", "structNavMeshContext.html", null ],
     [ "NavMeshData", "classNavMeshData.html", null ],
     [ "NavMeshDefinition", "structNavMeshDefinition.html", null ],

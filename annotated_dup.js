@@ -305,6 +305,7 @@ var annotated_dup =
     [ "Mesh", "classMesh.html", "classMesh" ],
     [ "MeshProcess", "structMeshProcess.html", "structMeshProcess" ],
     [ "MyDocument", "structMyDocument.html", "structMyDocument" ],
+    [ "NavmeshBuildInput", "structNavmeshBuildInput.html", "structNavmeshBuildInput" ],
     [ "NavMeshContext", "structNavMeshContext.html", "structNavMeshContext" ],
     [ "NavMeshData", "classNavMeshData.html", "classNavMeshData" ],
     [ "NavMeshDefinition", "structNavMeshDefinition.html", "structNavMeshDefinition" ],

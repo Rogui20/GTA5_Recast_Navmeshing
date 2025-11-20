@@ -1,5 +1,13 @@
 var NAVTREEINDEX82 =
 {
+"imgui__impl__sdl3_8cpp.html#abb11ffd5559f0d6b9d717db8fb7b4ec2":[45,0,7,0,0,27,47],
+"imgui__impl__sdl3_8cpp.html#abfb3ddfbccd397302aa3cd1119187f53":[45,0,7,0,0,27,50],
+"imgui__impl__sdl3_8cpp.html#ac1e2b2659aa466ddeee82b8e7e25c749":[45,0,7,0,0,27,48],
+"imgui__impl__sdl3_8cpp.html#ad20f3dc392d22f85ea53985d97490003":[45,0,7,0,0,27,37],
+"imgui__impl__sdl3_8cpp.html#ad88bc9af51e586f85ef5be1e4e0886a9":[45,0,7,0,0,27,15],
+"imgui__impl__sdl3_8cpp.html#ada5f411890a693a0b9a4771375693b7a":[45,0,7,0,0,27,51],
+"imgui__impl__sdl3_8cpp.html#adb160ad2039a000a8edbb14521bffe15":[45,0,7,0,0,27,30],
+"imgui__impl__sdl3_8cpp.html#ae2ada3f4ca417aa4b4efd77a47078a38":[45,0,7,0,0,27,20],
 "imgui__impl__sdl3_8cpp.html#ae48f06bf93afdbe78237cec47af15117":[45,0,7,0,0,27,28],
 "imgui__impl__sdl3_8cpp.html#ae8b3e3e94b79cb82e4b5b2175dfe2641":[45,0,7,0,0,27,23],
 "imgui__impl__sdl3_8cpp.html#aeb49db4ef2468dea6691b7bd17e58a63":[45,0,7,0,0,27,45],
@@ -241,13 +249,5 @@ var NAVTREEINDEX82 =
 "imgui__impl__win32_8cpp.html#a23dbebd2bbb4f5152dcb78cf80a31864":[45,0,7,0,0,40,53],
 "imgui__impl__win32_8cpp.html#a25e40453143994bf4b6b730f0095ca61":[45,0,7,0,0,40,55],
 "imgui__impl__win32_8cpp.html#a2836771b67b5a6453c60b139320d255c":[45,0,7,0,0,40,11],
-"imgui__impl__win32_8cpp.html#a2942d25da60c96f3681b4ca43de6b426":[45,0,7,0,0,40,48],
-"imgui__impl__win32_8cpp.html#a29696f9c6ffa4798de8b774bbff5baca":[45,0,7,0,0,40,25],
-"imgui__impl__win32_8cpp.html#a2aeb32bb0cfc356c58dddedc7edb7942":[45,0,7,0,0,40,62],
-"imgui__impl__win32_8cpp.html#a2b8cd4078bf40e54b53124033cf274a4":[45,0,7,0,0,40,2],
-"imgui__impl__win32_8cpp.html#a2f431ee18a1d3211691aa572a58f531b":[45,0,7,0,0,40,56],
-"imgui__impl__win32_8cpp.html#a36d30a5f5f7942a50b272fa13058cf96":[45,0,7,0,0,40,16],
-"imgui__impl__win32_8cpp.html#a3d68bc19ea52dbb5682b42f9a3316189":[45,0,7,0,0,40,23],
-"imgui__impl__win32_8cpp.html#a406c6a8e48cae7dcb70e768176599416":[45,0,7,0,0,40,64],
-"imgui__impl__win32_8cpp.html#a411247e61a6621babce2d06bb8a434db":[45,0,7,0,0,40,15]
+"imgui__impl__win32_8cpp.html#a2942d25da60c96f3681b4ca43de6b426":[45,0,7,0,0,40,48]
 };

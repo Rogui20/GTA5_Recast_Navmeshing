@@ -1,5 +1,13 @@
 var NAVTREEINDEX87 =
 {
+"imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177ca097bd55eceaa4c0e4ef88f6aee5f38c0":[45,0,7,0,6,238,4],
+"imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177ca1a3872ac8b5b407655ce12de4bb67233":[45,0,7,0,6,238,13],
+"imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177ca1f4719a5582f194ef9d8c7aa65fe1ef7":[45,0,7,0,6,238,7],
+"imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177ca565bbaa8c8a17695ac7a6d334eacd283":[45,0,7,0,6,238,12],
+"imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177ca61f1ac459b7ca1dd1097aeb279278c56":[45,0,7,0,6,238,6],
+"imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177ca82bc55458bf9b2e44ece9592249687cb":[45,0,7,0,6,238,10],
+"imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177ca90dc1c64af4b4e43a0c555573ad6f714":[45,0,7,0,6,238,3],
+"imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177ca9c3fe603491a9d94ad4ca678d070fec9":[45,0,7,0,6,238,15],
 "imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177ca9f8e276286a9675c723a6531374362ba":[45,0,7,0,6,238,2],
 "imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177cac52ba4fd5c7ad628e2dace965f1c02cd":[45,0,7,0,6,238,0],
 "imgui__internal_8h.html#ad3fdd202d1973cfeb10564b8f55b177cac53a1e6c97f5c7c9e37e55fd3f54f339":[45,0,7,0,6,238,8],
@@ -241,13 +249,5 @@ var NAVTREEINDEX87 =
 "imgui__widgets_8cpp.html#a46e34a2960eb4aa9fb9afb9bfb5ec96b":[45,0,7,0,8,93],
 "imgui__widgets_8cpp.html#a46ef9d2dbe0c4a1a8b98792c496289db":[45,0,7,0,8,73],
 "imgui__widgets_8cpp.html#a474e05906148675a80881d7e4583df87":[45,0,7,0,8,48],
-"imgui__widgets_8cpp.html#a4ac168018b20e53285d76c46aa24a122":[45,0,7,0,8,24],
-"imgui__widgets_8cpp.html#a4d14a9af02c8bc14a1a8a9e6fda9bfa2":[45,0,7,0,8,61],
-"imgui__widgets_8cpp.html#a4e2b30a2cf82f491a712ba37c2bf3455":[45,0,7,0,8,98],
-"imgui__widgets_8cpp.html#a4f15972fff9fd018c8355d16aa9814e5":[45,0,7,0,8,112],
-"imgui__widgets_8cpp.html#a5575d74ef7b910bdac413af8c8a315bf":[45,0,7,0,8,79],
-"imgui__widgets_8cpp.html#a56b30ec768c46c2abdd27ae66073c3e8":[45,0,7,0,8,72],
-"imgui__widgets_8cpp.html#a57469838509290dd5088d194ab1e7639":[45,0,7,0,8,43],
-"imgui__widgets_8cpp.html#a578438ad23cd7446c7930de4738cee37":[45,0,7,0,8,28],
-"imgui__widgets_8cpp.html#a579019adb9b5fbb8432121dc10d59755":[45,0,7,0,8,22]
+"imgui__widgets_8cpp.html#a4ac168018b20e53285d76c46aa24a122":[45,0,7,0,8,24]
 };

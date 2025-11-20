@@ -1,5 +1,13 @@
 var NAVTREEINDEX88 =
 {
+"imgui__widgets_8cpp.html#a4d14a9af02c8bc14a1a8a9e6fda9bfa2":[45,0,7,0,8,61],
+"imgui__widgets_8cpp.html#a4e2b30a2cf82f491a712ba37c2bf3455":[45,0,7,0,8,98],
+"imgui__widgets_8cpp.html#a4f15972fff9fd018c8355d16aa9814e5":[45,0,7,0,8,112],
+"imgui__widgets_8cpp.html#a5575d74ef7b910bdac413af8c8a315bf":[45,0,7,0,8,79],
+"imgui__widgets_8cpp.html#a56b30ec768c46c2abdd27ae66073c3e8":[45,0,7,0,8,72],
+"imgui__widgets_8cpp.html#a57469838509290dd5088d194ab1e7639":[45,0,7,0,8,43],
+"imgui__widgets_8cpp.html#a578438ad23cd7446c7930de4738cee37":[45,0,7,0,8,28],
+"imgui__widgets_8cpp.html#a579019adb9b5fbb8432121dc10d59755":[45,0,7,0,8,22],
 "imgui__widgets_8cpp.html#a58c3b8bbbb0042371c1c3d83d9bc72c9":[45,0,7,0,8,62],
 "imgui__widgets_8cpp.html#a591af6c724a8088d03687aba81098ae9":[45,0,7,0,8,81],
 "imgui__widgets_8cpp.html#a5d0ac25abe189c752495f2f26afea2e6":[45,0,7,0,8,91],
@@ -241,13 +249,5 @@ var NAVTREEINDEX88 =
 "md_CONTRIBUTING.html":[7],
 "md_CONTRIBUTING.html#code-of-conduct-1":[7,0],
 "md_CONTRIBUTING.html#commit-message-format":[7,3,2],
-"md_CONTRIBUTING.html#found-a-bug":[7,3],
-"md_CONTRIBUTING.html#have-a-question-or-problem":[7,1],
-"md_CONTRIBUTING.html#submitting-a-pull-request":[7,3,1],
-"md_CONTRIBUTING.html#submitting-an-issue":[7,3,0],
-"md_CONTRIBUTING.html#want-a-new-feature":[7,2],
-"md_Docs_2ImGuiMenuOrganization.html":[4],
-"md_Docs_2ImGuiMenuOrganization.html#escalabilidade":[4,4],
-"md_Docs_2ImGuiMenuOrganization.html#estrutura-geral":[4,0],
-"md_Docs_2ImGuiMenuOrganization.html#ideias-futuras":[4,6]
+"md_CONTRIBUTING.html#found-a-bug":[7,3]
 };
