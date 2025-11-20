@@ -188,6 +188,7 @@ bool ViewerApp::LoadMeshFromPath(const std::string& path)
 
     delete loadedMesh;
     loadedMesh = newMesh;
+    pickedTri = -1;
 
     printf("OBJ carregado: %zu verts, %zu indices\n",
            loadedMesh->renderVertices.size(),
@@ -201,12 +202,12 @@ bool ViewerApp::LoadMeshFromPath(const std::string& path)
     return true;
 }
 
-std::string ViewerApp::GetConfigFilePath() const
+std::filesystem::path ViewerApp::GetConfigFilePath() const
 {
     char* basePath = SDL_GetBasePath();
     if (basePath)
     {
-        std::string result = std::filesystem::path(basePath) / "last_directory.txt";
+        std::filesystem::path result = std::filesystem::path(basePath) / "last_directory.txt";
         SDL_free(basePath);
         return result;
     }
@@ -216,7 +217,7 @@ std::string ViewerApp::GetConfigFilePath() const
 
 void ViewerApp::LoadLastDirectory()
 {
-    std::string configPath = GetConfigFilePath();
+    std::filesystem::path configPath = GetConfigFilePath();
     std::ifstream file(configPath);
     if (file)
     {
@@ -233,7 +234,7 @@ void ViewerApp::SaveLastDirectory(const std::filesystem::path& directory)
 {
     if (directory.empty()) return;
 
-    std::string configPath = GetConfigFilePath();
+    std::filesystem::path configPath = GetConfigFilePath();
     std::ofstream file(configPath, std::ios::trunc);
     if (file)
     {
@@ -576,15 +577,22 @@ void ViewerApp::RenderFrame()
 
         if (pickedTri >= 0)
         {
-            int i0 = loadedMesh->indices[pickedTri+0];
-            int i1 = loadedMesh->indices[pickedTri+1];
-            int i2 = loadedMesh->indices[pickedTri+2];
+            if (pickedTri + 2 >= (int)loadedMesh->indices.size())
+            {
+                pickedTri = -1;
+            }
+            else
+            {
+                int i0 = loadedMesh->indices[pickedTri+0];
+                int i1 = loadedMesh->indices[pickedTri+1];
+                int i2 = loadedMesh->indices[pickedTri+2];
 
-            glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i0], 1.0f));
-            glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i1], 1.0f));
-            glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i2], 1.0f));
+                glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i0], 1.0f));
+                glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i1], 1.0f));
+                glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i2], 1.0f));
 
-            renderer->DrawTriangleHighlight(v0, v1, v2);
+                renderer->DrawTriangleHighlight(v0, v1, v2);
+            }
         }
         
 
