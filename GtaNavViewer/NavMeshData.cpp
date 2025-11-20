@@ -4,6 +4,7 @@
 #include <DetourNavMesh.h>
 #include <DetourNavMeshBuilder.h>
 
+#include <cstdarg>
 #include <cstdio>
 #include <cstring>
 
@@ -138,9 +139,38 @@ void NavMeshData::ExtractDebugMesh(
 bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
                                 const std::vector<unsigned int>& idxIn)
 {
+    struct LoggingRcContext : public rcContext
+    {
+        void doLog(const rcLogCategory category, const char* msg, const int len) override
+        {
+            rcIgnoreUnused(len);
+
+            const char* prefix = "[Recast]";
+            switch (category)
+            {
+            case RC_LOG_PROGRESS: prefix = "[Recast][info]"; break;
+            case RC_LOG_WARNING:  prefix = "[Recast][warn]"; break;
+            case RC_LOG_ERROR:    prefix = "[Recast][error]"; break;
+            default: break;
+            }
+
+            printf("%s %s\n", prefix, msg);
+        }
+    };
+
+    LoggingRcContext ctx;
+
     if (vertsIn.empty() || idxIn.empty())
     {
-        printf("[NavMeshData] BuildFromMesh: malha vazia.\n");
+        printf("[NavMeshData] BuildFromMesh: malha vazia. Verts=%zu, Indices=%zu\n",
+               vertsIn.size(), idxIn.size());
+        return false;
+    }
+
+    if (idxIn.size() % 3 != 0)
+    {
+        printf("[NavMeshData] BuildFromMesh: numero de indices nao e multiplo de 3 (%zu).\n",
+               idxIn.size());
         return false;
     }
 
@@ -154,6 +184,17 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     // --- 1. Flatten vertices e indices ---
     const int nverts = (int)vertsIn.size();
     const int ntris  = (int)(idxIn.size() / 3);
+
+    // valida indices
+    for (size_t i = 0; i < idxIn.size(); ++i)
+    {
+        if (idxIn[i] >= vertsIn.size())
+        {
+            printf("[NavMeshData] BuildFromMesh: indice fora do limite na pos %zu (idx=%u, verts=%zu).\n",
+                   i, idxIn[i], vertsIn.size());
+            return false;
+        }
+    }
 
     std::vector<float> verts(nverts * 3);
     for (int i = 0; i < nverts; ++i)
@@ -183,13 +224,19 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
 
     // --- 3. Configuração Recast básica ---
     rcConfig cfg{};
-    cfg.cs = 1.0f;    // cell size (ajusta depois)
-    cfg.ch = 0.5f;    // cell height (ajusta depois)
+    cfg.cs = 0.3f;    // cell size (ajustado conforme padrões do RecastDemo)
+    cfg.ch = 0.2f;    // cell height
 
-    cfg.walkableSlopeAngle   = 45.0f;
-    cfg.walkableHeight       = (int)ceilf(2.0f / cfg.ch);
-    cfg.walkableClimb        = (int)ceilf(1.0f / cfg.ch);
-    cfg.walkableRadius       = (int)ceilf(0.6f / cfg.cs);
+    // Parâmetros do agente (bastante permissivos para depuração)
+    const float agentHeight = 2.0f;
+    const float agentRadius = 0.6f;
+    const float agentMaxClimb = 1.0f;
+    const float agentMaxSlope = 60.0f; // permite rampas mais inclinadas para evitar filtrar tudo
+
+    cfg.walkableSlopeAngle   = agentMaxSlope;
+    cfg.walkableHeight       = (int)ceilf(agentHeight / cfg.ch);
+    cfg.walkableClimb        = (int)floorf(agentMaxClimb / cfg.ch);
+    cfg.walkableRadius       = (int)ceilf(agentRadius / cfg.cs);
     cfg.maxEdgeLen           = (int)(12.0f / cfg.cs);
     cfg.maxSimplificationError = 1.3f;
     cfg.minRegionArea        = (int)rcSqr(8);   // em células
@@ -199,9 +246,29 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     cfg.detailSampleMaxError = 1.0f;
 
     rcCalcGridSize(bmin, bmax, cfg.cs, &cfg.width, &cfg.height);
-    cfg.borderSize = 0; // pra simplificar
 
-    rcContext ctx;
+    cfg.borderSize = cfg.walkableRadius + 3; // padding recomendado
+    rcVcopy(cfg.bmin, bmin);
+    rcVcopy(cfg.bmax, bmax);
+    cfg.width  += cfg.borderSize * 2;
+    cfg.height += cfg.borderSize * 2;
+    cfg.bmin[0] -= cfg.borderSize * cfg.cs;
+    cfg.bmin[2] -= cfg.borderSize * cfg.cs;
+    cfg.bmax[0] += cfg.borderSize * cfg.cs;
+    cfg.bmax[2] += cfg.borderSize * cfg.cs;
+
+    if (cfg.width == 0 || cfg.height == 0)
+    {
+        printf("[NavMeshData] BuildFromMesh: rcCalcGridSize retornou grade invalida (%d x %d).\n",
+               cfg.width, cfg.height);
+        return false;
+    }
+
+    printf("[NavMeshData] BuildFromMesh: Verts=%d, Tris=%d, Bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f) Grid=%d x %d (border=%d)\n",
+           nverts, ntris,
+           bmin[0], bmin[1], bmin[2],
+           bmax[0], bmax[1], bmax[2],
+           cfg.width, cfg.height, cfg.borderSize);
 
     // --- 4. Altura, rasterização e filtros ---
     rcHeightfield* solid = rcAllocHeightfield();
@@ -211,7 +278,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         return false;
     }
     if (!rcCreateHeightfield(&ctx, *solid, cfg.width, cfg.height,
-                             bmin, bmax, cfg.cs, cfg.ch))
+                             cfg.bmin, cfg.bmax, cfg.cs, cfg.ch))
     {
         printf("[NavMeshData] rcCreateHeightfield falhou.\n");
         rcFreeHeightField(solid);
@@ -226,17 +293,24 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
                             tris.data(), ntris,
                             triAreas.data());
 
-    rcRasterizeTriangles(&ctx,
-                         verts.data(), nverts,
-                         tris.data(),
-                         triAreas.data(),
-                         ntris,
-                         *solid,
-                         cfg.walkableClimb);
+    if (!rcRasterizeTriangles(&ctx,
+                              verts.data(), nverts,
+                              tris.data(),
+                              triAreas.data(),
+                              ntris,
+                              *solid,
+                              cfg.walkableClimb))
+    {
+        printf("[NavMeshData] rcRasterizeTriangles falhou.\n");
+        rcFreeHeightField(solid);
+        return false;
+    }
 
     rcFilterLowHangingWalkableObstacles(&ctx, cfg.walkableClimb, *solid);
     rcFilterLedgeSpans(&ctx, cfg.walkableHeight, cfg.walkableClimb, *solid);
     rcFilterWalkableLowHeightSpans(&ctx, cfg.walkableHeight, *solid);
+
+    printf("[NavMeshData] Rasterizacao: spans=%d\n", solid->spanCount);
 
     // --- 5. Compact heightfield ---
     rcCompactHeightfield* chf = rcAllocCompactHeightfield();
@@ -263,6 +337,9 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     rcBuildDistanceField(&ctx, *chf);
     rcBuildRegions(&ctx, *chf, cfg.borderSize,
                    cfg.minRegionArea, cfg.mergeRegionArea);
+
+    printf("[NavMeshData] CompactHeightfield: spans=%d walkableCells=%d maxHeight=%d\n",
+           chf->spanCount, chf->walkableHeight, chf->maxRegion);
 
     // --- 6. Contours ---
     rcContourSet* cset = rcAllocContourSet();
@@ -301,6 +378,11 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         return false;
     }
 
+    printf("[NavMeshData] PolyMesh: verts=%d polys=%d nvp=%d bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
+           pmesh->nverts, pmesh->npolys, pmesh->nvp,
+           pmesh->bmin[0], pmesh->bmin[1], pmesh->bmin[2],
+           pmesh->bmax[0], pmesh->bmax[1], pmesh->bmax[2]);
+
     // --- 8. PolyMeshDetail ---
     rcPolyMeshDetail* dmesh = rcAllocPolyMeshDetail();
     if (!dmesh)
@@ -325,6 +407,9 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         return false;
     }
 
+    printf("[NavMeshData] PolyMeshDetail: verts=%d tris=%d meshes=%d\n",
+           dmesh->nverts, dmesh->ntris, dmesh->nmeshes);
+
     rcFreeCompactHeightfield(chf);
     rcFreeContourSet(cset);
 
@@ -335,10 +420,8 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     std::vector<unsigned short> polyFlags(pmesh->npolys);
     for (int i = 0; i < pmesh->npolys; ++i)
     {
-        if (pmesh->areas[i] != 0)
-            polyFlags[i] = 1; // walkable
-        else
-            polyFlags[i] = 0;
+        // rcBuildPolyMesh define area 0 como non-walkable
+        polyFlags[i] = (pmesh->areas[i] != 0) ? 1 : 0;
     }
 
     dtNavMeshCreateParams params{};
@@ -373,7 +456,10 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
 
     if (!dtCreateNavMeshData(&params, &navData, &navDataSize))
     {
-        printf("[NavMeshData] dtCreateNavMeshData falhou.\n");
+        printf("[NavMeshData] dtCreateNavMeshData falhou. polys=%d verts=%d detailVerts=%d detailTris=%d bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
+               pmesh->npolys, pmesh->nverts, dmesh->nverts, dmesh->ntris,
+               params.bmin[0], params.bmin[1], params.bmin[2],
+               params.bmax[0], params.bmax[1], params.bmax[2]);
         rcFreePolyMeshDetail(dmesh);
         rcFreePolyMesh(pmesh);
         return false;
@@ -408,7 +494,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     dtStatus status = m_nav->addTile(navData, navDataSize, DT_TILE_FREE_DATA, 0, nullptr);
     if (dtStatusFailed(status))
     {
-        printf("[NavMeshData] addTile falhou.\n");
+        printf("[NavMeshData] addTile falhou. status=0x%x size=%d\n", status, navDataSize);
         dtFree(navData);
         return false;
     }
