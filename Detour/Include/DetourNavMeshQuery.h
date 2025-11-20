@@ -209,6 +209,12 @@ public:
 							  float* straightPath, unsigned char* straightPathFlags, dtPolyRef* straightPathRefs,
 							  int* straightPathCount, const int maxStraightPath, const int options = 0) const;
 
+	dtStatus findStraightPathMinEdgePrecise(
+    const float* startPos, const float* endPos,
+    const dtPolyRef* path, const int pathSize,
+    float* straightPath, unsigned char* straightPathFlags, dtPolyRef* straightPathRefs,
+    int* straightPathCount, const int maxStraightPath, const int options,
+    const float minEdgeDist) const;
 	///@}
 	/// @name Sliced Pathfinding Functions
 	/// Common use case:
