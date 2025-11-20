@@ -1,5 +1,8 @@
 var NAVTREEINDEX89 =
 {
+"md_Docs_2__2__BuildingAndIntegrating.html#a-note-on-dll-exports-and-c-api":[1,5],
+"md_Docs_2__2__BuildingAndIntegrating.html#building-recastdemo":[1,0],
+"md_Docs_2__2__BuildingAndIntegrating.html#customizing-allocation-behavior":[1,4],
 "md_Docs_2__2__BuildingAndIntegrating.html#installation-through-vcpkg":[1,3,1],
 "md_Docs_2__2__BuildingAndIntegrating.html#integration":[1,3],
 "md_Docs_2__2__BuildingAndIntegrating.html#linux":[1,0,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX89 =
 "structExampleAppConsole.html#a91ef200056f867cf97a57db91bb991c4":[43,0,73,1],
 "structExampleAppConsole.html#aa1e8bf1f3795cbc41597e1ff081c6589":[43,0,73,5],
 "structExampleAppConsole.html#ab30accde81ae6833bd2ecf35f43f01ab":[43,0,73,17],
-"structExampleAppConsole.html#ab81253ac3575f7fcd63a61c7f5820913":[43,0,73,6],
-"structExampleAppConsole.html#acfde7d45fb733ac72d5d500168557b36":[43,0,73,18],
-"structExampleAppDocuments.html":[43,0,74],
-"structExampleAppDocuments.html#a0076259aa5b47ed3cc40adf63416dab6":[43,0,74,4]
+"structExampleAppConsole.html#ab81253ac3575f7fcd63a61c7f5820913":[43,0,73,6]
 };

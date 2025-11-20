@@ -1,5 +1,8 @@
 var NAVTREEINDEX105 =
 {
+"structSDL__RWops.html#a099017bfceaac24ced0e4d08a4e0a023":[43,0,417,19],
+"structSDL__RWops.html#a354b4677b722f11060fb7c4a0125ed37":[43,0,417,9],
+"structSDL__RWops.html#a3f68b93789331775de802d51a2934f0a":[43,0,417,14],
 "structSDL__RWops.html#a4108a41afa8b62e75b0f160de4b56103":[43,0,417,18],
 "structSDL__RWops.html#a45f66dbb683a88281d96f83ca18c525f":[43,0,417,2],
 "structSDL__RWops.html#a51baff579726790887a4ca41ce14873c":[43,0,417,15],
@@ -246,8 +249,5 @@ var NAVTREEINDEX105 =
 "structVERTEX__CONSTANT__BUFFER__DX10.html":[43,0,469],
 "structVERTEX__CONSTANT__BUFFER__DX10.html#a5b919e7d9d3c0194b05ddd336426aecf":[43,0,469,0],
 "structVERTEX__CONSTANT__BUFFER__DX11.html":[43,0,470],
-"structVERTEX__CONSTANT__BUFFER__DX11.html#a60d5a5fdfbc0fa9455b591ea77dfb8e7":[43,0,470,0],
-"structVERTEX__CONSTANT__BUFFER__DX12.html":[43,0,471],
-"structVERTEX__CONSTANT__BUFFER__DX12.html#af977128a020d49a3a5478a59e4229274":[43,0,471,0],
-"structdtBVNode.html":[43,0,14]
+"structVERTEX__CONSTANT__BUFFER__DX11.html#a60d5a5fdfbc0fa9455b591ea77dfb8e7":[43,0,470,0]
 };
