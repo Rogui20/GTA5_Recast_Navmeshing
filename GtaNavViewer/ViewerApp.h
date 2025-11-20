@@ -11,6 +11,7 @@
 #include "RendererGL.h"
 #include <memory>
 #include <vector>
+#include <unordered_map>
 
 class ViewerCamera;
 class RendererGL;
@@ -45,6 +46,17 @@ private:
         glm::vec3             position {0.0f};
         glm::vec3             rotation {0.0f};
         float                 scale = 1.0f;
+        uint64_t              id = 0;
+    };
+
+    struct MeshBoundsState
+    {
+        glm::vec3 bmin{0.0f};
+        glm::vec3 bmax{0.0f};
+        size_t vertexCount = 0;
+        size_t indexCount = 0;
+        const Mesh* meshPtr = nullptr;
+        bool valid = false;
     };
 
     // Engine components
@@ -68,6 +80,7 @@ private:
     bool navmeshShowLines = true;
     float navmeshFaceAlpha = 0.35f;
     NavmeshRenderMode navmeshRenderMode = NavmeshRenderMode::FacesAndLines;
+    bool navmeshUpdateTiles = false;
 
     enum class NavmeshAutoBuildFlag : uint32_t
     {
@@ -79,6 +92,8 @@ private:
     };
 
     uint32_t navmeshAutoBuildMask = 0;
+    uint64_t nextMeshId = 1;
+    std::unordered_map<uint64_t, MeshBoundsState> meshStateCache;
 
     bool pickTriangleMode = true;
     bool buildTileAtMode = false;
@@ -104,6 +119,9 @@ private:
     void RemoveMesh(size_t index);
     void HandleAutoBuild(NavmeshAutoBuildFlag flag);
     glm::mat4 GetModelMatrix(const MeshInstance& instance) const;
+    MeshBoundsState ComputeMeshBounds(const MeshInstance& instance) const;
+    bool HasMeshChanged(const MeshBoundsState& previous, const MeshBoundsState& current) const;
+    void UpdateNavmeshTiles();
 
     void ProcessEvents();
     void RenderFrame();
