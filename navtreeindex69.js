@@ -1,5 +1,7 @@
 var NAVTREEINDEX69 =
 {
+"classrcScopedDelete.html#a842c6cc65c3811faead9717aa53166dd":[44,0,347,3],
+"classrcScopedTimer.html":[44,0,348],
 "classrcScopedTimer.html#a3e1e6f826e8081e67f23cd6c35653b6e":[44,0,348,1],
 "classrcScopedTimer.html#ac75ae8ce09cdb8fc53a994e027e8735f":[44,0,348,0],
 "classrcTempVector.html":[44,0,352],
@@ -237,8 +239,8 @@ var NAVTREEINDEX69 =
 "functions_enum.html":[44,3,4],
 "functions_eval.html":[44,3,5],
 "functions_f.html":[44,3,0,6],
-"functions_func.html":[44,3,1],
 "functions_func.html":[44,3,1,0],
+"functions_func.html":[44,3,1],
 "functions_func_a.html":[44,3,1,1],
 "functions_func_b.html":[44,3,1,2],
 "functions_func_c.html":[44,3,1,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX69 =
 "functions_func_f.html":[44,3,1,6],
 "functions_func_g.html":[44,3,1,7],
 "functions_func_h.html":[44,3,1,8],
-"functions_func_i.html":[44,3,1,9],
-"functions_func_l.html":[44,3,1,10],
-"functions_func_m.html":[44,3,1,11]
+"functions_func_i.html":[44,3,1,9]
 };

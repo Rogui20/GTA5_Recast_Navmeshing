@@ -1,5 +1,7 @@
 var NAVTREEINDEX89 =
 {
+"md_CONTRIBUTING.html#commit-message-format":[7,3,2],
+"md_CONTRIBUTING.html#found-a-bug":[7,3],
 "md_CONTRIBUTING.html#have-a-question-or-problem":[7,1],
 "md_CONTRIBUTING.html#submitting-a-pull-request":[7,3,1],
 "md_CONTRIBUTING.html#submitting-an-issue":[7,3,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX89 =
 "structDirtyEntry.html":[44,0,13],
 "structDirtyEntry.html#a6efa59792bbe3b1feea05da8110151dd":[44,0,13,0],
 "structDirtyEntry.html#a9634e49527d7bdcacc925fe7124b07d1":[44,0,13,1],
-"structDirtyEntry.html#ad3c4712adccfb24f1a7ab8d75f42ab1e":[44,0,13,3],
-"structDirtyEntry.html#af570257530906e231345aa1e4debbfa7":[44,0,13,2],
-"structExampleAppConsole.html":[44,0,73]
+"structDirtyEntry.html#ad3c4712adccfb24f1a7ab8d75f42ab1e":[44,0,13,3]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX104 =
 {
+"structSDL__ControllerSensorEvent.html#a67f4b70a91f347130928f1c91d120e95":[44,0,375,2],
+"structSDL__ControllerSensorEvent.html#a992c902eb22978f48f0022022ca3aa6f":[44,0,375,3],
 "structSDL__ControllerSensorEvent.html#aac19e4034212a30d64066a122d5db2a8":[44,0,375,1],
 "structSDL__ControllerSensorEvent.html#acf40e0528d7147725dfc94cc96618d4d":[44,0,375,5],
 "structSDL__ControllerTouchpadEvent.html":[44,0,376],
@@ -247,7 +249,5 @@ var NAVTREEINDEX104 =
 "structSDL__MouseWheelEvent.html#a64b89ea00f054854f0fef03efc60d332":[44,0,411,4],
 "structSDL__MouseWheelEvent.html#a6d904eef474ea45a5b1828fcb5b0f859":[44,0,411,9],
 "structSDL__MouseWheelEvent.html#a7ed6f8543a20c43c12ba75e9db901081":[44,0,411,2],
-"structSDL__MouseWheelEvent.html#a83ad52c80ff49a8e75dc6c33bba65fa0":[44,0,411,5],
-"structSDL__MouseWheelEvent.html#a9fc46552d116499e5b8ca89d66df932c":[44,0,411,0],
-"structSDL__MouseWheelEvent.html#aa6b741e99df708c6f9550ee0f520fb70":[44,0,411,6]
+"structSDL__MouseWheelEvent.html#a83ad52c80ff49a8e75dc6c33bba65fa0":[44,0,411,5]
 };

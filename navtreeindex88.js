@@ -1,5 +1,7 @@
 var NAVTREEINDEX88 =
 {
+"imgui__widgets_8cpp.html#a474e05906148675a80881d7e4583df87":[45,0,7,0,8,48],
+"imgui__widgets_8cpp.html#a4ac168018b20e53285d76c46aa24a122":[45,0,7,0,8,24],
 "imgui__widgets_8cpp.html#a4d14a9af02c8bc14a1a8a9e6fda9bfa2":[45,0,7,0,8,61],
 "imgui__widgets_8cpp.html#a4e2b30a2cf82f491a712ba37c2bf3455":[45,0,7,0,8,98],
 "imgui__widgets_8cpp.html#a4f15972fff9fd018c8355d16aa9814e5":[45,0,7,0,8,112],
@@ -247,7 +249,5 @@ var NAVTREEINDEX88 =
 "md_CODE__OF__CONDUCT.html#our-standards":[6,1],
 "md_CODE__OF__CONDUCT.html#scope":[6,3],
 "md_CONTRIBUTING.html":[7],
-"md_CONTRIBUTING.html#code-of-conduct-1":[7,0],
-"md_CONTRIBUTING.html#commit-message-format":[7,3,2],
-"md_CONTRIBUTING.html#found-a-bug":[7,3]
+"md_CONTRIBUTING.html#code-of-conduct-1":[7,0]
 };
