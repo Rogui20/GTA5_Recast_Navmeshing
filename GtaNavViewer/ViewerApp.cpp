@@ -23,8 +23,6 @@
 #include <cctype>
 
 
-int pickedTri = -1;
-
 ViewerApp::ViewerApp()
 {
     currentDirectory = std::filesystem::current_path().string();
@@ -34,15 +32,52 @@ ViewerApp::~ViewerApp()
 {
 }
 
-bool ViewerApp::buildNavmeshFromCurrentMesh()
+glm::mat4 ViewerApp::GetModelMatrix(const MeshInstance& instance) const
 {
-    if (!loadedMesh)
+    glm::mat4 model(1.0f);
+    model = glm::translate(model, instance.position);
+    model = glm::rotate(model, glm::radians(instance.rotation.x), glm::vec3(1,0,0));
+    model = glm::rotate(model, glm::radians(instance.rotation.y), glm::vec3(0,1,0));
+    model = glm::rotate(model, glm::radians(instance.rotation.z), glm::vec3(0,0,1));
+    model = glm::scale(model, glm::vec3(instance.scale));
+    return model;
+}
+
+bool ViewerApp::buildNavmeshFromMeshes()
+{
+    if (meshInstances.empty())
     {
-        printf("[ViewerApp] buildNavmeshFromCurrentMesh: sem mesh carregada.\n");
+        printf("[ViewerApp] buildNavmeshFromMeshes: sem meshes carregadas.\n");
+        navMeshTris.clear();
+        navMeshLines.clear();
+        m_navmeshLines.clear();
         return false;
     }
 
-    if (!navData.BuildFromMesh(loadedMesh->navmeshVertices, loadedMesh->indices))
+    std::vector<glm::vec3> combinedVerts;
+    std::vector<unsigned int> combinedIdx;
+    unsigned int baseIndex = 0;
+
+    for (const auto& instance : meshInstances)
+    {
+        if (!instance.mesh)
+            continue;
+
+        glm::mat4 model = GetModelMatrix(instance);
+        for (const auto& v : instance.mesh->renderVertices)
+        {
+            combinedVerts.push_back(glm::vec3(model * glm::vec4(v, 1.0f)));
+        }
+
+        for (auto idx : instance.mesh->indices)
+        {
+            combinedIdx.push_back(baseIndex + idx);
+        }
+
+        baseIndex += static_cast<unsigned int>(instance.mesh->renderVertices.size());
+    }
+
+    if (!navData.BuildFromMesh(combinedVerts, combinedIdx))
     {
         printf("[ViewerApp] BuildFromMesh falhou.\n");
         return false;
@@ -58,26 +93,17 @@ void ViewerApp::buildNavmeshDebugLines()
     navMeshLines.clear();
     m_navmeshLines.clear();
 
-    glm::vec3 debugOffset(0.0f);
-    if (loadedMesh)
-        debugOffset = loadedMesh->renderOffset;
-
     navData.ExtractDebugMesh(navMeshTris, navMeshLines);
-
-    for (auto& v : navMeshTris)
-    {
-        v -= debugOffset;
-    }
 
     for (size_t i = 0; i + 1 < navMeshLines.size(); i += 2)
     {
         DebugLine dl;
-        dl.x0 = navMeshLines[i].x - debugOffset.x;
-        dl.y0 = navMeshLines[i].y - debugOffset.y;
-        dl.z0 = navMeshLines[i].z - debugOffset.z;
-        dl.x1 = navMeshLines[i+1].x - debugOffset.x;
-        dl.y1 = navMeshLines[i+1].y - debugOffset.y;
-        dl.z1 = navMeshLines[i+1].z - debugOffset.z;
+        dl.x0 = navMeshLines[i].x;
+        dl.y0 = navMeshLines[i].y;
+        dl.z0 = navMeshLines[i].z;
+        dl.x1 = navMeshLines[i+1].x;
+        dl.y1 = navMeshLines[i+1].y;
+        dl.z1 = navMeshLines[i+1].z;
         m_navmeshLines.push_back(dl);
     }
 
@@ -190,23 +216,27 @@ bool ViewerApp::InitImGui()
 }
 
 bool ViewerApp::LoadMeshFromPath(const std::string& path)
-{
-    Mesh* newMesh = ObjLoader::LoadObj(path, centerMesh);
+{ 
+    std::unique_ptr<Mesh> newMesh(ObjLoader::LoadObj(path, centerMesh));
     if (!newMesh)
     {
         printf("Falha ao carregar OBJ!\n");
         return false;
     }
 
-    delete loadedMesh;
-    loadedMesh = newMesh;
+    MeshInstance instance;
+    instance.name = std::filesystem::path(path).stem().string();
+    instance.sourcePath = path;
+    instance.mesh = std::move(newMesh);
+    meshInstances.push_back(std::move(instance));
     pickedTri = -1;
+    pickedMeshIndex = -1;
 
     printf("OBJ carregado: %zu verts, %zu indices\n",
-           loadedMesh->renderVertices.size(),
-           loadedMesh->indices.size());
+           meshInstances.back().mesh->renderVertices.size(),
+           meshInstances.back().mesh->indices.size());
 
-    buildNavmeshFromCurrentMesh();
+    HandleAutoBuild(NavmeshAutoBuildFlag::OnAdd);
 
     std::filesystem::path p(path);
     SaveLastDirectory(p.parent_path());
@@ -251,6 +281,43 @@ void ViewerApp::SaveLastDirectory(const std::filesystem::path& directory)
     if (file)
     {
         file << directory.string();
+    }
+}
+
+void ViewerApp::HandleAutoBuild(NavmeshAutoBuildFlag flag)
+{
+    if (flag == NavmeshAutoBuildFlag::None)
+        return;
+
+    if (static_cast<bool>(navmeshAutoBuildMask & static_cast<uint32_t>(flag)))
+    {
+        buildNavmeshFromMeshes();
+    }
+}
+
+void ViewerApp::RemoveMesh(size_t index)
+{
+    if (index >= meshInstances.size())
+        return;
+
+    meshInstances.erase(meshInstances.begin() + index);
+    if (pickedMeshIndex == static_cast<int>(index))
+    {
+        pickedMeshIndex = -1;
+        pickedTri = -1;
+    }
+    else if (pickedMeshIndex > static_cast<int>(index))
+    {
+        pickedMeshIndex--;
+    }
+
+    HandleAutoBuild(NavmeshAutoBuildFlag::OnRemove);
+
+    if (meshInstances.empty())
+    {
+        navMeshTris.clear();
+        navMeshLines.clear();
+        m_navmeshLines.clear();
     }
 }
 
@@ -339,7 +406,7 @@ void ViewerApp::ProcessEvents()
         }
         if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
         {
-            if (!loadedMesh)
+            if (meshInstances.empty())
                 continue;
 
             int mx = e.button.x;
@@ -347,35 +414,36 @@ void ViewerApp::ProcessEvents()
 
             Ray ray = camera->GetRayFromScreen(mx, my, 1600, 900);
 
-            // MATRIZ MODEL — EXATA usada no render
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, meshPos);
-            model = glm::rotate(model, glm::radians(meshRot.x), glm::vec3(1,0,0));
-            model = glm::rotate(model, glm::radians(meshRot.y), glm::vec3(0,1,0));
-            model = glm::rotate(model, glm::radians(meshRot.z), glm::vec3(0,0,1));
-            model = glm::scale(model, glm::vec3(meshScale));
-
             float best = FLT_MAX;
             pickedTri = -1;
+            pickedMeshIndex = -1;
 
-            for (int i = 0; i < loadedMesh->indices.size(); i += 3)
+            for (size_t meshIdx = 0; meshIdx < meshInstances.size(); ++meshIdx)
             {
-                int i0 = loadedMesh->indices[i+0];
-                int i1 = loadedMesh->indices[i+1];
-                int i2 = loadedMesh->indices[i+2];
+                const auto& instance = meshInstances[meshIdx];
+                if (!instance.mesh)
+                    continue;
 
-                // ****** TRANSFORMAR PARA ESPAÇO MUNDIAL ******
-                glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i0], 1.0f));
-                glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i1], 1.0f));
-                glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i2], 1.0f));
-
-                float dist;
-                if (RayTriangleIntersect(ray, v0, v1, v2, dist))
+                glm::mat4 model = GetModelMatrix(instance);
+                for (int i = 0; i < instance.mesh->indices.size(); i += 3)
                 {
-                    if (dist < best)
+                    int i0 = instance.mesh->indices[i+0];
+                    int i1 = instance.mesh->indices[i+1];
+                    int i2 = instance.mesh->indices[i+2];
+
+                    glm::vec3 v0 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i0], 1.0f));
+                    glm::vec3 v1 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i1], 1.0f));
+                    glm::vec3 v2 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i2], 1.0f));
+
+                    float dist;
+                    if (RayTriangleIntersect(ray, v0, v1, v2, dist))
                     {
-                        best = dist;
-                        pickedTri = i;
+                        if (dist < best)
+                        {
+                            best = dist;
+                            pickedTri = i;
+                            pickedMeshIndex = static_cast<int>(meshIdx);
+                        }
                     }
                 }
             }
@@ -413,158 +481,426 @@ void ViewerApp::RenderFrame()
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    // --- UI: Render Mode ---
-    ImGui::Begin("Render Mode");
-
-    int mode = (int)renderMode;
-    ImGui::RadioButton("Solid (F1)",     &mode, 0);
-    ImGui::RadioButton("Wireframe (F2)", &mode, 1);
-    ImGui::RadioButton("Normals (F3)",   &mode, 2);
-    ImGui::RadioButton("Depth (F4)",     &mode, 3);
-    ImGui::RadioButton("Lit (F5)", &mode, 4);
-
-
-    renderMode = (RenderMode)mode;
-
-    ImGui::End();
-
-    // --- UI: OBJ Browser ---
-    ImGui::Begin("Mesh Browser");
-    if (!std::filesystem::exists(currentDirectory))
+    // --- Barra de menus principal ---
+    if (ImGui::BeginMainMenuBar())
     {
-        currentDirectory = std::filesystem::current_path().string();
-    }
-
-    ImGui::Text("Diretório: %s", currentDirectory.c_str());
-    ImGui::Checkbox("Centralizar mesh carregada", &centerMesh);
-
-    if (ImGui::Button("Subir"))
-    {
-        std::filesystem::path parent = std::filesystem::path(currentDirectory).parent_path();
-        if (!parent.empty())
+        if (ImGui::BeginMenu("Arquivo"))
         {
-            currentDirectory = parent.string();
-            selectedEntry.clear();
+            ImGui::MenuItem("Browser de Meshes", nullptr, &showMeshBrowserWindow);
+            ImGui::MenuItem("Painel Lateral", nullptr, &showSidePanel);
+            ImGui::Separator();
+            ImGui::MenuItem("Centralizar mesh carregada", nullptr, &centerMesh);
+            ImGui::EndMenu();
         }
-    }
 
-    std::error_code ec;
-    std::vector<std::filesystem::directory_entry> directories;
-    std::vector<std::filesystem::directory_entry> objFiles;
-    for (const auto& entry : std::filesystem::directory_iterator(currentDirectory, ec))
-    {
-        if (entry.is_directory())
+        if (ImGui::BeginMenu("Visualização"))
         {
-            directories.push_back(entry);
+            ImGui::TextDisabled("Render Mode");
+            int mode = static_cast<int>(renderMode);
+            ImGui::RadioButton("Solid (F1)", &mode, 0);
+            ImGui::RadioButton("Wireframe (F2)", &mode, 1);
+            ImGui::RadioButton("Normals (F3)", &mode, 2);
+            ImGui::RadioButton("Depth (F4)", &mode, 3);
+            ImGui::RadioButton("Lit (F5)", &mode, 4);
+            renderMode = static_cast<RenderMode>(mode);
+
+            ImGui::Separator();
+            ImGui::MenuItem("Mostrar navmesh", nullptr, &navmeshVisible);
+            ImGui::MenuItem("Mostrar debug/câmera", nullptr, &showDebugInfo);
+            ImGui::EndMenu();
         }
-        else
-        {
-            auto ext = entry.path().extension().string();
-            std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return (char)std::tolower(c); });
-            if (ext == ".obj")
-                objFiles.push_back(entry);
-        }
-    }
 
-    std::sort(directories.begin(), directories.end(), [](const auto& a, const auto& b){ return a.path().filename() < b.path().filename(); });
-    std::sort(objFiles.begin(), objFiles.end(), [](const auto& a, const auto& b){ return a.path().filename() < b.path().filename(); });
-
-    ImGui::SeparatorText("Pastas");
-    for (const auto& dir : directories)
-    {
-        std::string label = "[DIR] " + dir.path().filename().string();
-        bool selected = selectedEntry == dir.path().string();
-        if (ImGui::Selectable(label.c_str(), selected, ImGuiSelectableFlags_AllowDoubleClick))
+        if (ImGui::BeginMenu("Navmesh"))
         {
-            selectedEntry = dir.path().string();
-            if (ImGui::IsMouseDoubleClicked(0))
+            bool hasMesh = !meshInstances.empty();
+            ImGui::BeginDisabled(!hasMesh);
+            if (ImGui::MenuItem("Rebuild Navmesh"))
             {
-                currentDirectory = dir.path().string();
+                buildNavmeshFromMeshes();
+            }
+            ImGui::EndDisabled();
+
+            ImGui::Separator();
+            bool autoOnAdd    = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd)) != 0;
+            bool autoOnRemove = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove)) != 0;
+            bool autoOnMove   = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove)) != 0;
+            bool autoOnRotate = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate)) != 0;
+
+            if (ImGui::MenuItem("Rebuild ao adicionar", nullptr, &autoOnAdd))
+            {
+                if (autoOnAdd)
+                    navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd);
+                else
+                    navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd);
+            }
+            if (ImGui::MenuItem("Rebuild ao remover", nullptr, &autoOnRemove))
+            {
+                if (autoOnRemove)
+                    navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove);
+                else
+                    navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove);
+            }
+            if (ImGui::MenuItem("Rebuild ao mover", nullptr, &autoOnMove))
+            {
+                if (autoOnMove)
+                    navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove);
+                else
+                    navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove);
+            }
+            if (ImGui::MenuItem("Rebuild ao rotacionar", nullptr, &autoOnRotate))
+            {
+                if (autoOnRotate)
+                    navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
+                else
+                    navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
+            }
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Ajuda"))
+        {
+            ImGui::MenuItem("Debug/Diagnóstico", nullptr, &showDebugInfo);
+            ImGui::TextDisabled("Use TABs no painel lateral para alternar modos.");
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
+
+    // --- OBJ Browser ---
+    if (showMeshBrowserWindow)
+    {
+        ImGui::Begin("Mesh Browser", &showMeshBrowserWindow);
+        if (!std::filesystem::exists(currentDirectory))
+        {
+            currentDirectory = std::filesystem::current_path().string();
+        }
+
+        ImGui::Text("Diretório: %s", currentDirectory.c_str());
+        ImGui::Checkbox("Centralizar mesh carregada", &centerMesh);
+
+        if (ImGui::Button("Subir"))
+        {
+            std::filesystem::path parent = std::filesystem::path(currentDirectory).parent_path();
+            if (!parent.empty())
+            {
+                currentDirectory = parent.string();
                 selectedEntry.clear();
             }
         }
-    }
 
-    ImGui::SeparatorText("Arquivos OBJ");
-    for (const auto& file : objFiles)
-    {
-        std::string label = file.path().filename().string();
-        bool selected = selectedEntry == file.path().string();
-        if (ImGui::Selectable(label.c_str(), selected, ImGuiSelectableFlags_AllowDoubleClick))
+        std::error_code ec;
+        std::vector<std::filesystem::directory_entry> directories;
+        std::vector<std::filesystem::directory_entry> objFiles;
+        for (const auto& entry : std::filesystem::directory_iterator(currentDirectory, ec))
         {
-            selectedEntry = file.path().string();
-            if (ImGui::IsMouseDoubleClicked(0))
+            if (entry.is_directory())
             {
-                LoadMeshFromPath(selectedEntry);
+                directories.push_back(entry);
+            }
+            else
+            {
+                auto ext = entry.path().extension().string();
+                std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return (char)std::tolower(c); });
+                if (ext == ".obj")
+                    objFiles.push_back(entry);
             }
         }
-    }
 
-    if (!ec)
-    {
-        if (ImGui::Button("Carregar OBJ selecionado"))
+        std::sort(directories.begin(), directories.end(), [](const auto& a, const auto& b){ return a.path().filename() < b.path().filename(); });
+        std::sort(objFiles.begin(), objFiles.end(), [](const auto& a, const auto& b){ return a.path().filename() < b.path().filename(); });
+
+        ImGui::SeparatorText("Pastas");
+        for (const auto& dir : directories)
         {
-            std::filesystem::path p(selectedEntry);
-            auto ext = p.extension().string();
-            std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return (char)std::tolower(c); });
-            if (ext == ".obj")
+            std::string label = "[DIR] " + dir.path().filename().string();
+            bool selected = selectedEntry == dir.path().string();
+            if (ImGui::Selectable(label.c_str(), selected, ImGuiSelectableFlags_AllowDoubleClick))
             {
-                LoadMeshFromPath(selectedEntry);
+                selectedEntry = dir.path().string();
+                if (ImGui::IsMouseDoubleClicked(0))
+                {
+                    currentDirectory = dir.path().string();
+                    selectedEntry.clear();
+                }
             }
         }
+
+        ImGui::SeparatorText("Arquivos OBJ");
+        for (const auto& file : objFiles)
+        {
+            std::string label = file.path().filename().string();
+            bool selected = selectedEntry == file.path().string();
+            if (ImGui::Selectable(label.c_str(), selected, ImGuiSelectableFlags_AllowDoubleClick))
+            {
+                selectedEntry = file.path().string();
+                if (ImGui::IsMouseDoubleClicked(0))
+                {
+                    LoadMeshFromPath(selectedEntry);
+                }
+            }
+        }
+
+        if (!ec)
+        {
+            if (ImGui::Button("Carregar OBJ selecionado"))
+            {
+                std::filesystem::path p(selectedEntry);
+                auto ext = p.extension().string();
+                std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return (char)std::tolower(c); });
+                if (ext == ".obj")
+                {
+                    LoadMeshFromPath(selectedEntry);
+                }
+            }
+        }
+        else
+        {
+            ImGui::TextColored(ImVec4(1,0,0,1), "Erro ao listar diretório: %s", ec.message().c_str());
+        }
+
+        ImGui::End();
     }
-    else
+
+    // --- Painel lateral com tabs ---
+    if (showSidePanel)
     {
-        ImGui::TextColored(ImVec4(1,0,0,1), "Erro ao listar diretório: %s", ec.message().c_str());
+        ImGui::SetNextWindowSize(ImVec2(420, 0), ImGuiCond_FirstUseEver);
+        ImGui::Begin("Painel", &showSidePanel, ImGuiWindowFlags_NoCollapse);
+
+        if (ImGui::BeginTabBar("PainelTabs"))
+        {
+            if (ImGui::BeginTabItem("Edição"))
+            {
+                if (ImGui::CollapsingHeader("Renderização", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    int mode = static_cast<int>(renderMode);
+                    ImGui::RadioButton("Solid (F1)", &mode, 0);
+                    ImGui::RadioButton("Wireframe (F2)", &mode, 1);
+                    ImGui::RadioButton("Normals (F3)", &mode, 2);
+                    ImGui::RadioButton("Depth (F4)", &mode, 3);
+                    ImGui::RadioButton("Lit (F5)", &mode, 4);
+                    renderMode = static_cast<RenderMode>(mode);
+                }
+
+                if (ImGui::CollapsingHeader("Meshes", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    ImGui::InputTextWithHint("##meshFilter", "Filtrar por nome", meshFilter, IM_ARRAYSIZE(meshFilter));
+                    if (ImGui::BeginTable("MeshTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+                    {
+                        ImGui::TableSetupColumn("Mesh");
+                        ImGui::TableSetupColumn("Transform");
+                        ImGui::TableSetupColumn("Ações", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+                        ImGui::TableHeadersRow();
+
+                        for (size_t i = 0; i < meshInstances.size(); )
+                        {
+                            auto& instance = meshInstances[i];
+                            std::string lowerName = instance.name;
+                            std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), [](unsigned char c){ return (char)std::tolower(c); });
+                            std::string lowerFilter = meshFilter;
+                            std::transform(lowerFilter.begin(), lowerFilter.end(), lowerFilter.begin(), [](unsigned char c){ return (char)std::tolower(c); });
+
+                            if (!lowerFilter.empty() && lowerName.find(lowerFilter) == std::string::npos)
+                            {
+                                ++i;
+                                continue;
+                            }
+
+                            ImGui::PushID(static_cast<int>(i));
+                            ImGui::TableNextRow();
+
+                            ImGui::TableNextColumn();
+                            bool isSelected = static_cast<int>(i) == pickedMeshIndex;
+                            if (ImGui::Selectable(instance.name.c_str(), isSelected))
+                            {
+                                pickedMeshIndex = static_cast<int>(i);
+                            }
+
+                            ImGui::TableNextColumn();
+                            glm::vec3 previousPos = instance.position;
+                            glm::vec3 previousRot = instance.rotation;
+                            bool moved = ImGui::DragFloat3("Pos", &instance.position.x, 0.25f);
+                            bool rotated = ImGui::DragFloat3("Rot", &instance.rotation.x, 0.25f);
+
+                            if (moved && instance.position != previousPos)
+                            {
+                                HandleAutoBuild(NavmeshAutoBuildFlag::OnMove);
+                            }
+                            if (rotated && instance.rotation != previousRot)
+                            {
+                                HandleAutoBuild(NavmeshAutoBuildFlag::OnRotate);
+                            }
+
+                            ImGui::TableNextColumn();
+                            if (ImGui::Button("Remover"))
+                            {
+                                ImGui::PopID();
+                                RemoveMesh(i);
+                                if (meshInstances.size() <= i)
+                                    break;
+                                continue;
+                            }
+
+                            ImGui::PopID();
+                            ++i;
+                        }
+
+                        ImGui::EndTable();
+                    }
+
+                    if (meshInstances.empty())
+                    {
+                        ImGui::TextDisabled("Nenhuma mesh carregada.");
+                    }
+                }
+
+                if (ImGui::CollapsingHeader("Navmesh", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    bool hasMesh = !meshInstances.empty();
+                    ImGui::Text("Meshes carregadas: %zu", meshInstances.size());
+
+                    ImGui::BeginDisabled(!hasMesh);
+                    if (ImGui::Button("Rebuild Navmesh"))
+                    {
+                        buildNavmeshFromMeshes();
+                    }
+                    ImGui::EndDisabled();
+
+                    ImGui::SeparatorText("Visibilidade");
+                    ImGui::Checkbox("Mostrar navmesh", &navmeshVisible);
+                    int navRenderMode = static_cast<int>(navmeshRenderMode);
+                    ImGui::RadioButton("Faces e linhas", &navRenderMode, static_cast<int>(NavmeshRenderMode::FacesAndLines));
+                    ImGui::RadioButton("Somente faces", &navRenderMode, static_cast<int>(NavmeshRenderMode::FacesOnly));
+                    ImGui::RadioButton("Somente linhas", &navRenderMode, static_cast<int>(NavmeshRenderMode::LinesOnly));
+                    navmeshRenderMode = static_cast<NavmeshRenderMode>(navRenderMode);
+
+                    ImGui::Checkbox("Mostrar faces da navmesh", &navmeshShowFaces);
+                    ImGui::BeginDisabled(!navmeshShowFaces || navmeshRenderMode == NavmeshRenderMode::LinesOnly);
+                    ImGui::SliderFloat("Alpha das faces", &navmeshFaceAlpha, 0.0f, 1.0f);
+                    ImGui::EndDisabled();
+                    ImGui::Checkbox("Mostrar linhas da navmesh", &navmeshShowLines);
+
+                    ImGui::SeparatorText("Construção Automática");
+                    bool autoOnAdd    = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd)) != 0;
+                    bool autoOnRemove = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove)) != 0;
+                    bool autoOnMove   = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove)) != 0;
+                    bool autoOnRotate = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate)) != 0;
+
+                    if (ImGui::Checkbox("Ao adicionar Mesh", &autoOnAdd))
+                    {
+                        if (autoOnAdd)
+                            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd);
+                        else
+                            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd);
+                    }
+
+                    if (ImGui::Checkbox("Ao remover Mesh", &autoOnRemove))
+                    {
+                        if (autoOnRemove)
+                            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove);
+                        else
+                            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove);
+                    }
+
+                    if (ImGui::Checkbox("Ao mover mesh", &autoOnMove))
+                    {
+                        if (autoOnMove)
+                            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove);
+                        else
+                            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove);
+                    }
+
+                    if (ImGui::Checkbox("Ao rotacionar mesh", &autoOnRotate))
+                    {
+                        if (autoOnRotate)
+                            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
+                        else
+                            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
+                    }
+
+                    ImGui::Separator();
+                    ImGui::Text("Tris: %zu", navMeshTris.size() / 3);
+                    ImGui::Text("Linhas: %zu", m_navmeshLines.size());
+                }
+
+                ImGui::EndTabItem();
+            }
+
+            if (showDebugInfo && ImGui::BeginTabItem("Diagnóstico"))
+            {
+                const MeshInstance* infoInstance = nullptr;
+                if (!meshInstances.empty())
+                {
+                    if (pickedMeshIndex >= 0 && pickedMeshIndex < static_cast<int>(meshInstances.size()))
+                        infoInstance = &meshInstances[pickedMeshIndex];
+                    else
+                        infoInstance = &meshInstances.front();
+                }
+
+                if (ImGui::CollapsingHeader("Mesh Info", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    if (infoInstance && infoInstance->mesh)
+                    {
+                        ImGui::Text("Mesh: %s", infoInstance->name.c_str());
+                        ImGui::Text("Navmesh bounds:");
+                        ImGui::Text("Min: %.1f %.1f %.1f",
+                            infoInstance->mesh->navmeshMinBounds.x,
+                            infoInstance->mesh->navmeshMinBounds.y,
+                            infoInstance->mesh->navmeshMinBounds.z);
+
+                        ImGui::Text("Max: %.1f %.1f %.1f",
+                            infoInstance->mesh->navmeshMaxBounds.x,
+                            infoInstance->mesh->navmeshMaxBounds.y,
+                            infoInstance->mesh->navmeshMaxBounds.z);
+
+                        glm::vec3 center = (infoInstance->mesh->navmeshMinBounds + infoInstance->mesh->navmeshMaxBounds) * 0.5f;
+                        ImGui::Text("Center: %.1f %.1f %.1f",
+                            center.x, center.y, center.z);
+
+                        ImGui::Separator();
+                        ImGui::Text("Render bounds (offset: %.1f %.1f %.1f)",
+                            infoInstance->mesh->renderOffset.x,
+                            infoInstance->mesh->renderOffset.y,
+                            infoInstance->mesh->renderOffset.z);
+                        ImGui::Text("Min: %.1f %.1f %.1f",
+                            infoInstance->mesh->renderMinBounds.x,
+                            infoInstance->mesh->renderMinBounds.y,
+                            infoInstance->mesh->renderMinBounds.z);
+
+                        ImGui::Text("Max: %.1f %.1f %.1f",
+                            infoInstance->mesh->renderMaxBounds.x,
+                            infoInstance->mesh->renderMaxBounds.y,
+                            infoInstance->mesh->renderMaxBounds.z);
+
+                        glm::vec3 renderCenter = (infoInstance->mesh->renderMinBounds + infoInstance->mesh->renderMaxBounds) * 0.5f;
+                        ImGui::Text("Render Center: %.1f %.1f %.1f",
+                            renderCenter.x, renderCenter.y, renderCenter.z);
+
+                        if (ImGui::Button("Teleport Camera to Mesh Center"))
+                            camera->pos = renderCenter + glm::vec3(0,50,150);
+                    }
+                    else
+                    {
+                        ImGui::TextDisabled("Nenhuma mesh selecionada.");
+                    }
+                }
+
+                if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    ImGui::Text("Camera: %.2f %.2f %.2f",
+                        camera->pos.x, camera->pos.y, camera->pos.z);
+                    ImGui::Text("Meshes carregadas: %zu", meshInstances.size());
+                }
+
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+        }
+
+        ImGui::End();
     }
-
-    ImGui::End();
-
-
-    // --- Navmesh Menu ---
-    ImGui::Begin("Navmesh Menu");
-    bool hasMesh = loadedMesh != nullptr;
-
-    if (!hasMesh)
-    {
-        ImGui::Text("Nenhuma mesh carregada.");
-    }
-
-    ImGui::BeginDisabled(!hasMesh);
-    if (ImGui::Button("Rebuild Navmesh"))
-    {
-        buildNavmeshFromCurrentMesh();
-    }
-    ImGui::EndDisabled();
-
-    ImGui::SeparatorText("Visibilidade");
-    ImGui::Checkbox("Mostrar navmesh", &navmeshVisible);
-
-    int navRenderMode = static_cast<int>(navmeshRenderMode);
-    ImGui::Text("Render Mode");
-    ImGui::RadioButton("Faces e linhas", &navRenderMode, static_cast<int>(NavmeshRenderMode::FacesAndLines));
-    ImGui::RadioButton("Somente faces", &navRenderMode, static_cast<int>(NavmeshRenderMode::FacesOnly));
-    ImGui::RadioButton("Somente linhas", &navRenderMode, static_cast<int>(NavmeshRenderMode::LinesOnly));
-    navmeshRenderMode = static_cast<NavmeshRenderMode>(navRenderMode);
-
-    ImGui::Checkbox("Mostrar faces da navmesh", &navmeshShowFaces);
-    ImGui::BeginDisabled(!navmeshShowFaces || navmeshRenderMode == NavmeshRenderMode::LinesOnly);
-    ImGui::SliderFloat("Alpha das faces", &navmeshFaceAlpha, 0.0f, 1.0f);
-    ImGui::EndDisabled();
-    ImGui::Checkbox("Mostrar linhas da navmesh", &navmeshShowLines);
-
-    ImGui::Separator();
-    ImGui::Text("Tris: %zu", navMeshTris.size() / 3);
-    ImGui::Text("Linhas: %zu", m_navmeshLines.size());
-
-    ImGui::End();
-
-
-    // --- Debug Camera ---
-    ImGui::Begin("Debug");
-    ImGui::Text("Camera: %.2f %.2f %.2f",
-        camera->pos.x, camera->pos.y, camera->pos.z);
-    ImGui::End();
 
     // --- OpenGL ---
     glEnable(GL_DEPTH_TEST);
@@ -575,57 +911,13 @@ void ViewerApp::RenderFrame()
     renderer->Begin(camera, renderMode);
     glUniform3f(glGetUniformLocation(renderer->GetShader(), "uSolidColor"), 1,1,1);
 
-    // OBJ
-
-    if (loadedMesh)
+    for (size_t meshIdx = 0; meshIdx < meshInstances.size(); ++meshIdx)
     {
-        ImGui::Begin("Mesh Info");
+        const auto& instance = meshInstances[meshIdx];
+        if (!instance.mesh)
+            continue;
 
-        ImGui::Text("Navmesh bounds:");
-        ImGui::Text("Min: %.1f %.1f %.1f",
-            loadedMesh->navmeshMinBounds.x,
-            loadedMesh->navmeshMinBounds.y,
-            loadedMesh->navmeshMinBounds.z);
-
-        ImGui::Text("Max: %.1f %.1f %.1f",
-            loadedMesh->navmeshMaxBounds.x,
-            loadedMesh->navmeshMaxBounds.y,
-            loadedMesh->navmeshMaxBounds.z);
-
-        glm::vec3 center = (loadedMesh->navmeshMinBounds + loadedMesh->navmeshMaxBounds) * 0.5f;
-        ImGui::Text("Center: %.1f %.1f %.1f",
-            center.x, center.y, center.z);
-
-        ImGui::Separator();
-        ImGui::Text("Render bounds (offset: %.1f %.1f %.1f)",
-            loadedMesh->renderOffset.x,
-            loadedMesh->renderOffset.y,
-            loadedMesh->renderOffset.z);
-        ImGui::Text("Min: %.1f %.1f %.1f",
-            loadedMesh->renderMinBounds.x,
-            loadedMesh->renderMinBounds.y,
-            loadedMesh->renderMinBounds.z);
-
-        ImGui::Text("Max: %.1f %.1f %.1f",
-            loadedMesh->renderMaxBounds.x,
-            loadedMesh->renderMaxBounds.y,
-            loadedMesh->renderMaxBounds.z);
-
-        glm::vec3 renderCenter = (loadedMesh->renderMinBounds + loadedMesh->renderMaxBounds) * 0.5f;
-        ImGui::Text("Render Center: %.1f %.1f %.1f",
-            renderCenter.x, renderCenter.y, renderCenter.z);
-
-        if (ImGui::Button("Teleport Camera to Mesh Center"))
-            camera->pos = renderCenter + glm::vec3(0,50,150);
-
-        ImGui::End();
-
-        glm::mat4 model(1.0f);
-        model = glm::translate(model, meshPos);
-        model = glm::rotate(model, glm::radians(meshRot.x), glm::vec3(1,0,0));
-        model = glm::rotate(model, glm::radians(meshRot.y), glm::vec3(0,1,0));
-        model = glm::rotate(model, glm::radians(meshRot.z), glm::vec3(0,0,1));
-        model = glm::scale(model, glm::vec3(meshScale));
+        glm::mat4 model = GetModelMatrix(instance);
 
         glUseProgram(renderer->GetShader());
         glUniformMatrix4fv(
@@ -633,32 +925,29 @@ void ViewerApp::RenderFrame()
             1, GL_FALSE, &model[0][0]
         );
 
-        loadedMesh->Draw();
+        instance.mesh->Draw();
 
-        if (pickedTri >= 0)
+        if (pickedTri >= 0 && pickedMeshIndex == static_cast<int>(meshIdx))
         {
-            if (pickedTri + 2 >= (int)loadedMesh->indices.size())
+            if (pickedTri + 2 >= (int)instance.mesh->indices.size())
             {
                 pickedTri = -1;
             }
             else
             {
-                int i0 = loadedMesh->indices[pickedTri+0];
-                int i1 = loadedMesh->indices[pickedTri+1];
-                int i2 = loadedMesh->indices[pickedTri+2];
+                int i0 = instance.mesh->indices[pickedTri+0];
+                int i1 = instance.mesh->indices[pickedTri+1];
+                int i2 = instance.mesh->indices[pickedTri+2];
 
-                glm::vec3 v0 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i0], 1.0f));
-                glm::vec3 v1 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i1], 1.0f));
-                glm::vec3 v2 = glm::vec3(model * glm::vec4(loadedMesh->renderVertices[i2], 1.0f));
+                glm::vec3 v0 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i0], 1.0f));
+                glm::vec3 v1 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i1], 1.0f));
+                glm::vec3 v2 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i2], 1.0f));
 
                 renderer->DrawTriangleHighlight(v0, v1, v2);
             }
         }
-        
-
-
     }
-    
+
     bool drawFaces = navmeshVisible && navmeshShowFaces &&
         navmeshRenderMode != NavmeshRenderMode::LinesOnly &&
         !navMeshTris.empty();
