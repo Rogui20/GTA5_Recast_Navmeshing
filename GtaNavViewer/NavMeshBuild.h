@@ -26,3 +26,11 @@ bool BuildSingleNavMesh(const NavmeshBuildInput& input,
 bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                        const NavmeshGenerationSettings& settings,
                        dtNavMesh*& outNav);
+
+bool BuildSingleTile(const NavmeshBuildInput& input,
+                     const NavmeshGenerationSettings& settings,
+                     int tileX,
+                     int tileY,
+                     dtNavMesh* nav,
+                     bool& outBuilt,
+                     bool& outEmpty);

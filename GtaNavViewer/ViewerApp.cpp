@@ -409,7 +409,7 @@ void ViewerApp::ProcessEvents()
             if (meshInstances.empty())
                 continue;
 
-            if (pickTriangleMode)
+            if (pickTriangleMode || buildTileAtMode)
             {
                 int mx = e.button.x;
                 int my = e.button.y;
@@ -419,6 +419,8 @@ void ViewerApp::ProcessEvents()
                 float best = FLT_MAX;
                 pickedTri = -1;
                 pickedMeshIndex = -1;
+                glm::vec3 bestPoint(0.0f);
+                bool hasHit = false;
 
                 for (size_t meshIdx = 0; meshIdx < meshInstances.size(); ++meshIdx)
                 {
@@ -445,10 +447,31 @@ void ViewerApp::ProcessEvents()
                                 best = dist;
                                 pickedTri = i;
                                 pickedMeshIndex = static_cast<int>(meshIdx);
+                                bestPoint = ray.origin + ray.dir * dist;
+                                hasHit = true;
                             }
                         }
                     }
                 }
+
+                if (buildTileAtMode && hasHit)
+                {
+                    int tileX = -1;
+                    int tileY = -1;
+                    if (navData.BuildTileAt(bestPoint, navGenSettings, tileX, tileY))
+                    {
+                        buildNavmeshDebugLines();
+                    }
+                    else
+                    {
+                        printf("[ViewerApp] BuildTileAt falhou para o clique em (%.2f, %.2f, %.2f).\n",
+                               bestPoint.x, bestPoint.y, bestPoint.z);
+                    }
+                }
+            }
+            else if (addRemoveTileMode)
+            {
+                printf("[ViewerApp] addRemoveTileMode ainda não implementado.\n");
             }
             else if (addRemoveTileMode)
             {
@@ -698,9 +721,29 @@ void ViewerApp::RenderFrame()
                     {
                         pickTriangleMode = pickMode;
                         if (pickTriangleMode)
+                        {
+                            buildTileAtMode = false;
                             addRemoveTileMode = false;
-                        else if (!addRemoveTileMode)
+                        }
+                        else if (!buildTileAtMode && !addRemoveTileMode)
+                        {
                             pickTriangleMode = true;
+                        }
+                    }
+
+                    bool buildTileMode = buildTileAtMode;
+                    if (ImGui::Checkbox("buildTileAtMode", &buildTileMode))
+                    {
+                        buildTileAtMode = buildTileMode;
+                        if (buildTileAtMode)
+                        {
+                            pickTriangleMode = false;
+                            addRemoveTileMode = false;
+                        }
+                        else if (!pickTriangleMode && !addRemoveTileMode)
+                        {
+                            pickTriangleMode = true;
+                        }
                     }
 
                     ImGui::BeginDisabled(true);
@@ -709,11 +752,14 @@ void ViewerApp::RenderFrame()
                     {
                         addRemoveTileMode = addRemoveMode;
                         if (addRemoveTileMode)
+                        {
                             pickTriangleMode = false;
+                            buildTileAtMode = false;
+                        }
                     }
                     ImGui::EndDisabled();
 
-                    const char* activeMode = pickTriangleMode ? "pickTriangleMode" : "addRemoveTileMode";
+                    const char* activeMode = pickTriangleMode ? "pickTriangleMode" : (buildTileAtMode ? "buildTileAtMode" : "addRemoveTileMode");
                     ImGui::Text("Modo ativo: %s", activeMode);
                 }
 

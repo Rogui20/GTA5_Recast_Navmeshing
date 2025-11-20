@@ -13,6 +13,27 @@
 #include <cstring>
 #include <cmath>
 
+namespace
+{
+    struct LoggingRcContext : public rcContext
+    {
+        void doLog(const rcLogCategory category, const char* msg, const int len) override
+        {
+            rcIgnoreUnused(len);
+            const char* prefix = "[Recast]";
+            switch (category)
+            {
+            case RC_LOG_PROGRESS: prefix = "[Recast][info]"; break;
+            case RC_LOG_WARNING:  prefix = "[Recast][warn]"; break;
+            case RC_LOG_ERROR:    prefix = "[Recast][error]"; break;
+            default: break;
+            }
+
+            printf("%s %s\n", prefix, msg);
+        }
+    };
+}
+
 NavMeshData::~NavMeshData()
 {
     if (m_nav)
@@ -82,6 +103,73 @@ bool NavMeshData::Load(const char* path)
     return true;
 }
 
+bool NavMeshData::BuildTileAt(const glm::vec3& worldPos,
+                              const NavmeshGenerationSettings& settings,
+                              int& outTileX,
+                              int& outTileY)
+{
+    outTileX = -1;
+    outTileY = -1;
+
+    if (!m_nav)
+    {
+        printf("[NavMeshData] BuildTileAt: navmesh ainda nao foi construido.\n");
+        return false;
+    }
+
+    if (!m_hasTiledCache)
+    {
+        printf("[NavMeshData] BuildTileAt: sem cache de build tiled. Gere o navmesh tiled primeiro.\n");
+        return false;
+    }
+
+    const float expectedTileWorld = m_cachedSettings.tileSize * m_cachedBaseCfg.cs;
+    if (settings.mode != NavmeshBuildMode::Tiled ||
+        fabsf(settings.cellSize - m_cachedSettings.cellSize) > 1e-3f ||
+        fabsf(settings.cellHeight - m_cachedSettings.cellHeight) > 1e-3f ||
+        settings.tileSize != m_cachedSettings.tileSize)
+    {
+        printf("[NavMeshData] BuildTileAt: configuracao atual difere da usada no navmesh cacheado. Use mesmos valores de tile/cell.\n");
+    }
+
+    const float tileWidth = expectedTileWorld;
+    const int tx = (int)floorf((worldPos.x - m_cachedBMin[0]) / tileWidth);
+    const int ty = (int)floorf((worldPos.z - m_cachedBMin[2]) / tileWidth);
+
+    if (tx < 0 || ty < 0 || tx >= m_cachedTileWidthCount || ty >= m_cachedTileHeightCount)
+    {
+        printf("[NavMeshData] BuildTileAt: posicao (%.2f, %.2f, %.2f) fora do grid de tiles (%d x %d).\n",
+               worldPos.x, worldPos.y, worldPos.z, m_cachedTileWidthCount, m_cachedTileHeightCount);
+        return false;
+    }
+
+    LoggingRcContext ctx;
+    NavmeshBuildInput buildInput{ctx, m_cachedVerts, m_cachedTris};
+    buildInput.nverts = (int)(m_cachedVerts.size() / 3);
+    buildInput.ntris = (int)(m_cachedTris.size() / 3);
+    rcVcopy(buildInput.meshBMin, m_cachedBMin);
+    rcVcopy(buildInput.meshBMax, m_cachedBMax);
+    buildInput.baseCfg = m_cachedBaseCfg;
+
+    bool built = false;
+    bool empty = false;
+    if (!BuildSingleTile(buildInput, m_cachedSettings, tx, ty, m_nav, built, empty))
+        return false;
+
+    outTileX = tx;
+    outTileY = ty;
+    if (empty)
+    {
+        printf("[NavMeshData] BuildTileAt: tile %d,%d nao possui geometrias para navmesh.\n", tx, ty);
+    }
+    else if (built)
+    {
+        printf("[NavMeshData] BuildTileAt: tile %d,%d reconstruido a partir do clique (%.2f, %.2f, %.2f).\n",
+               tx, ty, worldPos.x, worldPos.y, worldPos.z);
+    }
+    return true;
+}
+
 
 // ----------------------------------------------------------------------------
 // ExtractDebugMesh()
@@ -146,24 +234,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
                                 const std::vector<unsigned int>& idxIn,
                                 const NavmeshGenerationSettings& settings)
 {
-    struct LoggingRcContext : public rcContext
-    {
-        void doLog(const rcLogCategory category, const char* msg, const int len) override
-        {
-            rcIgnoreUnused(len);
-            const char* prefix = "[Recast]";
-            switch (category)
-            {
-            case RC_LOG_PROGRESS: prefix = "[Recast][info]"; break;
-            case RC_LOG_WARNING:  prefix = "[Recast][warn]"; break;
-            case RC_LOG_ERROR:    prefix = "[Recast][error]"; break;
-            default: break;
-            }
-
-            printf("%s %s\n", prefix, msg);
-        }
-    };
-
+    m_hasTiledCache = false;
     LoggingRcContext ctx;
 
     if (vertsIn.empty() || idxIn.empty())
@@ -280,5 +351,23 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     }
 
     m_nav = newNav;
+    if (settings.mode == NavmeshBuildMode::Tiled)
+    {
+        m_cachedVerts = verts;
+        m_cachedTris = tris;
+        rcVcopy(m_cachedBMin, meshBMin);
+        rcVcopy(m_cachedBMax, meshBMax);
+        m_cachedBaseCfg = baseCfg;
+        m_cachedSettings = settings;
+        m_cachedTileWidthCount = (baseCfg.width + settings.tileSize - 1) / settings.tileSize;
+        m_cachedTileHeightCount = (baseCfg.height + settings.tileSize - 1) / settings.tileSize;
+        m_hasTiledCache = true;
+    }
+    else
+    {
+        m_cachedVerts.clear();
+        m_cachedTris.clear();
+        m_hasTiledCache = false;
+    }
     return true;
 }

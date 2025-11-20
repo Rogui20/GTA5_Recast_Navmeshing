@@ -81,6 +81,7 @@ private:
     uint32_t navmeshAutoBuildMask = 0;
 
     bool pickTriangleMode = true;
+    bool buildTileAtMode = false;
     bool addRemoveTileMode = false;
 
     // buffers para desenhar navmesh no renderer

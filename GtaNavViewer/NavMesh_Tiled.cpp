@@ -2,7 +2,6 @@
 
 #include <DetourMath.h>
 #include <DetourNavMeshBuilder.h>
-#include <DetourCommon.h>
 
 #include <algorithm>
 #include <cmath>
@@ -441,5 +440,146 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
            tileWidthCount, tileHeightCount, tilesBuilt, tilesSkipped);
 
     outNav = nav;
+    return true;
+}
+
+bool BuildSingleTile(const NavmeshBuildInput& input,
+                     const NavmeshGenerationSettings& settings,
+                     int tileX,
+                     int tileY,
+                     dtNavMesh* nav,
+                     bool& outBuilt,
+                     bool& outEmpty)
+{
+    outBuilt = false;
+    outEmpty = false;
+
+    if (!nav)
+    {
+        printf("[NavMeshData] BuildSingleTile: navMesh nulo.\n");
+        return false;
+    }
+
+    rcConfig cfg = input.baseCfg;
+    cfg.borderSize = cfg.walkableRadius + 3;
+    cfg.tileSize = std::max(1, settings.tileSize);
+
+    const int tileWidthCount = (cfg.width + cfg.tileSize - 1) / cfg.tileSize;
+    const int tileHeightCount = (cfg.height + cfg.tileSize - 1) / cfg.tileSize;
+    if (tileX < 0 || tileY < 0 || tileX >= tileWidthCount || tileY >= tileHeightCount)
+    {
+        printf("[NavMeshData] BuildSingleTile: coordenada de tile fora do grid (%d,%d) grid=%d x %d.\n",
+               tileX, tileY, tileWidthCount, tileHeightCount);
+        return false;
+    }
+
+    rcConfig tileCfg = cfg;
+    tileCfg.width = cfg.tileSize + cfg.borderSize * 2;
+    tileCfg.height = cfg.tileSize + cfg.borderSize * 2;
+
+    float tbmin[3];
+    float tbmax[3];
+    tbmin[0] = input.meshBMin[0] + tileX * cfg.tileSize * cfg.cs;
+    tbmin[1] = input.meshBMin[1];
+    tbmin[2] = input.meshBMin[2] + tileY * cfg.tileSize * cfg.cs;
+    tbmax[0] = input.meshBMin[0] + (tileX + 1) * cfg.tileSize * cfg.cs;
+    tbmax[1] = input.meshBMax[1];
+    tbmax[2] = input.meshBMin[2] + (tileY + 1) * cfg.tileSize * cfg.cs;
+
+    rcVcopy(tileCfg.bmin, tbmin);
+    rcVcopy(tileCfg.bmax, tbmax);
+    tileCfg.bmax[0] = std::min(tileCfg.bmax[0], input.meshBMax[0]);
+    tileCfg.bmax[2] = std::min(tileCfg.bmax[2], input.meshBMax[2]);
+
+    tileCfg.bmin[0] -= cfg.borderSize * cfg.cs;
+    tileCfg.bmin[2] -= cfg.borderSize * cfg.cs;
+    tileCfg.bmax[0] += cfg.borderSize * cfg.cs;
+    tileCfg.bmax[2] += cfg.borderSize * cfg.cs;
+
+    std::vector<int> tileTris;
+    tileTris.reserve(input.tris.size());
+
+    for (int i = 0; i < input.ntris; ++i)
+    {
+        const float* v0 = &input.verts[input.tris[i*3+0] * 3];
+        const float* v1 = &input.verts[input.tris[i*3+1] * 3];
+        const float* v2 = &input.verts[input.tris[i*3+2] * 3];
+
+        float triMin[3] = {
+            std::min({v0[0], v1[0], v2[0]}),
+            std::min({v0[1], v1[1], v2[1]}),
+            std::min({v0[2], v1[2], v2[2]})
+        };
+        float triMax[3] = {
+            std::max({v0[0], v1[0], v2[0]}),
+            std::max({v0[1], v1[1], v2[1]}),
+            std::max({v0[2], v1[2], v2[2]})
+        };
+
+        if (overlapsBounds(triMin, triMax, tileCfg.bmin, tileCfg.bmax))
+        {
+            tileTris.push_back(input.tris[i*3+0]);
+            tileTris.push_back(input.tris[i*3+1]);
+            tileTris.push_back(input.tris[i*3+2]);
+        }
+    }
+
+    dtNavMeshParams params = *nav->getParams();
+    const unsigned int maxPolys = params.maxPolys;
+
+    dtStatus removeStatus = DT_SUCCESS;
+    const dtTileRef existing = nav->getTileRefAt(tileX, tileY, 0);
+    if (existing)
+    {
+        removeStatus = nav->removeTile(existing, nullptr, nullptr);
+        DEBUG_LOG("[NavMeshData] removeTile existente (%d,%d) status=0x%x\n", tileX, tileY, removeStatus);
+    }
+
+    if (tileTris.empty())
+    {
+        printf("[NavMeshData] BuildSingleTile: tile %d,%d nao possui geometria. Removido=%s\n",
+               tileX, tileY, dtStatusSucceed(removeStatus) ? "sim" : "nao");
+        outEmpty = true;
+        return dtStatusSucceed(removeStatus);
+    }
+
+    dtNavMeshCreateParams createParams{};
+    unsigned char* navMeshData = nullptr;
+    int navMeshDataSize = 0;
+    const NavTileBuildResult result = createNavDataForConfig(input, tileCfg, tileTris, tileX, tileY, createParams, navMeshData, navMeshDataSize);
+    if (result == NavTileBuildResult::Empty)
+    {
+        outEmpty = true;
+        return true;
+    }
+    if (result == NavTileBuildResult::Error)
+    {
+        return false;
+    }
+
+    if (createParams.polyCount > (int)maxPolys)
+    {
+        printf("[NavMeshData] BuildSingleTile: tile %d,%d tem %d polys > maxPolys(%u).\n",
+               tileX, tileY, createParams.polyCount, maxPolys);
+        dtFree(navMeshData);
+        return false;
+    }
+
+    dtStatus addStatus = nav->addTile(navMeshData, navMeshDataSize, DT_TILE_FREE_DATA, 0, nullptr);
+    if (dtStatusFailed(addStatus))
+    {
+        printf("[NavMeshData] BuildSingleTile: addTile falhou (tile %d,%d) status=0x%x size=%d polys=%d bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
+               tileX, tileY, addStatus, navMeshDataSize, createParams.polyCount,
+               createParams.bmin[0], createParams.bmin[1], createParams.bmin[2],
+               createParams.bmax[0], createParams.bmax[1], createParams.bmax[2]);
+        dtFree(navMeshData);
+        return false;
+    }
+
+    outBuilt = true;
+    printf("[NavMeshData] BuildSingleTile OK (%d,%d). polys=%d verts=%d bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
+           tileX, tileY, createParams.polyCount, createParams.vertCount,
+           createParams.bmin[0], createParams.bmin[1], createParams.bmin[2],
+           createParams.bmax[0], createParams.bmax[1], createParams.bmax[2]);
     return true;
 }

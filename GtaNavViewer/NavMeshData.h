@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <glm/glm.hpp>
+#include <Recast.h>
 
 class dtNavMesh;
 
@@ -40,6 +41,11 @@ public:
                        const std::vector<unsigned int>& indices,
                        const NavmeshGenerationSettings& settings);
 
+    bool BuildTileAt(const glm::vec3& worldPos,
+                     const NavmeshGenerationSettings& settings,
+                     int& outTileX,
+                     int& outTileY);
+
                        
     // Conversão para desenhar no viewer
     void ExtractDebugMesh(
@@ -49,4 +55,14 @@ public:
 
 private:
     dtNavMesh* m_nav = nullptr;
+
+    std::vector<float> m_cachedVerts;
+    std::vector<int>   m_cachedTris;
+    float m_cachedBMin[3] = {0,0,0};
+    float m_cachedBMax[3] = {0,0,0};
+    rcConfig m_cachedBaseCfg{};
+    NavmeshGenerationSettings m_cachedSettings{};
+    int m_cachedTileWidthCount = 0;
+    int m_cachedTileHeightCount = 0;
+    bool m_hasTiledCache = false;
 };
