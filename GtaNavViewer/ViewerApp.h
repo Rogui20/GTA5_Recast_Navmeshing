@@ -2,6 +2,7 @@
 #pragma once
 #include <string>
 #include <SDL.h>
+#include <filesystem>
 #include "Mesh.h"
 #include "RenderMode.h"
 #include "GtaNavAPI.h"
@@ -55,6 +56,14 @@ private:
     bool InitGL();
     bool InitImGui();
 
+    bool LoadMeshFromPath(const std::string& path);
+    void LoadLastDirectory();
+    void SaveLastDirectory(const std::filesystem::path& directory);
+    std::string GetConfigFilePath() const;
+
     void ProcessEvents();
     void RenderFrame();
+
+    std::string currentDirectory;
+    std::string selectedEntry;
 };
