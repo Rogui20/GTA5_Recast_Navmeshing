@@ -25,7 +25,7 @@ public:
     bool Init();
     void Run();
     void Shutdown();
-    bool buildNavmeshFromMeshes();
+    bool buildNavmeshFromMeshes(bool buildTilesNow = true);
     void buildNavmeshDebugLines();
 
 private:
@@ -54,6 +54,7 @@ private:
     RenderMode renderMode = RenderMode::Solid;
     bool centerMesh = true;
     NavMeshData navData;
+    NavmeshGenerationSettings navGenSettings{};
 
     enum class NavmeshRenderMode
     {
@@ -78,6 +79,10 @@ private:
     };
 
     uint32_t navmeshAutoBuildMask = 0;
+
+    bool pickTriangleMode = true;
+    bool buildTileAtMode = false;
+    bool addRemoveTileMode = false;
 
     // buffers para desenhar navmesh no renderer
     std::vector<glm::vec3> navMeshTris;
