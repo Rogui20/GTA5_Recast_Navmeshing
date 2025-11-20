@@ -523,30 +523,6 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
                meshBMin[0], meshBMin[1], meshBMin[2],
                meshBMax[0], meshBMax[1], meshBMax[2]);
 
-        m_nav = dtAllocNavMesh();
-        if (!m_nav)
-        {
-            printf("[NavMeshData] dtAllocNavMesh falhou.\n");
-            return false;
-        }
-
-        dtNavMeshParams navParams{};
-        rcVcopy(navParams.orig, meshBMin);
-        navParams.tileWidth = cfg.tileSize * cfg.cs;
-        navParams.tileHeight = cfg.tileSize * cfg.cs;
-        navParams.maxTiles = tileWidthCount * tileHeightCount;
-        navParams.maxPolys = 2048;
-
-        if (dtStatusFailed(m_nav->init(&navParams)))
-        {
-            printf("[NavMeshData] m_nav->init falhou (tiled).\n");
-            dtFreeNavMesh(m_nav);
-            m_nav = nullptr;
-            return false;
-        }
-
-        bool builtAnyTile = false;
-
         auto overlapsBounds = [](const float* amin, const float* amax, const float* bmin, const float* bmax)
         {
             if (amin[0] > bmax[0] || amax[0] < bmin[0]) return false;
@@ -554,6 +530,17 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
             if (amin[2] > bmax[2] || amax[2] < bmin[2]) return false;
             return true;
         };
+
+        struct TileInput
+        {
+            int tx = 0;
+            int ty = 0;
+            rcConfig cfg{};
+            std::vector<int> tris;
+        };
+
+        std::vector<TileInput> tilesToBuild;
+        tilesToBuild.reserve(tileWidthCount * tileHeightCount);
 
         for (int ty = 0; ty < tileHeightCount; ++ty)
         {
@@ -613,36 +600,74 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
                 if (tileTris.empty())
                     continue;
 
-                dtNavMeshCreateParams params{};
-                unsigned char* navMeshData = nullptr;
-                int navMeshDataSize = 0;
-                if (!createNavDataForConfig(tileCfg, tileTris, tx, ty, params, navMeshData, navMeshDataSize))
-                {
-                    dtFreeNavMesh(m_nav);
-                    m_nav = nullptr;
-                    return false;
-                }
-
-                dtStatus status = m_nav->addTile(navMeshData, navMeshDataSize, DT_TILE_FREE_DATA, 0, nullptr);
-                if (dtStatusFailed(status))
-                {
-                    printf("[NavMeshData] addTile falhou (tile %d,%d). status=0x%x size=%d\n", tx, ty, status, navMeshDataSize);
-                    dtFree(navMeshData);
-                    dtFreeNavMesh(m_nav);
-                    m_nav = nullptr;
-                    return false;
-                }
-
-                builtAnyTile = true;
+                TileInput input;
+                input.tx = tx;
+                input.ty = ty;
+                input.cfg = tileCfg;
+                input.tris = std::move(tileTris);
+                tilesToBuild.push_back(std::move(input));
             }
         }
 
-        if (!builtAnyTile)
+        if (tilesToBuild.empty())
         {
             printf("[NavMeshData] Nenhum tile de navmesh foi gerado.\n");
+            return false;
+        }
+
+        m_nav = dtAllocNavMesh();
+        if (!m_nav)
+        {
+            printf("[NavMeshData] dtAllocNavMesh falhou.\n");
+            return false;
+        }
+
+        dtNavMeshParams navParams{};
+        rcVcopy(navParams.orig, meshBMin);
+        navParams.tileWidth = cfg.tileSize * cfg.cs;
+        navParams.tileHeight = cfg.tileSize * cfg.cs;
+        navParams.maxTiles = (int)tilesToBuild.size();
+        navParams.maxPolys = 2048;
+
+        dtStatus initStatus = m_nav->init(&navParams);
+        if (dtStatusFailed(initStatus))
+        {
+            printf("[NavMeshData] m_nav->init falhou (tiled). status=0x%x maxTiles=%d maxPolys=%d tileWidth=%.3f tileHeight=%.3f orig=(%.2f, %.2f, %.2f)\n",
+                   initStatus, navParams.maxTiles, navParams.maxPolys, navParams.tileWidth, navParams.tileHeight,
+                   navParams.orig[0], navParams.orig[1], navParams.orig[2]);
             dtFreeNavMesh(m_nav);
             m_nav = nullptr;
             return false;
+        }
+
+        for (const TileInput& input : tilesToBuild)
+        {
+            dtNavMeshCreateParams params{};
+            unsigned char* navMeshData = nullptr;
+            int navMeshDataSize = 0;
+            if (!createNavDataForConfig(input.cfg, input.tris, input.tx, input.ty, params, navMeshData, navMeshDataSize))
+            {
+                printf("[NavMeshData] createNavDataForConfig falhou (tile %d,%d). Tris=%zu Bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
+                       input.tx, input.ty, input.tris.size() / 3,
+                       input.cfg.bmin[0], input.cfg.bmin[1], input.cfg.bmin[2],
+                       input.cfg.bmax[0], input.cfg.bmax[1], input.cfg.bmax[2]);
+                dtFreeNavMesh(m_nav);
+                m_nav = nullptr;
+                return false;
+            }
+
+            dtStatus status = m_nav->addTile(navMeshData, navMeshDataSize, DT_TILE_FREE_DATA, 0, nullptr);
+            if (dtStatusFailed(status))
+            {
+                printf("[NavMeshData] addTile falhou (tile %d,%d). status=0x%x size=%d polys=%d verts=%d bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
+                       input.tx, input.ty, status, navMeshDataSize, params.polyCount, params.vertCount,
+                       params.bmin[0], params.bmin[1], params.bmin[2],
+                       params.bmax[0], params.bmax[1], params.bmax[2]);
+                dtFree(navMeshData);
+                dtFreeNavMesh(m_nav);
+                m_nav = nullptr;
+                return false;
+            }
         }
 
         printf("[NavMeshData] BuildFromMesh OK (tiled). Tiles=%d x %d\n",
