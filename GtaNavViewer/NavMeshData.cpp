@@ -144,11 +144,6 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         void doLog(const rcLogCategory category, const char* msg, const int len) override
         {
             rcIgnoreUnused(len);
-        void doLog(const rcLogCategory category, const char* msg, va_list ap) override
-        {
-            char buffer[1024];
-            vsnprintf(buffer, sizeof(buffer), msg, ap);
-
             const char* prefix = "[Recast]";
             switch (category)
             {
@@ -159,7 +154,6 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
             }
 
             printf("%s %s\n", prefix, msg);
-            printf("%s %s\n", prefix, buffer);
         }
     };
 
