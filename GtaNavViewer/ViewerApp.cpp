@@ -22,6 +22,9 @@
 #include <algorithm>
 #include <cctype>
 
+
+int pickedTri = -1;
+
 ViewerApp::ViewerApp()
 {
     currentDirectory = std::filesystem::current_path().string();
@@ -286,7 +289,6 @@ bool RayTriangleIntersect(const Ray& r,
     return true;
 }
 
-int pickedTri = -1;
 
 void ViewerApp::ProcessEvents()
 {
@@ -524,9 +526,6 @@ void ViewerApp::RenderFrame()
     renderer->Begin(camera, renderMode);
     glUniform3f(glGetUniformLocation(renderer->GetShader(), "uSolidColor"), 1,1,1);
 
-    // Cubo
-    renderer->DebugCube(camera->pos + glm::vec3(0,0,-5), 1.0f);
-
     // OBJ
 
     if (loadedMesh)
@@ -572,8 +571,6 @@ void ViewerApp::RenderFrame()
         );
 
         loadedMesh->Draw();
-
-        renderer->DebugCube(meshPos, 0.5f);
 
         if (pickedTri >= 0)
         {
