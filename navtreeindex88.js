@@ -1,6 +1,5 @@
 var NAVTREEINDEX88 =
 {
-"imgui__widgets_8cpp.html#a5d0ac25abe189c752495f2f26afea2e6":[44,0,7,0,8,91],
 "imgui__widgets_8cpp.html#a5df9e72d33094eda9ddeea990432c447":[44,0,7,0,8,57],
 "imgui__widgets_8cpp.html#a6146d78f94a9da0cf92020500693ef2c":[44,0,7,0,8,99],
 "imgui__widgets_8cpp.html#a6201ac5ca1497718dc28dd5f9cd13a3b":[44,0,7,0,8,46],
@@ -249,5 +248,6 @@ var NAVTREEINDEX88 =
 "md_Docs_2__1__Introduction.html#high-level-overview-of-the-recast-navmesh-building-process":[0,3],
 "md_Docs_2__1__Introduction.html#what-is-a-navmesh-and-how-does-it-work":[0,0],
 "md_Docs_2__1__Introduction.html#what-is-a-navmesh-not":[0,1],
-"md_Docs_2__1__Introduction.html#what-is-recast-navigation":[0,2]
+"md_Docs_2__1__Introduction.html#what-is-recast-navigation":[0,2],
+"md_Docs_2__2__BuildingAndIntegrating.html":[1]
 };

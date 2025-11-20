@@ -1,6 +1,5 @@
 var NAVTREEINDEX69 =
 {
-"classrcVectorBase.html#a1177670bcc87add05f0e060e93b5e6bd":[43,0,351,28],
 "classrcVectorBase.html#a1632ccdccdecc8e5e4710832406bbe61":[43,0,351,19],
 "classrcVectorBase.html#a198579f0ad4de6bdadc5bdc7f1214315":[43,0,351,17],
 "classrcVectorBase.html#a1cb229e5cbe8e798fe216393f2f0f327":[43,0,351,30],
@@ -217,8 +216,8 @@ var NAVTREEINDEX69 =
 "external_2glm_2simd_2vector__relational_8h.html":[44,0,5,1,1,9],
 "external_2glm_2simd_2vector__relational_8h_source.html":[44,0,5,1,1,9],
 "files.html":[44,0],
-"functions.html":[43,3,0],
 "functions.html":[43,3,0,0],
+"functions.html":[43,3,0],
 "functions_a.html":[43,3,0,1],
 "functions_b.html":[43,3,0,2],
 "functions_c.html":[43,3,0,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX69 =
 "functions_func_t.html":[43,3,1,18],
 "functions_func_u.html":[43,3,1,19],
 "functions_func_v.html":[43,3,1,20],
-"functions_func_w.html":[43,3,1,21]
+"functions_func_w.html":[43,3,1,21],
+"functions_func_~.html":[43,3,1,22]
 };

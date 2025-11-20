@@ -1,6 +1,5 @@
 var NAVTREEINDEX104 =
 {
-"structSDL__FRect.html":[43,0,382],
 "structSDL__FRect.html#a23dacbd4579fa5a425435124b197a183":[43,0,382,0],
 "structSDL__FRect.html#a7dff6b929b472aa0c3989bec52bd01e0":[43,0,382,2],
 "structSDL__FRect.html#a8be19bcef20d0dc94302bfc092583bd7":[43,0,382,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX104 =
 "structSDL__Point.html#aaa68aefa869f6bdf46367a70bd9414b0":[43,0,413,1],
 "structSDL__QuitEvent.html":[43,0,414],
 "structSDL__QuitEvent.html#a51ab0279e6de40249ba93971a8757cf0":[43,0,414,1],
-"structSDL__QuitEvent.html#a7acd4fa42ca96da8edac146baaa0b433":[43,0,414,0]
+"structSDL__QuitEvent.html#a7acd4fa42ca96da8edac146baaa0b433":[43,0,414,0],
+"structSDL__RWops.html":[43,0,417]
 };
