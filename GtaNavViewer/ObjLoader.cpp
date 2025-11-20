@@ -31,7 +31,7 @@ static TempVertex ParseFaceElement(const std::string& token)
     return tv;
 }
 
-Mesh* ObjLoader::LoadObj(const std::string& path)
+Mesh* ObjLoader::LoadObj(const std::string& path, bool centerMesh)
 {
     std::ifstream file(path);
     if (!file.is_open())
@@ -75,26 +75,33 @@ Mesh* ObjLoader::LoadObj(const std::string& path)
         }
     }
 
-    // ============================
-    // 🔵 RECENTRALIZAR A MESH
-    // ============================
-    glm::vec3 center = (minB + maxB) * 0.5f;
-
-    for (auto& v : tmp)
-        v -= center;
-
-    // recalcular bounds após recentralizar
-    glm::vec3 newMin(FLT_MAX);
-    glm::vec3 newMax(-FLT_MAX);
-    for (auto& v : tmp)
+    glm::vec3 center(0.0f);
+    if (centerMesh)
     {
-        newMin = glm::min(newMin, v);
-        newMax = glm::max(newMax, v);
+        // ============================
+        // 🔵 RECENTRALIZAR A MESH
+        // ============================
+        center = (minB + maxB) * 0.5f;
+
+        for (auto& v : tmp)
+            v -= center;
+
+        // recalcular bounds após recentralizar
+        glm::vec3 newMin(FLT_MAX);
+        glm::vec3 newMax(-FLT_MAX);
+        for (auto& v : tmp)
+        {
+            newMin = glm::min(newMin, v);
+            newMax = glm::max(newMax, v);
+        }
+
+        minB = newMin;
+        maxB = newMax;
     }
 
     mesh->vertices = tmp;
-    mesh->minBounds = newMin;
-    mesh->maxBounds = newMax;
+    mesh->minBounds = minB;
+    mesh->maxBounds = maxB;
 
     // enviar GPU
     mesh->UploadToGPU();
@@ -103,10 +110,14 @@ Mesh* ObjLoader::LoadObj(const std::string& path)
         << "OBJ loaded: "
         << mesh->vertices.size() << " verts, "
         << mesh->indices.size() / 3 << " tris\n"
-        << "Bounds (recentered):\n"
-        << "   Min = " << newMin.x << ", " << newMin.y << ", " << newMin.z << "\n"
-        << "   Max = " << newMax.x << ", " << newMax.y << ", " << newMax.z << "\n"
-        << "   Center was = " << center.x << ", " << center.y << ", " << center.z << "\n";
+        << "Bounds" << (centerMesh ? " (recentered)" : "") << ":\n"
+        << "   Min = " << minB.x << ", " << minB.y << ", " << minB.z << "\n"
+        << "   Max = " << maxB.x << ", " << maxB.y << ", " << maxB.z << "\n";
+
+    if (centerMesh)
+    {
+        std::cout << "   Center was = " << center.x << ", " << center.y << ", " << center.z << "\n";
+    }
 
     return mesh;
 }
