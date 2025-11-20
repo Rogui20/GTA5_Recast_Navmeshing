@@ -1,5 +1,7 @@
 var NAVTREEINDEX69 =
 {
+"classrcPermVector.html#ab845b684e91805b000408677bb5f7950":[44,0,342,1],
+"classrcScopedDelete.html":[44,0,347],
 "classrcScopedDelete.html#a24d9238f78295ccbd1050247030e3741":[44,0,347,0],
 "classrcScopedDelete.html#a2f096ff87f4d48259dd85360a4218155":[44,0,347,1],
 "classrcScopedDelete.html#a694ef36a44d1ccac8fd3fb255d7cf9bd":[44,0,347,2],
@@ -232,8 +234,8 @@ var NAVTREEINDEX69 =
 "external_2glm_2simd_2vector__relational_8h.html":[45,0,5,1,1,9],
 "external_2glm_2simd_2vector__relational_8h_source.html":[45,0,5,1,1,9],
 "files.html":[45,0],
-"functions.html":[44,3,0],
 "functions.html":[44,3,0,0],
+"functions.html":[44,3,0],
 "functions_a.html":[44,3,0,1],
 "functions_b.html":[44,3,0,2],
 "functions_c.html":[44,3,0,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX69 =
 "functions_func_a.html":[44,3,1,1],
 "functions_func_b.html":[44,3,1,2],
 "functions_func_c.html":[44,3,1,3],
-"functions_func_d.html":[44,3,1,4],
-"functions_func_e.html":[44,3,1,5],
-"functions_func_f.html":[44,3,1,6]
+"functions_func_d.html":[44,3,1,4]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX95 =
 {
+"structImGuiIO.html#a92288d3e802788c8c408eac2c12e709c":[44,0,213,19],
+"structImGuiIO.html#a974c08e33e5f2abcdd23981c9b9350ae":[44,0,213,76],
 "structImGuiIO.html#a9b240460966bf2bd35c30f27b8db4028":[44,0,213,112],
 "structImGuiIO.html#a9b37eea17baa240a93b1288673a6eeb9":[44,0,213,78],
 "structImGuiIO.html#a9be5194970cbf4036350761870ea8624":[44,0,213,99],
@@ -247,7 +249,5 @@ var NAVTREEINDEX95 =
 "structImGuiMetricsConfig.html#a66b6a4e19bb9c307d379d3172154d6a2":[44,0,224,5],
 "structImGuiMetricsConfig.html#a6cb6307afe6dd89671e0439d7cbd19f3":[44,0,224,0],
 "structImGuiMetricsConfig.html#a6cba724d2914e668a0d07e590e2bbac2":[44,0,224,9],
-"structImGuiMetricsConfig.html#a850ca6b46d41ba6bfb7057fd1a2dc30b":[44,0,224,7],
-"structImGuiMetricsConfig.html#a8a87adc63e607b6e96a82ed60fbeb027":[44,0,224,13],
-"structImGuiMetricsConfig.html#ab26775b8699841443de659a2364116a7":[44,0,224,8]
+"structImGuiMetricsConfig.html#a850ca6b46d41ba6bfb7057fd1a2dc30b":[44,0,224,7]
 };

@@ -113,7 +113,7 @@ var searchData=
   ['maxnum_110',['maxnum',['../structSDL__RWops.html#a7786282ec28451085908f70048ee32c8',1,'SDL_RWops']]],
   ['maxobstacles_111',['maxObstacles',['../structdtTileCacheParams.html#a30fb34944589db46ad6262748d3f4c0c',1,'dtTileCacheParams']]],
   ['maxpath_112',['maxPath',['../structdtRaycastHit.html#a62b75cb350d9ace5e47887c7c1add9b3',1,'dtRaycastHit']]],
-  ['maxpolys_113',['maxpolys',['../structdtNavMeshParams.html#a4f44babd04fff4f8300ecd15d4237375',1,'dtNavMeshParams::maxPolys'],['../structrcPolyMesh.html#afc6261e7cee3e3ff2a83b6ee8baf14a9',1,'rcPolyMesh::maxpolys']]],
+  ['maxpolys_113',['maxpolys',['../structrcPolyMesh.html#afc6261e7cee3e3ff2a83b6ee8baf14a9',1,'rcPolyMesh::maxpolys'],['../structdtNavMeshParams.html#a4f44babd04fff4f8300ecd15d4237375',1,'dtNavMeshParams::maxPolys']]],
   ['maxrectbounds_114',['MaxRectBounds',['../structImFontAtlasBuilder.html#a1a97f57c58a81c35d8c16e989c72356b',1,'ImFontAtlasBuilder']]],
   ['maxrectsize_115',['MaxRectSize',['../structImFontAtlasBuilder.html#a1b386bcf52c3daa5ce5de749d62417d6',1,'ImFontAtlasBuilder']]],
   ['maxregions_116',['maxRegions',['../structrcCompactHeightfield.html#a6bfb7a2fdb06a64b03f0fffa885edd94',1,'rcCompactHeightfield']]],

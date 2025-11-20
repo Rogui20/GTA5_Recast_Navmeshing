@@ -114,115 +114,133 @@ $(document).ready(function(){initNavTree('ViewerApp_8h_source.html',''); initRes
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="RendererGL_8h.html">RendererGL.h</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">class </span><a class="code hl_class" href="classViewerCamera.html">ViewerCamera</a>;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">class </span><a class="code hl_class" href="classRendererGL.html">RendererGL</a>;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">class </span><a class="code hl_class" href="classViewerCamera.html">ViewerCamera</a>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">class </span><a class="code hl_class" href="classRendererGL.html">RendererGL</a>;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classViewerApp.html">   19</a></span><span class="keyword">class </span><a class="code hl_class" href="classViewerApp.html">ViewerApp</a></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <a class="code hl_function" href="classViewerApp.html#aae7f24aed89ead6de9de655db8b00757">ViewerApp</a>();</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <a class="code hl_function" href="classViewerApp.html#a46f2542925089dbd0d8dc3742b458df6">~ViewerApp</a>();</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classViewerApp.html#adf79f3b7e38626f1b21ca54b3194e1d5">Init</a>();</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classViewerApp.html#ac32b6821de5456c23b16f33b6e8b87e0">Run</a>();</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classViewerApp.html#a65f11dc51628f197699e624a44817df1">Shutdown</a>();</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classViewerApp.html#ae3d85da22e1bfac7ff7219b4410034ed">buildNavmeshFromMeshes</a>(<span class="keywordtype">bool</span> buildTilesNow = <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classViewerApp.html#a30b4ae10e356bfd02ba48f305e5e4e5c">buildNavmeshDebugLines</a>();</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="comment">// SDL</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <a class="code hl_typedef" href="SDL__video_8h.html#a55a196c7d3b8497538632c79ae1e6392">SDL_Window</a>* window = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <a class="code hl_typedef" href="SDL__video_8h.html#a0d64dcf67c9685d09cbe051448e1b3f3">SDL_GLContext</a> glContext = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="comment">// Controls</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">bool</span> running = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">bool</span> mouseCaptured = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">struct </span>MeshInstance</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        std::unique_ptr&lt;Mesh&gt; mesh;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        std::string           <a class="code hl_typedef" href="glad_8h.html#a5c4947d4516dd7cfa3505ce3a648a4ef">name</a>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        std::filesystem::path sourcePath;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        glm::vec3             position {0.0f};</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        glm::vec3             rotation {0.0f};</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordtype">float</span>                 <a class="code hl_typedef" href="SDL__opengl__glext_8h.html#a281421b881aa7a1266842b73a3bc7655">scale</a> = 1.0f;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    };</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// Engine components</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <a class="code hl_class" href="classViewerCamera.html">ViewerCamera</a>* camera = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_class" href="classRendererGL.html">RendererGL</a>* renderer = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    std::vector&lt;MeshInstance&gt; meshInstances;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <a class="code hl_enumeration" href="RenderMode_8h.html#ac9e546db27bb4f76f47d7e25f24abb88">RenderMode</a> renderMode = <a class="code hl_enumvalue" href="RenderMode_8h.html#ac9e546db27bb4f76f47d7e25f24abb88ae41480b6bbfbf7407974a88d3d34f4fa">RenderMode::Solid</a>;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">bool</span> centerMesh = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <a class="code hl_class" href="classNavMeshData.html">NavMeshData</a> navData;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <a class="code hl_struct" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> navGenSettings{};</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">enum class</span> NavmeshRenderMode</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        FacesAndLines = 0,</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        FacesOnly,</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        LinesOnly</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    };</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">bool</span> navmeshVisible = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">bool</span> navmeshShowFaces = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">bool</span> navmeshShowLines = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">float</span> navmeshFaceAlpha = 0.35f;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    NavmeshRenderMode navmeshRenderMode = NavmeshRenderMode::FacesAndLines;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">enum class</span> NavmeshAutoBuildFlag : <a class="code hl_typedef" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    {</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <a class="code hl_enumvalue" href="RenderMode_8h.html#ac9e546db27bb4f76f47d7e25f24abb88a6adf97f83acf6453d4a6a4b1070f3754">None</a>    = 0,</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        OnAdd   = 1 &lt;&lt; 0,</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        OnRemove= 1 &lt;&lt; 1,</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        OnMove  = 1 &lt;&lt; 2,</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        OnRotate= 1 &lt;&lt; 3,</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    };</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <a class="code hl_typedef" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> navmeshAutoBuildMask = 0;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordtype">bool</span> pickTriangleMode = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordtype">bool</span> buildTileAtMode = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordtype">bool</span> addRemoveTileMode = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="comment">// buffers para desenhar navmesh no renderer</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    std::vector&lt;glm::vec3&gt; navMeshTris;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    std::vector&lt;glm::vec3&gt; navMeshLines;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    std::vector&lt;DebugLine&gt; m_navmeshLines; <span class="comment">// apenas isso por enquanto</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="foldopen" id="foldopen00020" data-start="{" data-end="};">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classViewerApp.html">   20</a></span><span class="keyword">class </span><a class="code hl_class" href="classViewerApp.html">ViewerApp</a></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>{</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <a class="code hl_function" href="classViewerApp.html#aae7f24aed89ead6de9de655db8b00757">ViewerApp</a>();</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <a class="code hl_function" href="classViewerApp.html#a46f2542925089dbd0d8dc3742b458df6">~ViewerApp</a>();</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classViewerApp.html#adf79f3b7e38626f1b21ca54b3194e1d5">Init</a>();</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classViewerApp.html#ac32b6821de5456c23b16f33b6e8b87e0">Run</a>();</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classViewerApp.html#a65f11dc51628f197699e624a44817df1">Shutdown</a>();</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classViewerApp.html#ae3d85da22e1bfac7ff7219b4410034ed">buildNavmeshFromMeshes</a>(<span class="keywordtype">bool</span> buildTilesNow = <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classViewerApp.html#a30b4ae10e356bfd02ba48f305e5e4e5c">buildNavmeshDebugLines</a>();</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="comment">// SDL</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <a class="code hl_typedef" href="SDL__video_8h.html#a55a196c7d3b8497538632c79ae1e6392">SDL_Window</a>* window = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <a class="code hl_typedef" href="SDL__video_8h.html#a0d64dcf67c9685d09cbe051448e1b3f3">SDL_GLContext</a> glContext = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="comment">// Controls</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">bool</span> running = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">bool</span> mouseCaptured = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">struct </span>MeshInstance</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        std::unique_ptr&lt;Mesh&gt; mesh;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        std::string           <a class="code hl_typedef" href="glad_8h.html#a5c4947d4516dd7cfa3505ce3a648a4ef">name</a>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        std::filesystem::path sourcePath;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        glm::vec3             position {0.0f};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        glm::vec3             rotation {0.0f};</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keywordtype">float</span>                 <a class="code hl_typedef" href="SDL__opengl__glext_8h.html#a281421b881aa7a1266842b73a3bc7655">scale</a> = 1.0f;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <a class="code hl_typedef" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a>              <span class="keywordtype">id</span> = 0;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    };</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">struct </span>MeshBoundsState</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        glm::vec3 bmin{0.0f};</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        glm::vec3 bmax{0.0f};</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordtype">size_t</span> vertexCount = 0;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordtype">size_t</span> indexCount = 0;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keyword">const</span> <a class="code hl_class" href="classMesh.html">Mesh</a>* meshPtr = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordtype">bool</span> valid = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    };</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="comment">// Engine components</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <a class="code hl_class" href="classViewerCamera.html">ViewerCamera</a>* camera = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <a class="code hl_class" href="classRendererGL.html">RendererGL</a>* renderer = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    std::vector&lt;MeshInstance&gt; meshInstances;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <a class="code hl_enumeration" href="RenderMode_8h.html#ac9e546db27bb4f76f47d7e25f24abb88">RenderMode</a> renderMode = <a class="code hl_enumvalue" href="RenderMode_8h.html#ac9e546db27bb4f76f47d7e25f24abb88ae41480b6bbfbf7407974a88d3d34f4fa">RenderMode::Solid</a>;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">bool</span> centerMesh = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <a class="code hl_class" href="classNavMeshData.html">NavMeshData</a> navData;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <a class="code hl_struct" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> navGenSettings{};</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keyword">enum class</span> NavmeshRenderMode</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        FacesAndLines = 0,</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        FacesOnly,</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        LinesOnly</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    };</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordtype">bool</span> navmeshVisible = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordtype">bool</span> navmeshShowFaces = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordtype">bool</span> navmeshShowLines = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordtype">float</span> navmeshFaceAlpha = 0.35f;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    NavmeshRenderMode navmeshRenderMode = NavmeshRenderMode::FacesAndLines;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordtype">bool</span> navmeshUpdateTiles = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keyword">enum class</span> NavmeshAutoBuildFlag : <a class="code hl_typedef" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    {</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <a class="code hl_enumvalue" href="RenderMode_8h.html#ac9e546db27bb4f76f47d7e25f24abb88a6adf97f83acf6453d4a6a4b1070f3754">None</a>    = 0,</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        OnAdd   = 1 &lt;&lt; 0,</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        OnRemove= 1 &lt;&lt; 1,</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        OnMove  = 1 &lt;&lt; 2,</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        OnRotate= 1 &lt;&lt; 3,</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    };</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordtype">bool</span> InitSDL();</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordtype">bool</span> InitGL();</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordtype">bool</span> InitImGui();</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keywordtype">bool</span> LoadMeshFromPath(<span class="keyword">const</span> std::string&amp; <a class="code hl_typedef" href="SDL__opengl__glext_8h.html#ab25d8cd967ccbd19b630d7100ff8f67e">path</a>);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordtype">void</span> LoadLastDirectory();</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordtype">void</span> SaveLastDirectory(<span class="keyword">const</span> std::filesystem::path&amp; directory);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    std::filesystem::path GetConfigFilePath() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordtype">void</span> RemoveMesh(<span class="keywordtype">size_t</span> <a class="code hl_typedef" href="glad_8h.html#a57f14e05b1900f16a2da82ade47d0c6d">index</a>);</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordtype">void</span> HandleAutoBuild(NavmeshAutoBuildFlag flag);</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    glm::mat4 GetModelMatrix(<span class="keyword">const</span> MeshInstance&amp; instance) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <a class="code hl_typedef" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> navmeshAutoBuildMask = 0;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <a class="code hl_typedef" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> nextMeshId = 1;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    std::unordered_map&lt;uint64_t, MeshBoundsState&gt; meshStateCache;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordtype">bool</span> pickTriangleMode = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keywordtype">bool</span> buildTileAtMode = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordtype">bool</span> addRemoveTileMode = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="comment">// buffers para desenhar navmesh no renderer</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    std::vector&lt;glm::vec3&gt; navMeshTris;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    std::vector&lt;glm::vec3&gt; navMeshLines;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::vector&lt;DebugLine&gt; m_navmeshLines; <span class="comment">// apenas isso por enquanto</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="keywordtype">void</span> ProcessEvents();</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordtype">void</span> RenderFrame();</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    std::string currentDirectory;</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    std::string selectedEntry;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keywordtype">bool</span> InitSDL();</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keywordtype">bool</span> InitGL();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordtype">bool</span> InitImGui();</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keywordtype">bool</span> showSidePanel = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordtype">bool</span> showMeshBrowserWindow = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordtype">bool</span> showDebugInfo = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keywordtype">char</span> meshFilter[64] = {0};</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keywordtype">bool</span> LoadMeshFromPath(<span class="keyword">const</span> std::string&amp; <a class="code hl_typedef" href="SDL__opengl__glext_8h.html#ab25d8cd967ccbd19b630d7100ff8f67e">path</a>);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordtype">void</span> LoadLastDirectory();</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordtype">void</span> SaveLastDirectory(<span class="keyword">const</span> std::filesystem::path&amp; directory);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    std::filesystem::path GetConfigFilePath() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keywordtype">int</span> pickedMeshIndex = -1;</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordtype">int</span> pickedTri = -1;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>};</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keywordtype">void</span> RemoveMesh(<span class="keywordtype">size_t</span> <a class="code hl_typedef" href="glad_8h.html#a57f14e05b1900f16a2da82ade47d0c6d">index</a>);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordtype">void</span> HandleAutoBuild(NavmeshAutoBuildFlag flag);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    glm::mat4 GetModelMatrix(<span class="keyword">const</span> MeshInstance&amp; instance) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    MeshBoundsState ComputeMeshBounds(<span class="keyword">const</span> MeshInstance&amp; instance) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordtype">bool</span> HasMeshChanged(<span class="keyword">const</span> MeshBoundsState&amp; previous, <span class="keyword">const</span> MeshBoundsState&amp; current) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keywordtype">void</span> UpdateNavmeshTiles();</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keywordtype">void</span> ProcessEvents();</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keywordtype">void</span> RenderFrame();</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    std::string currentDirectory;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    std::string selectedEntry;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keywordtype">bool</span> showSidePanel = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordtype">bool</span> showMeshBrowserWindow = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keywordtype">bool</span> showDebugInfo = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keywordtype">char</span> meshFilter[64] = {0};</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    <span class="keywordtype">int</span> pickedMeshIndex = -1;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordtype">int</span> pickedTri = -1;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>};</div>
 </div>
 <div class="ttc" id="aGtaNavAPI_8h_html"><div class="ttname"><a href="GtaNavAPI_8h.html">GtaNavAPI.h</a></div></div>
 <div class="ttc" id="aMesh_8h_html"><div class="ttname"><a href="Mesh_8h.html">Mesh.h</a></div></div>
@@ -234,24 +252,26 @@ $(document).ready(function(){initNavTree('ViewerApp_8h_source.html',''); initRes
 <div class="ttc" id="aRendererGL_8h_html"><div class="ttname"><a href="RendererGL_8h.html">RendererGL.h</a></div></div>
 <div class="ttc" id="aSDL_8h_html"><div class="ttname"><a href="SDL_8h.html">SDL.h</a></div><div class="ttdoc">Main include header for the SDL library.</div></div>
 <div class="ttc" id="aSDL__config__ngage_8h_html_a435d1572bf3f880d55459d9805097f62"><div class="ttname"><a href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a></div><div class="ttdeci">unsigned int uint32_t</div><div class="ttdef"><b>Definition</b> SDL_config_ngage.h:33</div></div>
+<div class="ttc" id="aSDL__config__ngage_8h_html_aaa5d1cd013383c889537491c3cfd9aad"><div class="ttname"><a href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a></div><div class="ttdeci">unsigned long long uint64_t</div><div class="ttdef"><b>Definition</b> SDL_config_ngage.h:35</div></div>
 <div class="ttc" id="aSDL__opengl__glext_8h_html_a281421b881aa7a1266842b73a3bc7655"><div class="ttname"><a href="SDL__opengl__glext_8h.html#a281421b881aa7a1266842b73a3bc7655">scale</a></div><div class="ttdeci">GLenum GLenum GLenum GLenum GLenum scale</div><div class="ttdef"><b>Definition</b> SDL_opengl_glext.h:11271</div></div>
 <div class="ttc" id="aSDL__opengl__glext_8h_html_ab25d8cd967ccbd19b630d7100ff8f67e"><div class="ttname"><a href="SDL__opengl__glext_8h.html#ab25d8cd967ccbd19b630d7100ff8f67e">path</a></div><div class="ttdeci">GLsizei const GLchar *const  * path</div><div class="ttdef"><b>Definition</b> SDL_opengl_glext.h:4536</div></div>
 <div class="ttc" id="aSDL__video_8h_html_a0d64dcf67c9685d09cbe051448e1b3f3"><div class="ttname"><a href="SDL__video_8h.html#a0d64dcf67c9685d09cbe051448e1b3f3">SDL_GLContext</a></div><div class="ttdeci">void * SDL_GLContext</div><div class="ttdoc">An opaque handle to an OpenGL context.</div><div class="ttdef"><b>Definition</b> SDL_video.h:221</div></div>
 <div class="ttc" id="aSDL__video_8h_html_a55a196c7d3b8497538632c79ae1e6392"><div class="ttname"><a href="SDL__video_8h.html#a55a196c7d3b8497538632c79ae1e6392">SDL_Window</a></div><div class="ttdeci">struct SDL_Window SDL_Window</div><div class="ttdoc">The opaque type used to identify a window.</div><div class="ttdef"><b>Definition</b> SDL_video.h:95</div></div>
-<div class="ttc" id="aclassNavMeshData_html"><div class="ttname"><a href="classNavMeshData.html">NavMeshData</a></div><div class="ttdef"><b>Definition</b> NavMeshData.h:34</div></div>
+<div class="ttc" id="aclassMesh_html"><div class="ttname"><a href="classMesh.html">Mesh</a></div><div class="ttdef"><b>Definition</b> Mesh.h:6</div></div>
+<div class="ttc" id="aclassNavMeshData_html"><div class="ttname"><a href="classNavMeshData.html">NavMeshData</a></div><div class="ttdef"><b>Definition</b> NavMeshData.h:35</div></div>
 <div class="ttc" id="aclassRendererGL_html"><div class="ttname"><a href="classRendererGL.html">RendererGL</a></div><div class="ttdef"><b>Definition</b> RendererGL.h:17</div></div>
-<div class="ttc" id="aclassViewerApp_html"><div class="ttname"><a href="classViewerApp.html">ViewerApp</a></div><div class="ttdef"><b>Definition</b> ViewerApp.h:20</div></div>
-<div class="ttc" id="aclassViewerApp_html_a30b4ae10e356bfd02ba48f305e5e4e5c"><div class="ttname"><a href="classViewerApp.html#a30b4ae10e356bfd02ba48f305e5e4e5c">ViewerApp::buildNavmeshDebugLines</a></div><div class="ttdeci">void buildNavmeshDebugLines()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:90</div></div>
-<div class="ttc" id="aclassViewerApp_html_a46f2542925089dbd0d8dc3742b458df6"><div class="ttname"><a href="classViewerApp.html#a46f2542925089dbd0d8dc3742b458df6">ViewerApp::~ViewerApp</a></div><div class="ttdeci">~ViewerApp()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:31</div></div>
-<div class="ttc" id="aclassViewerApp_html_a65f11dc51628f197699e624a44817df1"><div class="ttname"><a href="classViewerApp.html#a65f11dc51628f197699e624a44817df1">ViewerApp::Shutdown</a></div><div class="ttdeci">void Shutdown()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:129</div></div>
-<div class="ttc" id="aclassViewerApp_html_aae7f24aed89ead6de9de655db8b00757"><div class="ttname"><a href="classViewerApp.html#aae7f24aed89ead6de9de655db8b00757">ViewerApp::ViewerApp</a></div><div class="ttdeci">ViewerApp()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:26</div></div>
-<div class="ttc" id="aclassViewerApp_html_ac32b6821de5456c23b16f33b6e8b87e0"><div class="ttname"><a href="classViewerApp.html#ac32b6821de5456c23b16f33b6e8b87e0">ViewerApp::Run</a></div><div class="ttdeci">void Run()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:325</div></div>
-<div class="ttc" id="aclassViewerApp_html_adf79f3b7e38626f1b21ca54b3194e1d5"><div class="ttname"><a href="classViewerApp.html#adf79f3b7e38626f1b21ca54b3194e1d5">ViewerApp::Init</a></div><div class="ttdeci">bool Init()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:114</div></div>
-<div class="ttc" id="aclassViewerApp_html_ae3d85da22e1bfac7ff7219b4410034ed"><div class="ttname"><a href="classViewerApp.html#ae3d85da22e1bfac7ff7219b4410034ed">ViewerApp::buildNavmeshFromMeshes</a></div><div class="ttdeci">bool buildNavmeshFromMeshes(bool buildTilesNow=true)</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:46</div></div>
+<div class="ttc" id="aclassViewerApp_html"><div class="ttname"><a href="classViewerApp.html">ViewerApp</a></div><div class="ttdef"><b>Definition</b> ViewerApp.h:21</div></div>
+<div class="ttc" id="aclassViewerApp_html_a30b4ae10e356bfd02ba48f305e5e4e5c"><div class="ttname"><a href="classViewerApp.html#a30b4ae10e356bfd02ba48f305e5e4e5c">ViewerApp::buildNavmeshDebugLines</a></div><div class="ttdeci">void buildNavmeshDebugLines()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:139</div></div>
+<div class="ttc" id="aclassViewerApp_html_a46f2542925089dbd0d8dc3742b458df6"><div class="ttname"><a href="classViewerApp.html#a46f2542925089dbd0d8dc3742b458df6">ViewerApp::~ViewerApp</a></div><div class="ttdeci">~ViewerApp()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:33</div></div>
+<div class="ttc" id="aclassViewerApp_html_a65f11dc51628f197699e624a44817df1"><div class="ttname"><a href="classViewerApp.html#a65f11dc51628f197699e624a44817df1">ViewerApp::Shutdown</a></div><div class="ttdeci">void Shutdown()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:178</div></div>
+<div class="ttc" id="aclassViewerApp_html_aae7f24aed89ead6de9de655db8b00757"><div class="ttname"><a href="classViewerApp.html#aae7f24aed89ead6de9de655db8b00757">ViewerApp::ViewerApp</a></div><div class="ttdeci">ViewerApp()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:28</div></div>
+<div class="ttc" id="aclassViewerApp_html_ac32b6821de5456c23b16f33b6e8b87e0"><div class="ttname"><a href="classViewerApp.html#ac32b6821de5456c23b16f33b6e8b87e0">ViewerApp::Run</a></div><div class="ttdeci">void Run()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:448</div></div>
+<div class="ttc" id="aclassViewerApp_html_adf79f3b7e38626f1b21ca54b3194e1d5"><div class="ttname"><a href="classViewerApp.html#adf79f3b7e38626f1b21ca54b3194e1d5">ViewerApp::Init</a></div><div class="ttdeci">bool Init()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:163</div></div>
+<div class="ttc" id="aclassViewerApp_html_ae3d85da22e1bfac7ff7219b4410034ed"><div class="ttname"><a href="classViewerApp.html#ae3d85da22e1bfac7ff7219b4410034ed">ViewerApp::buildNavmeshFromMeshes</a></div><div class="ttdeci">bool buildNavmeshFromMeshes(bool buildTilesNow=true)</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:95</div></div>
 <div class="ttc" id="aclassViewerCamera_html"><div class="ttname"><a href="classViewerCamera.html">ViewerCamera</a></div><div class="ttdef"><b>Definition</b> ViewerCamera.h:11</div></div>
 <div class="ttc" id="aglad_8h_html_a57f14e05b1900f16a2da82ade47d0c6d"><div class="ttname"><a href="glad_8h.html#a57f14e05b1900f16a2da82ade47d0c6d">index</a></div><div class="ttdeci">GLuint index</div><div class="ttdef"><b>Definition</b> glad.h:1305</div></div>
 <div class="ttc" id="aglad_8h_html_a5c4947d4516dd7cfa3505ce3a648a4ef"><div class="ttname"><a href="glad_8h.html#a5c4947d4516dd7cfa3505ce3a648a4ef">name</a></div><div class="ttdeci">GLuint const GLchar * name</div><div class="ttdef"><b>Definition</b> glad.h:1305</div></div>
-<div class="ttc" id="astructNavmeshGenerationSettings_html"><div class="ttname"><a href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a></div><div class="ttdef"><b>Definition</b> NavMeshData.h:15</div></div>
+<div class="ttc" id="astructNavmeshGenerationSettings_html"><div class="ttname"><a href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a></div><div class="ttdef"><b>Definition</b> NavMeshData.h:16</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.6-->
