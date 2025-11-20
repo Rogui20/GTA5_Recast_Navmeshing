@@ -31,6 +31,7 @@ public:
 
     void DrawTriangleHighlight(glm::vec3 a, glm::vec3 b, glm::vec3 c);
     void drawNavmeshLines(const std::vector<DebugLine>& lines);
+    void drawNavmeshTriangles(const std::vector<glm::vec3>& tris, const glm::vec3& color, float alpha);
 
     bool Load(const char* path);
 
