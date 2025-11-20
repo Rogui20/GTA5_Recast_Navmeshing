@@ -314,7 +314,16 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     rcFilterLedgeSpans(&ctx, cfg.walkableHeight, cfg.walkableClimb, *solid);
     rcFilterWalkableLowHeightSpans(&ctx, cfg.walkableHeight, *solid);
 
-    printf("[NavMeshData] Rasterizacao: spans=%d\n", solid->spanCount);
+    int solidSpanCount = 0;
+    for (int i = 0; i < solid->width * solid->height; ++i)
+    {
+        for (rcSpan* span = solid->spans[i]; span; span = span->next)
+        {
+            ++solidSpanCount;
+        }
+    }
+
+    printf("[NavMeshData] Rasterizacao: spans=%d\n", solidSpanCount);
 
     // --- 5. Compact heightfield ---
     rcCompactHeightfield* chf = rcAllocCompactHeightfield();
@@ -342,8 +351,8 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     rcBuildRegions(&ctx, *chf, cfg.borderSize,
                    cfg.minRegionArea, cfg.mergeRegionArea);
 
-    printf("[NavMeshData] CompactHeightfield: spans=%d walkableCells=%d maxHeight=%d\n",
-           chf->spanCount, chf->walkableHeight, chf->maxRegion);
+    printf("[NavMeshData] CompactHeightfield: spans=%d cells=%d maxRegions=%d\n",
+           chf->spanCount, chf->width * chf->height, chf->maxRegions);
 
     // --- 6. Contours ---
     rcContourSet* cset = rcAllocContourSet();
