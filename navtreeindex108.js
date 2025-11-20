@@ -1,5 +1,8 @@
 var NAVTREEINDEX108 =
 {
+"structstbtt__packedchar.html#adb30c50674c79d32116ae6f94bd5893f":[44,0,458,3],
+"structstbtt__vertex.html":[44,0,459],
+"structstbtt__vertex.html#a1c45a8d41727b24b84f97a944f2b800a":[44,0,459,1],
 "structstbtt__vertex.html#a43835489e2a151b31cb100d20f8adeae":[44,0,459,0],
 "structstbtt__vertex.html#a5610d6335aa6962d970fc7fd2225545e":[44,0,459,2],
 "structstbtt__vertex.html#a68227d28643f5667064fa3c385f4ea7d":[44,0,459,3],

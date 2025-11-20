@@ -118,6 +118,8 @@ Functions</h2></td></tr>
 <tr class="separator:a5c31b2d6805d93b7ab4546a2ac413a6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a073259c97407f6678086bfa867838b19" id="r_a073259c97407f6678086bfa867838b19"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMeshBuild_8h.html#a073259c97407f6678086bfa867838b19">BuildTiledNavMesh</a> (const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ad3c78daa7d8673f71649d4840c641779">input</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&amp;outNav)</td></tr>
 <tr class="separator:a073259c97407f6678086bfa867838b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abef178e9026b2092c69014ad09006ab5" id="r_abef178e9026b2092c69014ad09006ab5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMeshBuild_8h.html#abef178e9026b2092c69014ad09006ab5">BuildSingleTile</a> (const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ad3c78daa7d8673f71649d4840c641779">input</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, int tileX, int tileY, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav, bool &amp;outBuilt, bool &amp;outEmpty)</td></tr>
+<tr class="separator:abef178e9026b2092c69014ad09006ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a5c31b2d6805d93b7ab4546a2ac413a6c" name="a5c31b2d6805d93b7ab4546a2ac413a6c"></a>
@@ -143,6 +145,64 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&amp;&#160;</td>
           <td class="paramname"><em>outNav</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abef178e9026b2092c69014ad09006ab5" name="abef178e9026b2092c69014ad09006ab5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abef178e9026b2092c69014ad09006ab5">&#9670;&#160;</a></span>BuildSingleTile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool BuildSingleTile </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;&#160;</td>
+          <td class="paramname"><em>settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>tileX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>tileY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&#160;</td>
+          <td class="paramname"><em>nav</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;&#160;</td>
+          <td class="paramname"><em>outBuilt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;&#160;</td>
+          <td class="paramname"><em>outEmpty</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

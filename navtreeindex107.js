@@ -1,5 +1,8 @@
 var NAVTREEINDEX107 =
 {
+"structduDebugDraw.html#ac699459669944f2f950bbf972fe62a14":[44,0,70,4],
+"structduDebugDraw.html#af7942595befad5dab1372d8c8b2c2ec1":[44,0,70,0],
+"structduDebugDraw.html#afd70102a49177ea8068508139c8cdb1e":[44,0,70,5],
 "structduFileIO.html":[44,0,72],
 "structduFileIO.html#a853e4af9415fdaa073bb785151f6b28c":[44,0,72,1],
 "structduFileIO.html#ab436e18b116c61875dbdf5faafda9694":[44,0,72,2],
@@ -42,8 +45,8 @@ var NAVTREEINDEX107 =
 "structrcChunkyTriMesh.html#a72fed74ea56cac960cd9eb282e312d87":[44,0,322,7],
 "structrcChunkyTriMesh.html#a93638e22b53882b6bdc700b8c35ecd05":[44,0,322,4],
 "structrcChunkyTriMesh.html#aaf4b64877b4d7e95d037e5c8e7480420":[44,0,322,5],
-"structrcChunkyTriMesh.html#abd0bad171797ff8785f0483fc95e260f":[44,0,322,3],
 "structrcChunkyTriMesh.html#abd0bad171797ff8785f0483fc95e260f":[44,0,322,1],
+"structrcChunkyTriMesh.html#abd0bad171797ff8785f0483fc95e260f":[44,0,322,3],
 "structrcChunkyTriMeshNode.html":[44,0,323],
 "structrcChunkyTriMeshNode.html#a21461e9717fa41aede9a197e82c2fab8":[44,0,323,3],
 "structrcChunkyTriMeshNode.html#a21ef3b8a9cf348497ed1c6a9c01c403e":[44,0,323,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX107 =
 "structstbtt__packedchar.html#a43429c9545ca8ccf14012cedcf83c1a7":[44,0,458,5],
 "structstbtt__packedchar.html#a6f342ae10df5319f4999ffd256567142":[44,0,458,7],
 "structstbtt__packedchar.html#a9569073ba79fad355210b6ffc35905a7":[44,0,458,6],
-"structstbtt__packedchar.html#a99d371f0261cd13dfd1a179f143175d1":[44,0,458,1],
-"structstbtt__packedchar.html#adb30c50674c79d32116ae6f94bd5893f":[44,0,458,3],
-"structstbtt__vertex.html":[44,0,459],
-"structstbtt__vertex.html#a1c45a8d41727b24b84f97a944f2b800a":[44,0,459,1]
+"structstbtt__packedchar.html#a99d371f0261cd13dfd1a179f143175d1":[44,0,458,1]
 };

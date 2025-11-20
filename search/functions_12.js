@@ -539,7 +539,7 @@ var searchData=
   ['sdl_5flocksurface_536',['SDL_LockSurface',['../SDL__surface_8h.html#a3d1da1c7ecdaa461fac51a10785f5077',1,'SDL_surface.h']]],
   ['sdl_5flocktexture_537',['SDL_LockTexture',['../SDL__render_8h.html#af64adcd12e4e9d41d48031fd3da7b913',1,'SDL_render.h']]],
   ['sdl_5flocktexturetosurface_538',['SDL_LockTextureToSurface',['../SDL__render_8h.html#af1f12f5baf50ec8c86235dd4528a4e0c',1,'SDL_render.h']]],
-  ['sdl_5flog_539',['sdl_log',['../SDL__stdinc_8h.html#a2b226b584a9922167301231d3c13bee2',1,'SDL_log(double x):&#160;SDL_stdinc.h'],['../SDL__log_8h.html#a712dc42164c67b7f9e23dc0e3b15bd92',1,'SDL_Log(SDL_PRINTF_FORMAT_STRING const char *fmt,...) SDL_PRINTF_VARARG_FUNC(1):&#160;SDL_log.h']]],
+  ['sdl_5flog_539',['sdl_log',['../SDL__log_8h.html#a712dc42164c67b7f9e23dc0e3b15bd92',1,'SDL_Log(SDL_PRINTF_FORMAT_STRING const char *fmt,...) SDL_PRINTF_VARARG_FUNC(1):&#160;SDL_log.h'],['../SDL__stdinc_8h.html#a2b226b584a9922167301231d3c13bee2',1,'SDL_log(double x):&#160;SDL_stdinc.h']]],
   ['sdl_5flog10_540',['SDL_log10',['../SDL__stdinc_8h.html#ae907373550fb1e22242aeb56fb5e86ec',1,'SDL_stdinc.h']]],
   ['sdl_5flog10f_541',['SDL_log10f',['../SDL__stdinc_8h.html#a272cf573bc32004a674bdc78a7ce2104',1,'SDL_stdinc.h']]],
   ['sdl_5flogcritical_542',['SDL_LogCritical',['../SDL__log_8h.html#a3600cf500a030f892d41a61d9d30de19',1,'SDL_log.h']]],

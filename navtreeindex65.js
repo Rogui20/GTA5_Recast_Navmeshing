@@ -1,5 +1,7 @@
 var NAVTREEINDEX65 =
 {
+"SDL__video_8h.html#a6500d698e7dbe6799250a626a8b42359":[45,0,5,2,1,89,89],
+"SDL__video_8h.html#a6540db01a424ced1847376e583361ecb":[45,0,5,2,1,89,50],
 "SDL__video_8h.html#a6799acf235454f519ac209ccf14caa67":[45,0,5,2,1,89,111],
 "SDL__video_8h.html#a68b0d06595d086d9244fd49afe3e8360":[45,0,5,2,1,89,95],
 "SDL__video_8h.html#a68eb0d850934fa1c7ac12c30f2d56a84":[45,0,5,2,1,89,39],
@@ -247,7 +249,5 @@ var NAVTREEINDEX65 =
 "android.html#known-issues":[9,18],
 "android.html#loading-assets":[9,5],
 "android.html#memory-debugging":[9,13],
-"android.html#misc":[9,8],
-"android.html#mouse--touch-events":[9,7],
-"android.html#pause--resume-behaviour":[9,6]
+"android.html#misc":[9,8]
 };

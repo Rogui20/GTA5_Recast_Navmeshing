@@ -105,8 +105,9 @@ var NAVTREEINDEX9 =
 "Mesh_8h.html":[45,0,7,3],
 "Mesh_8h_source.html":[45,0,7,3],
 "NavMeshBuild_8h.html":[45,0,7,6],
-"NavMeshBuild_8h.html#a073259c97407f6678086bfa867838b19":[45,0,7,6,2],
+"NavMeshBuild_8h.html#a073259c97407f6678086bfa867838b19":[45,0,7,6,3],
 "NavMeshBuild_8h.html#a5c31b2d6805d93b7ab4546a2ac413a6c":[45,0,7,6,1],
+"NavMeshBuild_8h.html#abef178e9026b2092c69014ad09006ab5":[45,0,7,6,2],
 "NavMeshBuild_8h_source.html":[45,0,7,6],
 "NavMeshData_8cpp.html":[45,0,7,7],
 "NavMeshData_8h.html":[45,0,7,8],
@@ -131,7 +132,8 @@ var NAVTREEINDEX9 =
 "NavMesh__Single_8cpp.html":[45,0,7,4],
 "NavMesh__Single_8cpp.html#a5c31b2d6805d93b7ab4546a2ac413a6c":[45,0,7,4,0],
 "NavMesh__Tiled_8cpp.html":[45,0,7,5],
-"NavMesh__Tiled_8cpp.html#a073259c97407f6678086bfa867838b19":[45,0,7,5,2],
+"NavMesh__Tiled_8cpp.html#a073259c97407f6678086bfa867838b19":[45,0,7,5,3],
+"NavMesh__Tiled_8cpp.html#abef178e9026b2092c69014ad09006ab5":[45,0,7,5,2],
 "NavMesh__Tiled_8cpp.html#ac80a3592e72fd96b772ee47a7d8e0d0a":[45,0,7,5,1],
 "NavMesh__Tiled_8cpp.html#afd7987666402798824ebc784d17a9928":[45,0,7,5,0],
 "ObjLoader_8cpp.html":[45,0,7,9],
@@ -247,7 +249,5 @@ var NAVTREEINDEX9 =
 "RecastDebugDraw_8h.html#adaac7d02f53973fdeca92cf7c8e9b14b":[45,0,0,0,2,5],
 "RecastDebugDraw_8h.html#aded380127861ec22ecce3f14567dd922":[45,0,0,0,2,3],
 "RecastDebugDraw_8h_source.html":[45,0,0,0,2],
-"RecastDemo_2Include_2ChunkyTriMesh_8h.html":[45,0,9,0,0],
-"RecastDemo_2Include_2ChunkyTriMesh_8h.html#a1ddf6286b85d102c1012cb3db79020e2":[45,0,9,0,0,4],
-"RecastDemo_2Include_2ChunkyTriMesh_8h.html#a2738633e684f03e39567d80500039c7d":[45,0,9,0,0,5]
+"RecastDemo_2Include_2ChunkyTriMesh_8h.html":[45,0,9,0,0]
 };

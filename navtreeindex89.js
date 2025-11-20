@@ -1,5 +1,8 @@
 var NAVTREEINDEX89 =
 {
+"md_CODE__OF__CONDUCT.html#scope":[6,3],
+"md_CONTRIBUTING.html":[7],
+"md_CONTRIBUTING.html#code-of-conduct-1":[7,0],
 "md_CONTRIBUTING.html#commit-message-format":[7,3,2],
 "md_CONTRIBUTING.html#found-a-bug":[7,3],
 "md_CONTRIBUTING.html#have-a-question-or-problem":[7,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX89 =
 "structDebugLine.html#aa37fd073b2bd7052f6eb3a17efd760d6":[44,0,12,2],
 "structDebugLine.html#aae7b7f3345ece817075fbcf1a758eb44":[44,0,12,3],
 "structDebugLine.html#ad5264bd41158ad33497bb0c723fa90dc":[44,0,12,4],
-"structDirtyEntry.html":[44,0,13],
-"structDirtyEntry.html#a6efa59792bbe3b1feea05da8110151dd":[44,0,13,0],
-"structDirtyEntry.html#a9634e49527d7bdcacc925fe7124b07d1":[44,0,13,1],
-"structDirtyEntry.html#ad3c4712adccfb24f1a7ab8d75f42ab1e":[44,0,13,3]
+"structDirtyEntry.html":[44,0,13]
 };
