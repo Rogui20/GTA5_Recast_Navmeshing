@@ -1,5 +1,6 @@
 var NAVTREEINDEX88 =
 {
+"imgui__widgets_8cpp.html#a3a68672a788f293779faf265ff2c33a1":[45,0,7,0,8,95],
 "imgui__widgets_8cpp.html#a3b9d5feb26a83507589fdb7887eb73cc":[45,0,7,0,8,94],
 "imgui__widgets_8cpp.html#a3dcda0a629504f551a02eb7d5c781b48":[45,0,7,0,8,86],
 "imgui__widgets_8cpp.html#a406ec9909804b6a72ae884b02b291ce4":[45,0,7,0,8,49],
@@ -248,6 +249,5 @@ var NAVTREEINDEX88 =
 "md_CODE__OF__CONDUCT.html#autotoc_md1-correction":[6,5,0],
 "md_CODE__OF__CONDUCT.html#autotoc_md2-warning":[6,5,1],
 "md_CODE__OF__CONDUCT.html#autotoc_md3-temporary-ban":[6,5,2],
-"md_CODE__OF__CONDUCT.html#autotoc_md4-permanent-ban":[6,5,3],
-"md_CODE__OF__CONDUCT.html#enforcement":[6,4]
+"md_CODE__OF__CONDUCT.html#autotoc_md4-permanent-ban":[6,5,3]
 };

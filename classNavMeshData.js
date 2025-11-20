@@ -9,5 +9,6 @@ var classNavMeshData =
     [ "IsLoaded", "classNavMeshData.html#ab3432212bbd65a1020926267863756fa", null ],
     [ "Load", "classNavMeshData.html#a1cf96687792fe613b2cc953369aef529", null ],
     [ "RebuildSpecificTiles", "classNavMeshData.html#a45dd6cd6c7451cd69d01757fc18765f8", null ],
-    [ "RebuildTilesInBounds", "classNavMeshData.html#af793fd5a445cc980578e652d3158447d", null ]
+    [ "RebuildTilesInBounds", "classNavMeshData.html#af793fd5a445cc980578e652d3158447d", null ],
+    [ "UpdateCachedGeometry", "classNavMeshData.html#a05d23e3170de5a3bc8852e35e5777131", null ]
 ];

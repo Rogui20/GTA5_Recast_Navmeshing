@@ -1,5 +1,6 @@
 var NAVTREEINDEX77 =
 {
+"glad_8h.html#af0093e3509bfedce6680c22abe31fa35":[45,0,5,0,0,0,0,1102],
 "glad_8h.html#af059abebc7dff6780bdd97ae22e8ab02":[45,0,5,0,0,0,0,1479],
 "glad_8h.html#af07e9596f4c8bb748c5e64d1cff6ca35":[45,0,5,0,0,0,0,854],
 "glad_8h.html#af088612058ae25aaefd76210fcdb480e":[45,0,5,0,0,0,0,1238],
@@ -121,8 +122,8 @@ var NAVTREEINDEX77 =
 "glad_8h.html#afff10397aced90d3aa31b50774a1294e":[45,0,5,0,0,0,0,102],
 "glad_8h.html#afff71cf093f104f22601f1f8dc8bba46":[45,0,5,0,0,0,0,1466],
 "glad_8h_source.html":[45,0,5,0,0,0,0],
-"globals.html":[45,1,0,0],
 "globals.html":[45,1,0],
+"globals.html":[45,1,0,0],
 "globals_a.html":[45,1,0,1],
 "globals_b.html":[45,1,0,2],
 "globals_c.html":[45,1,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX77 =
 "globals_w.html":[45,1,0,22],
 "globals_x.html":[45,1,0,23],
 "globals_y.html":[45,1,0,24],
-"globals_z.html":[45,1,0,25],
-"hierarchy.html":[44,2]
+"globals_z.html":[45,1,0,25]
 };

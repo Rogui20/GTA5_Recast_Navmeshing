@@ -1,5 +1,6 @@
 var NAVTREEINDEX82 =
 {
+"imgui__impl__sdl3_8cpp.html#a84dedc42e47a9eca6c6fefeca99289bf":[45,0,7,0,0,27,26],
 "imgui__impl__sdl3_8cpp.html#a8979b2ecdee3e6029401efaaa1ed03bf":[45,0,7,0,0,27,24],
 "imgui__impl__sdl3_8cpp.html#a9103a82edb06cbdd5b5827d13fb0d37b":[45,0,7,0,0,27,42],
 "imgui__impl__sdl3_8cpp.html#aa2f5a0b712f9763163c5d6b9cedbade0":[45,0,7,0,0,27,43],
@@ -248,6 +249,5 @@ var NAVTREEINDEX82 =
 "imgui__impl__win32_8cpp.html#a0554b333dae0845c369b9d7234c695e9":[45,0,7,0,0,40,19],
 "imgui__impl__win32_8cpp.html#a07fb8ef75809375968109182ec3766ea":[45,0,7,0,0,40,50],
 "imgui__impl__win32_8cpp.html#a0b4072c3e306aab56e4b1f41f66ecfd0":[45,0,7,0,0,40,21],
-"imgui__impl__win32_8cpp.html#a0b4072c3e306aab56e4b1f41f66ecfd0a2690b1d0f73cd71a24c38dbccc99be8b":[45,0,7,0,0,40,21,1],
-"imgui__impl__win32_8cpp.html#a0b4072c3e306aab56e4b1f41f66ecfd0aad0077e9938715939b18fc533eeae097":[45,0,7,0,0,40,21,2]
+"imgui__impl__win32_8cpp.html#a0b4072c3e306aab56e4b1f41f66ecfd0a2690b1d0f73cd71a24c38dbccc99be8b":[45,0,7,0,0,40,21,1]
 };

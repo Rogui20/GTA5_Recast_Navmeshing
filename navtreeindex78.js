@@ -1,5 +1,6 @@
 var NAVTREEINDEX78 =
 {
+"hierarchy.html":[44,2],
 "imconfig_8h.html":[45,0,7,0,1],
 "imconfig_8h_source.html":[45,0,7,0,1],
 "imguiRenderGL_8cpp.html":[45,0,9,1,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX78 =
 "imgui__draw_8cpp.html#afaa2f2d0d9d6726cfae6da070e736347":[45,0,7,0,5,18],
 "imgui__draw_8cpp.html#afb984dfe621aaf80f49b6f0af469330f":[45,0,7,0,5,63],
 "imgui__draw_8cpp.html#afcf5d4f446f3dc0411abd7b5374afaea":[45,0,7,0,5,51],
-"imgui__impl__allegro5_8cpp.html":[45,0,7,0,0,0],
-"imgui__impl__allegro5_8cpp.html#a0d09ba855db6d3fdc94cc0c6eb4a032f":[45,0,7,0,0,0,8]
+"imgui__impl__allegro5_8cpp.html":[45,0,7,0,0,0]
 };
