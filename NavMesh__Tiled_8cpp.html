@@ -116,8 +116,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a073259c97407f6678086bfa867838b19" id="r_a073259c97407f6678086bfa867838b19"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#a073259c97407f6678086bfa867838b19">BuildTiledNavMesh</a> (const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ad3c78daa7d8673f71649d4840c641779">input</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&amp;outNav)</td></tr>
-<tr class="separator:a073259c97407f6678086bfa867838b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a849b70f7598b910b10b050a02aa6b9" id="r_a7a849b70f7598b910b10b050a02aa6b9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#a7a849b70f7598b910b10b050a02aa6b9">BuildTiledNavMesh</a> (const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ad3c78daa7d8673f71649d4840c641779">input</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&amp;outNav, bool buildTilesNow, int *outTilesBuilt, int *outTilesSkipped)</td></tr>
+<tr class="separator:a7a849b70f7598b910b10b050a02aa6b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abef178e9026b2092c69014ad09006ab5" id="r_abef178e9026b2092c69014ad09006ab5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#abef178e9026b2092c69014ad09006ab5">BuildSingleTile</a> (const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ad3c78daa7d8673f71649d4840c641779">input</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, int tileX, int tileY, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav, bool &amp;outBuilt, bool &amp;outEmpty)</td></tr>
 <tr class="separator:abef178e9026b2092c69014ad09006ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -223,8 +223,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a073259c97407f6678086bfa867838b19" name="a073259c97407f6678086bfa867838b19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a073259c97407f6678086bfa867838b19">&#9670;&#160;</a></span>BuildTiledNavMesh()</h2>
+<a id="a7a849b70f7598b910b10b050a02aa6b9" name="a7a849b70f7598b910b10b050a02aa6b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a849b70f7598b910b10b050a02aa6b9">&#9670;&#160;</a></span>BuildTiledNavMesh()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -245,7 +245,25 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&amp;&#160;</td>
-          <td class="paramname"><em>outNav</em>&#160;</td>
+          <td class="paramname"><em>outNav</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>buildTilesNow</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>outTilesBuilt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>outTilesSkipped</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

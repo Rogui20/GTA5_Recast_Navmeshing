@@ -110,8 +110,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1cf96687792fe613b2cc953369aef529"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3432212bbd65a1020926267863756fa" id="r_ab3432212bbd65a1020926267863756fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#ab3432212bbd65a1020926267863756fa">IsLoaded</a> () const</td></tr>
 <tr class="separator:ab3432212bbd65a1020926267863756fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95f2c4f5cf74d4c3710acac8d6a4c246" id="r_a95f2c4f5cf74d4c3710acac8d6a4c246"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a95f2c4f5cf74d4c3710acac8d6a4c246">BuildFromMesh</a> (const std::vector&lt; glm::vec3 &gt; &amp;verts, const std::vector&lt; unsigned int &gt; &amp;<a class="el" href="glad_8h.html#a94ae715eebfc1eb65456c0ab9b97f1e9">indices</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings)</td></tr>
-<tr class="separator:a95f2c4f5cf74d4c3710acac8d6a4c246"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcc7ca871eecfec2131711e8b32ac4de" id="r_afcc7ca871eecfec2131711e8b32ac4de"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#afcc7ca871eecfec2131711e8b32ac4de">BuildFromMesh</a> (const std::vector&lt; glm::vec3 &gt; &amp;verts, const std::vector&lt; unsigned int &gt; &amp;<a class="el" href="glad_8h.html#a94ae715eebfc1eb65456c0ab9b97f1e9">indices</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, bool buildTilesNow=true)</td></tr>
+<tr class="separator:afcc7ca871eecfec2131711e8b32ac4de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a309f93226ce1a4576d932144c9a70363" id="r_a309f93226ce1a4576d932144c9a70363"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a309f93226ce1a4576d932144c9a70363">BuildTileAt</a> (const glm::vec3 &amp;worldPos, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, int &amp;outTileX, int &amp;outTileY)</td></tr>
 <tr class="separator:a309f93226ce1a4576d932144c9a70363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e3a68693ca1bb2655cc9db37a6f111f" id="r_a1e3a68693ca1bb2655cc9db37a6f111f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a1e3a68693ca1bb2655cc9db37a6f111f">ExtractDebugMesh</a> (std::vector&lt; glm::vec3 &gt; &amp;outVerts, std::vector&lt; glm::vec3 &gt; &amp;outLines)</td></tr>
@@ -136,8 +136,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a95f2c4f5cf74d4c3710acac8d6a4c246" name="a95f2c4f5cf74d4c3710acac8d6a4c246"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95f2c4f5cf74d4c3710acac8d6a4c246">&#9670;&#160;</a></span>BuildFromMesh()</h2>
+<a id="afcc7ca871eecfec2131711e8b32ac4de" name="afcc7ca871eecfec2131711e8b32ac4de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcc7ca871eecfec2131711e8b32ac4de">&#9670;&#160;</a></span>BuildFromMesh()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -158,7 +158,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;&#160;</td>
-          <td class="paramname"><em>settings</em>&#160;</td>
+          <td class="paramname"><em>settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>buildTilesNow</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
