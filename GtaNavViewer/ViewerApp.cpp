@@ -473,6 +473,10 @@ void ViewerApp::ProcessEvents()
             {
                 printf("[ViewerApp] addRemoveTileMode ainda não implementado.\n");
             }
+            else if (addRemoveTileMode)
+            {
+                printf("[ViewerApp] addRemoveTileMode ainda não implementado.\n");
+            }
         }
 
 
