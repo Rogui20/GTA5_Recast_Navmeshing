@@ -106,6 +106,11 @@ private:
     std::string currentDirectory;
     std::string selectedEntry;
 
+    bool showSidePanel = true;
+    bool showMeshBrowserWindow = true;
+    bool showDebugInfo = true;
+    char meshFilter[64] = {0};
+
     int pickedMeshIndex = -1;
     int pickedTri = -1;
 };

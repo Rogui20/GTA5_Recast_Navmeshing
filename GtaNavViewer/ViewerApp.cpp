@@ -481,241 +481,426 @@ void ViewerApp::RenderFrame()
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    // --- UI: Render Mode ---
-    ImGui::Begin("Render Mode");
-
-    int mode = (int)renderMode;
-    ImGui::RadioButton("Solid (F1)",     &mode, 0);
-    ImGui::RadioButton("Wireframe (F2)", &mode, 1);
-    ImGui::RadioButton("Normals (F3)",   &mode, 2);
-    ImGui::RadioButton("Depth (F4)",     &mode, 3);
-    ImGui::RadioButton("Lit (F5)", &mode, 4);
-
-
-    renderMode = (RenderMode)mode;
-
-    ImGui::End();
-
-    // --- UI: OBJ Browser ---
-    ImGui::Begin("Mesh Browser");
-    if (!std::filesystem::exists(currentDirectory))
+    // --- Barra de menus principal ---
+    if (ImGui::BeginMainMenuBar())
     {
-        currentDirectory = std::filesystem::current_path().string();
-    }
-
-    ImGui::Text("Diretório: %s", currentDirectory.c_str());
-    ImGui::Checkbox("Centralizar mesh carregada", &centerMesh);
-
-    if (ImGui::Button("Subir"))
-    {
-        std::filesystem::path parent = std::filesystem::path(currentDirectory).parent_path();
-        if (!parent.empty())
+        if (ImGui::BeginMenu("Arquivo"))
         {
-            currentDirectory = parent.string();
-            selectedEntry.clear();
+            ImGui::MenuItem("Browser de Meshes", nullptr, &showMeshBrowserWindow);
+            ImGui::MenuItem("Painel Lateral", nullptr, &showSidePanel);
+            ImGui::Separator();
+            ImGui::MenuItem("Centralizar mesh carregada", nullptr, &centerMesh);
+            ImGui::EndMenu();
         }
-    }
 
-    std::error_code ec;
-    std::vector<std::filesystem::directory_entry> directories;
-    std::vector<std::filesystem::directory_entry> objFiles;
-    for (const auto& entry : std::filesystem::directory_iterator(currentDirectory, ec))
-    {
-        if (entry.is_directory())
+        if (ImGui::BeginMenu("Visualização"))
         {
-            directories.push_back(entry);
+            ImGui::TextDisabled("Render Mode");
+            int mode = static_cast<int>(renderMode);
+            ImGui::RadioButton("Solid (F1)", &mode, 0);
+            ImGui::RadioButton("Wireframe (F2)", &mode, 1);
+            ImGui::RadioButton("Normals (F3)", &mode, 2);
+            ImGui::RadioButton("Depth (F4)", &mode, 3);
+            ImGui::RadioButton("Lit (F5)", &mode, 4);
+            renderMode = static_cast<RenderMode>(mode);
+
+            ImGui::Separator();
+            ImGui::MenuItem("Mostrar navmesh", nullptr, &navmeshVisible);
+            ImGui::MenuItem("Mostrar debug/câmera", nullptr, &showDebugInfo);
+            ImGui::EndMenu();
         }
-        else
-        {
-            auto ext = entry.path().extension().string();
-            std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return (char)std::tolower(c); });
-            if (ext == ".obj")
-                objFiles.push_back(entry);
-        }
-    }
 
-    std::sort(directories.begin(), directories.end(), [](const auto& a, const auto& b){ return a.path().filename() < b.path().filename(); });
-    std::sort(objFiles.begin(), objFiles.end(), [](const auto& a, const auto& b){ return a.path().filename() < b.path().filename(); });
-
-    ImGui::SeparatorText("Pastas");
-    for (const auto& dir : directories)
-    {
-        std::string label = "[DIR] " + dir.path().filename().string();
-        bool selected = selectedEntry == dir.path().string();
-        if (ImGui::Selectable(label.c_str(), selected, ImGuiSelectableFlags_AllowDoubleClick))
+        if (ImGui::BeginMenu("Navmesh"))
         {
-            selectedEntry = dir.path().string();
-            if (ImGui::IsMouseDoubleClicked(0))
+            bool hasMesh = !meshInstances.empty();
+            ImGui::BeginDisabled(!hasMesh);
+            if (ImGui::MenuItem("Rebuild Navmesh"))
             {
-                currentDirectory = dir.path().string();
+                buildNavmeshFromMeshes();
+            }
+            ImGui::EndDisabled();
+
+            ImGui::Separator();
+            bool autoOnAdd    = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd)) != 0;
+            bool autoOnRemove = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove)) != 0;
+            bool autoOnMove   = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove)) != 0;
+            bool autoOnRotate = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate)) != 0;
+
+            if (ImGui::MenuItem("Rebuild ao adicionar", nullptr, &autoOnAdd))
+            {
+                if (autoOnAdd)
+                    navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd);
+                else
+                    navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd);
+            }
+            if (ImGui::MenuItem("Rebuild ao remover", nullptr, &autoOnRemove))
+            {
+                if (autoOnRemove)
+                    navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove);
+                else
+                    navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove);
+            }
+            if (ImGui::MenuItem("Rebuild ao mover", nullptr, &autoOnMove))
+            {
+                if (autoOnMove)
+                    navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove);
+                else
+                    navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove);
+            }
+            if (ImGui::MenuItem("Rebuild ao rotacionar", nullptr, &autoOnRotate))
+            {
+                if (autoOnRotate)
+                    navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
+                else
+                    navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
+            }
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Ajuda"))
+        {
+            ImGui::MenuItem("Debug/Diagnóstico", nullptr, &showDebugInfo);
+            ImGui::TextDisabled("Use TABs no painel lateral para alternar modos.");
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
+
+    // --- OBJ Browser ---
+    if (showMeshBrowserWindow)
+    {
+        ImGui::Begin("Mesh Browser", &showMeshBrowserWindow);
+        if (!std::filesystem::exists(currentDirectory))
+        {
+            currentDirectory = std::filesystem::current_path().string();
+        }
+
+        ImGui::Text("Diretório: %s", currentDirectory.c_str());
+        ImGui::Checkbox("Centralizar mesh carregada", &centerMesh);
+
+        if (ImGui::Button("Subir"))
+        {
+            std::filesystem::path parent = std::filesystem::path(currentDirectory).parent_path();
+            if (!parent.empty())
+            {
+                currentDirectory = parent.string();
                 selectedEntry.clear();
             }
         }
-    }
 
-    ImGui::SeparatorText("Arquivos OBJ");
-    for (const auto& file : objFiles)
-    {
-        std::string label = file.path().filename().string();
-        bool selected = selectedEntry == file.path().string();
-        if (ImGui::Selectable(label.c_str(), selected, ImGuiSelectableFlags_AllowDoubleClick))
+        std::error_code ec;
+        std::vector<std::filesystem::directory_entry> directories;
+        std::vector<std::filesystem::directory_entry> objFiles;
+        for (const auto& entry : std::filesystem::directory_iterator(currentDirectory, ec))
         {
-            selectedEntry = file.path().string();
-            if (ImGui::IsMouseDoubleClicked(0))
+            if (entry.is_directory())
             {
-                LoadMeshFromPath(selectedEntry);
+                directories.push_back(entry);
+            }
+            else
+            {
+                auto ext = entry.path().extension().string();
+                std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return (char)std::tolower(c); });
+                if (ext == ".obj")
+                    objFiles.push_back(entry);
             }
         }
-    }
 
-    if (!ec)
-    {
-        if (ImGui::Button("Carregar OBJ selecionado"))
+        std::sort(directories.begin(), directories.end(), [](const auto& a, const auto& b){ return a.path().filename() < b.path().filename(); });
+        std::sort(objFiles.begin(), objFiles.end(), [](const auto& a, const auto& b){ return a.path().filename() < b.path().filename(); });
+
+        ImGui::SeparatorText("Pastas");
+        for (const auto& dir : directories)
         {
-            std::filesystem::path p(selectedEntry);
-            auto ext = p.extension().string();
-            std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return (char)std::tolower(c); });
-            if (ext == ".obj")
+            std::string label = "[DIR] " + dir.path().filename().string();
+            bool selected = selectedEntry == dir.path().string();
+            if (ImGui::Selectable(label.c_str(), selected, ImGuiSelectableFlags_AllowDoubleClick))
             {
-                LoadMeshFromPath(selectedEntry);
+                selectedEntry = dir.path().string();
+                if (ImGui::IsMouseDoubleClicked(0))
+                {
+                    currentDirectory = dir.path().string();
+                    selectedEntry.clear();
+                }
             }
         }
-    }
-    else
-    {
-        ImGui::TextColored(ImVec4(1,0,0,1), "Erro ao listar diretório: %s", ec.message().c_str());
-    }
 
-    ImGui::End();
-
-
-    // --- Navmesh Menu ---
-    ImGui::Begin("Navmesh Menu");
-    bool hasMesh = !meshInstances.empty();
-
-    if (!hasMesh)
-    {
-        ImGui::Text("Nenhuma mesh carregada.");
-    }
-
-    ImGui::BeginDisabled(!hasMesh);
-    if (ImGui::Button("Rebuild Navmesh"))
-    {
-        buildNavmeshFromMeshes();
-    }
-    ImGui::EndDisabled();
-
-    ImGui::SeparatorText("Visibilidade");
-    ImGui::Checkbox("Mostrar navmesh", &navmeshVisible);
-
-    int navRenderMode = static_cast<int>(navmeshRenderMode);
-    ImGui::Text("Render Mode");
-    ImGui::RadioButton("Faces e linhas", &navRenderMode, static_cast<int>(NavmeshRenderMode::FacesAndLines));
-    ImGui::RadioButton("Somente faces", &navRenderMode, static_cast<int>(NavmeshRenderMode::FacesOnly));
-    ImGui::RadioButton("Somente linhas", &navRenderMode, static_cast<int>(NavmeshRenderMode::LinesOnly));
-    navmeshRenderMode = static_cast<NavmeshRenderMode>(navRenderMode);
-
-    ImGui::Checkbox("Mostrar faces da navmesh", &navmeshShowFaces);
-    ImGui::BeginDisabled(!navmeshShowFaces || navmeshRenderMode == NavmeshRenderMode::LinesOnly);
-    ImGui::SliderFloat("Alpha das faces", &navmeshFaceAlpha, 0.0f, 1.0f);
-    ImGui::EndDisabled();
-    ImGui::Checkbox("Mostrar linhas da navmesh", &navmeshShowLines);
-
-    ImGui::SeparatorText("Construção de Navmesh Automática");
-    bool autoOnAdd    = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd)) != 0;
-    bool autoOnRemove = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove)) != 0;
-    bool autoOnMove   = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove)) != 0;
-    bool autoOnRotate = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate)) != 0;
-
-    if (ImGui::Checkbox("Ao adicionar Mesh", &autoOnAdd))
-    {
-        if (autoOnAdd)
-            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd);
-        else
-            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd);
-    }
-
-    if (ImGui::Checkbox("Ao remover Mesh", &autoOnRemove))
-    {
-        if (autoOnRemove)
-            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove);
-        else
-            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove);
-    }
-
-    if (ImGui::Checkbox("Ao mover mesh", &autoOnMove))
-    {
-        if (autoOnMove)
-            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove);
-        else
-            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove);
-    }
-
-    if (ImGui::Checkbox("Ao rotacionar mesh", &autoOnRotate))
-    {
-        if (autoOnRotate)
-            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
-        else
-            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
-    }
-
-    ImGui::Separator();
-    ImGui::Text("Tris: %zu", navMeshTris.size() / 3);
-    ImGui::Text("Linhas: %zu", m_navmeshLines.size());
-
-    ImGui::End();
-
-    // --- Mesh Menu ---
-    ImGui::Begin("Mesh Menu");
-    if (meshInstances.empty())
-    {
-        ImGui::Text("Nenhuma mesh carregada.");
-    }
-    else
-    {
-        for (size_t i = 0; i < meshInstances.size(); )
+        ImGui::SeparatorText("Arquivos OBJ");
+        for (const auto& file : objFiles)
         {
-            auto& instance = meshInstances[i];
-            ImGui::PushID(static_cast<int>(i));
-            ImGui::SeparatorText(instance.name.c_str());
-
-            glm::vec3 previousPos = instance.position;
-            glm::vec3 previousRot = instance.rotation;
-
-            bool moved = ImGui::DragFloat3("Posição", &instance.position.x, 0.5f);
-            bool rotated = ImGui::DragFloat3("Rotação", &instance.rotation.x, 0.5f);
-
-            if (ImGui::Button("Remover"))
+            std::string label = file.path().filename().string();
+            bool selected = selectedEntry == file.path().string();
+            if (ImGui::Selectable(label.c_str(), selected, ImGuiSelectableFlags_AllowDoubleClick))
             {
-                ImGui::PopID();
-                RemoveMesh(i);
-                if (meshInstances.size() <= i)
-                    break;
-                continue;
+                selectedEntry = file.path().string();
+                if (ImGui::IsMouseDoubleClicked(0))
+                {
+                    LoadMeshFromPath(selectedEntry);
+                }
             }
-
-            if (moved && instance.position != previousPos)
-            {
-                HandleAutoBuild(NavmeshAutoBuildFlag::OnMove);
-            }
-
-            if (rotated && instance.rotation != previousRot)
-            {
-                HandleAutoBuild(NavmeshAutoBuildFlag::OnRotate);
-            }
-
-            ImGui::PopID();
-            ++i;
         }
+
+        if (!ec)
+        {
+            if (ImGui::Button("Carregar OBJ selecionado"))
+            {
+                std::filesystem::path p(selectedEntry);
+                auto ext = p.extension().string();
+                std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return (char)std::tolower(c); });
+                if (ext == ".obj")
+                {
+                    LoadMeshFromPath(selectedEntry);
+                }
+            }
+        }
+        else
+        {
+            ImGui::TextColored(ImVec4(1,0,0,1), "Erro ao listar diretório: %s", ec.message().c_str());
+        }
+
+        ImGui::End();
     }
-    ImGui::End();
 
+    // --- Painel lateral com tabs ---
+    if (showSidePanel)
+    {
+        ImGui::SetNextWindowSize(ImVec2(420, 0), ImGuiCond_FirstUseEver);
+        ImGui::Begin("Painel", &showSidePanel, ImGuiWindowFlags_NoCollapse);
 
-    // --- Debug Camera ---
-    ImGui::Begin("Debug");
-    ImGui::Text("Camera: %.2f %.2f %.2f",
-        camera->pos.x, camera->pos.y, camera->pos.z);
-    ImGui::End();
+        if (ImGui::BeginTabBar("PainelTabs"))
+        {
+            if (ImGui::BeginTabItem("Edição"))
+            {
+                if (ImGui::CollapsingHeader("Renderização", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    int mode = static_cast<int>(renderMode);
+                    ImGui::RadioButton("Solid (F1)", &mode, 0);
+                    ImGui::RadioButton("Wireframe (F2)", &mode, 1);
+                    ImGui::RadioButton("Normals (F3)", &mode, 2);
+                    ImGui::RadioButton("Depth (F4)", &mode, 3);
+                    ImGui::RadioButton("Lit (F5)", &mode, 4);
+                    renderMode = static_cast<RenderMode>(mode);
+                }
+
+                if (ImGui::CollapsingHeader("Meshes", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    ImGui::InputTextWithHint("##meshFilter", "Filtrar por nome", meshFilter, IM_ARRAYSIZE(meshFilter));
+                    if (ImGui::BeginTable("MeshTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+                    {
+                        ImGui::TableSetupColumn("Mesh");
+                        ImGui::TableSetupColumn("Transform");
+                        ImGui::TableSetupColumn("Ações", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+                        ImGui::TableHeadersRow();
+
+                        for (size_t i = 0; i < meshInstances.size(); )
+                        {
+                            auto& instance = meshInstances[i];
+                            std::string lowerName = instance.name;
+                            std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), [](unsigned char c){ return (char)std::tolower(c); });
+                            std::string lowerFilter = meshFilter;
+                            std::transform(lowerFilter.begin(), lowerFilter.end(), lowerFilter.begin(), [](unsigned char c){ return (char)std::tolower(c); });
+
+                            if (!lowerFilter.empty() && lowerName.find(lowerFilter) == std::string::npos)
+                            {
+                                ++i;
+                                continue;
+                            }
+
+                            ImGui::PushID(static_cast<int>(i));
+                            ImGui::TableNextRow();
+
+                            ImGui::TableNextColumn();
+                            bool isSelected = static_cast<int>(i) == pickedMeshIndex;
+                            if (ImGui::Selectable(instance.name.c_str(), isSelected))
+                            {
+                                pickedMeshIndex = static_cast<int>(i);
+                            }
+
+                            ImGui::TableNextColumn();
+                            glm::vec3 previousPos = instance.position;
+                            glm::vec3 previousRot = instance.rotation;
+                            bool moved = ImGui::DragFloat3("Pos", &instance.position.x, 0.25f);
+                            bool rotated = ImGui::DragFloat3("Rot", &instance.rotation.x, 0.25f);
+
+                            if (moved && instance.position != previousPos)
+                            {
+                                HandleAutoBuild(NavmeshAutoBuildFlag::OnMove);
+                            }
+                            if (rotated && instance.rotation != previousRot)
+                            {
+                                HandleAutoBuild(NavmeshAutoBuildFlag::OnRotate);
+                            }
+
+                            ImGui::TableNextColumn();
+                            if (ImGui::Button("Remover"))
+                            {
+                                ImGui::PopID();
+                                RemoveMesh(i);
+                                if (meshInstances.size() <= i)
+                                    break;
+                                continue;
+                            }
+
+                            ImGui::PopID();
+                            ++i;
+                        }
+
+                        ImGui::EndTable();
+                    }
+
+                    if (meshInstances.empty())
+                    {
+                        ImGui::TextDisabled("Nenhuma mesh carregada.");
+                    }
+                }
+
+                if (ImGui::CollapsingHeader("Navmesh", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    bool hasMesh = !meshInstances.empty();
+                    ImGui::Text("Meshes carregadas: %zu", meshInstances.size());
+
+                    ImGui::BeginDisabled(!hasMesh);
+                    if (ImGui::Button("Rebuild Navmesh"))
+                    {
+                        buildNavmeshFromMeshes();
+                    }
+                    ImGui::EndDisabled();
+
+                    ImGui::SeparatorText("Visibilidade");
+                    ImGui::Checkbox("Mostrar navmesh", &navmeshVisible);
+                    int navRenderMode = static_cast<int>(navmeshRenderMode);
+                    ImGui::RadioButton("Faces e linhas", &navRenderMode, static_cast<int>(NavmeshRenderMode::FacesAndLines));
+                    ImGui::RadioButton("Somente faces", &navRenderMode, static_cast<int>(NavmeshRenderMode::FacesOnly));
+                    ImGui::RadioButton("Somente linhas", &navRenderMode, static_cast<int>(NavmeshRenderMode::LinesOnly));
+                    navmeshRenderMode = static_cast<NavmeshRenderMode>(navRenderMode);
+
+                    ImGui::Checkbox("Mostrar faces da navmesh", &navmeshShowFaces);
+                    ImGui::BeginDisabled(!navmeshShowFaces || navmeshRenderMode == NavmeshRenderMode::LinesOnly);
+                    ImGui::SliderFloat("Alpha das faces", &navmeshFaceAlpha, 0.0f, 1.0f);
+                    ImGui::EndDisabled();
+                    ImGui::Checkbox("Mostrar linhas da navmesh", &navmeshShowLines);
+
+                    ImGui::SeparatorText("Construção Automática");
+                    bool autoOnAdd    = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd)) != 0;
+                    bool autoOnRemove = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove)) != 0;
+                    bool autoOnMove   = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove)) != 0;
+                    bool autoOnRotate = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate)) != 0;
+
+                    if (ImGui::Checkbox("Ao adicionar Mesh", &autoOnAdd))
+                    {
+                        if (autoOnAdd)
+                            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd);
+                        else
+                            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd);
+                    }
+
+                    if (ImGui::Checkbox("Ao remover Mesh", &autoOnRemove))
+                    {
+                        if (autoOnRemove)
+                            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove);
+                        else
+                            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove);
+                    }
+
+                    if (ImGui::Checkbox("Ao mover mesh", &autoOnMove))
+                    {
+                        if (autoOnMove)
+                            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove);
+                        else
+                            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove);
+                    }
+
+                    if (ImGui::Checkbox("Ao rotacionar mesh", &autoOnRotate))
+                    {
+                        if (autoOnRotate)
+                            navmeshAutoBuildMask |= static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
+                        else
+                            navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
+                    }
+
+                    ImGui::Separator();
+                    ImGui::Text("Tris: %zu", navMeshTris.size() / 3);
+                    ImGui::Text("Linhas: %zu", m_navmeshLines.size());
+                }
+
+                ImGui::EndTabItem();
+            }
+
+            if (showDebugInfo && ImGui::BeginTabItem("Diagnóstico"))
+            {
+                const MeshInstance* infoInstance = nullptr;
+                if (!meshInstances.empty())
+                {
+                    if (pickedMeshIndex >= 0 && pickedMeshIndex < static_cast<int>(meshInstances.size()))
+                        infoInstance = &meshInstances[pickedMeshIndex];
+                    else
+                        infoInstance = &meshInstances.front();
+                }
+
+                if (ImGui::CollapsingHeader("Mesh Info", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    if (infoInstance && infoInstance->mesh)
+                    {
+                        ImGui::Text("Mesh: %s", infoInstance->name.c_str());
+                        ImGui::Text("Navmesh bounds:");
+                        ImGui::Text("Min: %.1f %.1f %.1f",
+                            infoInstance->mesh->navmeshMinBounds.x,
+                            infoInstance->mesh->navmeshMinBounds.y,
+                            infoInstance->mesh->navmeshMinBounds.z);
+
+                        ImGui::Text("Max: %.1f %.1f %.1f",
+                            infoInstance->mesh->navmeshMaxBounds.x,
+                            infoInstance->mesh->navmeshMaxBounds.y,
+                            infoInstance->mesh->navmeshMaxBounds.z);
+
+                        glm::vec3 center = (infoInstance->mesh->navmeshMinBounds + infoInstance->mesh->navmeshMaxBounds) * 0.5f;
+                        ImGui::Text("Center: %.1f %.1f %.1f",
+                            center.x, center.y, center.z);
+
+                        ImGui::Separator();
+                        ImGui::Text("Render bounds (offset: %.1f %.1f %.1f)",
+                            infoInstance->mesh->renderOffset.x,
+                            infoInstance->mesh->renderOffset.y,
+                            infoInstance->mesh->renderOffset.z);
+                        ImGui::Text("Min: %.1f %.1f %.1f",
+                            infoInstance->mesh->renderMinBounds.x,
+                            infoInstance->mesh->renderMinBounds.y,
+                            infoInstance->mesh->renderMinBounds.z);
+
+                        ImGui::Text("Max: %.1f %.1f %.1f",
+                            infoInstance->mesh->renderMaxBounds.x,
+                            infoInstance->mesh->renderMaxBounds.y,
+                            infoInstance->mesh->renderMaxBounds.z);
+
+                        glm::vec3 renderCenter = (infoInstance->mesh->renderMinBounds + infoInstance->mesh->renderMaxBounds) * 0.5f;
+                        ImGui::Text("Render Center: %.1f %.1f %.1f",
+                            renderCenter.x, renderCenter.y, renderCenter.z);
+
+                        if (ImGui::Button("Teleport Camera to Mesh Center"))
+                            camera->pos = renderCenter + glm::vec3(0,50,150);
+                    }
+                    else
+                    {
+                        ImGui::TextDisabled("Nenhuma mesh selecionada.");
+                    }
+                }
+
+                if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    ImGui::Text("Camera: %.2f %.2f %.2f",
+                        camera->pos.x, camera->pos.y, camera->pos.z);
+                    ImGui::Text("Meshes carregadas: %zu", meshInstances.size());
+                }
+
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+        }
+
+        ImGui::End();
+    }
 
     // --- OpenGL ---
     glEnable(GL_DEPTH_TEST);
@@ -725,60 +910,6 @@ void ViewerApp::RenderFrame()
     // Begin renderer com renderMode
     renderer->Begin(camera, renderMode);
     glUniform3f(glGetUniformLocation(renderer->GetShader(), "uSolidColor"), 1,1,1);
-
-    const MeshInstance* infoInstance = nullptr;
-    if (!meshInstances.empty())
-    {
-        if (pickedMeshIndex >= 0 && pickedMeshIndex < static_cast<int>(meshInstances.size()))
-            infoInstance = &meshInstances[pickedMeshIndex];
-        else
-            infoInstance = &meshInstances.front();
-    }
-
-    if (infoInstance && infoInstance->mesh)
-    {
-        ImGui::Begin("Mesh Info");
-
-        ImGui::Text("Mesh: %s", infoInstance->name.c_str());
-        ImGui::Text("Navmesh bounds:");
-        ImGui::Text("Min: %.1f %.1f %.1f",
-            infoInstance->mesh->navmeshMinBounds.x,
-            infoInstance->mesh->navmeshMinBounds.y,
-            infoInstance->mesh->navmeshMinBounds.z);
-
-        ImGui::Text("Max: %.1f %.1f %.1f",
-            infoInstance->mesh->navmeshMaxBounds.x,
-            infoInstance->mesh->navmeshMaxBounds.y,
-            infoInstance->mesh->navmeshMaxBounds.z);
-
-        glm::vec3 center = (infoInstance->mesh->navmeshMinBounds + infoInstance->mesh->navmeshMaxBounds) * 0.5f;
-        ImGui::Text("Center: %.1f %.1f %.1f",
-            center.x, center.y, center.z);
-
-        ImGui::Separator();
-        ImGui::Text("Render bounds (offset: %.1f %.1f %.1f)",
-            infoInstance->mesh->renderOffset.x,
-            infoInstance->mesh->renderOffset.y,
-            infoInstance->mesh->renderOffset.z);
-        ImGui::Text("Min: %.1f %.1f %.1f",
-            infoInstance->mesh->renderMinBounds.x,
-            infoInstance->mesh->renderMinBounds.y,
-            infoInstance->mesh->renderMinBounds.z);
-
-        ImGui::Text("Max: %.1f %.1f %.1f",
-            infoInstance->mesh->renderMaxBounds.x,
-            infoInstance->mesh->renderMaxBounds.y,
-            infoInstance->mesh->renderMaxBounds.z);
-
-        glm::vec3 renderCenter = (infoInstance->mesh->renderMinBounds + infoInstance->mesh->renderMaxBounds) * 0.5f;
-        ImGui::Text("Render Center: %.1f %.1f %.1f",
-            renderCenter.x, renderCenter.y, renderCenter.z);
-
-        if (ImGui::Button("Teleport Camera to Mesh Center"))
-            camera->pos = renderCenter + glm::vec3(0,50,150);
-
-        ImGui::End();
-    }
 
     for (size_t meshIdx = 0; meshIdx < meshInstances.size(); ++meshIdx)
     {
