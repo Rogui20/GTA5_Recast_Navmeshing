@@ -65,6 +65,8 @@ public:
                               std::vector<std::pair<int, int>>* outTiles = nullptr);
 
     bool HasTiledCache() const { return m_hasTiledCache; }
+    bool UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
+                              const std::vector<unsigned int>& indices);
 
 
     // Conversão para desenhar no viewer

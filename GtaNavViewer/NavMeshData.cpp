@@ -314,6 +314,42 @@ bool NavMeshData::RebuildSpecificTiles(const std::vector<std::pair<int, int>>& t
     return true;
 }
 
+bool NavMeshData::UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
+                                       const std::vector<unsigned int>& indices)
+{
+    if (!m_nav || !m_hasTiledCache)
+    {
+        printf("[NavMeshData] UpdateCachedGeometry: navmesh tiled nao inicializado.\n");
+        return false;
+    }
+
+    const size_t nverts = verts.size();
+    const size_t ntris = indices.size() / 3;
+    if (nverts == 0 || ntris == 0)
+    {
+        printf("[NavMeshData] UpdateCachedGeometry: geometria vazia.\n");
+        return false;
+    }
+
+    std::vector<float> convertedVerts(nverts * 3);
+    for (size_t i = 0; i < nverts; ++i)
+    {
+        convertedVerts[i * 3 + 0] = verts[i].x;
+        convertedVerts[i * 3 + 1] = verts[i].y;
+        convertedVerts[i * 3 + 2] = verts[i].z;
+    }
+
+    std::vector<int> convertedTris(indices.size());
+    for (size_t i = 0; i < indices.size(); ++i)
+    {
+        convertedTris[i] = static_cast<int>(indices[i]);
+    }
+
+    m_cachedVerts = std::move(convertedVerts);
+    m_cachedTris = std::move(convertedTris);
+    return true;
+}
+
 
 // ----------------------------------------------------------------------------
 // ExtractDebugMesh()

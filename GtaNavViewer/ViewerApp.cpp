@@ -398,6 +398,38 @@ void ViewerApp::UpdateNavmeshTiles()
     if (dirtyBounds.empty())
         return;
 
+    std::vector<glm::vec3> combinedVerts;
+    std::vector<unsigned int> combinedIdx;
+    unsigned int baseIndex = 0;
+    bool hasGeometry = false;
+
+    for (const auto& instance : meshInstances)
+    {
+        if (!instance.mesh)
+            continue;
+
+        glm::mat4 model = GetModelMatrix(instance);
+        for (const auto& v : instance.mesh->renderVertices)
+        {
+            glm::vec3 world = glm::vec3(model * glm::vec4(v, 1.0f));
+            combinedVerts.push_back(world);
+        }
+
+        for (auto idx : instance.mesh->indices)
+        {
+            combinedIdx.push_back(baseIndex + idx);
+        }
+
+        baseIndex += static_cast<unsigned int>(instance.mesh->renderVertices.size());
+        hasGeometry = true;
+    }
+
+    if (!hasGeometry || combinedVerts.empty() || combinedIdx.empty())
+        return;
+
+    if (!navData.UpdateCachedGeometry(combinedVerts, combinedIdx))
+        return;
+
     const auto tileKey = [](int tx, int ty) -> uint64_t
     {
         return (static_cast<uint64_t>(static_cast<uint32_t>(tx)) << 32) | static_cast<uint32_t>(ty);
