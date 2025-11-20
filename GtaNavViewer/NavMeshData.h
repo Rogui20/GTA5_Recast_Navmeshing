@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 #include <vector>
 #include <glm/glm.hpp>
 #include <Recast.h>
@@ -47,7 +48,15 @@ public:
                      int& outTileX,
                      int& outTileY);
 
-                       
+    bool RebuildTilesInBounds(const glm::vec3& bmin,
+                              const glm::vec3& bmax,
+                              const NavmeshGenerationSettings& settings,
+                              bool onlyExistingTiles,
+                              std::vector<std::pair<int, int>>* outTiles = nullptr);
+
+    bool HasTiledCache() const { return m_hasTiledCache; }
+
+
     // Conversão para desenhar no viewer
     void ExtractDebugMesh(
         std::vector<glm::vec3>& outVerts,
