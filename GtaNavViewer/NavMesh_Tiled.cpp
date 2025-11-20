@@ -10,6 +10,16 @@
 
 namespace
 {
+#ifndef DEBUG_MODE
+#define DEBUG_MODE 0
+#endif
+
+#if DEBUG_MODE
+#define DEBUG_LOG(fmt, ...) printf(fmt, ##__VA_ARGS__)
+#else
+#define DEBUG_LOG(fmt, ...) do { } while (0)
+#endif
+
     bool overlapsBounds(const float* amin, const float* amax, const float* bmin, const float* bmax)
     {
         if (amin[0] > bmax[0] || amax[0] < bmin[0]) return false;
@@ -18,31 +28,38 @@ namespace
         return true;
     }
 
-    bool createNavDataForConfig(const NavmeshBuildInput& input,
-                                const rcConfig& cfg,
-                                const std::vector<int>& triSource,
-                                int tileX,
-                                int tileY,
-                                dtNavMeshCreateParams& outParams,
-                                unsigned char*& navData,
-                                int& navDataSize)
+    enum class NavTileBuildResult
+    {
+        Success,
+        Empty,
+        Error,
+    };
+
+    NavTileBuildResult createNavDataForConfig(const NavmeshBuildInput& input,
+                                              const rcConfig& cfg,
+                                              const std::vector<int>& triSource,
+                                              int tileX,
+                                              int tileY,
+                                              dtNavMeshCreateParams& outParams,
+                                              unsigned char*& navData,
+                                              int& navDataSize)
     {
         const int localTris = (int)(triSource.size() / 3);
         if (localTris == 0)
-            return false;
+            return NavTileBuildResult::Empty;
 
         rcHeightfield* solid = rcAllocHeightfield();
         if (!solid)
         {
             printf("[NavMeshData] rcAllocHeightfield falhou.\n");
-            return false;
+            return NavTileBuildResult::Error;
         }
         if (!rcCreateHeightfield(&input.ctx, *solid, cfg.width, cfg.height,
                                  cfg.bmin, cfg.bmax, cfg.cs, cfg.ch))
         {
             printf("[NavMeshData] rcCreateHeightfield falhou.\n");
             rcFreeHeightField(solid);
-            return false;
+            return NavTileBuildResult::Error;
         }
 
         std::vector<unsigned char> triAreas(localTris);
@@ -63,7 +80,7 @@ namespace
         {
             printf("[NavMeshData] rcRasterizeTriangles falhou.\n");
             rcFreeHeightField(solid);
-            return false;
+            return NavTileBuildResult::Error;
         }
 
         rcFilterLowHangingWalkableObstacles(&input.ctx, cfg.walkableClimb, *solid);
@@ -75,7 +92,7 @@ namespace
         {
             printf("[NavMeshData] rcAllocCompactHeightfield falhou.\n");
             rcFreeHeightField(solid);
-            return false;
+            return NavTileBuildResult::Error;
         }
         if (!rcBuildCompactHeightfield(&input.ctx,
                                        cfg.walkableHeight, cfg.walkableClimb,
@@ -84,7 +101,7 @@ namespace
             printf("[NavMeshData] rcBuildCompactHeightfield falhou.\n");
             rcFreeCompactHeightfield(chf);
             rcFreeHeightField(solid);
-            return false;
+            return NavTileBuildResult::Error;
         }
 
         rcFreeHeightField(solid);
@@ -100,7 +117,7 @@ namespace
         {
             printf("[NavMeshData] rcAllocContourSet falhou.\n");
             rcFreeCompactHeightfield(chf);
-            return false;
+            return NavTileBuildResult::Error;
         }
         if (!rcBuildContours(&input.ctx, *chf,
                              cfg.maxSimplificationError,
@@ -110,7 +127,7 @@ namespace
             printf("[NavMeshData] rcBuildContours falhou.\n");
             rcFreeContourSet(cset);
             rcFreeCompactHeightfield(chf);
-            return false;
+            return NavTileBuildResult::Error;
         }
 
         rcPolyMesh* pmesh = rcAllocPolyMesh();
@@ -119,7 +136,7 @@ namespace
             printf("[NavMeshData] rcAllocPolyMesh falhou.\n");
             rcFreeContourSet(cset);
             rcFreeCompactHeightfield(chf);
-            return false;
+            return NavTileBuildResult::Error;
         }
         if (!rcBuildPolyMesh(&input.ctx, *cset, cfg.maxVertsPerPoly, *pmesh))
         {
@@ -127,7 +144,17 @@ namespace
             rcFreePolyMesh(pmesh);
             rcFreeContourSet(cset);
             rcFreeCompactHeightfield(chf);
-            return false;
+            return NavTileBuildResult::Error;
+        }
+
+        if (pmesh->npolys == 0)
+        {
+            DEBUG_LOG("[NavMeshData] Tile %d,%d nao possui polys apos filtros. Verts=%d Tris=%d Contours=%d\n",
+                      tileX, tileY, pmesh->nverts, localTris, cset->nconts);
+            rcFreePolyMesh(pmesh);
+            rcFreeContourSet(cset);
+            rcFreeCompactHeightfield(chf);
+            return NavTileBuildResult::Empty;
         }
 
         rcPolyMeshDetail* dmesh = rcAllocPolyMeshDetail();
@@ -137,7 +164,7 @@ namespace
             rcFreePolyMesh(pmesh);
             rcFreeContourSet(cset);
             rcFreeCompactHeightfield(chf);
-            return false;
+            return NavTileBuildResult::Error;
         }
 
         if (!rcBuildPolyMeshDetail(&input.ctx, *pmesh, *chf,
@@ -149,7 +176,7 @@ namespace
             rcFreePolyMesh(pmesh);
             rcFreeContourSet(cset);
             rcFreeCompactHeightfield(chf);
-            return false;
+            return NavTileBuildResult::Error;
         }
 
         rcFreeCompactHeightfield(chf);
@@ -197,10 +224,15 @@ namespace
 
         outParams = params;
 
+        DEBUG_LOG("[NavMeshData] Tile %d,%d navData criado. polys=%d verts=%d detailVerts=%d detailTris=%d area=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
+                  tileX, tileY, pmesh->npolys, pmesh->nverts, dmesh->nverts, dmesh->ntris,
+                  params.bmin[0], params.bmin[1], params.bmin[2],
+                  params.bmax[0], params.bmax[1], params.bmax[2]);
+
         rcFreePolyMeshDetail(dmesh);
         rcFreePolyMesh(pmesh);
 
-        return ok;
+        return ok ? NavTileBuildResult::Success : NavTileBuildResult::Error;
     }
 }
 
@@ -356,12 +388,21 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
         return false;
     }
 
+    int tilesBuilt = 0;
+    int tilesSkipped = 0;
+
     for (const TileInput& inputTile : tilesToBuild)
     {
         dtNavMeshCreateParams params{};
         unsigned char* navMeshData = nullptr;
         int navMeshDataSize = 0;
-        if (!createNavDataForConfig(input, inputTile.cfg, inputTile.tris, inputTile.tx, inputTile.ty, params, navMeshData, navMeshDataSize))
+        const NavTileBuildResult result = createNavDataForConfig(input, inputTile.cfg, inputTile.tris, inputTile.tx, inputTile.ty, params, navMeshData, navMeshDataSize);
+        if (result == NavTileBuildResult::Empty)
+        {
+            ++tilesSkipped;
+            continue;
+        }
+        if (result == NavTileBuildResult::Error)
         {
             printf("[NavMeshData] createNavDataForConfig falhou (tile %d,%d). Tris=%zu Bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
                    inputTile.tx, inputTile.ty, inputTile.tris.size() / 3,
@@ -391,10 +432,12 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
             dtFreeNavMesh(nav);
             return false;
         }
+
+        ++tilesBuilt;
     }
 
-    printf("[NavMeshData] BuildFromMesh OK (tiled). Tiles=%d x %d\n",
-           tileWidthCount, tileHeightCount);
+    printf("[NavMeshData] BuildFromMesh OK (tiled). Tiles=%d x %d (construidos=%d ignoradosSemPolys=%d)\n",
+           tileWidthCount, tileHeightCount, tilesBuilt, tilesSkipped);
 
     outNav = nav;
     return true;
