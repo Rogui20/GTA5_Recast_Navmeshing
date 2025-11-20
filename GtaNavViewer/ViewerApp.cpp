@@ -21,6 +21,9 @@
 #include <fstream>
 #include <algorithm>
 #include <cctype>
+#include <cmath>
+#include <limits>
+#include <unordered_set>
 
 
 ViewerApp::ViewerApp()
@@ -41,6 +44,53 @@ glm::mat4 ViewerApp::GetModelMatrix(const MeshInstance& instance) const
     model = glm::rotate(model, glm::radians(instance.rotation.z), glm::vec3(0,0,1));
     model = glm::scale(model, glm::vec3(instance.scale));
     return model;
+}
+
+ViewerApp::MeshBoundsState ViewerApp::ComputeMeshBounds(const MeshInstance& instance) const
+{
+    MeshBoundsState state;
+    if (!instance.mesh || instance.mesh->renderVertices.empty())
+        return state;
+
+    glm::mat4 model = GetModelMatrix(instance);
+    glm::vec3 bmin(std::numeric_limits<float>::max());
+    glm::vec3 bmax(std::numeric_limits<float>::lowest());
+
+    for (const auto& v : instance.mesh->renderVertices)
+    {
+        glm::vec3 world = glm::vec3(model * glm::vec4(v, 1.0f));
+        bmin = glm::min(bmin, world);
+        bmax = glm::max(bmax, world);
+    }
+
+    state.bmin = bmin;
+    state.bmax = bmax;
+    state.vertexCount = instance.mesh->renderVertices.size();
+    state.indexCount = instance.mesh->indices.size();
+    state.meshPtr = instance.mesh.get();
+    state.valid = true;
+    return state;
+}
+
+bool ViewerApp::HasMeshChanged(const MeshBoundsState& previous, const MeshBoundsState& current) const
+{
+    if (!previous.valid || !current.valid)
+        return true;
+
+    if (previous.meshPtr != current.meshPtr ||
+        previous.vertexCount != current.vertexCount ||
+        previous.indexCount != current.indexCount)
+    {
+        return true;
+    }
+
+    const float eps = 1e-3f;
+    auto differentVec3 = [&](const glm::vec3& a, const glm::vec3& b)
+    {
+        return fabsf(a.x - b.x) > eps || fabsf(a.y - b.y) > eps || fabsf(a.z - b.z) > eps;
+    };
+
+    return differentVec3(previous.bmin, current.bmin) || differentVec3(previous.bmax, current.bmax);
 }
 
 bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
@@ -227,6 +277,7 @@ bool ViewerApp::LoadMeshFromPath(const std::string& path)
     MeshInstance instance;
     instance.name = std::filesystem::path(path).stem().string();
     instance.sourcePath = path;
+    instance.id = nextMeshId++;
     instance.mesh = std::move(newMesh);
     meshInstances.push_back(std::move(instance));
     pickedTri = -1;
@@ -292,6 +343,135 @@ void ViewerApp::HandleAutoBuild(NavmeshAutoBuildFlag flag)
     if (static_cast<bool>(navmeshAutoBuildMask & static_cast<uint32_t>(flag)))
     {
         buildNavmeshFromMeshes();
+    }
+}
+
+void ViewerApp::UpdateNavmeshTiles()
+{
+    if (!navmeshUpdateTiles)
+        return;
+
+    if (navGenSettings.mode != NavmeshBuildMode::Tiled)
+        return;
+
+    if (!navData.IsLoaded() || !navData.HasTiledCache())
+        return;
+
+    std::vector<std::pair<glm::vec3, glm::vec3>> dirtyBounds;
+    std::unordered_map<uint64_t, MeshBoundsState> currentStates;
+    currentStates.reserve(meshInstances.size());
+    std::unordered_set<uint64_t> dirtyTiles;
+
+    for (const auto& instance : meshInstances)
+    {
+        MeshBoundsState state = ComputeMeshBounds(instance);
+        if (!state.valid)
+            continue;
+
+        currentStates[instance.id] = state;
+
+        auto itPrev = meshStateCache.find(instance.id);
+        if (itPrev == meshStateCache.end())
+        {
+            dirtyBounds.emplace_back(state.bmin, state.bmax);
+            continue;
+        }
+
+        if (HasMeshChanged(itPrev->second, state))
+        {
+            glm::vec3 mergedMin = glm::min(itPrev->second.bmin, state.bmin);
+            glm::vec3 mergedMax = glm::max(itPrev->second.bmax, state.bmax);
+            dirtyBounds.emplace_back(mergedMin, mergedMax);
+        }
+    }
+
+    for (const auto& [prevId, prevState] : meshStateCache)
+    {
+        if (currentStates.find(prevId) == currentStates.end() && prevState.valid)
+        {
+            dirtyBounds.emplace_back(prevState.bmin, prevState.bmax);
+        }
+    }
+
+    meshStateCache = std::move(currentStates);
+
+    if (dirtyBounds.empty())
+        return;
+
+    std::vector<glm::vec3> combinedVerts;
+    std::vector<unsigned int> combinedIdx;
+    unsigned int baseIndex = 0;
+    bool hasGeometry = false;
+
+    for (const auto& instance : meshInstances)
+    {
+        if (!instance.mesh)
+            continue;
+
+        glm::mat4 model = GetModelMatrix(instance);
+        for (const auto& v : instance.mesh->renderVertices)
+        {
+            glm::vec3 world = glm::vec3(model * glm::vec4(v, 1.0f));
+            combinedVerts.push_back(world);
+        }
+
+        for (auto idx : instance.mesh->indices)
+        {
+            combinedIdx.push_back(baseIndex + idx);
+        }
+
+        baseIndex += static_cast<unsigned int>(instance.mesh->renderVertices.size());
+        hasGeometry = true;
+    }
+
+    if (!hasGeometry || combinedVerts.empty() || combinedIdx.empty())
+        return;
+
+    if (!navData.UpdateCachedGeometry(combinedVerts, combinedIdx))
+        return;
+
+    const auto tileKey = [](int tx, int ty) -> uint64_t
+    {
+        return (static_cast<uint64_t>(static_cast<uint32_t>(tx)) << 32) | static_cast<uint32_t>(ty);
+    };
+
+    for (const auto& bounds : dirtyBounds)
+    {
+        std::vector<std::pair<int, int>> tilesInBounds;
+        if (!navData.CollectTilesInBounds(bounds.first, bounds.second, true, tilesInBounds))
+        {
+            printf("[ViewerApp] UpdateNavmeshTiles: falha ao coletar tiles alteradas.\n");
+            continue;
+        }
+
+        for (const auto& tile : tilesInBounds)
+        {
+            dirtyTiles.insert(tileKey(tile.first, tile.second));
+        }
+    }
+
+    if (dirtyTiles.empty())
+        return;
+
+    std::vector<std::pair<int, int>> tilesToRebuild;
+    tilesToRebuild.reserve(dirtyTiles.size());
+    for (uint64_t key : dirtyTiles)
+    {
+        int tx = static_cast<int>(key >> 32);
+        int ty = static_cast<int>(key & 0xffffffffu);
+        tilesToRebuild.emplace_back(tx, ty);
+    }
+
+    std::vector<std::pair<int, int>> touchedTiles;
+    if (!navData.RebuildSpecificTiles(tilesToRebuild, navGenSettings, true, &touchedTiles))
+    {
+        printf("[ViewerApp] UpdateNavmeshTiles: falha ao reconstruir tiles.\n");
+        return;
+    }
+
+    if (!touchedTiles.empty())
+    {
+        buildNavmeshDebugLines();
     }
 }
 
@@ -506,6 +686,8 @@ void ViewerApp::RenderFrame()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
+
+    UpdateNavmeshTiles();
 
     // --- Barra de menus principal ---
     if (ImGui::BeginMainMenuBar())
@@ -757,6 +939,29 @@ void ViewerApp::RenderFrame()
 
                     const char* activeMode = pickTriangleMode ? "pickTriangleMode" : (buildTileAtMode ? "buildTileAtMode" : "addRemoveTileMode");
                     ImGui::Text("Modo ativo: %s", activeMode);
+                }
+
+                if (ImGui::CollapsingHeader("Navmesh Tests"))
+                {
+                    bool updateTiles = navmeshUpdateTiles;
+                    if (ImGui::Checkbox("Update Tiles", &updateTiles))
+                    {
+                        navmeshUpdateTiles = updateTiles;
+                        meshStateCache.clear();
+                        if (navmeshUpdateTiles)
+                        {
+                            for (const auto& instance : meshInstances)
+                            {
+                                MeshBoundsState state = ComputeMeshBounds(instance);
+                                if (state.valid)
+                                {
+                                    meshStateCache[instance.id] = state;
+                                }
+                            }
+                        }
+                    }
+                    ImGui::SameLine();
+                    ImGui::TextDisabled("(reconstroi tiles com geometria alterada)");
 
                     if (ImGui::Button("experimental_buildSingleTile"))
                     {

@@ -170,6 +170,186 @@ bool NavMeshData::BuildTileAt(const glm::vec3& worldPos,
     return true;
 }
 
+bool NavMeshData::RebuildTilesInBounds(const glm::vec3& bmin,
+                                       const glm::vec3& bmax,
+                                       const NavmeshGenerationSettings& settings,
+                                       bool onlyExistingTiles,
+                                       std::vector<std::pair<int, int>>* outTiles)
+{
+    std::vector<std::pair<int, int>> tiles;
+    if (!CollectTilesInBounds(bmin, bmax, onlyExistingTiles, tiles))
+        return false;
+
+    return RebuildSpecificTiles(tiles, settings, onlyExistingTiles, outTiles);
+}
+
+bool NavMeshData::CollectTilesInBounds(const glm::vec3& bmin,
+                                       const glm::vec3& bmax,
+                                       bool onlyExistingTiles,
+                                       std::vector<std::pair<int, int>>& outTiles) const
+{
+    outTiles.clear();
+
+    if (!m_nav)
+    {
+        printf("[NavMeshData] CollectTilesInBounds: navmesh ainda nao foi construido.\n");
+        return false;
+    }
+
+    if (!m_hasTiledCache)
+    {
+        printf("[NavMeshData] CollectTilesInBounds: sem cache de build tiled. Gere o navmesh tiled primeiro.\n");
+        return false;
+    }
+
+    const float tileWidth = m_cachedSettings.tileSize * m_cachedBaseCfg.cs;
+    int minTx = (int)floorf((bmin.x - m_cachedBMin[0]) / tileWidth);
+    int minTy = (int)floorf((bmin.z - m_cachedBMin[2]) / tileWidth);
+    int maxTx = (int)floorf((bmax.x - m_cachedBMin[0]) / tileWidth);
+    int maxTy = (int)floorf((bmax.z - m_cachedBMin[2]) / tileWidth);
+
+    minTx = std::max(0, minTx);
+    minTy = std::max(0, minTy);
+    maxTx = std::min(m_cachedTileWidthCount - 1, maxTx);
+    maxTy = std::min(m_cachedTileHeightCount - 1, maxTy);
+
+    if (minTx > maxTx || minTy > maxTy)
+    {
+        printf("[NavMeshData] CollectTilesInBounds: bounds fora do grid. BMin=(%.2f, %.2f, %.2f) BMax=(%.2f, %.2f, %.2f)\n",
+               bmin.x, bmin.y, bmin.z, bmax.x, bmax.y, bmax.z);
+        return false;
+    }
+
+    for (int ty = minTy; ty <= maxTy; ++ty)
+    {
+        for (int tx = minTx; tx <= maxTx; ++tx)
+        {
+            if (onlyExistingTiles && m_nav->getTileRefAt(tx, ty, 0) == 0)
+                continue;
+            outTiles.emplace_back(tx, ty);
+        }
+    }
+
+    if (outTiles.empty())
+    {
+        printf("[NavMeshData] CollectTilesInBounds: nenhuma tile candidata no intervalo [%d,%d]-[%d,%d].\n",
+               minTx, minTy, maxTx, maxTy);
+    }
+
+    return true;
+}
+
+bool NavMeshData::RebuildSpecificTiles(const std::vector<std::pair<int, int>>& tiles,
+                                       const NavmeshGenerationSettings& settings,
+                                       bool onlyExistingTiles,
+                                       std::vector<std::pair<int, int>>* outTiles)
+{
+    if (outTiles)
+        outTiles->clear();
+
+    if (!m_nav)
+    {
+        printf("[NavMeshData] RebuildSpecificTiles: navmesh ainda nao foi construido.\n");
+        return false;
+    }
+
+    if (!m_hasTiledCache)
+    {
+        printf("[NavMeshData] RebuildSpecificTiles: sem cache de build tiled. Gere o navmesh tiled primeiro.\n");
+        return false;
+    }
+
+    if (settings.mode != NavmeshBuildMode::Tiled ||
+        fabsf(settings.cellSize - m_cachedSettings.cellSize) > 1e-3f ||
+        fabsf(settings.cellHeight - m_cachedSettings.cellHeight) > 1e-3f ||
+        settings.tileSize != m_cachedSettings.tileSize)
+    {
+        printf("[NavMeshData] RebuildSpecificTiles: configuracao atual difere da usada no navmesh cacheado. Use mesmos valores de tile/cell.\n");
+    }
+
+    LoggingRcContext ctx;
+    NavmeshBuildInput buildInput{ctx, m_cachedVerts, m_cachedTris};
+    buildInput.nverts = (int)(m_cachedVerts.size() / 3);
+    buildInput.ntris = (int)(m_cachedTris.size() / 3);
+    rcVcopy(buildInput.meshBMin, m_cachedBMin);
+    rcVcopy(buildInput.meshBMax, m_cachedBMax);
+    buildInput.baseCfg = m_cachedBaseCfg;
+
+    bool anyTouched = false;
+
+    for (const auto& tile : tiles)
+    {
+        const int tx = tile.first;
+        const int ty = tile.second;
+        if (tx < 0 || ty < 0 || tx >= m_cachedTileWidthCount || ty >= m_cachedTileHeightCount)
+        {
+            printf("[NavMeshData] RebuildSpecificTiles: tile %d,%d fora do grid (%d x %d).\n", tx, ty, m_cachedTileWidthCount, m_cachedTileHeightCount);
+            continue;
+        }
+
+        if (onlyExistingTiles && m_nav->getTileRefAt(tx, ty, 0) == 0)
+            continue;
+
+        bool built = false;
+        bool empty = false;
+        if (!BuildSingleTile(buildInput, m_cachedSettings, tx, ty, m_nav, built, empty))
+        {
+            printf("[NavMeshData] RebuildSpecificTiles: falhou ao reconstruir tile %d,%d.\n", tx, ty);
+            return false;
+        }
+
+        if (built || empty)
+        {
+            anyTouched = true;
+            if (outTiles)
+                outTiles->emplace_back(tx, ty);
+        }
+    }
+
+    if (!anyTouched)
+    {
+        printf("[NavMeshData] RebuildSpecificTiles: nenhuma tile elegivel no conjunto fornecido (%zu entradas).\n", tiles.size());
+    }
+
+    return true;
+}
+
+bool NavMeshData::UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
+                                       const std::vector<unsigned int>& indices)
+{
+    if (!m_nav || !m_hasTiledCache)
+    {
+        printf("[NavMeshData] UpdateCachedGeometry: navmesh tiled nao inicializado.\n");
+        return false;
+    }
+
+    const size_t nverts = verts.size();
+    const size_t ntris = indices.size() / 3;
+    if (nverts == 0 || ntris == 0)
+    {
+        printf("[NavMeshData] UpdateCachedGeometry: geometria vazia.\n");
+        return false;
+    }
+
+    std::vector<float> convertedVerts(nverts * 3);
+    for (size_t i = 0; i < nverts; ++i)
+    {
+        convertedVerts[i * 3 + 0] = verts[i].x;
+        convertedVerts[i * 3 + 1] = verts[i].y;
+        convertedVerts[i * 3 + 2] = verts[i].z;
+    }
+
+    std::vector<int> convertedTris(indices.size());
+    for (size_t i = 0; i < indices.size(); ++i)
+    {
+        convertedTris[i] = static_cast<int>(indices[i]);
+    }
+
+    m_cachedVerts = std::move(convertedVerts);
+    m_cachedTris = std::move(convertedTris);
+    return true;
+}
+
 
 // ----------------------------------------------------------------------------
 // ExtractDebugMesh()
