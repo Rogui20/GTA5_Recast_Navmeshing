@@ -16,6 +16,7 @@ var classdtNavMeshQuery =
     [ "findRandomPoint", "classdtNavMeshQuery.html#af86c392a14bd788b0caecf21d9fb4b3d", null ],
     [ "findRandomPointAroundCircle", "classdtNavMeshQuery.html#abfb87531eb962cbd51c649469de2e4fa", null ],
     [ "findStraightPath", "classdtNavMeshQuery.html#ac160434c85bdf9edec24fa621f120d2d", null ],
+    [ "findStraightPathMinEdgePrecise", "classdtNavMeshQuery.html#abb3d1c8068478de9d7841d8a43c9008f", null ],
     [ "getAttachedNavMesh", "classdtNavMeshQuery.html#ab99757f03578bbd82aa70e1fd895a1f9", null ],
     [ "getNodePool", "classdtNavMeshQuery.html#ac703297afb992c9e79f4a6e8754c8a89", null ],
     [ "getPathFromDijkstraSearch", "classdtNavMeshQuery.html#af0eadf81ceef919bd502469529b02fd0", null ],

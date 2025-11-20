@@ -122,6 +122,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac160434c85bdf9edec24fa621f120d2d" id="r_ac160434c85bdf9edec24fa621f120d2d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="DetourStatus_8h.html#a4f23c0dcf28d9e299a4aa06af5b9ada3">dtStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdtNavMeshQuery.html#ac160434c85bdf9edec24fa621f120d2d">findStraightPath</a> (const float *startPos, const float *endPos, const <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> *<a class="el" href="SDL__opengl__glext_8h.html#ab25d8cd967ccbd19b630d7100ff8f67e">path</a>, const int pathSize, float *straightPath, unsigned char *straightPathFlags, <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> *straightPathRefs, int *straightPathCount, const int maxStraightPath, const int options=0) const</td></tr>
 <tr class="memdesc:ac160434c85bdf9edec24fa621f120d2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the straight path from the start to the end position within the polygon corridor.  <br /></td></tr>
 <tr class="separator:ac160434c85bdf9edec24fa621f120d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb3d1c8068478de9d7841d8a43c9008f" id="r_abb3d1c8068478de9d7841d8a43c9008f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="DetourStatus_8h.html#a4f23c0dcf28d9e299a4aa06af5b9ada3">dtStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdtNavMeshQuery.html#abb3d1c8068478de9d7841d8a43c9008f">findStraightPathMinEdgePrecise</a> (const float *startPos, const float *endPos, const <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> *<a class="el" href="SDL__opengl__glext_8h.html#ab25d8cd967ccbd19b630d7100ff8f67e">path</a>, const int pathSize, float *straightPath, unsigned char *straightPathFlags, <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> *straightPathRefs, int *straightPathCount, const int maxStraightPath, const int options, const float minEdgeDist) const</td></tr>
+<tr class="separator:abb3d1c8068478de9d7841d8a43c9008f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Sliced Pathfinding Functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p>Common use case:</p>
 <ol type="1">
@@ -1258,6 +1260,88 @@ Public Member Functions</h2></td></tr>
 <p>The start position is clamped to the first polygon in the path, and the end position is clamped to the last. So the start and end positions should normally be within or very near the first and last polygons respectively.</p>
 <p>The returned polygon references represent the reference id of the polygon that is entered at the associated path position. The reference id associated with the end point will always be zero. This allows, for example, matching off-mesh link points to their representative polygons.</p>
 <p>If the provided result buffers are too small for the entire result set, they will be filled as far as possible from the start toward the end position. </p>
+
+</div>
+</div>
+<a id="abb3d1c8068478de9d7841d8a43c9008f" name="abb3d1c8068478de9d7841d8a43c9008f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb3d1c8068478de9d7841d8a43c9008f">&#9670;&#160;</a></span>findStraightPathMinEdgePrecise()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="DetourStatus_8h.html#a4f23c0dcf28d9e299a4aa06af5b9ada3">dtStatus</a> dtNavMeshQuery::findStraightPathMinEdgePrecise </td>
+          <td>(</td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>startPos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>endPos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> *&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>pathSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>straightPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramname"><em>straightPathFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> *&#160;</td>
+          <td class="paramname"><em>straightPathRefs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>straightPathCount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>maxStraightPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>options</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>minEdgeDist</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
