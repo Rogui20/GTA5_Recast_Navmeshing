@@ -44,7 +44,23 @@ void main()
     vec3 N = normalize(cross(dFdx(vWorldPos), dFdy(vWorldPos)));
 
     if (uRenderMode == 0) {
-        FragColor = vec4(1,1,0,1);
+        // Blender-like SOLID shading (lambert + subtle fill light)
+        vec3 baseColor = vec3(0.72, 0.76, 0.82);
+
+        // Key light similar to Blender's default solid lighting
+        vec3 L1 = normalize(vec3(0.45, 0.80, 0.35));
+        // Fill light to avoid overly dark backsides
+        vec3 L2 = normalize(vec3(-0.30, -0.60, -0.25));
+
+        float diff1 = max(dot(N, L1), 0.0);
+        float diff2 = max(dot(N, L2), 0.0) * 0.35;
+
+        float ambient = 0.25;
+        float shading = ambient + diff1 * 0.9 + diff2;
+        shading = clamp(shading, 0.0, 1.0);
+
+        vec3 col = baseColor * shading;
+        FragColor = vec4(col,1);
     }
     else if (uRenderMode == 1) {
         FragColor = vec4(0,0,0,1);
