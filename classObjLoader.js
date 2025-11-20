@@ -1,4 +1,4 @@
 var classObjLoader =
 [
-    [ "LoadObj", "classObjLoader.html#a2cffea6920150d70a58127e9164d28f0", null ]
+    [ "LoadObj", "classObjLoader.html#adab62fa2dd73699be059017eb2b5bd30", null ]
 ];
