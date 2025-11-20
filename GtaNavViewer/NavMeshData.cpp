@@ -176,31 +176,33 @@ bool NavMeshData::RebuildTilesInBounds(const glm::vec3& bmin,
                                        bool onlyExistingTiles,
                                        std::vector<std::pair<int, int>>* outTiles)
 {
-    if (outTiles)
-        outTiles->clear();
+    std::vector<std::pair<int, int>> tiles;
+    if (!CollectTilesInBounds(bmin, bmax, onlyExistingTiles, tiles))
+        return false;
+
+    return RebuildSpecificTiles(tiles, settings, onlyExistingTiles, outTiles);
+}
+
+bool NavMeshData::CollectTilesInBounds(const glm::vec3& bmin,
+                                       const glm::vec3& bmax,
+                                       bool onlyExistingTiles,
+                                       std::vector<std::pair<int, int>>& outTiles) const
+{
+    outTiles.clear();
 
     if (!m_nav)
     {
-        printf("[NavMeshData] RebuildTilesInBounds: navmesh ainda nao foi construido.\n");
+        printf("[NavMeshData] CollectTilesInBounds: navmesh ainda nao foi construido.\n");
         return false;
     }
 
     if (!m_hasTiledCache)
     {
-        printf("[NavMeshData] RebuildTilesInBounds: sem cache de build tiled. Gere o navmesh tiled primeiro.\n");
+        printf("[NavMeshData] CollectTilesInBounds: sem cache de build tiled. Gere o navmesh tiled primeiro.\n");
         return false;
     }
 
-    const float expectedTileWorld = m_cachedSettings.tileSize * m_cachedBaseCfg.cs;
-    if (settings.mode != NavmeshBuildMode::Tiled ||
-        fabsf(settings.cellSize - m_cachedSettings.cellSize) > 1e-3f ||
-        fabsf(settings.cellHeight - m_cachedSettings.cellHeight) > 1e-3f ||
-        settings.tileSize != m_cachedSettings.tileSize)
-    {
-        printf("[NavMeshData] RebuildTilesInBounds: configuracao atual difere da usada no navmesh cacheado. Use mesmos valores de tile/cell.\n");
-    }
-
-    const float tileWidth = expectedTileWorld;
+    const float tileWidth = m_cachedSettings.tileSize * m_cachedBaseCfg.cs;
     int minTx = (int)floorf((bmin.x - m_cachedBMin[0]) / tileWidth);
     int minTy = (int)floorf((bmin.z - m_cachedBMin[2]) / tileWidth);
     int maxTx = (int)floorf((bmax.x - m_cachedBMin[0]) / tileWidth);
@@ -213,9 +215,56 @@ bool NavMeshData::RebuildTilesInBounds(const glm::vec3& bmin,
 
     if (minTx > maxTx || minTy > maxTy)
     {
-        printf("[NavMeshData] RebuildTilesInBounds: bounds fora do grid. BMin=(%.2f, %.2f, %.2f) BMax=(%.2f, %.2f, %.2f)\n",
+        printf("[NavMeshData] CollectTilesInBounds: bounds fora do grid. BMin=(%.2f, %.2f, %.2f) BMax=(%.2f, %.2f, %.2f)\n",
                bmin.x, bmin.y, bmin.z, bmax.x, bmax.y, bmax.z);
         return false;
+    }
+
+    for (int ty = minTy; ty <= maxTy; ++ty)
+    {
+        for (int tx = minTx; tx <= maxTx; ++tx)
+        {
+            if (onlyExistingTiles && m_nav->getTileRefAt(tx, ty, 0) == 0)
+                continue;
+            outTiles.emplace_back(tx, ty);
+        }
+    }
+
+    if (outTiles.empty())
+    {
+        printf("[NavMeshData] CollectTilesInBounds: nenhuma tile candidata no intervalo [%d,%d]-[%d,%d].\n",
+               minTx, minTy, maxTx, maxTy);
+    }
+
+    return true;
+}
+
+bool NavMeshData::RebuildSpecificTiles(const std::vector<std::pair<int, int>>& tiles,
+                                       const NavmeshGenerationSettings& settings,
+                                       bool onlyExistingTiles,
+                                       std::vector<std::pair<int, int>>* outTiles)
+{
+    if (outTiles)
+        outTiles->clear();
+
+    if (!m_nav)
+    {
+        printf("[NavMeshData] RebuildSpecificTiles: navmesh ainda nao foi construido.\n");
+        return false;
+    }
+
+    if (!m_hasTiledCache)
+    {
+        printf("[NavMeshData] RebuildSpecificTiles: sem cache de build tiled. Gere o navmesh tiled primeiro.\n");
+        return false;
+    }
+
+    if (settings.mode != NavmeshBuildMode::Tiled ||
+        fabsf(settings.cellSize - m_cachedSettings.cellSize) > 1e-3f ||
+        fabsf(settings.cellHeight - m_cachedSettings.cellHeight) > 1e-3f ||
+        settings.tileSize != m_cachedSettings.tileSize)
+    {
+        printf("[NavMeshData] RebuildSpecificTiles: configuracao atual difere da usada no navmesh cacheado. Use mesmos valores de tile/cell.\n");
     }
 
     LoggingRcContext ctx;
@@ -228,34 +277,38 @@ bool NavMeshData::RebuildTilesInBounds(const glm::vec3& bmin,
 
     bool anyTouched = false;
 
-    for (int ty = minTy; ty <= maxTy; ++ty)
+    for (const auto& tile : tiles)
     {
-        for (int tx = minTx; tx <= maxTx; ++tx)
+        const int tx = tile.first;
+        const int ty = tile.second;
+        if (tx < 0 || ty < 0 || tx >= m_cachedTileWidthCount || ty >= m_cachedTileHeightCount)
         {
-            if (onlyExistingTiles && m_nav->getTileRefAt(tx, ty, 0) == 0)
-                continue;
+            printf("[NavMeshData] RebuildSpecificTiles: tile %d,%d fora do grid (%d x %d).\n", tx, ty, m_cachedTileWidthCount, m_cachedTileHeightCount);
+            continue;
+        }
 
-            bool built = false;
-            bool empty = false;
-            if (!BuildSingleTile(buildInput, m_cachedSettings, tx, ty, m_nav, built, empty))
-            {
-                printf("[NavMeshData] RebuildTilesInBounds: falhou ao reconstruir tile %d,%d.\n", tx, ty);
-                return false;
-            }
+        if (onlyExistingTiles && m_nav->getTileRefAt(tx, ty, 0) == 0)
+            continue;
 
-            if (built || empty)
-            {
-                anyTouched = true;
-                if (outTiles)
-                    outTiles->emplace_back(tx, ty);
-            }
+        bool built = false;
+        bool empty = false;
+        if (!BuildSingleTile(buildInput, m_cachedSettings, tx, ty, m_nav, built, empty))
+        {
+            printf("[NavMeshData] RebuildSpecificTiles: falhou ao reconstruir tile %d,%d.\n", tx, ty);
+            return false;
+        }
+
+        if (built || empty)
+        {
+            anyTouched = true;
+            if (outTiles)
+                outTiles->emplace_back(tx, ty);
         }
     }
 
     if (!anyTouched)
     {
-        printf("[NavMeshData] RebuildTilesInBounds: nenhuma tile elegivel no intervalo [%d,%d]-[%d,%d].\n",
-               minTx, minTy, maxTx, maxTy);
+        printf("[NavMeshData] RebuildSpecificTiles: nenhuma tile elegivel no conjunto fornecido (%zu entradas).\n", tiles.size());
     }
 
     return true;

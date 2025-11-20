@@ -48,8 +48,18 @@ public:
                      int& outTileX,
                      int& outTileY);
 
+    bool CollectTilesInBounds(const glm::vec3& bmin,
+                              const glm::vec3& bmax,
+                              bool onlyExistingTiles,
+                              std::vector<std::pair<int, int>>& outTiles) const;
+
     bool RebuildTilesInBounds(const glm::vec3& bmin,
                               const glm::vec3& bmax,
+                              const NavmeshGenerationSettings& settings,
+                              bool onlyExistingTiles,
+                              std::vector<std::pair<int, int>>* outTiles = nullptr);
+
+    bool RebuildSpecificTiles(const std::vector<std::pair<int, int>>& tiles,
                               const NavmeshGenerationSettings& settings,
                               bool onlyExistingTiles,
                               std::vector<std::pair<int, int>>* outTiles = nullptr);

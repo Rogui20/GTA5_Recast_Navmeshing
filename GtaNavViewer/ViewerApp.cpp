@@ -23,6 +23,7 @@
 #include <cctype>
 #include <cmath>
 #include <limits>
+#include <unordered_set>
 
 
 ViewerApp::ViewerApp()
@@ -359,6 +360,7 @@ void ViewerApp::UpdateNavmeshTiles()
     std::vector<std::pair<glm::vec3, glm::vec3>> dirtyBounds;
     std::unordered_map<uint64_t, MeshBoundsState> currentStates;
     currentStates.reserve(meshInstances.size());
+    std::unordered_set<uint64_t> dirtyTiles;
 
     for (const auto& instance : meshInstances)
     {
@@ -396,23 +398,46 @@ void ViewerApp::UpdateNavmeshTiles()
     if (dirtyBounds.empty())
         return;
 
-    bool changedSomething = false;
+    const auto tileKey = [](int tx, int ty) -> uint64_t
+    {
+        return (static_cast<uint64_t>(static_cast<uint32_t>(tx)) << 32) | static_cast<uint32_t>(ty);
+    };
+
     for (const auto& bounds : dirtyBounds)
     {
-        std::vector<std::pair<int, int>> touchedTiles;
-        if (!navData.RebuildTilesInBounds(bounds.first, bounds.second, navGenSettings, true, &touchedTiles))
+        std::vector<std::pair<int, int>> tilesInBounds;
+        if (!navData.CollectTilesInBounds(bounds.first, bounds.second, true, tilesInBounds))
         {
-            printf("[ViewerApp] UpdateNavmeshTiles: falha ao reconstruir tiles.\n");
+            printf("[ViewerApp] UpdateNavmeshTiles: falha ao coletar tiles alteradas.\n");
             continue;
         }
 
-        if (!touchedTiles.empty())
+        for (const auto& tile : tilesInBounds)
         {
-            changedSomething = true;
+            dirtyTiles.insert(tileKey(tile.first, tile.second));
         }
     }
 
-    if (changedSomething)
+    if (dirtyTiles.empty())
+        return;
+
+    std::vector<std::pair<int, int>> tilesToRebuild;
+    tilesToRebuild.reserve(dirtyTiles.size());
+    for (uint64_t key : dirtyTiles)
+    {
+        int tx = static_cast<int>(key >> 32);
+        int ty = static_cast<int>(key & 0xffffffffu);
+        tilesToRebuild.emplace_back(tx, ty);
+    }
+
+    std::vector<std::pair<int, int>> touchedTiles;
+    if (!navData.RebuildSpecificTiles(tilesToRebuild, navGenSettings, true, &touchedTiles))
+    {
+        printf("[ViewerApp] UpdateNavmeshTiles: falha ao reconstruir tiles.\n");
+        return;
+    }
+
+    if (!touchedTiles.empty())
     {
         buildNavmeshDebugLines();
     }
