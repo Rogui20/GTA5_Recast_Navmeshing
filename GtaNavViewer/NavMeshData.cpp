@@ -3,10 +3,15 @@
 #include <Recast.h>
 #include <DetourNavMesh.h>
 #include <DetourNavMeshBuilder.h>
+#include <DetourMath.h>
 
+#include "NavMeshBuild.h"
+
+#include <algorithm>
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
+#include <cmath>
 
 NavMeshData::~NavMeshData()
 {
@@ -136,8 +141,10 @@ void NavMeshData::ExtractDebugMesh(
 
 }
 
+
 bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
-                                const std::vector<unsigned int>& idxIn)
+                                const std::vector<unsigned int>& idxIn,
+                                const NavmeshGenerationSettings& settings)
 {
     struct LoggingRcContext : public rcContext
     {
@@ -173,18 +180,15 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         return false;
     }
 
-    // Se já existe um navmesh, limpa
     if (m_nav)
     {
         dtFreeNavMesh(m_nav);
         m_nav = nullptr;
     }
 
-    // --- 1. Flatten vertices e indices ---
     const int nverts = (int)vertsIn.size();
     const int ntris  = (int)(idxIn.size() / 3);
 
-    // valida indices
     for (size_t i = 0; i < idxIn.size(); ++i)
     {
         if (idxIn[i] >= vertsIn.size())
@@ -207,312 +211,74 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     for (int i = 0; i < ntris * 3; ++i)
         tris[i] = (int)idxIn[i];
 
-    // --- 2. Bounds da malha ---
-    float bmin[3] = { verts[0], verts[1], verts[2] };
-    float bmax[3] = { verts[0], verts[1], verts[2] };
+    float meshBMin[3] = { verts[0], verts[1], verts[2] };
+    float meshBMax[3] = { verts[0], verts[1], verts[2] };
     for (int i = 1; i < nverts; ++i)
     {
         const float* v = &verts[i*3];
-        if (v[0] < bmin[0]) bmin[0] = v[0];
-        if (v[1] < bmin[1]) bmin[1] = v[1];
-        if (v[2] < bmin[2]) bmin[2] = v[2];
-        if (v[0] > bmax[0]) bmax[0] = v[0];
-        if (v[1] > bmax[1]) bmax[1] = v[1];
-        if (v[2] > bmax[2]) bmax[2] = v[2];
+        if (v[0] < meshBMin[0]) meshBMin[0] = v[0];
+        if (v[1] < meshBMin[1]) meshBMin[1] = v[1];
+        if (v[2] < meshBMin[2]) meshBMin[2] = v[2];
+        if (v[0] > meshBMax[0]) meshBMax[0] = v[0];
+        if (v[1] > meshBMax[1]) meshBMax[1] = v[1];
+        if (v[2] > meshBMax[2]) meshBMax[2] = v[2];
     }
 
-    // --- 3. Configuração Recast básica ---
-    rcConfig cfg{};
-    cfg.cs = 0.3f;    // cell size (ajustado conforme padrões do RecastDemo)
-    cfg.ch = 0.2f;    // cell height
+    auto fillBaseConfig = [&](rcConfig& cfg)
+    {
+        cfg = {};
+        cfg.cs = std::max(0.01f, settings.cellSize);
+        cfg.ch = std::max(0.01f, settings.cellHeight);
 
-    // Parâmetros do agente (bastante permissivos para depuração)
-    const float agentHeight = 2.0f;
-    const float agentRadius = 0.6f;
-    const float agentMaxClimb = 1.0f;
-    const float agentMaxSlope = 60.0f; // permite rampas mais inclinadas para evitar filtrar tudo
+        cfg.walkableSlopeAngle   = settings.agentMaxSlope;
+        cfg.walkableHeight       = (int)ceilf(settings.agentHeight / cfg.ch);
+        cfg.walkableClimb        = (int)floorf(settings.agentMaxClimb / cfg.ch);
+        cfg.walkableRadius       = (int)ceilf(settings.agentRadius / cfg.cs);
+        cfg.maxEdgeLen           = std::max(0, (int)std::ceil(settings.maxEdgeLen / cfg.cs));
+        cfg.maxSimplificationError = settings.maxSimplificationError;
+        cfg.minRegionArea        = (int)rcSqr(std::max(0.0f, settings.minRegionSize));
+        cfg.mergeRegionArea      = (int)rcSqr(std::max(0.0f, settings.mergeRegionSize));
+        cfg.maxVertsPerPoly      = std::max(3, settings.maxVertsPerPoly);
+        cfg.detailSampleDist     = std::max(0.0f, settings.detailSampleDist);
+        cfg.detailSampleMaxError = std::max(0.0f, settings.detailSampleMaxError);
+    };
 
-    cfg.walkableSlopeAngle   = agentMaxSlope;
-    cfg.walkableHeight       = (int)ceilf(agentHeight / cfg.ch);
-    cfg.walkableClimb        = (int)floorf(agentMaxClimb / cfg.ch);
-    cfg.walkableRadius       = (int)ceilf(agentRadius / cfg.cs);
-    cfg.maxEdgeLen           = (int)(12.0f / cfg.cs);
-    cfg.maxSimplificationError = 1.3f;
-    cfg.minRegionArea        = (int)rcSqr(8);   // em células
-    cfg.mergeRegionArea      = (int)rcSqr(20);  // em células
-    cfg.maxVertsPerPoly      = 6;
-    cfg.detailSampleDist     = 6.0f;
-    cfg.detailSampleMaxError = 1.0f;
+    rcConfig baseCfg{};
+    fillBaseConfig(baseCfg);
 
-    rcCalcGridSize(bmin, bmax, cfg.cs, &cfg.width, &cfg.height);
-
-    cfg.borderSize = cfg.walkableRadius + 3; // padding recomendado
-    rcVcopy(cfg.bmin, bmin);
-    rcVcopy(cfg.bmax, bmax);
-    cfg.width  += cfg.borderSize * 2;
-    cfg.height += cfg.borderSize * 2;
-    cfg.bmin[0] -= cfg.borderSize * cfg.cs;
-    cfg.bmin[2] -= cfg.borderSize * cfg.cs;
-    cfg.bmax[0] += cfg.borderSize * cfg.cs;
-    cfg.bmax[2] += cfg.borderSize * cfg.cs;
-
-    if (cfg.width == 0 || cfg.height == 0)
+    rcCalcGridSize(meshBMin, meshBMax, baseCfg.cs, &baseCfg.width, &baseCfg.height);
+    if (baseCfg.width == 0 || baseCfg.height == 0)
     {
         printf("[NavMeshData] BuildFromMesh: rcCalcGridSize retornou grade invalida (%d x %d).\n",
-               cfg.width, cfg.height);
+               baseCfg.width, baseCfg.height);
         return false;
     }
 
-    printf("[NavMeshData] BuildFromMesh: Verts=%d, Tris=%d, Bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f) Grid=%d x %d (border=%d)\n",
-           nverts, ntris,
-           bmin[0], bmin[1], bmin[2],
-           bmax[0], bmax[1], bmax[2],
-           cfg.width, cfg.height, cfg.borderSize);
-    printf("[NavMeshData] BuildFromMesh: Verts=%d, Tris=%d, Bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f) Grid=%d x %d\n",
-           nverts, ntris,
-           bmin[0], bmin[1], bmin[2],
-           bmax[0], bmax[1], bmax[2],
-           cfg.width, cfg.height);
+    NavmeshBuildInput buildInput{ctx, verts, tris, nverts, ntris};
+    rcVcopy(buildInput.meshBMin, meshBMin);
+    rcVcopy(buildInput.meshBMax, meshBMax);
+    buildInput.baseCfg = baseCfg;
 
-    // --- 4. Altura, rasterização e filtros ---
-    rcHeightfield* solid = rcAllocHeightfield();
-    if (!solid)
+    dtNavMesh* newNav = nullptr;
+    bool ok = false;
+    if (settings.mode == NavmeshBuildMode::SingleMesh)
     {
-        printf("[NavMeshData] rcAllocHeightfield falhou.\n");
-        return false;
+        ok = BuildSingleNavMesh(buildInput, settings, newNav);
     }
-    if (!rcCreateHeightfield(&ctx, *solid, cfg.width, cfg.height,
-                             cfg.bmin, cfg.bmax, cfg.cs, cfg.ch))
+    else
     {
-        printf("[NavMeshData] rcCreateHeightfield falhou.\n");
-        rcFreeHeightField(solid);
-        return false;
+        ok = BuildTiledNavMesh(buildInput, settings, newNav);
     }
 
-    std::vector<unsigned char> triAreas(ntris);
-    memset(triAreas.data(), 0, ntris * sizeof(unsigned char));
-
-    rcMarkWalkableTriangles(&ctx, cfg.walkableSlopeAngle,
-                            verts.data(), nverts,
-                            tris.data(), ntris,
-                            triAreas.data());
-
-    if (!rcRasterizeTriangles(&ctx,
-                              verts.data(), nverts,
-                              tris.data(),
-                              triAreas.data(),
-                              ntris,
-                              *solid,
-                              cfg.walkableClimb))
+    if (!ok)
     {
-        printf("[NavMeshData] rcRasterizeTriangles falhou.\n");
-        rcFreeHeightField(solid);
-        return false;
-    }
-
-    rcFilterLowHangingWalkableObstacles(&ctx, cfg.walkableClimb, *solid);
-    rcFilterLedgeSpans(&ctx, cfg.walkableHeight, cfg.walkableClimb, *solid);
-    rcFilterWalkableLowHeightSpans(&ctx, cfg.walkableHeight, *solid);
-
-    int solidSpanCount = 0;
-    for (int i = 0; i < solid->width * solid->height; ++i)
-    {
-        for (rcSpan* span = solid->spans[i]; span; span = span->next)
+        if (newNav)
         {
-            ++solidSpanCount;
+            dtFreeNavMesh(newNav);
         }
-    }
-
-    printf("[NavMeshData] Rasterizacao: spans=%d\n", solidSpanCount);
-
-    // --- 5. Compact heightfield ---
-    rcCompactHeightfield* chf = rcAllocCompactHeightfield();
-    if (!chf)
-    {
-        printf("[NavMeshData] rcAllocCompactHeightfield falhou.\n");
-        rcFreeHeightField(solid);
-        return false;
-    }
-    if (!rcBuildCompactHeightfield(&ctx,
-                                   cfg.walkableHeight, cfg.walkableClimb,
-                                   *solid, *chf))
-    {
-        printf("[NavMeshData] rcBuildCompactHeightfield falhou.\n");
-        rcFreeCompactHeightfield(chf);
-        rcFreeHeightField(solid);
         return false;
     }
 
-    rcFreeHeightField(solid);
-    solid = nullptr;
-
-    rcErodeWalkableArea(&ctx, cfg.walkableRadius, *chf);
-    rcBuildDistanceField(&ctx, *chf);
-    rcBuildRegions(&ctx, *chf, cfg.borderSize,
-                   cfg.minRegionArea, cfg.mergeRegionArea);
-
-    printf("[NavMeshData] CompactHeightfield: spans=%d cells=%d maxRegions=%d\n",
-           chf->spanCount, chf->width * chf->height, chf->maxRegions);
-
-    // --- 6. Contours ---
-    rcContourSet* cset = rcAllocContourSet();
-    if (!cset)
-    {
-        printf("[NavMeshData] rcAllocContourSet falhou.\n");
-        rcFreeCompactHeightfield(chf);
-        return false;
-    }
-    if (!rcBuildContours(&ctx, *chf,
-                         cfg.maxSimplificationError,
-                         cfg.maxEdgeLen,
-                         *cset))
-    {
-        printf("[NavMeshData] rcBuildContours falhou.\n");
-        rcFreeContourSet(cset);
-        rcFreeCompactHeightfield(chf);
-        return false;
-    }
-
-    // --- 7. PolyMesh ---
-    rcPolyMesh* pmesh = rcAllocPolyMesh();
-    if (!pmesh)
-    {
-        printf("[NavMeshData] rcAllocPolyMesh falhou.\n");
-        rcFreeContourSet(cset);
-        rcFreeCompactHeightfield(chf);
-        return false;
-    }
-    if (!rcBuildPolyMesh(&ctx, *cset, cfg.maxVertsPerPoly, *pmesh))
-    {
-        printf("[NavMeshData] rcBuildPolyMesh falhou.\n");
-        rcFreePolyMesh(pmesh);
-        rcFreeContourSet(cset);
-        rcFreeCompactHeightfield(chf);
-        return false;
-    }
-
-    printf("[NavMeshData] PolyMesh: verts=%d polys=%d nvp=%d bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
-           pmesh->nverts, pmesh->npolys, pmesh->nvp,
-           pmesh->bmin[0], pmesh->bmin[1], pmesh->bmin[2],
-           pmesh->bmax[0], pmesh->bmax[1], pmesh->bmax[2]);
-
-    // --- 8. PolyMeshDetail ---
-    rcPolyMeshDetail* dmesh = rcAllocPolyMeshDetail();
-    if (!dmesh)
-    {
-        printf("[NavMeshData] rcAllocPolyMeshDetail falhou.\n");
-        rcFreePolyMesh(pmesh);
-        rcFreeContourSet(cset);
-        rcFreeCompactHeightfield(chf);
-        return false;
-    }
-    if (!rcBuildPolyMeshDetail(&ctx,
-                               *pmesh, *chf,
-                               cfg.detailSampleDist,
-                               cfg.detailSampleMaxError,
-                               *dmesh))
-    {
-        printf("[NavMeshData] rcBuildPolyMeshDetail falhou.\n");
-        rcFreePolyMeshDetail(dmesh);
-        rcFreePolyMesh(pmesh);
-        rcFreeContourSet(cset);
-        rcFreeCompactHeightfield(chf);
-        return false;
-    }
-
-    printf("[NavMeshData] PolyMeshDetail: verts=%d tris=%d meshes=%d\n",
-           dmesh->nverts, dmesh->ntris, dmesh->nmeshes);
-
-    rcFreeCompactHeightfield(chf);
-    rcFreeContourSet(cset);
-
-    // --- 9. Params Detour ---
-    unsigned char* navData = nullptr;
-    int navDataSize = 0;
-
-    std::vector<unsigned short> polyFlags(pmesh->npolys);
-    for (int i = 0; i < pmesh->npolys; ++i)
-    {
-        // rcBuildPolyMesh define area 0 como non-walkable
-        polyFlags[i] = (pmesh->areas[i] != 0) ? 1 : 0;
-    }
-
-    dtNavMeshCreateParams params{};
-    params.verts = pmesh->verts;
-    params.vertCount = pmesh->nverts;
-    params.polys = pmesh->polys;
-    params.polyAreas = pmesh->areas;
-    params.polyFlags = polyFlags.data();
-    params.polyCount = pmesh->npolys;
-    params.nvp = pmesh->nvp;
-    params.detailMeshes = dmesh->meshes;
-    params.detailVerts = dmesh->verts;
-    params.detailVertsCount = dmesh->nverts;
-    params.detailTris = dmesh->tris;
-    params.detailTriCount = dmesh->ntris;
-    params.walkableHeight = (float)cfg.walkableHeight * cfg.ch;
-    params.walkableRadius = (float)cfg.walkableRadius * cfg.cs;
-    params.walkableClimb  = (float)cfg.walkableClimb  * cfg.ch;
-    params.bmin[0] = pmesh->bmin[0];
-    params.bmin[1] = pmesh->bmin[1];
-    params.bmin[2] = pmesh->bmin[2];
-    params.bmax[0] = pmesh->bmax[0];
-    params.bmax[1] = pmesh->bmax[1];
-    params.bmax[2] = pmesh->bmax[2];
-    params.cs = cfg.cs;
-    params.ch = cfg.ch;
-    params.buildBvTree = true;
-
-    params.tileX = 0;
-    params.tileY = 0;
-    params.tileLayer = 0;
-
-    if (!dtCreateNavMeshData(&params, &navData, &navDataSize))
-    {
-        printf("[NavMeshData] dtCreateNavMeshData falhou. polys=%d verts=%d detailVerts=%d detailTris=%d bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
-               pmesh->npolys, pmesh->nverts, dmesh->nverts, dmesh->ntris,
-               params.bmin[0], params.bmin[1], params.bmin[2],
-               params.bmax[0], params.bmax[1], params.bmax[2]);
-        rcFreePolyMeshDetail(dmesh);
-        rcFreePolyMesh(pmesh);
-        return false;
-    }
-
-    rcFreePolyMeshDetail(dmesh);
-    rcFreePolyMesh(pmesh);
-
-    // --- 10. Criar dtNavMesh ---
-    m_nav = dtAllocNavMesh();
-    if (!m_nav)
-    {
-        printf("[NavMeshData] dtAllocNavMesh falhou.\n");
-        dtFree(navData);
-        return false;
-    }
-
-    dtNavMeshParams navParams{};
-    memcpy(navParams.orig, params.bmin, sizeof(float)*3);
-    navParams.tileWidth  = (params.bmax[0] - params.bmin[0]);
-    navParams.tileHeight = (params.bmax[2] - params.bmin[2]);
-    navParams.maxTiles   = 1;
-    navParams.maxPolys   = 2048; // ajusta se quiser
-
-    if (dtStatusFailed(m_nav->init(&navParams)))
-    {
-        printf("[NavMeshData] m_nav->init falhou.\n");
-        dtFree(navData);
-        return false;
-    }
-
-    dtStatus status = m_nav->addTile(navData, navDataSize, DT_TILE_FREE_DATA, 0, nullptr);
-    if (dtStatusFailed(status))
-    {
-        printf("[NavMeshData] addTile falhou. status=0x%x size=%d\n", status, navDataSize);
-        dtFree(navData);
-        return false;
-    }
-
-    printf("[NavMeshData] BuildFromMesh OK. Verts=%d, Tris=%d, Polys=%d\n",
-           nverts, ntris, pmesh->npolys);
+    m_nav = newNav;
     return true;
 }
