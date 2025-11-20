@@ -1,3 +1,4 @@
+
 // ViewerApp.h
 #pragma once
 #include <string>
@@ -59,7 +60,7 @@ private:
     bool LoadMeshFromPath(const std::string& path);
     void LoadLastDirectory();
     void SaveLastDirectory(const std::filesystem::path& directory);
-    std::string GetConfigFilePath() const;
+    std::filesystem::path GetConfigFilePath() const;
 
     void ProcessEvents();
     void RenderFrame();
