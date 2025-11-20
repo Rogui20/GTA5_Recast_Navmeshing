@@ -2,6 +2,7 @@
 
 #include <DetourMath.h>
 #include <DetourNavMeshBuilder.h>
+#include <DetourCommon.h>
 
 #include <algorithm>
 #include <cmath>
