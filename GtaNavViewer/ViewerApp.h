@@ -39,10 +39,24 @@ private:
     RendererGL* renderer = nullptr;
     Mesh* loadedMesh = nullptr;
     RenderMode renderMode = RenderMode::Solid;
+    bool centerMesh = true;
     glm::vec3 meshPos = glm::vec3(0, 0, -0);
     glm::vec3 meshRot = glm::vec3(0);
     float     meshScale = 1.0f;
     NavMeshData navData;
+
+    enum class NavmeshRenderMode
+    {
+        FacesAndLines = 0,
+        FacesOnly,
+        LinesOnly
+    };
+
+    bool navmeshVisible = true;
+    bool navmeshShowFaces = true;
+    bool navmeshShowLines = true;
+    float navmeshFaceAlpha = 0.35f;
+    NavmeshRenderMode navmeshRenderMode = NavmeshRenderMode::FacesAndLines;
 
     // buffers para desenhar navmesh no renderer
     std::vector<glm::vec3> navMeshTris;

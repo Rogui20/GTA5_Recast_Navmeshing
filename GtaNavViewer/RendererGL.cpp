@@ -35,6 +35,7 @@ in vec3 vWorldPos;
 
 uniform int uRenderMode;
 uniform vec3 uSolidColor;
+uniform float uSolidAlpha;
 
 out vec4 FragColor;
 
@@ -81,7 +82,7 @@ void main()
         FragColor = vec4(col,1);
     }
     else if (uRenderMode == 99) {
-        FragColor = vec4(uSolidColor,1);
+        FragColor = vec4(uSolidColor,uSolidAlpha);
     }
 }
 )";
@@ -190,6 +191,12 @@ RendererGL::~RendererGL()
     glDeleteProgram(shader);
     glDeleteVertexArrays(1, &vaoCube);
     glDeleteBuffers(1, &vboCube);
+    glDeleteVertexArrays(1, &vaoAxis);
+    glDeleteBuffers(1, &vboAxis);
+    glDeleteVertexArrays(1, &vaoGrid);
+    glDeleteBuffers(1, &vboGrid);
+    glDeleteVertexArrays(1, &navVao);
+    glDeleteBuffers(1, &navVbo);
 }
 
 GLuint RendererGL::LoadShader(const char* vs, const char* fs)
@@ -242,6 +249,7 @@ void RendererGL::Begin(ViewerCamera* cam, RenderMode mode)
 {
     glUseProgram(shader);
     glUniform1i(glGetUniformLocation(shader, "uRenderMode"), (int)mode);
+    glUniform1f(glGetUniformLocation(shader, "uSolidAlpha"), 1.0f);
 
 
     // Matriz de projeção e view sempre iguais
@@ -424,6 +432,51 @@ void RendererGL::DrawAxisGizmoScreen(const ViewerCamera* cam, int screenW, int s
     glViewport(0, 0, screenW, screenH);
 }
 
+void RendererGL::drawNavmeshTriangles(const std::vector<glm::vec3>& tris, const glm::vec3& color, float alpha)
+{
+    if (tris.empty())
+        return;
+
+    std::vector<float> verts;
+    verts.reserve(tris.size() * 3);
+
+    for (const auto& v : tris)
+    {
+        verts.push_back(v.x);
+        verts.push_back(v.y);
+        verts.push_back(v.z);
+    }
+
+    glUseProgram(shader);
+    glUniform1i(glGetUniformLocation(shader, "uRenderMode"), 99);
+    glUniform3f(glGetUniformLocation(shader, "uSolidColor"), color.x, color.y, color.z);
+    glUniform1f(glGetUniformLocation(shader, "uSolidAlpha"), alpha);
+
+    glm::mat4 model(1.0f);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "uModel"),
+                       1, GL_FALSE, &model[0][0]);
+
+    glBindVertexArray(navVao);
+    glBindBuffer(GL_ARRAY_BUFFER, navVbo);
+    glBufferData(GL_ARRAY_BUFFER,
+                 verts.size() * sizeof(float),
+                 verts.data(),
+                 GL_DYNAMIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDepthMask(GL_FALSE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(verts.size() / 3));
+    glDepthMask(GL_TRUE);
+    glDisable(GL_BLEND);
+
+    glBindVertexArray(0);
+}
+
 void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines)
 {
     if (lines.empty())
@@ -444,6 +497,7 @@ void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines)
     // Queremos um "modo linha colorida fixa"
     glUniform1i(glGetUniformLocation(shader, "uRenderMode"), 99);
     glUniform3f(glGetUniformLocation(shader, "uSolidColor"), 0.0f, 0.0f, 0.0f); // preto (muda se quiser)
+    glUniform1f(glGetUniformLocation(shader, "uSolidAlpha"), 1.0f);
 
     glm::mat4 model(1.0f);
     glUniformMatrix4fv(glGetUniformLocation(shader, "uModel"),

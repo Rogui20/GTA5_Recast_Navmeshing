@@ -64,6 +64,11 @@ void ViewerApp::buildNavmeshDebugLines()
 
     navData.ExtractDebugMesh(navMeshTris, navMeshLines);
 
+    for (auto& v : navMeshTris)
+    {
+        v -= debugOffset;
+    }
+
     for (size_t i = 0; i + 1 < navMeshLines.size(); i += 2)
     {
         DebugLine dl;
@@ -186,7 +191,7 @@ bool ViewerApp::InitImGui()
 
 bool ViewerApp::LoadMeshFromPath(const std::string& path)
 {
-    Mesh* newMesh = ObjLoader::LoadObj(path);
+    Mesh* newMesh = ObjLoader::LoadObj(path, centerMesh);
     if (!newMesh)
     {
         printf("Falha ao carregar OBJ!\n");
@@ -431,6 +436,7 @@ void ViewerApp::RenderFrame()
     }
 
     ImGui::Text("Diretório: %s", currentDirectory.c_str());
+    ImGui::Checkbox("Centralizar mesh carregada", &centerMesh);
 
     if (ImGui::Button("Subir"))
     {
@@ -515,6 +521,45 @@ void ViewerApp::RenderFrame()
     ImGui::End();
 
 
+    // --- Navmesh Menu ---
+    ImGui::Begin("Navmesh Menu");
+    bool hasMesh = loadedMesh != nullptr;
+
+    if (!hasMesh)
+    {
+        ImGui::Text("Nenhuma mesh carregada.");
+    }
+
+    ImGui::BeginDisabled(!hasMesh);
+    if (ImGui::Button("Rebuild Navmesh"))
+    {
+        buildNavmeshFromCurrentMesh();
+    }
+    ImGui::EndDisabled();
+
+    ImGui::SeparatorText("Visibilidade");
+    ImGui::Checkbox("Mostrar navmesh", &navmeshVisible);
+
+    int navRenderMode = static_cast<int>(navmeshRenderMode);
+    ImGui::Text("Render Mode");
+    ImGui::RadioButton("Faces e linhas", &navRenderMode, static_cast<int>(NavmeshRenderMode::FacesAndLines));
+    ImGui::RadioButton("Somente faces", &navRenderMode, static_cast<int>(NavmeshRenderMode::FacesOnly));
+    ImGui::RadioButton("Somente linhas", &navRenderMode, static_cast<int>(NavmeshRenderMode::LinesOnly));
+    navmeshRenderMode = static_cast<NavmeshRenderMode>(navRenderMode);
+
+    ImGui::Checkbox("Mostrar faces da navmesh", &navmeshShowFaces);
+    ImGui::BeginDisabled(!navmeshShowFaces || navmeshRenderMode == NavmeshRenderMode::LinesOnly);
+    ImGui::SliderFloat("Alpha das faces", &navmeshFaceAlpha, 0.0f, 1.0f);
+    ImGui::EndDisabled();
+    ImGui::Checkbox("Mostrar linhas da navmesh", &navmeshShowLines);
+
+    ImGui::Separator();
+    ImGui::Text("Tris: %zu", navMeshTris.size() / 3);
+    ImGui::Text("Linhas: %zu", m_navmeshLines.size());
+
+    ImGui::End();
+
+
     // --- Debug Camera ---
     ImGui::Begin("Debug");
     ImGui::Text("Camera: %.2f %.2f %.2f",
@@ -573,11 +618,6 @@ void ViewerApp::RenderFrame()
         if (ImGui::Button("Teleport Camera to Mesh Center"))
             camera->pos = renderCenter + glm::vec3(0,50,150);
 
-        if (ImGui::Button("Rebuild Navmesh"))
-        {
-            buildNavmeshFromCurrentMesh();
-        }
-
         ImGui::End();
 
         glm::mat4 model(1.0f);
@@ -619,7 +659,23 @@ void ViewerApp::RenderFrame()
 
     }
     
-    renderer->drawNavmeshLines(m_navmeshLines);
+    bool drawFaces = navmeshVisible && navmeshShowFaces &&
+        navmeshRenderMode != NavmeshRenderMode::LinesOnly &&
+        !navMeshTris.empty();
+    bool drawLines = navmeshVisible && navmeshShowLines &&
+        navmeshRenderMode != NavmeshRenderMode::FacesOnly &&
+        !m_navmeshLines.empty();
+
+    if (drawFaces)
+    {
+        float clampedAlpha = std::clamp(navmeshFaceAlpha, 0.0f, 1.0f);
+        renderer->drawNavmeshTriangles(navMeshTris, glm::vec3(0.5f, 0.7f, 1.0f), clampedAlpha);
+    }
+
+    if (drawLines)
+    {
+        renderer->drawNavmeshLines(m_navmeshLines);
+    }
 
     // desenhar grid e eixo sempre no modo 99
     glDisable(GL_DEPTH_TEST);   // Gizmos ficam por cima
