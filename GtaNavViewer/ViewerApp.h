@@ -54,6 +54,7 @@ private:
     RenderMode renderMode = RenderMode::Solid;
     bool centerMesh = true;
     NavMeshData navData;
+    NavmeshGenerationSettings navGenSettings{};
 
     enum class NavmeshRenderMode
     {
@@ -78,6 +79,9 @@ private:
     };
 
     uint32_t navmeshAutoBuildMask = 0;
+
+    bool pickTriangleMode = true;
+    bool addRemoveTileMode = false;
 
     // buffers para desenhar navmesh no renderer
     std::vector<glm::vec3> navMeshTris;
