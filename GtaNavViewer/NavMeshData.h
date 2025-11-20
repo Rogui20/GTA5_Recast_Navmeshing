@@ -68,6 +68,12 @@ public:
     bool UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
                               const std::vector<unsigned int>& indices);
 
+    bool RemoveTileAt(const glm::vec3& worldPos,
+                      int& outTileX,
+                      int& outTileY);
+
+    dtNavMesh* GetNavMesh() const { return m_nav; }
+
 
     // Conversão para desenhar no viewer
     void ExtractDebugMesh(
