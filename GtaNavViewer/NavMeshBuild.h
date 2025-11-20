@@ -25,7 +25,10 @@ bool BuildSingleNavMesh(const NavmeshBuildInput& input,
 
 bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                        const NavmeshGenerationSettings& settings,
-                       dtNavMesh*& outNav);
+                       dtNavMesh*& outNav,
+                       bool buildTilesNow = true,
+                       int* outTilesBuilt = nullptr,
+                       int* outTilesSkipped = nullptr);
 
 bool BuildSingleTile(const NavmeshBuildInput& input,
                      const NavmeshGenerationSettings& settings,

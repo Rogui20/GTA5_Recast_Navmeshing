@@ -43,7 +43,7 @@ glm::mat4 ViewerApp::GetModelMatrix(const MeshInstance& instance) const
     return model;
 }
 
-bool ViewerApp::buildNavmeshFromMeshes()
+bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
 {
     if (meshInstances.empty())
     {
@@ -77,7 +77,7 @@ bool ViewerApp::buildNavmeshFromMeshes()
         baseIndex += static_cast<unsigned int>(instance.mesh->renderVertices.size());
     }
 
-    if (!navData.BuildFromMesh(combinedVerts, combinedIdx, navGenSettings))
+    if (!navData.BuildFromMesh(combinedVerts, combinedIdx, navGenSettings, buildTilesNow))
     {
         printf("[ViewerApp] BuildFromMesh falhou.\n");
         return false;
@@ -473,10 +473,6 @@ void ViewerApp::ProcessEvents()
             {
                 printf("[ViewerApp] addRemoveTileMode ainda não implementado.\n");
             }
-            else if (addRemoveTileMode)
-            {
-                printf("[ViewerApp] addRemoveTileMode ainda não implementado.\n");
-            }
         }
 
 
@@ -761,6 +757,29 @@ void ViewerApp::RenderFrame()
 
                     const char* activeMode = pickTriangleMode ? "pickTriangleMode" : (buildTileAtMode ? "buildTileAtMode" : "addRemoveTileMode");
                     ImGui::Text("Modo ativo: %s", activeMode);
+
+                    if (ImGui::Button("experimental_buildSingleTile"))
+                    {
+                        if (navGenSettings.mode != NavmeshBuildMode::Tiled)
+                        {
+                            printf("[ViewerApp] experimental_buildSingleTile: forçando modo tiled.\n");
+                            navGenSettings.mode = NavmeshBuildMode::Tiled;
+                        }
+
+                        if (buildNavmeshFromMeshes(false))
+                        {
+                            buildTileAtMode = true;
+                            pickTriangleMode = false;
+                            addRemoveTileMode = false;
+                            printf("[ViewerApp] Navmesh tiled inicializado sem tiles. Clique na mesh para gerar tiles individuais.\n");
+                        }
+                        else
+                        {
+                            printf("[ViewerApp] experimental_buildSingleTile falhou ao preparar navmesh tiled.\n");
+                        }
+                    }
+                    ImGui::SameLine();
+                    ImGui::TextDisabled("(prepara grid/caches e gera tiles no clique)");
                 }
 
                 if (ImGui::CollapsingHeader("Meshes", ImGuiTreeNodeFlags_DefaultOpen))

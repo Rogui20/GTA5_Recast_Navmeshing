@@ -39,7 +39,8 @@ public:
     // NOVO: constrói navmesh direto da malha
     bool BuildFromMesh(const std::vector<glm::vec3>& verts,
                        const std::vector<unsigned int>& indices,
-                       const NavmeshGenerationSettings& settings);
+                       const NavmeshGenerationSettings& settings,
+                       bool buildTilesNow = true);
 
     bool BuildTileAt(const glm::vec3& worldPos,
                      const NavmeshGenerationSettings& settings,

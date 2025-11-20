@@ -25,7 +25,7 @@ public:
     bool Init();
     void Run();
     void Shutdown();
-    bool buildNavmeshFromMeshes();
+    bool buildNavmeshFromMeshes(bool buildTilesNow = true);
     void buildNavmeshDebugLines();
 
 private:

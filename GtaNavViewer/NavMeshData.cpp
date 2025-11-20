@@ -232,7 +232,8 @@ void NavMeshData::ExtractDebugMesh(
 
 bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
                                 const std::vector<unsigned int>& idxIn,
-                                const NavmeshGenerationSettings& settings)
+                                const NavmeshGenerationSettings& settings,
+                                bool buildTilesNow)
 {
     m_hasTiledCache = false;
     LoggingRcContext ctx;
@@ -338,7 +339,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     }
     else
     {
-        ok = BuildTiledNavMesh(buildInput, settings, newNav);
+        ok = BuildTiledNavMesh(buildInput, settings, newNav, buildTilesNow, nullptr, nullptr);
     }
 
     if (!ok)

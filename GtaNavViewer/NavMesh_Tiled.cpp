@@ -238,7 +238,10 @@ namespace
 
 bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                        const NavmeshGenerationSettings& settings,
-                       dtNavMesh*& outNav)
+                       dtNavMesh*& outNav,
+                       bool buildTilesNow,
+                       int* outTilesBuilt,
+                       int* outTilesSkipped)
 {
     rcConfig cfg = input.baseCfg;
     cfg.borderSize = cfg.walkableRadius + 3;
@@ -337,13 +340,14 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
         }
     }
 
-    if (tilesToBuild.empty())
+    if (tilesToBuild.empty() && buildTilesNow)
     {
         printf("[NavMeshData] Nenhum tile de navmesh foi gerado.\n");
         return false;
     }
 
-    printf("[NavMeshData] Tiles com geometria: %zu / %d\n", tilesToBuild.size(), tileWidthCount * tileHeightCount);
+    const int tileCountTotal = tileWidthCount * tileHeightCount;
+    printf("[NavMeshData] Tiles com geometria: %zu / %d\n", tilesToBuild.size(), tileCountTotal);
 
     dtNavMesh* nav = dtAllocNavMesh();
     if (!nav)
@@ -356,7 +360,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
     rcVcopy(navParams.orig, input.meshBMin);
     navParams.tileWidth = cfg.tileSize * cfg.cs;
     navParams.tileHeight = cfg.tileSize * cfg.cs;
-    navParams.maxTiles = (int)tilesToBuild.size();
+    navParams.maxTiles = tileCountTotal;
 
     const unsigned int desiredMaxPolys = 2048;
     const unsigned int tileBits = (unsigned int)dtIlog2(dtNextPow2((unsigned int)navParams.maxTiles));
@@ -391,53 +395,64 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
     int tilesBuilt = 0;
     int tilesSkipped = 0;
 
-    for (const TileInput& inputTile : tilesToBuild)
+    if (buildTilesNow)
     {
-        dtNavMeshCreateParams params{};
-        unsigned char* navMeshData = nullptr;
-        int navMeshDataSize = 0;
-        const NavTileBuildResult result = createNavDataForConfig(input, inputTile.cfg, inputTile.tris, inputTile.tx, inputTile.ty, params, navMeshData, navMeshDataSize);
-        if (result == NavTileBuildResult::Empty)
+        for (const TileInput& inputTile : tilesToBuild)
         {
-            ++tilesSkipped;
-            continue;
-        }
-        if (result == NavTileBuildResult::Error)
-        {
-            printf("[NavMeshData] createNavDataForConfig falhou (tile %d,%d). Tris=%zu Bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
-                   inputTile.tx, inputTile.ty, inputTile.tris.size() / 3,
-                   inputTile.cfg.bmin[0], inputTile.cfg.bmin[1], inputTile.cfg.bmin[2],
-                   inputTile.cfg.bmax[0], inputTile.cfg.bmax[1], inputTile.cfg.bmax[2]);
-            dtFreeNavMesh(nav);
-            return false;
+            dtNavMeshCreateParams params{};
+            unsigned char* navMeshData = nullptr;
+            int navMeshDataSize = 0;
+            const NavTileBuildResult result = createNavDataForConfig(input, inputTile.cfg, inputTile.tris, inputTile.tx, inputTile.ty, params, navMeshData, navMeshDataSize);
+            if (result == NavTileBuildResult::Empty)
+            {
+                ++tilesSkipped;
+                continue;
+            }
+            if (result == NavTileBuildResult::Error)
+            {
+                printf("[NavMeshData] createNavDataForConfig falhou (tile %d,%d). Tris=%zu Bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
+                       inputTile.tx, inputTile.ty, inputTile.tris.size() / 3,
+                       inputTile.cfg.bmin[0], inputTile.cfg.bmin[1], inputTile.cfg.bmin[2],
+                       inputTile.cfg.bmax[0], inputTile.cfg.bmax[1], inputTile.cfg.bmax[2]);
+                dtFreeNavMesh(nav);
+                return false;
+            }
+
+            if (params.polyCount > navParams.maxPolys)
+            {
+                printf("[NavMeshData] Tile %d,%d tem %d polys > maxPolys(%d). Ajuste tileSize ou reduza area.\n",
+                       inputTile.tx, inputTile.ty, params.polyCount, navParams.maxPolys);
+                dtFree(navMeshData);
+                dtFreeNavMesh(nav);
+                return false;
+            }
+
+            dtStatus status = nav->addTile(navMeshData, navMeshDataSize, DT_TILE_FREE_DATA, 0, nullptr);
+            if (dtStatusFailed(status))
+            {
+                printf("[NavMeshData] addTile falhou (tile %d,%d). status=0x%x size=%d polys=%d verts=%d bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
+                       inputTile.tx, inputTile.ty, status, navMeshDataSize, params.polyCount, params.vertCount,
+                       params.bmin[0], params.bmin[1], params.bmin[2],
+                       params.bmax[0], params.bmax[1], params.bmax[2]);
+                dtFree(navMeshData);
+                dtFreeNavMesh(nav);
+                return false;
+            }
+
+            ++tilesBuilt;
         }
 
-        if (params.polyCount > navParams.maxPolys)
-        {
-            printf("[NavMeshData] Tile %d,%d tem %d polys > maxPolys(%d). Ajuste tileSize ou reduza area.\n",
-                   inputTile.tx, inputTile.ty, params.polyCount, navParams.maxPolys);
-            dtFree(navMeshData);
-            dtFreeNavMesh(nav);
-            return false;
-        }
-
-        dtStatus status = nav->addTile(navMeshData, navMeshDataSize, DT_TILE_FREE_DATA, 0, nullptr);
-        if (dtStatusFailed(status))
-        {
-            printf("[NavMeshData] addTile falhou (tile %d,%d). status=0x%x size=%d polys=%d verts=%d bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f)\n",
-                   inputTile.tx, inputTile.ty, status, navMeshDataSize, params.polyCount, params.vertCount,
-                   params.bmin[0], params.bmin[1], params.bmin[2],
-                   params.bmax[0], params.bmax[1], params.bmax[2]);
-            dtFree(navMeshData);
-            dtFreeNavMesh(nav);
-            return false;
-        }
-
-        ++tilesBuilt;
+        printf("[NavMeshData] BuildFromMesh OK (tiled). Tiles=%d x %d (construidos=%d ignoradosSemPolys=%d)\n",
+               tileWidthCount, tileHeightCount, tilesBuilt, tilesSkipped);
+    }
+    else
+    {
+        printf("[NavMeshData] BuildFromMesh (tiled) inicializado sem construir tiles. Tiles=%d x %d (capacidade maxTiles=%d)\n",
+               tileWidthCount, tileHeightCount, navParams.maxTiles);
     }
 
-    printf("[NavMeshData] BuildFromMesh OK (tiled). Tiles=%d x %d (construidos=%d ignoradosSemPolys=%d)\n",
-           tileWidthCount, tileHeightCount, tilesBuilt, tilesSkipped);
+    if (outTilesBuilt) *outTilesBuilt = tilesBuilt;
+    if (outTilesSkipped) *outTilesSkipped = tilesSkipped;
 
     outNav = nav;
     return true;
