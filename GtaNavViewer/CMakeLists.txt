@@ -62,8 +62,11 @@ add_executable(GtaNavViewer
     ObjLoader.h
     Mesh.cpp
     Mesh.h
+    NavMesh_Single.cpp
+    NavMesh_Tiled.cpp
     NavMeshData.cpp
     NavMeshData.h
+    NavMeshBuild.h
     ${GLAD_SRC}
     ${IMGUI_SOURCES}
 )
