@@ -38,9 +38,9 @@ private:
     RendererGL* renderer = nullptr;
     Mesh* loadedMesh = nullptr;
     RenderMode renderMode = RenderMode::Solid;
-    glm::vec3 meshPos = glm::vec3(0, 0, -20);
+    glm::vec3 meshPos = glm::vec3(0, 0, -0);
     glm::vec3 meshRot = glm::vec3(0);
-    float     meshScale = 10.0f;
+    float     meshScale = 1.0f;
     NavMeshData navData;
 
     // buffers para desenhar navmesh no renderer
