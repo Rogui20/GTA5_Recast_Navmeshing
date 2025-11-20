@@ -77,7 +77,7 @@ bool ViewerApp::buildNavmeshFromMeshes()
         baseIndex += static_cast<unsigned int>(instance.mesh->renderVertices.size());
     }
 
-    if (!navData.BuildFromMesh(combinedVerts, combinedIdx))
+    if (!navData.BuildFromMesh(combinedVerts, combinedIdx, navGenSettings))
     {
         printf("[ViewerApp] BuildFromMesh falhou.\n");
         return false;
@@ -409,43 +409,50 @@ void ViewerApp::ProcessEvents()
             if (meshInstances.empty())
                 continue;
 
-            int mx = e.button.x;
-            int my = e.button.y;
-
-            Ray ray = camera->GetRayFromScreen(mx, my, 1600, 900);
-
-            float best = FLT_MAX;
-            pickedTri = -1;
-            pickedMeshIndex = -1;
-
-            for (size_t meshIdx = 0; meshIdx < meshInstances.size(); ++meshIdx)
+            if (pickTriangleMode)
             {
-                const auto& instance = meshInstances[meshIdx];
-                if (!instance.mesh)
-                    continue;
+                int mx = e.button.x;
+                int my = e.button.y;
 
-                glm::mat4 model = GetModelMatrix(instance);
-                for (int i = 0; i < instance.mesh->indices.size(); i += 3)
+                Ray ray = camera->GetRayFromScreen(mx, my, 1600, 900);
+
+                float best = FLT_MAX;
+                pickedTri = -1;
+                pickedMeshIndex = -1;
+
+                for (size_t meshIdx = 0; meshIdx < meshInstances.size(); ++meshIdx)
                 {
-                    int i0 = instance.mesh->indices[i+0];
-                    int i1 = instance.mesh->indices[i+1];
-                    int i2 = instance.mesh->indices[i+2];
+                    const auto& instance = meshInstances[meshIdx];
+                    if (!instance.mesh)
+                        continue;
 
-                    glm::vec3 v0 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i0], 1.0f));
-                    glm::vec3 v1 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i1], 1.0f));
-                    glm::vec3 v2 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i2], 1.0f));
-
-                    float dist;
-                    if (RayTriangleIntersect(ray, v0, v1, v2, dist))
+                    glm::mat4 model = GetModelMatrix(instance);
+                    for (int i = 0; i < instance.mesh->indices.size(); i += 3)
                     {
-                        if (dist < best)
+                        int i0 = instance.mesh->indices[i+0];
+                        int i1 = instance.mesh->indices[i+1];
+                        int i2 = instance.mesh->indices[i+2];
+
+                        glm::vec3 v0 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i0], 1.0f));
+                        glm::vec3 v1 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i1], 1.0f));
+                        glm::vec3 v2 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i2], 1.0f));
+
+                        float dist;
+                        if (RayTriangleIntersect(ray, v0, v1, v2, dist))
                         {
-                            best = dist;
-                            pickedTri = i;
-                            pickedMeshIndex = static_cast<int>(meshIdx);
+                            if (dist < best)
+                            {
+                                best = dist;
+                                pickedTri = i;
+                                pickedMeshIndex = static_cast<int>(meshIdx);
+                            }
                         }
                     }
                 }
+            }
+            else if (addRemoveTileMode)
+            {
+                printf("[ViewerApp] addRemoveTileMode ainda não implementado.\n");
             }
         }
 
@@ -683,6 +690,33 @@ void ViewerApp::RenderFrame()
                     renderMode = static_cast<RenderMode>(mode);
                 }
 
+                if (ImGui::CollapsingHeader("Viewport", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    ImGui::TextDisabled("Comportamento do clique");
+                    bool pickMode = pickTriangleMode;
+                    if (ImGui::Checkbox("pickTriangleMode", &pickMode))
+                    {
+                        pickTriangleMode = pickMode;
+                        if (pickTriangleMode)
+                            addRemoveTileMode = false;
+                        else if (!addRemoveTileMode)
+                            pickTriangleMode = true;
+                    }
+
+                    ImGui::BeginDisabled(true);
+                    bool addRemoveMode = addRemoveTileMode;
+                    if (ImGui::Checkbox("addRemoveTileMode (em breve)", &addRemoveMode))
+                    {
+                        addRemoveTileMode = addRemoveMode;
+                        if (addRemoveTileMode)
+                            pickTriangleMode = false;
+                    }
+                    ImGui::EndDisabled();
+
+                    const char* activeMode = pickTriangleMode ? "pickTriangleMode" : "addRemoveTileMode";
+                    ImGui::Text("Modo ativo: %s", activeMode);
+                }
+
                 if (ImGui::CollapsingHeader("Meshes", ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     ImGui::InputTextWithHint("##meshFilter", "Filtrar por nome", meshFilter, IM_ARRAYSIZE(meshFilter));
@@ -753,6 +787,47 @@ void ViewerApp::RenderFrame()
                     {
                         ImGui::TextDisabled("Nenhuma mesh carregada.");
                     }
+                }
+
+                if (ImGui::CollapsingHeader("Navmesh Gen Settings", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    int buildMode = navGenSettings.mode == NavmeshBuildMode::Tiled ? 1 : 0;
+                    if (ImGui::RadioButton("Navmesh normal (single)", buildMode == 0))
+                    {
+                        navGenSettings.mode = NavmeshBuildMode::SingleMesh;
+                    }
+                    if (ImGui::RadioButton("Tile based", buildMode == 1))
+                    {
+                        navGenSettings.mode = NavmeshBuildMode::Tiled;
+                    }
+
+                    ImGui::SeparatorText("Voxelização");
+                    ImGui::DragFloat("Cell Size", &navGenSettings.cellSize, 0.01f, 0.01f, 5.0f, "%.3f");
+                    ImGui::DragFloat("Cell Height", &navGenSettings.cellHeight, 0.01f, 0.01f, 5.0f, "%.3f");
+
+                    ImGui::SeparatorText("Agente");
+                    ImGui::DragFloat("Altura", &navGenSettings.agentHeight, 0.05f, 0.1f, 20.0f, "%.2f");
+                    ImGui::DragFloat("Raio", &navGenSettings.agentRadius, 0.05f, 0.05f, 10.0f, "%.2f");
+                    ImGui::DragFloat("Climb", &navGenSettings.agentMaxClimb, 0.05f, 0.0f, 10.0f, "%.2f");
+                    ImGui::DragFloat("Slope", &navGenSettings.agentMaxSlope, 1.0f, 0.0f, 89.0f, "%.1f");
+
+                    ImGui::SeparatorText("Polígonos e Regiões");
+                    ImGui::DragFloat("Max Edge Len", &navGenSettings.maxEdgeLen, 0.5f, 0.1f, 200.0f, "%.2f");
+                    ImGui::DragFloat("Simplification Error", &navGenSettings.maxSimplificationError, 0.01f, 0.0f, 10.0f, "%.2f");
+                    ImGui::DragFloat("Min Region Size", &navGenSettings.minRegionSize, 0.5f, 0.0f, 200.0f, "%.1f");
+                    ImGui::DragFloat("Merge Region Size", &navGenSettings.mergeRegionSize, 0.5f, 0.0f, 400.0f, "%.1f");
+                    ImGui::DragInt("Max Verts/Poly", &navGenSettings.maxVertsPerPoly, 1, 3, 12);
+
+                    ImGui::SeparatorText("Detalhamento");
+                    ImGui::DragFloat("Detail Sample Dist", &navGenSettings.detailSampleDist, 0.25f, 0.0f, 100.0f, "%.2f");
+                    ImGui::DragFloat("Detail Sample Max Error", &navGenSettings.detailSampleMaxError, 0.1f, 0.0f, 50.0f, "%.2f");
+
+                    ImGui::BeginDisabled(navGenSettings.mode != NavmeshBuildMode::Tiled);
+                    ImGui::DragInt("Tile Size (cells)", &navGenSettings.tileSize, 1, 1, 512);
+                    ImGui::EndDisabled();
+
+                    navGenSettings.maxVertsPerPoly = std::max(3, navGenSettings.maxVertsPerPoly);
+                    navGenSettings.tileSize = std::max(1, navGenSettings.tileSize);
                 }
 
                 if (ImGui::CollapsingHeader("Navmesh", ImGuiTreeNodeFlags_DefaultOpen))
