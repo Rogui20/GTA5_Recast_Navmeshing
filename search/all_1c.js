@@ -424,7 +424,7 @@ var searchData=
   ['renderresources_421',['renderresources',['../structRenderResources.html',1,'RenderResources'],['../structImGui__ImplWGPU__Data.html#aa917aa3bfe6121ca7775feb83a131fe7',1,'ImGui_ImplWGPU_Data::renderResources']]],
   ['rendertarget_422',['RenderTarget',['../structImGui__ImplDX12__FrameContext.html#a4e1807303f364f8f353c35bab6abeeb3',1,'ImGui_ImplDX12_FrameContext']]],
   ['rendertargetcpudescriptors_423',['RenderTargetCpuDescriptors',['../structImGui__ImplDX12__FrameContext.html#ae71a7bb09cf1a88c214f98e28d14d433',1,'ImGui_ImplDX12_FrameContext']]],
-  ['rendertargetformat_424',['rendertargetformat',['../structImGui__ImplWGPU__Data.html#a7d6a63bad9154eaa895f6e857f6dcebb',1,'ImGui_ImplWGPU_Data::renderTargetFormat'],['../structImGui__ImplWGPU__InitInfo.html#ae63cbe11129eea4fc73fef1348ffc974',1,'ImGui_ImplWGPU_InitInfo::RenderTargetFormat']]],
+  ['rendertargetformat_424',['rendertargetformat',['../structImGui__ImplWGPU__InitInfo.html#ae63cbe11129eea4fc73fef1348ffc974',1,'ImGui_ImplWGPU_InitInfo::RenderTargetFormat'],['../structImGui__ImplWGPU__Data.html#a7d6a63bad9154eaa895f6e857f6dcebb',1,'ImGui_ImplWGPU_Data::renderTargetFormat']]],
   ['rendertext_425',['rendertext',['../namespaceImGui.html#a9971ce57f2a288ac3a12df886c5550d1',1,'ImGui::RenderText()'],['../structImFont.html#a47b4aabfba670cc965507d356e8faf5b',1,'ImFont::RenderText()']]],
   ['rendertextclipped_426',['RenderTextClipped',['../namespaceImGui.html#ab362eafae794c7364a6b96ea06f38eb9',1,'ImGui']]],
   ['rendertextclippedex_427',['RenderTextClippedEx',['../namespaceImGui.html#a6ff0aaef091d39b0e2e2f6afeb647b34',1,'ImGui']]],
