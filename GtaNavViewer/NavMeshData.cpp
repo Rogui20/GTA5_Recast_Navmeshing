@@ -3,6 +3,7 @@
 #include <Recast.h>
 #include <DetourNavMesh.h>
 #include <DetourNavMeshBuilder.h>
+#include <DetourMath.h>
 
 #include <algorithm>
 #include <cstdarg>
@@ -615,6 +616,8 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
             return false;
         }
 
+        printf("[NavMeshData] Tiles com geometria: %zu / %d\n", tilesToBuild.size(), tileWidthCount * tileHeightCount);
+
         m_nav = dtAllocNavMesh();
         if (!m_nav)
         {
@@ -627,7 +630,27 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         navParams.tileWidth = cfg.tileSize * cfg.cs;
         navParams.tileHeight = cfg.tileSize * cfg.cs;
         navParams.maxTiles = (int)tilesToBuild.size();
-        navParams.maxPolys = 2048;
+
+        const unsigned int desiredMaxPolys = 2048;
+        const unsigned int tileBits = (unsigned int)dtIlog2(dtNextPow2((unsigned int)navParams.maxTiles));
+        const unsigned int desiredPolyBits = (unsigned int)dtIlog2(dtNextPow2(desiredMaxPolys));
+        const unsigned int maxPolyBitsAllowed = tileBits >= 22 ? 0u : (22u - tileBits);
+        if (maxPolyBitsAllowed == 0)
+        {
+            printf("[NavMeshData] maxTiles=%u consome todos os bits de ref (tileBits=%u). Ajuste tileSize ou reduza area.\n",
+                   (unsigned int)navParams.maxTiles, tileBits);
+            dtFreeNavMesh(m_nav);
+            m_nav = nullptr;
+            return false;
+        }
+
+        const unsigned int chosenPolyBits = std::min(desiredPolyBits, maxPolyBitsAllowed);
+        navParams.maxPolys = 1u << chosenPolyBits;
+        if (navParams.maxPolys != desiredMaxPolys)
+        {
+            printf("[NavMeshData] Clamp maxPolys para %u (tileBits=%u polyBits=%u). Numero de tiles=%u\n",
+                   (unsigned int)navParams.maxPolys, tileBits, chosenPolyBits, (unsigned int)navParams.maxTiles);
+        }
 
         dtStatus initStatus = m_nav->init(&navParams);
         if (dtStatusFailed(initStatus))
@@ -651,6 +674,16 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
                        input.tx, input.ty, input.tris.size() / 3,
                        input.cfg.bmin[0], input.cfg.bmin[1], input.cfg.bmin[2],
                        input.cfg.bmax[0], input.cfg.bmax[1], input.cfg.bmax[2]);
+                dtFreeNavMesh(m_nav);
+                m_nav = nullptr;
+                return false;
+            }
+
+            if (params.polyCount > navParams.maxPolys)
+            {
+                printf("[NavMeshData] Tile %d,%d tem %d polys > maxPolys(%d). Ajuste tileSize ou reduza area.\n",
+                       input.tx, input.ty, params.polyCount, navParams.maxPolys);
+                dtFree(navMeshData);
                 dtFreeNavMesh(m_nav);
                 m_nav = nullptr;
                 return false;
