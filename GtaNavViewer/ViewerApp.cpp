@@ -201,12 +201,12 @@ bool ViewerApp::LoadMeshFromPath(const std::string& path)
     return true;
 }
 
-std::filesystem::path ViewerApp::GetConfigFilePath() const
+std::string ViewerApp::GetConfigFilePath() const
 {
     char* basePath = SDL_GetBasePath();
     if (basePath)
     {
-        std::filesystem::path result = std::filesystem::path(basePath) / "last_directory.txt";
+        std::string result = std::filesystem::path(basePath) / "last_directory.txt";
         SDL_free(basePath);
         return result;
     }
@@ -216,7 +216,7 @@ std::filesystem::path ViewerApp::GetConfigFilePath() const
 
 void ViewerApp::LoadLastDirectory()
 {
-    std::filesystem::path configPath = GetConfigFilePath();
+    std::string configPath = GetConfigFilePath();
     std::ifstream file(configPath);
     if (file)
     {
@@ -233,7 +233,7 @@ void ViewerApp::SaveLastDirectory(const std::filesystem::path& directory)
 {
     if (directory.empty()) return;
 
-    std::filesystem::path configPath = GetConfigFilePath();
+    std::string configPath = GetConfigFilePath();
     std::ofstream file(configPath, std::ios::trunc);
     if (file)
     {

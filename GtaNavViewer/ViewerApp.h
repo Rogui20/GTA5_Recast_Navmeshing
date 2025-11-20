@@ -59,7 +59,7 @@ private:
     bool LoadMeshFromPath(const std::string& path);
     void LoadLastDirectory();
     void SaveLastDirectory(const std::filesystem::path& directory);
-    std::filesystem::path GetConfigFilePath() const;
+    std::string GetConfigFilePath() const;
 
     void ProcessEvents();
     void RenderFrame();
