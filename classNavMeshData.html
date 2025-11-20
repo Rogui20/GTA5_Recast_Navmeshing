@@ -124,6 +124,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5a45cea84241aa5c00016b16ffee26d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05d23e3170de5a3bc8852e35e5777131" id="r_a05d23e3170de5a3bc8852e35e5777131"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a05d23e3170de5a3bc8852e35e5777131">UpdateCachedGeometry</a> (const std::vector&lt; glm::vec3 &gt; &amp;verts, const std::vector&lt; unsigned int &gt; &amp;<a class="el" href="glad_8h.html#a94ae715eebfc1eb65456c0ab9b97f1e9">indices</a>)</td></tr>
 <tr class="separator:a05d23e3170de5a3bc8852e35e5777131"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44c1dfa99e290e495f2e0acbf5888942" id="r_a44c1dfa99e290e495f2e0acbf5888942"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a44c1dfa99e290e495f2e0acbf5888942">RemoveTileAt</a> (const glm::vec3 &amp;worldPos, int &amp;outTileX, int &amp;outTileY)</td></tr>
+<tr class="separator:a44c1dfa99e290e495f2e0acbf5888942"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48c4d354d62d406decab6d32cecd7acb" id="r_a48c4d354d62d406decab6d32cecd7acb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a48c4d354d62d406decab6d32cecd7acb">GetNavMesh</a> () const</td></tr>
+<tr class="separator:a48c4d354d62d406decab6d32cecd7acb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e3a68693ca1bb2655cc9db37a6f111f" id="r_a1e3a68693ca1bb2655cc9db37a6f111f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a1e3a68693ca1bb2655cc9db37a6f111f">ExtractDebugMesh</a> (std::vector&lt; glm::vec3 &gt; &amp;outVerts, std::vector&lt; glm::vec3 &gt; &amp;outLines)</td></tr>
 <tr class="separator:a1e3a68693ca1bb2655cc9db37a6f111f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -294,6 +298,31 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a48c4d354d62d406decab6d32cecd7acb" name="a48c4d354d62d406decab6d32cecd7acb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48c4d354d62d406decab6d32cecd7acb">&#9670;&#160;</a></span>GetNavMesh()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classdtNavMesh.html">dtNavMesh</a> * NavMeshData::GetNavMesh </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a5a45cea84241aa5c00016b16ffee26d1" name="a5a45cea84241aa5c00016b16ffee26d1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5a45cea84241aa5c00016b16ffee26d1">&#9670;&#160;</a></span>HasTiledCache()</h2>
 
@@ -437,6 +466,40 @@ Public Member Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">std::vector&lt; std::pair&lt; int, int &gt; &gt; *&#160;</td>
           <td class="paramname"><em>outTiles</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a44c1dfa99e290e495f2e0acbf5888942" name="a44c1dfa99e290e495f2e0acbf5888942"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44c1dfa99e290e495f2e0acbf5888942">&#9670;&#160;</a></span>RemoveTileAt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NavMeshData::RemoveTileAt </td>
+          <td>(</td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>worldPos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>outTileX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>outTileY</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
