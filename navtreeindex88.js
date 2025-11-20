@@ -1,5 +1,6 @@
 var NAVTREEINDEX88 =
 {
+"imgui__widgets_8cpp.html#a6625118253ca25ee5849aae59cd47c88":[44,0,7,0,8,64],
 "imgui__widgets_8cpp.html#a662633518bb4fb262fc93329df1fa548":[44,0,7,0,8,6],
 "imgui__widgets_8cpp.html#a6ce8e0ae4534a882c54629a82548bd68":[44,0,7,0,8,41],
 "imgui__widgets_8cpp.html#a702ae9e2d8ad2e1c7b40811b31e94857":[44,0,7,0,8,51],
@@ -248,6 +249,5 @@ var NAVTREEINDEX88 =
 "md_Docs_2__2__BuildingAndIntegrating.html":[1],
 "md_Docs_2__2__BuildingAndIntegrating.html#a-note-on-dll-exports-and-c-api":[1,5],
 "md_Docs_2__2__BuildingAndIntegrating.html#building-recastdemo":[1,0],
-"md_Docs_2__2__BuildingAndIntegrating.html#customizing-allocation-behavior":[1,4],
-"md_Docs_2__2__BuildingAndIntegrating.html#installation-through-vcpkg":[1,3,1]
+"md_Docs_2__2__BuildingAndIntegrating.html#customizing-allocation-behavior":[1,4]
 };

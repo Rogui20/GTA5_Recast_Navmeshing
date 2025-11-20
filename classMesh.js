@@ -7,5 +7,6 @@ var classMesh =
     [ "indices", "classMesh.html#a26632e27b772f24b069a738e7983b9da", null ],
     [ "maxBounds", "classMesh.html#ac35c6c0faca095b603858bee540756af", null ],
     [ "minBounds", "classMesh.html#a406a3cda649855a42c6b9e7ff8f96975", null ],
-    [ "vertices", "classMesh.html#aee572fab7113a18cf174a8418394aef4", null ]
+    [ "navmeshVertices", "classMesh.html#aca9d207f8746872c47a55b0b647564ae", null ],
+    [ "renderVertices", "classMesh.html#ab1a95264f84ad36693a8c8c91c930523", null ]
 ];

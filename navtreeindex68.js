@@ -1,5 +1,6 @@
 var NAVTREEINDEX68 =
 {
+"classTempObstacleHilightTool.html#a066ac99df2d343aab8433c122af73fa6":[43,0,461,2],
 "classTempObstacleHilightTool.html#a18662a3c7ada140b16aa40cdf678caf5":[43,0,461,10],
 "classTempObstacleHilightTool.html#a1c0a4a693fbd80d60fcf1305e6499884":[43,0,461,9],
 "classTempObstacleHilightTool.html#a238bf84317b82bb005acfa021905c280":[43,0,461,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX68 =
 "classrcVectorBase.html#a1177670bcc87add05f0e060e93b5e6bd":[43,0,351,28],
 "classrcVectorBase.html#a1632ccdccdecc8e5e4710832406bbe61":[43,0,351,19],
 "classrcVectorBase.html#a198579f0ad4de6bdadc5bdc7f1214315":[43,0,351,17],
-"classrcVectorBase.html#a1cb229e5cbe8e798fe216393f2f0f327":[43,0,351,30],
-"classrcVectorBase.html#a3c0575ffab362bc8e2b11e52c1254f49":[43,0,351,16]
+"classrcVectorBase.html#a1cb229e5cbe8e798fe216393f2f0f327":[43,0,351,30]
 };

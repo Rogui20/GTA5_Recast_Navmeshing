@@ -1,5 +1,6 @@
 var NAVTREEINDEX80 =
 {
+"imgui__impl__glut_8cpp.html#a23e5924a875d3c1d9f26e9726a5f87d1":[44,0,7,0,0,14,14],
 "imgui__impl__glut_8cpp.html#a34896b8d999a720ee8749f65ece0a5bd":[44,0,7,0,0,14,10],
 "imgui__impl__glut_8cpp.html#a4662e35b42463fc31a3fc1fb9d6a2f74":[44,0,7,0,0,14,4],
 "imgui__impl__glut_8cpp.html#a5374218f11c02c10ed917641a3aeb404":[44,0,7,0,0,14,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX80 =
 "imgui__impl__opengl3__loader_8h.html#a8bd045e2edc004c61c2586c7cbcff35d":[44,0,7,0,0,23,213],
 "imgui__impl__opengl3__loader_8h.html#a8c4f153ed20a741aaae952650fec46f0":[44,0,7,0,0,23,28],
 "imgui__impl__opengl3__loader_8h.html#a8d2d049627d5d578ce37f5d7de74a4bb":[44,0,7,0,0,23,203],
-"imgui__impl__opengl3__loader_8h.html#a8e71ccb4538d4f8f5e8ff074fc5b6754":[44,0,7,0,0,23,75],
-"imgui__impl__opengl3__loader_8h.html#a8f53b4ed68269ca6cff1680e11aeae1c":[44,0,7,0,0,23,1]
+"imgui__impl__opengl3__loader_8h.html#a8e71ccb4538d4f8f5e8ff074fc5b6754":[44,0,7,0,0,23,75]
 };

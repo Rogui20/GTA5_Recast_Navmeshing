@@ -1,5 +1,6 @@
 var NAVTREEINDEX104 =
 {
+"structSDL__FRect.html#a9c7105750c0b4b1d27ee86ecd29835b3":[43,0,382,3],
 "structSDL__Finger.html":[43,0,380],
 "structSDL__Finger.html#a0a2c7a06ae641940111e03801c672cf9":[43,0,380,3],
 "structSDL__Finger.html#a0ecb50c7fd699d59899ac60c941bdee6":[43,0,380,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX104 =
 "structSDL__RWops.html":[43,0,417],
 "structSDL__RWops.html#a099017bfceaac24ced0e4d08a4e0a023":[43,0,417,19],
 "structSDL__RWops.html#a354b4677b722f11060fb7c4a0125ed37":[43,0,417,9],
-"structSDL__RWops.html#a3f68b93789331775de802d51a2934f0a":[43,0,417,14],
-"structSDL__RWops.html#a4108a41afa8b62e75b0f160de4b56103":[43,0,417,18]
+"structSDL__RWops.html#a3f68b93789331775de802d51a2934f0a":[43,0,417,14]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX69 =
 {
+"classrcVectorBase.html#a3c0575ffab362bc8e2b11e52c1254f49":[43,0,351,16],
 "classrcVectorBase.html#a44e70e9744a1c6e3dcaab2a89a7a2c65":[43,0,351,14],
 "classrcVectorBase.html#a4bbd6903932b6a87322e6c22f288f5de":[43,0,351,10],
 "classrcVectorBase.html#a55225c4d52eda5e77c10b41c34deab95":[43,0,351,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX69 =
 "functions_func_~.html":[43,3,1,22],
 "functions_g.html":[43,3,0,7],
 "functions_h.html":[43,3,0,8],
-"functions_i.html":[43,3,0,9],
-"functions_j.html":[43,3,0,10]
+"functions_i.html":[43,3,0,9]
 };

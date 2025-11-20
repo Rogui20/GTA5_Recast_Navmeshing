@@ -1,5 +1,6 @@
 var NAVTREEINDEX105 =
 {
+"structSDL__RWops.html#a4108a41afa8b62e75b0f160de4b56103":[43,0,417,18],
 "structSDL__RWops.html#a45f66dbb683a88281d96f83ca18c525f":[43,0,417,2],
 "structSDL__RWops.html#a51baff579726790887a4ca41ce14873c":[43,0,417,15],
 "structSDL__RWops.html#a5f12fd517afffba5bfaff4643d6792b1":[43,0,417,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX105 =
 "structVERTEX__CONSTANT__BUFFER__DX11.html#a60d5a5fdfbc0fa9455b591ea77dfb8e7":[43,0,470,0],
 "structVERTEX__CONSTANT__BUFFER__DX12.html":[43,0,471],
 "structVERTEX__CONSTANT__BUFFER__DX12.html#af977128a020d49a3a5478a59e4229274":[43,0,471,0],
-"structdtBVNode.html":[43,0,14],
-"structdtBVNode.html#a4f03eda2f4ae838eed627db41ebea292":[43,0,14,1]
+"structdtBVNode.html":[43,0,14]
 };

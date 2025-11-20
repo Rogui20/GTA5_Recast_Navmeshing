@@ -1,5 +1,6 @@
 var NAVTREEINDEX89 =
 {
+"md_Docs_2__2__BuildingAndIntegrating.html#installation-through-vcpkg":[1,3,1],
 "md_Docs_2__2__BuildingAndIntegrating.html#integration":[1,3],
 "md_Docs_2__2__BuildingAndIntegrating.html#linux":[1,0,2],
 "md_Docs_2__2__BuildingAndIntegrating.html#macos":[1,0,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX89 =
 "structExampleAppConsole.html#ab81253ac3575f7fcd63a61c7f5820913":[43,0,73,6],
 "structExampleAppConsole.html#acfde7d45fb733ac72d5d500168557b36":[43,0,73,18],
 "structExampleAppDocuments.html":[43,0,74],
-"structExampleAppDocuments.html#a0076259aa5b47ed3cc40adf63416dab6":[43,0,74,4],
-"structExampleAppDocuments.html#a007a1a59693a3c7fc7d87815e022dbe4":[43,0,74,1]
+"structExampleAppDocuments.html#a0076259aa5b47ed3cc40adf63416dab6":[43,0,74,4]
 };
