@@ -14,6 +14,7 @@
 #include <vector>
 #include <unordered_map>
 
+struct Ray;
 class ViewerCamera;
 class RendererGL;
 

@@ -2,6 +2,7 @@
 
 #include "MathUtils.h"
 #include <SDL.h>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/vector_angle.hpp>
 #include <cfloat>
