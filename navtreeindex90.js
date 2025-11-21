@@ -1,5 +1,9 @@
 var NAVTREEINDEX90 =
 {
+"raspberry-pi.html#no-input":[31,5],
+"raspberry-pi.html#notes-3":[31,9],
+"raspberry-pi.html#opengl-problems":[31,8],
+"raspberry-pi.html#raspbian-build-dependencies":[31,1],
 "raspberry-pi.html#text-input-api-support":[31,7],
 "readme-hg.html":[17],
 "risc-os.html":[32],
@@ -245,9 +249,5 @@ var NAVTREEINDEX90 =
 "structImBitArray.html#a803e52b9d1653dca6cac959cb84d64e9":[44,0,96,7],
 "structImBitArray.html#a8c4d1a352cbd565200c8fe983c879022":[44,0,96,5],
 "structImBitArray.html#ae0cc61bba70a3f2994f28130d9de76f4":[44,0,96,1],
-"structImBitArray.html#ae1b3a57b35efd1f1ffb51629cce38c14":[44,0,96,3],
-"structImBitVector.html":[44,0,97],
-"structImBitVector.html#a2e25a0809000ad27bfc3fb89f3d04829":[44,0,97,2],
-"structImBitVector.html#a419abda300de5270b4475eac6ce250c2":[44,0,97,5],
-"structImBitVector.html#a6486ac9a357400a42af07909f937a659":[44,0,97,0]
+"structImBitArray.html#ae1b3a57b35efd1f1ffb51629cce38c14":[44,0,96,3]
 };

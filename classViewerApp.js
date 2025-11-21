@@ -7,5 +7,6 @@ var classViewerApp =
     [ "BuildStaticMap", "classViewerApp.html#adedb16a94f7e1707d83c258e2d009016", null ],
     [ "Init", "classViewerApp.html#adf79f3b7e38626f1b21ca54b3194e1d5", null ],
     [ "Run", "classViewerApp.html#ac32b6821de5456c23b16f33b6e8b87e0", null ],
+    [ "SetProceduralTestEnabled", "classViewerApp.html#a3e9e45deb16c2334243125158c9793e2", null ],
     [ "Shutdown", "classViewerApp.html#a65f11dc51628f197699e624a44817df1", null ]
 ];

@@ -1,5 +1,9 @@
 var NAVTREEINDEX104 =
 {
+"structSDLTest__TestCaseReference.html#a02bcd31636644ce291dae6520304a112":[44,0,444,2],
+"structSDLTest__TestCaseReference.html#a15168c85e38cae7557b4beb477ef6f9a":[44,0,444,1],
+"structSDLTest__TestCaseReference.html#a5bfe4df076e488b8773beab882f42614":[44,0,444,0],
+"structSDLTest__TestCaseReference.html#af9472f0c421a2845b540fc28fb30a3ef":[44,0,444,3],
 "structSDLTest__TestSuiteReference.html":[44,0,445],
 "structSDLTest__TestSuiteReference.html#a01b702b83dad3dc15cfe535554527418":[44,0,445,0],
 "structSDLTest__TestSuiteReference.html#a06d97ce5bcf9ceb1300cc4aa39c028d3":[44,0,445,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX104 =
 "structSDL__JoyBatteryEvent.html":[44,0,401],
 "structSDL__JoyBatteryEvent.html#a035f2b336030c875ab0393dc2b3f3c9d":[44,0,401,0],
 "structSDL__JoyBatteryEvent.html#a08e013a06c59ad74897a84b0b29e8426":[44,0,401,3],
-"structSDL__JoyBatteryEvent.html#a6769e3e7e9907a9b214e88abcba12bb8":[44,0,401,2],
-"structSDL__JoyBatteryEvent.html#aa135e2661c9cf8a65bd535a66a667ab4":[44,0,401,1],
-"structSDL__JoyButtonEvent.html":[44,0,402],
-"structSDL__JoyButtonEvent.html#a1679049adad7242b28420948fdc79044":[44,0,402,6],
-"structSDL__JoyButtonEvent.html#a3e7ca473fb7783d755d64598529b1ff9":[44,0,402,1]
+"structSDL__JoyBatteryEvent.html#a6769e3e7e9907a9b214e88abcba12bb8":[44,0,401,2]
 };

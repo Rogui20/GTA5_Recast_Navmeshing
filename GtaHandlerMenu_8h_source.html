@@ -118,21 +118,29 @@ $(document).ready(function(){initNavTree('GtaHandlerMenu_8h_source.html',''); in
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <a class="code hl_function" href="classGtaHandlerMenu.html#a1c00ac5cc63e6eb0a6e1c9f54e4b3bb3">GtaHandlerMenu</a>();</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classGtaHandlerMenu.html#aeb1294c33dba7aa31445d719adedd109">Draw</a>(<a class="code hl_class" href="classGtaHandler.html">GtaHandler</a>&amp; handler, <a class="code hl_class" href="classViewerApp.html">ViewerApp</a>&amp; app);</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    std::filesystem::path instancesFile;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    std::filesystem::path meshDirectory;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordtype">float</span> scanRange = 100.0f;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <a class="code hl_class" href="classImGui_1_1FileBrowser.html">ImGui::FileBrowser</a> instancesBrowser;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <a class="code hl_class" href="classImGui_1_1FileBrowser.html">ImGui::FileBrowser</a> meshDirectoryBrowser;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>};</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classGtaHandlerMenu.html#a5197e614e78a01b1d47d2ec7e20a8e3a">   17</a></span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classGtaHandlerMenu.html#a5197e614e78a01b1d47d2ec7e20a8e3a">GetScanRange</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> scanRange; }</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classGtaHandlerMenu.html#a1cc7f8c50c4ce3f3b7043b3b8c7381ed">   18</a></span>    <span class="keyword">const</span> std::filesystem::path&amp; <a class="code hl_function" href="classGtaHandlerMenu.html#a1cc7f8c50c4ce3f3b7043b3b8c7381ed">GetMeshDirectory</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> meshDirectory; }</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classGtaHandlerMenu.html#a1bdf23190bd75dfc420bf8ddc30344cf">   19</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classGtaHandlerMenu.html#a1bdf23190bd75dfc420bf8ddc30344cf">IsProceduralTestEnabled</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> proceduralTest; }</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    std::filesystem::path instancesFile;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    std::filesystem::path meshDirectory;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keywordtype">float</span> scanRange = 100.0f;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keywordtype">bool</span> proceduralTest = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_class" href="classImGui_1_1FileBrowser.html">ImGui::FileBrowser</a> instancesBrowser;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <a class="code hl_class" href="classImGui_1_1FileBrowser.html">ImGui::FileBrowser</a> meshDirectoryBrowser;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>};</div>
 </div>
 <div class="ttc" id="aclassGtaHandlerMenu_html"><div class="ttname"><a href="classGtaHandlerMenu.html">GtaHandlerMenu</a></div><div class="ttdef"><b>Definition</b> GtaHandlerMenu.h:12</div></div>
+<div class="ttc" id="aclassGtaHandlerMenu_html_a1bdf23190bd75dfc420bf8ddc30344cf"><div class="ttname"><a href="classGtaHandlerMenu.html#a1bdf23190bd75dfc420bf8ddc30344cf">GtaHandlerMenu::IsProceduralTestEnabled</a></div><div class="ttdeci">bool IsProceduralTestEnabled() const</div><div class="ttdef"><b>Definition</b> GtaHandlerMenu.h:19</div></div>
 <div class="ttc" id="aclassGtaHandlerMenu_html_a1c00ac5cc63e6eb0a6e1c9f54e4b3bb3"><div class="ttname"><a href="classGtaHandlerMenu.html#a1c00ac5cc63e6eb0a6e1c9f54e4b3bb3">GtaHandlerMenu::GtaHandlerMenu</a></div><div class="ttdeci">GtaHandlerMenu()</div><div class="ttdef"><b>Definition</b> GtaHandlerMenu.cpp:9</div></div>
+<div class="ttc" id="aclassGtaHandlerMenu_html_a1cc7f8c50c4ce3f3b7043b3b8c7381ed"><div class="ttname"><a href="classGtaHandlerMenu.html#a1cc7f8c50c4ce3f3b7043b3b8c7381ed">GtaHandlerMenu::GetMeshDirectory</a></div><div class="ttdeci">const std::filesystem::path &amp; GetMeshDirectory() const</div><div class="ttdef"><b>Definition</b> GtaHandlerMenu.h:18</div></div>
+<div class="ttc" id="aclassGtaHandlerMenu_html_a5197e614e78a01b1d47d2ec7e20a8e3a"><div class="ttname"><a href="classGtaHandlerMenu.html#a5197e614e78a01b1d47d2ec7e20a8e3a">GtaHandlerMenu::GetScanRange</a></div><div class="ttdeci">float GetScanRange() const</div><div class="ttdef"><b>Definition</b> GtaHandlerMenu.h:17</div></div>
 <div class="ttc" id="aclassGtaHandlerMenu_html_aeb1294c33dba7aa31445d719adedd109"><div class="ttname"><a href="classGtaHandlerMenu.html#aeb1294c33dba7aa31445d719adedd109">GtaHandlerMenu::Draw</a></div><div class="ttdeci">void Draw(GtaHandler &amp;handler, ViewerApp &amp;app)</div><div class="ttdef"><b>Definition</b> GtaHandlerMenu.cpp:18</div></div>
 <div class="ttc" id="aclassGtaHandler_html"><div class="ttname"><a href="classGtaHandler.html">GtaHandler</a></div><div class="ttdef"><b>Definition</b> GtaHandler.h:9</div></div>
 <div class="ttc" id="aclassImGui_1_1FileBrowser_html"><div class="ttname"><a href="classImGui_1_1FileBrowser.html">ImGui::FileBrowser</a></div><div class="ttdef"><b>Definition</b> imfilebrowser.h:40</div></div>
-<div class="ttc" id="aclassViewerApp_html"><div class="ttname"><a href="classViewerApp.html">ViewerApp</a></div><div class="ttdef"><b>Definition</b> ViewerApp.h:31</div></div>
+<div class="ttc" id="aclassViewerApp_html"><div class="ttname"><a href="classViewerApp.html">ViewerApp</a></div><div class="ttdef"><b>Definition</b> ViewerApp.h:32</div></div>
 <div class="ttc" id="aimfilebrowser_8h_html"><div class="ttname"><a href="imfilebrowser_8h.html">imfilebrowser.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

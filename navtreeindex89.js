@@ -1,5 +1,9 @@
 var NAVTREEINDEX89 =
 {
+"imstb__truetype_8h.html#ac3b6bda1851d0b1a4fd53f5f353668e5":[45,0,7,0,11,62],
+"imstb__truetype_8h.html#ac914b70667c9abbe432dcc4c048e6542":[45,0,7,0,11,13],
+"imstb__truetype_8h.html#accb2ecf3e0d840362ebba3fe3da192da":[45,0,7,0,11,15],
+"imstb__truetype_8h.html#accf148d2d285fd55178d9a401734ba92":[45,0,7,0,11,51],
 "imstb__truetype_8h.html#acf0b09547b1c2002ad0266802224552d":[45,0,7,0,11,53],
 "imstb__truetype_8h.html#adba6ae7b9f05604eb366a828836b62a9":[45,0,7,0,11,47],
 "imstb__truetype_8h.html#adfc8faff4ebfbad1ce0bff9b4ebc691c":[45,0,7,0,11,70],
@@ -245,9 +249,5 @@ var NAVTREEINDEX89 =
 "raspberry-pi.html#cross-compiling-from-x86-linux":[31,3],
 "raspberry-pi.html#features":[31,0],
 "raspberry-pi.html#neon":[31,2],
-"raspberry-pi.html#no-hdmi-audio":[31,6],
-"raspberry-pi.html#no-input":[31,5],
-"raspberry-pi.html#notes-3":[31,9],
-"raspberry-pi.html#opengl-problems":[31,8],
-"raspberry-pi.html#raspbian-build-dependencies":[31,1]
+"raspberry-pi.html#no-hdmi-audio":[31,6]
 };

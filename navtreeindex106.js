@@ -1,5 +1,9 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__VirtualJoystickDesc.html#a6c488b4411d3301ba8343a2beb2c992a":[44,0,435,9],
+"structSDL__VirtualJoystickDesc.html#a787c36ed21a470e96cb69b000c4839ac":[44,0,435,5],
+"structSDL__VirtualJoystickDesc.html#a845f74a17570b8d8bff01ba88482f060":[44,0,435,3],
+"structSDL__VirtualJoystickDesc.html#a9123c6feebf5690a9331cc22f09b0f77":[44,0,435,25],
 "structSDL__VirtualJoystickDesc.html#a96239732b5073a33e93acbdbd984f0cb":[44,0,435,23],
 "structSDL__VirtualJoystickDesc.html#a9c6c227ce7de6b31d556a85b26425f09":[44,0,435,13],
 "structSDL__VirtualJoystickDesc.html#a9f9d1f676a233c91183963cb3c36d809":[44,0,435,21],
@@ -245,9 +249,5 @@ var NAVTREEINDEX106 =
 "structdtTileCacheAlloc.html#a8507c465095ee62fed991ba5a3781c0c":[44,0,60,0],
 "structdtTileCacheAlloc.html#aeb9afcb80b4e923d173b2c1706c56130":[44,0,60,2],
 "structdtTileCacheAlloc.html#afc894a69df9f38eee8431762983f571d":[44,0,60,1],
-"structdtTileCacheCompressor.html":[44,0,61],
-"structdtTileCacheCompressor.html#a16d46b3a4c03c9d5b89998c80c247ab6":[44,0,61,2],
-"structdtTileCacheCompressor.html#a6db6bd0ea893262196f91d1c5368e655":[44,0,61,0],
-"structdtTileCacheCompressor.html#aaa7fcfc5889a5f3fc5fbf689bbbc1494":[44,0,61,3],
-"structdtTileCacheCompressor.html#ad117fb147426232344a3a1d83b572182":[44,0,61,1]
+"structdtTileCacheCompressor.html":[44,0,61]
 };
