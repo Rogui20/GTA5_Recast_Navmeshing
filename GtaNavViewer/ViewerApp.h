@@ -9,6 +9,7 @@
 #include "GtaNavAPI.h"
 #include "NavMeshData.h"
 #include "RendererGL.h"
+#include "imfilebrowser.h"
 #include <DetourNavMeshQuery.h>
 #include <memory>
 #include <vector>
@@ -203,6 +204,7 @@ private:
     void RebuildDebugLineBuffer();
     bool IsNavmeshJobRunning() const { return navmeshJobRunning.load(); }
 
+    ImGui::FileBrowser directoryBrowser;
     std::string currentDirectory;
     std::string selectedEntry;
 

@@ -28,8 +28,11 @@
 
 
 ViewerApp::ViewerApp()
+    : directoryBrowser(ImGuiFileBrowserFlags_SelectDirectory | ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_NoTitleBar)
 {
     currentDirectory = std::filesystem::current_path().string();
+    directoryBrowser.SetTitle("Selecionar pasta");
+    directoryBrowser.SetDirectory(currentDirectory);
 }
 
 ViewerApp::~ViewerApp()
@@ -716,6 +719,12 @@ void ViewerApp::RenderFrame()
         ImGui::Text("Diretório: %s", currentDirectory.c_str());
         ImGui::Checkbox("Centralizar mesh carregada", &centerMesh);
 
+        if (ImGui::Button("Selecionar pasta"))
+        {
+            directoryBrowser.SetDirectory(currentDirectory);
+            directoryBrowser.Open();
+        }
+
         if (ImGui::Button("Subir"))
         {
             std::filesystem::path parent = std::filesystem::path(currentDirectory).parent_path();
@@ -794,6 +803,14 @@ void ViewerApp::RenderFrame()
         else
         {
             ImGui::TextColored(ImVec4(1,0,0,1), "Erro ao listar diretório: %s", ec.message().c_str());
+        }
+
+        directoryBrowser.Display();
+        if (directoryBrowser.HasSelected())
+        {
+            currentDirectory = directoryBrowser.GetSelected().string();
+            selectedEntry.clear();
+            directoryBrowser.ClearSelected();
         }
 
         ImGui::End();
