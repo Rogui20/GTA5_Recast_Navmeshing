@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cmath>
 #include <cstring>
+#include <cstdint>
 
 #include "GtaNavTiles.h"
 #include "GtaNavContext.h"
@@ -17,7 +18,79 @@
 #include "DetourNavMeshQuery.h"
 #include "DetourCommon.h"
 #include "DetourNavMeshBuilder.h"
+#include "DetourAlloc.h"
 
+
+namespace
+{
+    static constexpr uint32_t TILE_CACHE_MAGIC   = 'G' << 24 | 'T' << 16 | 'A' << 8 | 'C';
+    static constexpr uint32_t TILE_CACHE_VERSION = 1;
+
+    struct DiskTileHeader
+    {
+        int      tx;
+        int      tz;
+        uint32_t dataSize;
+        uint64_t geomHash;
+    };
+
+    struct TileCacheFileHeader
+    {
+        uint32_t         magic;
+        uint32_t         version;
+        int              navmeshType;
+        int              mapId;
+        uint32_t         tileCount;
+        dtNavMeshParams  meshParams;
+    };
+
+    static uint64_t fnv1a64(const void* data, size_t size)
+    {
+        const uint8_t* bytes = static_cast<const uint8_t*>(data);
+        uint64_t hash = 0xcbf29ce484222325ULL;
+        for (size_t i = 0; i < size; ++i)
+        {
+            hash ^= static_cast<uint64_t>(bytes[i]);
+            hash *= 0x100000001b3ULL;
+        }
+        return hash;
+    }
+
+    static uint64_t ComputeTileGeometryHash(const std::vector<float>& verts, const std::vector<int>& tris)
+    {
+        uint64_t hash = 0xcbf29ce484222325ULL;
+
+        if (!verts.empty())
+        {
+            hash ^= fnv1a64(verts.data(), verts.size() * sizeof(float));
+            hash *= 0x100000001b3ULL;
+        }
+
+        if (!tris.empty())
+        {
+            hash ^= fnv1a64(tris.data(), tris.size() * sizeof(int));
+            hash *= 0x100000001b3ULL;
+        }
+
+        return hash;
+    }
+
+    static void RemoveAllTiles(dtNavMesh* navMesh)
+    {
+        if (!navMesh)
+            return;
+
+        for (int i = 0; i < navMesh->getMaxTiles(); ++i)
+        {
+            const dtMeshTile* tile = navMesh->getTile(i);
+            if (!tile || !tile->header)
+                continue;
+
+            const dtTileRef ref = navMesh->getTileRef(tile);
+            navMesh->removeTile(ref, nullptr, nullptr);
+        }
+    }
+}
 
 // =======================================================================
 // CALCULATE TILE BOUNDS
@@ -383,6 +456,181 @@ bool GtaNavTiles::BuildTilesInBounds(
             BuildTile(ctx, tx, tz, tbmin, tbmax);
         }
 
+    return true;
+}
+
+
+// =======================================================================
+// CACHE: SAVE TO DISK
+// =======================================================================
+bool GtaNavTiles::SaveTileCache(NavMeshContext* ctx, const char* cachePath)
+{
+    if (!ctx || !ctx->navMesh || !ctx->geom || !cachePath)
+        return false;
+
+    std::vector<DiskTileHeader> tileHeaders;
+    std::vector<const unsigned char*> tileData;
+    tileHeaders.reserve(ctx->navMesh->getMaxTiles());
+    tileData.reserve(ctx->navMesh->getMaxTiles());
+
+    std::vector<float> verts;
+    std::vector<int>   tris;
+
+    for (int i = 0; i < ctx->navMesh->getMaxTiles(); ++i)
+    {
+        const dtMeshTile* tile = ctx->navMesh->getTile(i);
+        if (!tile || !tile->header || !tile->dataSize || !tile->data)
+            continue;
+
+        float tbmin[3], tbmax[3];
+        CalcTileBounds(ctx, tile->header->x, tile->header->y, tbmin, tbmax);
+
+        verts.clear();
+        tris.clear();
+        const bool hasGeom = GtaNavGeometry::BuildTileGeometry(ctx, tbmin, tbmax, verts, tris);
+        const uint64_t hash = hasGeom ? ComputeTileGeometryHash(verts, tris) : 0;
+
+        DiskTileHeader diskHeader{};
+        diskHeader.tx = tile->header->x;
+        diskHeader.tz = tile->header->y;
+        diskHeader.dataSize = tile->dataSize;
+        diskHeader.geomHash = hash;
+
+        tileHeaders.push_back(diskHeader);
+        tileData.push_back(tile->data);
+    }
+
+    TileCacheFileHeader fileHeader{};
+    fileHeader.magic      = TILE_CACHE_MAGIC;
+    fileHeader.version    = TILE_CACHE_VERSION;
+    fileHeader.navmeshType = ctx->navmeshType;
+    fileHeader.mapId      = ctx->mapID;
+    fileHeader.tileCount  = static_cast<uint32_t>(tileHeaders.size());
+    memcpy(&fileHeader.meshParams, ctx->navMesh->getParams(), sizeof(dtNavMeshParams));
+
+    FILE* fp = fopen(cachePath, "wb");
+    if (!fp)
+        return false;
+
+    size_t writeOk = fwrite(&fileHeader, sizeof(TileCacheFileHeader), 1, fp);
+    if (writeOk != 1)
+    {
+        fclose(fp);
+        return false;
+    }
+
+    for (size_t i = 0; i < tileHeaders.size(); ++i)
+    {
+        const DiskTileHeader& th = tileHeaders[i];
+        fwrite(&th, sizeof(DiskTileHeader), 1, fp);
+        fwrite(tileData[i], th.dataSize, 1, fp);
+    }
+
+    fclose(fp);
+    printf("[Tiles] Cache salvo em %s (%zu tiles)\n", cachePath, tileHeaders.size());
+    return true;
+}
+
+
+// =======================================================================
+// CACHE: LOAD FROM DISK (COM VALIDAÇÃO OPCIONAL)
+// =======================================================================
+bool GtaNavTiles::LoadTileCache(NavMeshContext* ctx, const char* cachePath, bool validateGeometry, bool rewriteOutdatedCache)
+{
+    if (!ctx || !ctx->navMesh || !cachePath)
+        return false;
+
+    FILE* fp = fopen(cachePath, "rb");
+    if (!fp)
+        return false;
+
+    TileCacheFileHeader fileHeader{};
+    size_t readOk = fread(&fileHeader, sizeof(TileCacheFileHeader), 1, fp);
+    if (readOk != 1 || fileHeader.magic != TILE_CACHE_MAGIC || fileHeader.version != TILE_CACHE_VERSION)
+    {
+        fclose(fp);
+        return false;
+    }
+
+    const dtNavMeshParams* params = ctx->navMesh->getParams();
+    const bool paramsMatch = memcmp(params, &fileHeader.meshParams, sizeof(dtNavMeshParams)) == 0;
+    const bool metaMatch = ctx->navmeshType == fileHeader.navmeshType && ctx->mapID == fileHeader.mapId;
+    if (!paramsMatch || !metaMatch)
+    {
+        fclose(fp);
+        printf("[Tiles] Cache incompatível com os parâmetros atuais.\n");
+        return false;
+    }
+
+    RemoveAllTiles(ctx->navMesh);
+
+    bool cacheDirty = false;
+    std::vector<float> verts;
+    std::vector<int>   tris;
+
+    for (uint32_t i = 0; i < fileHeader.tileCount; ++i)
+    {
+        DiskTileHeader th{};
+        if (fread(&th, sizeof(DiskTileHeader), 1, fp) != 1)
+        {
+            fclose(fp);
+            return false;
+        }
+
+        unsigned char* data = static_cast<unsigned char*>(dtAlloc(th.dataSize, DT_ALLOC_PERM));
+        if (!data)
+        {
+            fclose(fp);
+            return false;
+        }
+        if (fread(data, th.dataSize, 1, fp) != 1)
+        {
+            dtFree(data);
+            fclose(fp);
+            return false;
+        }
+
+        float tbmin[3], tbmax[3];
+        CalcTileBounds(ctx, th.tx, th.tz, tbmin, tbmax);
+
+        bool useCache = true;
+        if (validateGeometry)
+        {
+            verts.clear();
+            tris.clear();
+            const bool hasGeom = GtaNavGeometry::BuildTileGeometry(ctx, tbmin, tbmax, verts, tris);
+            const uint64_t currentHash = hasGeom ? ComputeTileGeometryHash(verts, tris) : 0;
+            if (currentHash != th.geomHash)
+            {
+                useCache = false;
+            }
+        }
+
+        if (useCache)
+        {
+            dtStatus status = ctx->navMesh->addTile(data, th.dataSize, DT_TILE_FREE_DATA, 0, nullptr);
+            if (dtStatusFailed(status))
+            {
+                printf("[Tiles] Falha ao adicionar tile em cache (%d,%d)\n", th.tx, th.tz);
+                cacheDirty = true;
+                dtFree(data);
+            }
+        }
+        else
+        {
+            cacheDirty = true;
+            BuildTile(ctx, th.tx, th.tz, tbmin, tbmax, true);
+        }
+    }
+
+    fclose(fp);
+
+    if (cacheDirty && rewriteOutdatedCache)
+    {
+        SaveTileCache(ctx, cachePath);
+    }
+
+    printf("[Tiles] Cache carregado de %s. Dirty=%s\n", cachePath, cacheDirty ? "true" : "false");
     return true;
 }
 
