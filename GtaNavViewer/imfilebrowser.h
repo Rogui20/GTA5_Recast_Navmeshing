@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <algorithm>
 #include <array>
@@ -9,6 +9,7 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <imgui.h>
 
 #ifndef IMGUI_VERSION
 #   error "include imgui.h before this header"
