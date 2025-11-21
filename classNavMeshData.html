@@ -138,6 +138,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a44c1dfa99e290e495f2e0acbf5888942"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48c4d354d62d406decab6d32cecd7acb" id="r_a48c4d354d62d406decab6d32cecd7acb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a48c4d354d62d406decab6d32cecd7acb">GetNavMesh</a> () const</td></tr>
 <tr class="separator:a48c4d354d62d406decab6d32cecd7acb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a709a5ddbd9a95a6c55c0bf38ddd1015a" id="r_a709a5ddbd9a95a6c55c0bf38ddd1015a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a709a5ddbd9a95a6c55c0bf38ddd1015a">AddOffmeshLink</a> (const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, float radius, bool bidirectional)</td></tr>
+<tr class="separator:a709a5ddbd9a95a6c55c0bf38ddd1015a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a787c10580f7e4def333d8f271ef95da4" id="r_a787c10580f7e4def333d8f271ef95da4"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="structOffmeshLink.html">OffmeshLink</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a787c10580f7e4def333d8f271ef95da4">GetOffmeshLinks</a> () const</td></tr>
+<tr class="separator:a787c10580f7e4def333d8f271ef95da4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac03e109d7eb10ab8828d329ec17075a4" id="r_ac03e109d7eb10ab8828d329ec17075a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#ac03e109d7eb10ab8828d329ec17075a4">ClearOffmeshLinks</a> ()</td></tr>
+<tr class="separator:ac03e109d7eb10ab8828d329ec17075a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e3a68693ca1bb2655cc9db37a6f111f" id="r_a1e3a68693ca1bb2655cc9db37a6f111f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a1e3a68693ca1bb2655cc9db37a6f111f">ExtractDebugMesh</a> (std::vector&lt; glm::vec3 &gt; &amp;outVerts, std::vector&lt; glm::vec3 &gt; &amp;outLines)</td></tr>
 <tr class="separator:a1e3a68693ca1bb2655cc9db37a6f111f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -237,6 +243,46 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a709a5ddbd9a95a6c55c0bf38ddd1015a" name="a709a5ddbd9a95a6c55c0bf38ddd1015a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a709a5ddbd9a95a6c55c0bf38ddd1015a">&#9670;&#160;</a></span>AddOffmeshLink()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> NavMeshData::AddOffmeshLink </td>
+          <td>(</td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>end</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>radius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bidirectional</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac84ae20a294aebff442e62b0eebfc886" name="ac84ae20a294aebff442e62b0eebfc886"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac84ae20a294aebff442e62b0eebfc886">&#9670;&#160;</a></span>BuildFromMesh()</h2>
 
@@ -335,6 +381,23 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ac03e109d7eb10ab8828d329ec17075a4" name="ac03e109d7eb10ab8828d329ec17075a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac03e109d7eb10ab8828d329ec17075a4">&#9670;&#160;</a></span>ClearOffmeshLinks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> NavMeshData::ClearOffmeshLinks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a56451182e4858ddea0ec98fef3b2a626" name="a56451182e4858ddea0ec98fef3b2a626"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a56451182e4858ddea0ec98fef3b2a626">&#9670;&#160;</a></span>CollectTilesInBounds()</h2>
 
@@ -414,6 +477,31 @@ Public Member Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classdtNavMesh.html">dtNavMesh</a> * NavMeshData::GetNavMesh </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a787c10580f7e4def333d8f271ef95da4" name="a787c10580f7e4def333d8f271ef95da4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a787c10580f7e4def333d8f271ef95da4">&#9670;&#160;</a></span>GetOffmeshLinks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; <a class="el" href="structOffmeshLink.html">OffmeshLink</a> &gt; &amp; NavMeshData::GetOffmeshLinks </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>

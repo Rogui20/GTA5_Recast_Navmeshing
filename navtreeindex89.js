@@ -1,5 +1,8 @@
 var NAVTREEINDEX89 =
 {
+"imstb__truetype_8h.html#aad275d7211530a3d817fcd8647690b7b":[45,0,7,0,11,81],
+"imstb__truetype_8h.html#aafc4974ee424f18246f47b0926a1cd31":[45,0,7,0,11,24],
+"imstb__truetype_8h.html#ab0896826867ac841bba5b6060b3dab09":[45,0,7,0,11,27],
 "imstb__truetype_8h.html#ab459250c5579b1d942e0d8eb23936827":[45,0,7,0,11,11],
 "imstb__truetype_8h.html#ab51e492c4b320b8af6ef557ad3388140":[45,0,7,0,11,71],
 "imstb__truetype_8h.html#ab593f3066f2a8a7e33e7b7011d1b1f9a":[45,0,7,0,11,52],
@@ -246,8 +249,5 @@ var NAVTREEINDEX89 =
 "ps2.html#hints":[29,1],
 "ps2.html#notes-2":[29,2],
 "ps2.html#running-on-pcsx2-emulator":[29,4],
-"ps2.html#to-do":[29,5],
-"psp.html":[30],
-"psp.html#building-2":[30,0],
-"psp.html#compiling-a-helloworld":[30,3]
+"ps2.html#to-do":[29,5]
 };

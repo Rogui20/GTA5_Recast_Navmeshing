@@ -6,6 +6,7 @@ var structNavmeshBuildInput =
     [ "meshBMin", "structNavmeshBuildInput.html#ad525dbeadfe69b371d57d10118f60335", null ],
     [ "ntris", "structNavmeshBuildInput.html#a81632abd2f677079b33b5a8ab75a490c", null ],
     [ "nverts", "structNavmeshBuildInput.html#a431c2abc0e81d84f9a41d3bdb7380234", null ],
+    [ "offmeshLinks", "structNavmeshBuildInput.html#a9f8044ab72ea725bdd5e8d6c14fca4ea", null ],
     [ "tris", "structNavmeshBuildInput.html#af0de9dc55a910b1be1c0532ea5b3c7d7", null ],
     [ "verts", "structNavmeshBuildInput.html#aac4684d2c44b810cb545302c70813680", null ]
 ];

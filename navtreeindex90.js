@@ -1,5 +1,8 @@
 var NAVTREEINDEX90 =
 {
+"psp.html":[30],
+"psp.html#building-2":[30,0],
+"psp.html#compiling-a-helloworld":[30,3],
 "psp.html#getting-psp-dev":[30,1],
 "psp.html#running-on-ppsspp-emulator":[30,2],
 "psp.html#to-do-1":[30,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX90 =
 "structGuiState.html#aac5d3f5ae7a567ab5f5fd18d4b2c3d6b":[44,0,95,16],
 "structGuiState.html#ac1eb0dfc263debeea082f2bebec4a10a":[44,0,95,3],
 "structGuiState.html#adbb0ec177af2c0beaf4471339952d522":[44,0,95,18],
-"structGuiState.html#ae30e4fb22d16fa188b02b4ae41c6691b":[44,0,95,21],
-"structGuiState.html#ae5e5321a872b52b30c9582b74d6a45ea":[44,0,95,20],
-"structGuiState.html#af6fe16bad26560cc8433134ebbb3d635":[44,0,95,9],
-"structImBitArray.html":[44,0,96]
+"structGuiState.html#ae30e4fb22d16fa188b02b4ae41c6691b":[44,0,95,21]
 };

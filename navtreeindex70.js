@@ -1,5 +1,8 @@
 var NAVTREEINDEX70 =
 {
+"external_2glm_2simd_2platform_8h.html#a8ef3d2eda9723ed41cd5e20656bb4ecd":[45,0,5,1,1,7,9],
+"external_2glm_2simd_2platform_8h.html#a901d6221d7a4af2fa2564db55a027bb6":[45,0,5,1,1,7,30],
+"external_2glm_2simd_2platform_8h.html#a91dbb50ae31ff15c8367478a82e01f4f":[45,0,5,1,1,7,106],
 "external_2glm_2simd_2platform_8h.html#a9230d02d58b197f7ab0c21def4c118ae":[45,0,5,1,1,7,27],
 "external_2glm_2simd_2platform_8h.html#a92a23bb7104397cfbb7b06041392e38d":[45,0,5,1,1,7,47],
 "external_2glm_2simd_2platform_8h.html#a96c42d566ba655db4610bba265b26346":[45,0,5,1,1,7,17],
@@ -57,8 +60,8 @@ var NAVTREEINDEX70 =
 "external_2glm_2simd_2vector__relational_8h.html":[45,0,5,1,1,9],
 "external_2glm_2simd_2vector__relational_8h_source.html":[45,0,5,1,1,9],
 "files.html":[45,0],
-"functions.html":[44,3,0],
 "functions.html":[44,3,0,0],
+"functions.html":[44,3,0],
 "functions_a.html":[44,3,0,1],
 "functions_b.html":[44,3,0,2],
 "functions_c.html":[44,3,0,3],
@@ -67,8 +70,8 @@ var NAVTREEINDEX70 =
 "functions_enum.html":[44,3,4],
 "functions_eval.html":[44,3,5],
 "functions_f.html":[44,3,0,6],
-"functions_func.html":[44,3,1],
 "functions_func.html":[44,3,1,0],
+"functions_func.html":[44,3,1],
 "functions_func_a.html":[44,3,1,1],
 "functions_func_b.html":[44,3,1,2],
 "functions_func_c.html":[44,3,1,3],
@@ -109,8 +112,8 @@ var NAVTREEINDEX70 =
 "functions_type.html":[44,3,3],
 "functions_u.html":[44,3,0,21],
 "functions_v.html":[44,3,0,22],
-"functions_vars.html":[44,3,2],
 "functions_vars.html":[44,3,2,0],
+"functions_vars.html":[44,3,2],
 "functions_vars_a.html":[44,3,2,1],
 "functions_vars_b.html":[44,3,2,2],
 "functions_vars_c.html":[44,3,2,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX70 =
 "glad_8h.html#a0c2238bb2b12c74a5c96cb9ff81f7a38":[45,0,5,0,0,0,0,1151],
 "glad_8h.html#a0c51fbe743a6c9da5d2f7ac4306b66df":[45,0,5,0,0,0,0,44],
 "glad_8h.html#a0c5465806167aaa659a8dac3169c17a1":[45,0,5,0,0,0,0,926],
-"glad_8h.html#a0ca47e506982d2b8d378f5b7e0e7c833":[45,0,5,0,0,0,0,191],
-"glad_8h.html#a0cb06d612b3358bfaadbbefd7c51f1cc":[45,0,5,0,0,0,0,837],
-"glad_8h.html#a0ccb2626b15d645b5aacc5d5d6057bde":[45,0,5,0,0,0,0,714],
-"glad_8h.html#a0d1bb5415599ba20add1d20451f44834":[45,0,5,0,0,0,0,1128]
+"glad_8h.html#a0ca47e506982d2b8d378f5b7e0e7c833":[45,0,5,0,0,0,0,191]
 };

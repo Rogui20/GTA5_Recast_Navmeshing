@@ -417,6 +417,7 @@ var hierarchy =
     [ "NavMeshTileBuildContext", "structNavMeshTileBuildContext.html", null ],
     [ "NavMeshTileHeader", "structNavMeshTileHeader.html", null ],
     [ "ObjLoader", "classObjLoader.html", null ],
+    [ "OffmeshLink", "structOffmeshLink.html", null ],
     [ "PropInstance", "structPropInstance.html", null ],
     [ "RasterizationContext", "structRasterizationContext.html", null ],
     [ "Ray", "structRay.html", null ],
