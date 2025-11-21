@@ -120,8 +120,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1cf96687792fe613b2cc953369aef529"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3432212bbd65a1020926267863756fa" id="r_ab3432212bbd65a1020926267863756fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#ab3432212bbd65a1020926267863756fa">IsLoaded</a> () const</td></tr>
 <tr class="separator:ab3432212bbd65a1020926267863756fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afcc7ca871eecfec2131711e8b32ac4de" id="r_afcc7ca871eecfec2131711e8b32ac4de"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#afcc7ca871eecfec2131711e8b32ac4de">BuildFromMesh</a> (const std::vector&lt; glm::vec3 &gt; &amp;verts, const std::vector&lt; unsigned int &gt; &amp;<a class="el" href="glad_8h.html#a94ae715eebfc1eb65456c0ab9b97f1e9">indices</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, bool buildTilesNow=true)</td></tr>
-<tr class="separator:afcc7ca871eecfec2131711e8b32ac4de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90044fe1161fe9685be28e3d23b6504f" id="r_a90044fe1161fe9685be28e3d23b6504f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a90044fe1161fe9685be28e3d23b6504f">BuildFromMesh</a> (const std::vector&lt; glm::vec3 &gt; &amp;verts, const std::vector&lt; unsigned int &gt; &amp;<a class="el" href="glad_8h.html#a94ae715eebfc1eb65456c0ab9b97f1e9">indices</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, bool buildTilesNow=true, const std::atomic_bool *cancelFlag=nullptr)</td></tr>
+<tr class="separator:a90044fe1161fe9685be28e3d23b6504f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a309f93226ce1a4576d932144c9a70363" id="r_a309f93226ce1a4576d932144c9a70363"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a309f93226ce1a4576d932144c9a70363">BuildTileAt</a> (const glm::vec3 &amp;worldPos, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, int &amp;outTileX, int &amp;outTileY)</td></tr>
 <tr class="separator:a309f93226ce1a4576d932144c9a70363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56451182e4858ddea0ec98fef3b2a626" id="r_a56451182e4858ddea0ec98fef3b2a626"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a56451182e4858ddea0ec98fef3b2a626">CollectTilesInBounds</a> (const glm::vec3 &amp;bmin, const glm::vec3 &amp;bmax, bool onlyExistingTiles, std::vector&lt; std::pair&lt; int, int &gt; &gt; &amp;outTiles) const</td></tr>
@@ -237,8 +237,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="afcc7ca871eecfec2131711e8b32ac4de" name="afcc7ca871eecfec2131711e8b32ac4de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afcc7ca871eecfec2131711e8b32ac4de">&#9670;&#160;</a></span>BuildFromMesh()</h2>
+<a id="a90044fe1161fe9685be28e3d23b6504f" name="a90044fe1161fe9685be28e3d23b6504f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90044fe1161fe9685be28e3d23b6504f">&#9670;&#160;</a></span>BuildFromMesh()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -265,7 +265,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>buildTilesNow</em> = <code>true</code>&#160;</td>
+          <td class="paramname"><em>buildTilesNow</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::atomic_bool *&#160;</td>
+          <td class="paramname"><em>cancelFlag</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
