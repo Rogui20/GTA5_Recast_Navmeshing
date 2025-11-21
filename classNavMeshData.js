@@ -4,7 +4,7 @@ var classNavMeshData =
     [ "NavMeshData", "classNavMeshData.html#aab236c694841433fad2b123c7d67f8f5", null ],
     [ "NavMeshData", "classNavMeshData.html#ad78beb7092a0cad7a0412fb48b5e665f", null ],
     [ "~NavMeshData", "classNavMeshData.html#a5434728b0546753c3f01735e4a13e892", null ],
-    [ "BuildFromMesh", "classNavMeshData.html#a90044fe1161fe9685be28e3d23b6504f", null ],
+    [ "BuildFromMesh", "classNavMeshData.html#ac84ae20a294aebff442e62b0eebfc886", null ],
     [ "BuildTileAt", "classNavMeshData.html#a309f93226ce1a4576d932144c9a70363", null ],
     [ "CollectTilesInBounds", "classNavMeshData.html#a56451182e4858ddea0ec98fef3b2a626", null ],
     [ "ExtractDebugMesh", "classNavMeshData.html#a1e3a68693ca1bb2655cc9db37a6f111f", null ],

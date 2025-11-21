@@ -107,6 +107,8 @@ $(document).ready(function(){initNavTree('NavMesh__Tiled_8cpp.html',''); initRes
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;cstdio&gt;</code><br />
 <code>#include &lt;cstring&gt;</code><br />
+<code>#include &lt;cstdint&gt;</code><br />
+<code>#include &lt;unordered_map&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -117,8 +119,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3ecf23440ba41d4cc46ce730cce6840c" id="r_a3ecf23440ba41d4cc46ce730cce6840c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#a3ecf23440ba41d4cc46ce730cce6840c">BuildTiledNavMesh</a> (const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ad3c78daa7d8673f71649d4840c641779">input</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&amp;outNav, bool buildTilesNow, int *outTilesBuilt, int *outTilesSkipped, const std::atomic_bool *cancelFlag)</td></tr>
-<tr class="separator:a3ecf23440ba41d4cc46ce730cce6840c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7971b9b5e433570315f9e0950bd6d081" id="r_a7971b9b5e433570315f9e0950bd6d081"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#a7971b9b5e433570315f9e0950bd6d081">BuildTiledNavMesh</a> (const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ad3c78daa7d8673f71649d4840c641779">input</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&amp;outNav, bool buildTilesNow, int *outTilesBuilt, int *outTilesSkipped, const std::atomic_bool *cancelFlag, bool useCache, const char *cachePath)</td></tr>
+<tr class="separator:a7971b9b5e433570315f9e0950bd6d081"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abef178e9026b2092c69014ad09006ab5" id="r_abef178e9026b2092c69014ad09006ab5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#abef178e9026b2092c69014ad09006ab5">BuildSingleTile</a> (const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ad3c78daa7d8673f71649d4840c641779">input</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, int tileX, int tileY, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav, bool &amp;outBuilt, bool &amp;outEmpty)</td></tr>
 <tr class="separator:abef178e9026b2092c69014ad09006ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -224,8 +226,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a3ecf23440ba41d4cc46ce730cce6840c" name="a3ecf23440ba41d4cc46ce730cce6840c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ecf23440ba41d4cc46ce730cce6840c">&#9670;&#160;</a></span>BuildTiledNavMesh()</h2>
+<a id="a7971b9b5e433570315f9e0950bd6d081" name="a7971b9b5e433570315f9e0950bd6d081"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7971b9b5e433570315f9e0950bd6d081">&#9670;&#160;</a></span>BuildTiledNavMesh()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -270,7 +272,19 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::atomic_bool *&#160;</td>
-          <td class="paramname"><em>cancelFlag</em>&#160;</td>
+          <td class="paramname"><em>cancelFlag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>useCache</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>cachePath</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
