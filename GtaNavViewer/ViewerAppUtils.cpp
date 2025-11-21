@@ -215,9 +215,9 @@ glm::mat3 ViewerApp::GetRotationMatrix(const glm::vec3& eulerDegrees) const
 {
     glm::vec3 normalized = NormalizeEuler(eulerDegrees);
     glm::mat4 rot(1.0f);
-    rot = glm::rotate(rot, glm::radians(normalized.z), glm::vec3(0,0,1));
+    rot = glm::rotate(rot, glm::radians(normalized.z), glm::vec3(0,1,0));
     rot = glm::rotate(rot, glm::radians(normalized.x), glm::vec3(1,0,0));
-    rot = glm::rotate(rot, glm::radians(normalized.y), glm::vec3(0,1,0));
+    rot = glm::rotate(rot, glm::radians(normalized.y), glm::vec3(0,0,1));
     return glm::mat3(rot);
 }
 
