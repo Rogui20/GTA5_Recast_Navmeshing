@@ -1,5 +1,10 @@
 var NAVTREEINDEX104 =
 {
+"structSDL__ControllerAxisEvent.html#a07087f68ea9d64b50047d65312ee7b94":[44,0,372,8],
+"structSDL__ControllerAxisEvent.html#a1ed7f14255ed01b982d40a38791d475a":[44,0,372,7],
+"structSDL__ControllerAxisEvent.html#a4a04fcd20a54db21c5258ab0e40c6ab5":[44,0,372,2],
+"structSDL__ControllerAxisEvent.html#aa904b61e4763d28d887cf8afcc3cbb7c":[44,0,372,6],
+"structSDL__ControllerAxisEvent.html#ab82598fe5621dca9b1a41f7b2ca1e9a0":[44,0,372,3],
 "structSDL__ControllerAxisEvent.html#aba6543c143521aebce06a41a8cf79db0":[44,0,372,0],
 "structSDL__ControllerAxisEvent.html#ae0ad0f279b9978bbbac9f5b22ae8020b":[44,0,372,4],
 "structSDL__ControllerAxisEvent.html#af980495b1e24f9a868f2ccb25ce9629b":[44,0,372,1],
@@ -244,10 +249,5 @@ var NAVTREEINDEX104 =
 "structSDL__MouseButtonEvent.html#a1a4680e19ae06d02d2093f0bcba1b24c":[44,0,409,0],
 "structSDL__MouseButtonEvent.html#a366aef59a0f393afc8a3561e741825df":[44,0,409,6],
 "structSDL__MouseButtonEvent.html#a5bb9c61b86e999f58637511e32e3a076":[44,0,409,8],
-"structSDL__MouseButtonEvent.html#a765957d218d16fa00558fa4d20e80689":[44,0,409,2],
-"structSDL__MouseButtonEvent.html#a7ccb5c55a7ddadce723f4ea6d5269540":[44,0,409,9],
-"structSDL__MouseButtonEvent.html#a8809cef85cfffad4f2059f2ba4fc6a3d":[44,0,409,3],
-"structSDL__MouseButtonEvent.html#aa606bebcbc3ffc7e932016039c2a36a1":[44,0,409,1],
-"structSDL__MouseButtonEvent.html#ab05e8a454692608ff56c502e95799c56":[44,0,409,4],
-"structSDL__MouseButtonEvent.html#ab3b855d4b543b5d02fcf5d56e4421393":[44,0,409,7]
+"structSDL__MouseButtonEvent.html#a765957d218d16fa00558fa4d20e80689":[44,0,409,2]
 };

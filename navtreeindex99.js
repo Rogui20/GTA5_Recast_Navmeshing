@@ -1,5 +1,10 @@
 var NAVTREEINDEX99 =
 {
+"structImGuiTypingSelectState.html#a608a580f880e2838276373f4a95d2a1c":[44,0,273,7],
+"structImGuiTypingSelectState.html#a6269af7bff0144accfbfb3f467fd3593":[44,0,273,1],
+"structImGuiTypingSelectState.html#a72805fdbcd1feb91afd485afddc27d11":[44,0,273,5],
+"structImGuiTypingSelectState.html#a76a4febc71acee793aa0f2f10fc586b4":[44,0,273,6],
+"structImGuiTypingSelectState.html#a7fde026be5ff298793d0dd7bceff2bfe":[44,0,273,4],
 "structImGuiTypingSelectState.html#aad6794105ed06b337c1a80aea92e85f4":[44,0,273,0],
 "structImGuiTypingSelectState.html#afd93993ec93bf03f081d538514eed48f":[44,0,273,2],
 "structImGuiViewport.html":[44,0,274],
@@ -244,10 +249,5 @@ var NAVTREEINDEX99 =
 "structImGuiWindowTempData.html#a4191d0684aa688e31c69a618490a3f32":[44,0,281,29],
 "structImGuiWindowTempData.html#a4e5c2b786d40849ce195f670e2e4e78e":[44,0,281,10],
 "structImGuiWindowTempData.html#a4f9366e24dce97f0cc3ecc0e19436db5":[44,0,281,36],
-"structImGuiWindowTempData.html#a51a9b4d8e56e0b30d8135d92a1341047":[44,0,281,25],
-"structImGuiWindowTempData.html#a56c2607a6965314ec05a351ac6b68c83":[44,0,281,21],
-"structImGuiWindowTempData.html#a56ea966c95f667c41f6ef2d6c0ad7aa2":[44,0,281,34],
-"structImGuiWindowTempData.html#a585804d9f68a5973a3e1f4d47b18103e":[44,0,281,30],
-"structImGuiWindowTempData.html#a5e35107a4b7f7490900312307367d377":[44,0,281,39],
-"structImGuiWindowTempData.html#a684f9cd8726dc846a633011d22367e90":[44,0,281,4]
+"structImGuiWindowTempData.html#a51a9b4d8e56e0b30d8135d92a1341047":[44,0,281,25]
 };

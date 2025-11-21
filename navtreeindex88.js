@@ -1,5 +1,10 @@
 var NAVTREEINDEX88 =
 {
+"imgui__widgets_8cpp.html#a1b0a25c8debb2e6b33d5b9678ff31eb6":[45,0,7,0,8,10],
+"imgui__widgets_8cpp.html#a1c32d6fc2251c9168d5ce133104110d4":[45,0,7,0,8,82],
+"imgui__widgets_8cpp.html#a1df4f706900ddcd0caf9cae679c3ccbf":[45,0,7,0,8,113],
+"imgui__widgets_8cpp.html#a1e7e825b3df67f64a15b84c548e51c26":[45,0,7,0,8,9],
+"imgui__widgets_8cpp.html#a1f0a79276d5116d2f14d8fb801c20f8f":[45,0,7,0,8,56],
 "imgui__widgets_8cpp.html#a2372bf34dbfe9ee393e5e893a59519ff":[45,0,7,0,8,17],
 "imgui__widgets_8cpp.html#a2519d160c1656bd613cc93fe05ed83c1":[45,0,7,0,8,88],
 "imgui__widgets_8cpp.html#a26b0390859152c26079afc25387d5ae5":[45,0,7,0,8,26],
@@ -244,10 +249,5 @@ var NAVTREEINDEX88 =
 "kmsdrm-on-bsd.html#partially-working-or-no-input-on-openbsdnetbsd":[19,1],
 "kmsdrm-on-bsd.html#sdl2-wscons-input-backend-features":[19,0],
 "linux-1.html":[20],
-"linux-1.html#build-dependencies":[20,0],
-"linux-1.html#joystick-does-not-work":[20,1],
-"md_CHANGELOG.html":[5],
-"md_CHANGELOG.html#autotoc_md100---2009-03-29":[5,7],
-"md_CHANGELOG.html#autotoc_md110---2009-04-11":[5,6],
-"md_CHANGELOG.html#autotoc_md120---2009-06-17":[5,5]
+"linux-1.html#build-dependencies":[20,0]
 };

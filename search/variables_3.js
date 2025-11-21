@@ -70,7 +70,7 @@ var searchData=
   ['collapsedcond_67',['CollapsedCond',['../structImGuiNextWindowData.html#a864d3d1bf0dbf81ba4cf9cefd75fe06b',1,'ImGuiNextWindowData']]],
   ['collapsedval_68',['CollapsedVal',['../structImGuiNextWindowData.html#a0c4c81bf78a6ac094f794d2cf318037a',1,'ImGuiNextWindowData']]],
   ['collisionqueryrange_69',['collisionQueryRange',['../structdtCrowdAgentParams.html#a5e1c7373b02e2f926360e3d3130be068',1,'dtCrowdAgentParams']]],
-  ['color_70',['color',['../structSDL__Vertex.html#ace543def50f0b3f3f87a86c47caab53f',1,'SDL_Vertex::color'],['../structMyDocument.html#a38d0b4dc1d4cd036ab39031fbd6d57cc',1,'MyDocument::Color']]],
+  ['color_70',['color',['../structMyDocument.html#a38d0b4dc1d4cd036ab39031fbd6d57cc',1,'MyDocument::Color'],['../structSDL__Vertex.html#ace543def50f0b3f3f87a86c47caab53f',1,'SDL_Vertex::color']]],
   ['colorbuffer_71',['ColorBuffer',['../structImGui__ImplSDLRenderer3__Data.html#aa40eb7ee6d0c2ffa4478f16112c41fbc',1,'ImGui_ImplSDLRenderer3_Data']]],
   ['colorbuttonposition_72',['ColorButtonPosition',['../structImGuiStyle.html#a64b5fdd495573fa07a80dc0071e99802',1,'ImGuiStyle']]],
   ['colored_73',['Colored',['../structImFontGlyph.html#a6dca72bfeb40ba1cf6ceae007894f665',1,'ImFontGlyph']]],
