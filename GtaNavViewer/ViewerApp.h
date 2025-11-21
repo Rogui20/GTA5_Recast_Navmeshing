@@ -225,6 +225,8 @@ private:
 
     void ProcessNavmeshJob();
     void JoinNavmeshWorker();
+    void RequestStopNavmeshBuild();
+    void ClearNavmesh();
     void RebuildDebugLineBuffer();
     bool IsNavmeshJobRunning() const { return navmeshJobRunning.load(); }
 
@@ -256,6 +258,7 @@ private:
     std::thread navmeshWorker;
     std::atomic<bool> navmeshJobRunning{false};
     std::atomic<bool> navmeshJobCompleted{false};
+    std::atomic<bool> navmeshCancelRequested{false};
     bool navmeshJobQueued = false;
     bool navmeshJobQueuedBuildTilesNow = true;
     std::mutex navmeshJobMutex;

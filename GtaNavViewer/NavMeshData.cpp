@@ -504,10 +504,22 @@ void NavMeshData::ExtractDebugMesh(
 bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
                                 const std::vector<unsigned int>& idxIn,
                                 const NavmeshGenerationSettings& settings,
-                                bool buildTilesNow)
+                                bool buildTilesNow,
+                                const std::atomic_bool* cancelFlag)
 {
     m_hasTiledCache = false;
     LoggingRcContext ctx;
+
+    auto isCancelled = [cancelFlag]()
+    {
+        return cancelFlag && cancelFlag->load();
+    };
+
+    if (isCancelled())
+    {
+        printf("[NavMeshData] BuildFromMesh abortado antes de iniciar (cancelado).\n");
+        return false;
+    }
 
     if (vertsIn.empty() || idxIn.empty())
     {
@@ -534,6 +546,11 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
 
     for (size_t i = 0; i < idxIn.size(); ++i)
     {
+        if (isCancelled())
+        {
+            printf("[NavMeshData] BuildFromMesh abortado durante validacao de indices.\n");
+            return false;
+        }
         if (idxIn[i] >= vertsIn.size())
         {
             printf("[NavMeshData] BuildFromMesh: indice fora do limite na pos %zu (idx=%u, verts=%zu).\n",
@@ -545,6 +562,11 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     std::vector<float> verts(nverts * 3);
     for (int i = 0; i < nverts; ++i)
     {
+        if (isCancelled())
+        {
+            printf("[NavMeshData] BuildFromMesh abortado durante copia de vertices.\n");
+            return false;
+        }
         verts[i*3+0] = vertsIn[i].x;
         verts[i*3+1] = vertsIn[i].y;
         verts[i*3+2] = vertsIn[i].z;
@@ -553,6 +575,12 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     std::vector<int> tris(ntris * 3);
     for (int i = 0; i < ntris * 3; ++i)
         tris[i] = (int)idxIn[i];
+
+    if (isCancelled())
+    {
+        printf("[NavMeshData] BuildFromMesh abortado apos copia de indices.\n");
+        return false;
+    }
 
     float meshBMin[3] = { verts[0], verts[1], verts[2] };
     float meshBMax[3] = { verts[0], verts[1], verts[2] };
@@ -610,7 +638,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     }
     else
     {
-        ok = BuildTiledNavMesh(buildInput, settings, newNav, buildTilesNow, nullptr, nullptr);
+        ok = BuildTiledNavMesh(buildInput, settings, newNav, buildTilesNow, nullptr, nullptr, cancelFlag);
     }
 
     if (!ok)
