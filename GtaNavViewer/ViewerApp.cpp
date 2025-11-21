@@ -500,6 +500,9 @@ void ViewerApp::RemoveMesh(size_t index)
     if (index >= meshInstances.size())
         return;
 
+    uint64_t removedId = meshInstances[index].id;
+    DetachChildren(removedId);
+    meshStateCache.erase(removedId);
     meshInstances.erase(meshInstances.begin() + index);
     if (pickedMeshIndex == static_cast<int>(index))
     {
@@ -1010,11 +1013,48 @@ void ViewerApp::RenderFrame()
                             if (moved && gtaPos != previousGtaPos)
                             {
                                 instance.position = FromGtaCoords(gtaPos);
+                                OnInstanceTransformUpdated(i, true, false);
                                 HandleAutoBuild(NavmeshAutoBuildFlag::OnMove);
                             }
                             if (rotated && instance.rotation != previousRot)
                             {
+                                OnInstanceTransformUpdated(i, false, true);
                                 HandleAutoBuild(NavmeshAutoBuildFlag::OnRotate);
+                            }
+
+                            std::string parentLabel = "Nenhum";
+                            if (instance.parentId != 0)
+                            {
+                                if (const MeshInstance* parent = FindMeshById(instance.parentId))
+                                    parentLabel = parent->name;
+                                else
+                                    parentLabel = "(Parent removido)";
+                            }
+
+                            if (ImGui::BeginCombo("Parent", parentLabel.c_str()))
+                            {
+                                if (ImGui::Selectable("Nenhum", instance.parentId == 0))
+                                {
+                                    SetMeshParent(i, 0);
+                                }
+
+                                for (size_t parentIdx = 0; parentIdx < meshInstances.size(); ++parentIdx)
+                                {
+                                    if (parentIdx == i)
+                                        continue;
+
+                                    const auto& candidate = meshInstances[parentIdx];
+                                    if (WouldCreateCycle(instance.id, candidate.id))
+                                        continue;
+
+                                    bool isParent = instance.parentId == candidate.id;
+                                    if (ImGui::Selectable(candidate.name.c_str(), isParent))
+                                    {
+                                        SetMeshParent(i, candidate.id);
+                                    }
+                                }
+
+                                ImGui::EndCombo();
                             }
 
                             ImGui::TableNextColumn();
@@ -1027,16 +1067,35 @@ void ViewerApp::RenderFrame()
                             ImGui::EndDisabled();
                             ImGui::SameLine();
 
+                            bool removeSingle = false;
+                            bool removeWithChildren = false;
                             if (ImGui::Button("Remover"))
                             {
-                                ImGui::PopID();
-                                RemoveMesh(i);
+                                removeSingle = true;
+                            }
+                            ImGui::SameLine();
+                            if (ImGui::Button("Remover Mesh e Childs"))
+                            {
+                                removeWithChildren = true;
+                            }
+
+                            ImGui::PopID();
+                            if (removeWithChildren)
+                            {
+                                uint64_t rootId = instance.id;
+                                RemoveMeshSubtree(rootId);
                                 if (meshInstances.size() <= i)
                                     break;
                                 continue;
                             }
 
-                            ImGui::PopID();
+                            if (removeSingle)
+                            {
+                                RemoveMesh(i);
+                                if (meshInstances.size() <= i)
+                                    break;
+                                continue;
+                            }
                             ++i;
                         }
 

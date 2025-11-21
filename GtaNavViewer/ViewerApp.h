@@ -53,6 +53,9 @@ private:
         glm::vec3             rotation {0.0f};
         float                 scale = 1.0f;
         uint64_t              id = 0;
+        uint64_t              parentId = 0;
+        glm::vec3             parentOffsetPos {0.0f};
+        glm::vec3             parentOffsetRot {0.0f};
     };
 
     struct MeshBoundsState
@@ -196,6 +199,15 @@ private:
     void UpdateEditDrag(int mouseX, int mouseY);
     void DrawSelectedMeshHighlight();
     void DrawEditGizmo();
+    MeshInstance* FindMeshById(uint64_t id);
+    const MeshInstance* FindMeshById(uint64_t id) const;
+    void UpdateChildTransforms(uint64_t parentId);
+    void OnInstanceTransformUpdated(size_t index, bool positionChanged, bool rotationChanged);
+    bool WouldCreateCycle(uint64_t childId, uint64_t newParentId) const;
+    void SetMeshParent(size_t childIndex, uint64_t newParentId);
+    void DetachChildren(uint64_t parentId);
+    void CollectSubtreeIds(uint64_t rootId, std::vector<uint64_t>& outIds) const;
+    void RemoveMeshSubtree(uint64_t rootId);
 
     void ProcessEvents();
     void RenderFrame();
