@@ -1,5 +1,6 @@
 var NAVTREEINDEX103 =
 {
+"structMyDocument.html#a95b8cc478b59e5fc70a187e990506668":[44,0,304,3],
 "structMyDocument.html#aa8b4127cad19be82ea13993d621367a1":[44,0,304,9],
 "structMyDocument.html#ab204604930ba2489fb0f1ef2a53206a9":[44,0,304,1],
 "structMyDocument.html#abe5ed4d7f257d5a2fe5cf2a1844b22f9":[44,0,304,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX103 =
 "structSDL__ControllerAxisEvent.html#a1ed7f14255ed01b982d40a38791d475a":[44,0,372,7],
 "structSDL__ControllerAxisEvent.html#a4a04fcd20a54db21c5258ab0e40c6ab5":[44,0,372,2],
 "structSDL__ControllerAxisEvent.html#aa904b61e4763d28d887cf8afcc3cbb7c":[44,0,372,6],
-"structSDL__ControllerAxisEvent.html#ab82598fe5621dca9b1a41f7b2ca1e9a0":[44,0,372,3],
-"structSDL__ControllerAxisEvent.html#aba6543c143521aebce06a41a8cf79db0":[44,0,372,0]
+"structSDL__ControllerAxisEvent.html#ab82598fe5621dca9b1a41f7b2ca1e9a0":[44,0,372,3]
 };

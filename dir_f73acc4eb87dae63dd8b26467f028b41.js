@@ -21,7 +21,7 @@ var dir_f73acc4eb87dae63dd8b26467f028b41 =
     [ "ViewerApp.cpp", "ViewerApp_8cpp.html", null ],
     [ "ViewerApp.h", "ViewerApp_8h.html", "ViewerApp_8h" ],
     [ "ViewerAppInput.cpp", "ViewerAppInput_8cpp.html", null ],
-    [ "ViewerAppUtils.cpp", "ViewerAppUtils_8cpp.html", null ],
+    [ "ViewerAppUtils.cpp", "ViewerAppUtils_8cpp.html", "ViewerAppUtils_8cpp" ],
     [ "ViewerCamera.cpp", "ViewerCamera_8cpp.html", null ],
     [ "ViewerCamera.h", "ViewerCamera_8h.html", "ViewerCamera_8h" ]
 ];
