@@ -18,6 +18,7 @@ struct NavmeshBuildInput
     float meshBMin[3] = {};
     float meshBMax[3] = {};
     rcConfig baseCfg{};
+    const std::vector<OffmeshLink>* offmeshLinks = nullptr;
 };
 
 bool BuildSingleNavMesh(const NavmeshBuildInput& input,

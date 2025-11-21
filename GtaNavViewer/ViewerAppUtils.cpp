@@ -118,6 +118,8 @@ void ViewerApp::ResetPathState()
     hasPathStart = false;
     hasPathTarget = false;
     pathLines.clear();
+    hasOffmeshStart = false;
+    hasOffmeshTarget = false;
 }
 
 bool ViewerApp::InitNavQueryForCurrentNavmesh()

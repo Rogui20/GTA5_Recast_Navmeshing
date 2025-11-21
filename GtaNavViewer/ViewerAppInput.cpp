@@ -146,6 +146,30 @@ void ViewerApp::ProcessEvents()
                 break;
             case ViewportClickMode::EditMesh:
                 break;
+            case ViewportClickMode::AddOffmeshLink:
+                if (!hasOffmeshStart)
+                {
+                    offmeshStart = hitPoint;
+                    hasOffmeshStart = true;
+                }
+                else
+                {
+                    offmeshTarget = hitPoint;
+                    hasOffmeshTarget = true;
+                    navData.AddOffmeshLink(offmeshStart, offmeshTarget, navGenSettings.agentRadius, offmeshBidirectional);
+                    printf("[ViewerApp] Offmesh link adicionado. Start=(%.2f, %.2f, %.2f) Target=(%.2f, %.2f, %.2f) BiDir=%s\n",
+                           offmeshStart.x, offmeshStart.y, offmeshStart.z,
+                           offmeshTarget.x, offmeshTarget.y, offmeshTarget.z,
+                           offmeshBidirectional ? "true" : "false");
+                    hasOffmeshStart = false;
+                    hasOffmeshTarget = false;
+
+                    if (navData.IsLoaded())
+                    {
+                        buildNavmeshFromMeshes();
+                    }
+                }
+                break;
             }
         }
 
