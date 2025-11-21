@@ -1,5 +1,11 @@
 var NAVTREEINDEX16 =
 {
+"SDL__config__winrt_8h.html#a494d1ecf5a4567ccbf7901e3be337bc7":[45,0,5,2,1,20,61],
+"SDL__config__winrt_8h.html#a49afaaefcf9868c6d3a9fb43706af4db":[45,0,5,2,1,20,79],
+"SDL__config__winrt_8h.html#a4ac6a60cb19181437136206238f16497":[45,0,5,2,1,20,83],
+"SDL__config__winrt_8h.html#a4e31ef0be24f881a3a13e42723db7095":[45,0,5,2,1,20,35],
+"SDL__config__winrt_8h.html#a4f6ff4162269254c4c4b86bc9892ecce":[45,0,5,2,1,20,44],
+"SDL__config__winrt_8h.html#a52de22f2e81bce94222ff968b2b3c8c1":[45,0,5,2,1,20,14],
 "SDL__config__winrt_8h.html#a550e5c272cc3cf3814651721167dcd23":[45,0,5,2,1,20,107],
 "SDL__config__winrt_8h.html#a561075a6afb23894833fc887a1552928":[45,0,5,2,1,20,62],
 "SDL__config__winrt_8h.html#a575cd33d7c103a84b4d54759e71ea78d":[45,0,5,2,1,20,32],
@@ -243,11 +249,5 @@ var NAVTREEINDEX16 =
 "SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaadb3154654baf003910e75d74b507a82b":[45,0,5,2,1,27,76,53],
 "SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaadefb8866b9d28be21c2c33c35cc66c4b":[45,0,5,2,1,27,76,13],
 "SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaae00ac6995dfb7b92bfae68b9f47ae07a":[45,0,5,2,1,27,76,34],
-"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaae6bd3acb4bf099e3c1671aefac43af69":[45,0,5,2,1,27,76,41],
-"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaae8971f362076f4844d953ea57702108a":[45,0,5,2,1,27,76,56],
-"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaae94c3ab09ae94c2b83c386eae4e56810":[45,0,5,2,1,27,76,38],
-"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaaeca87c7b5bb21915d444298449a78ee6":[45,0,5,2,1,27,76,35],
-"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaaf0803b3f8a12de3d85f81ebd7b514cd1":[45,0,5,2,1,27,76,22],
-"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaafa7a5589ea54330547713f4c80b4437e":[45,0,5,2,1,27,76,39],
-"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaafba4080bfbad335e520097b2024f0dff":[45,0,5,2,1,27,76,24]
+"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaae6bd3acb4bf099e3c1671aefac43af69":[45,0,5,2,1,27,76,41]
 };

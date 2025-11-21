@@ -1,5 +1,11 @@
 var NAVTREEINDEX17 =
 {
+"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaae8971f362076f4844d953ea57702108a":[45,0,5,2,1,27,76,56],
+"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaae94c3ab09ae94c2b83c386eae4e56810":[45,0,5,2,1,27,76,38],
+"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaaeca87c7b5bb21915d444298449a78ee6":[45,0,5,2,1,27,76,35],
+"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaaf0803b3f8a12de3d85f81ebd7b514cd1":[45,0,5,2,1,27,76,22],
+"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaafa7a5589ea54330547713f4c80b4437e":[45,0,5,2,1,27,76,39],
+"SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaafba4080bfbad335e520097b2024f0dff":[45,0,5,2,1,27,76,24],
 "SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaafd64b483c47e93576b91bf5b227d04c2":[45,0,5,2,1,27,76,0],
 "SDL__events_8h.html#a3b589e89be6b35c02e0dd34a55f3fccaaffeac40a4ff366717c0ebc74118ea2ae":[45,0,5,2,1,27,76,60],
 "SDL__events_8h.html#a4225727df385885e999784f416410cc9":[45,0,5,2,1,27,82],
@@ -243,11 +249,5 @@ var NAVTREEINDEX17 =
 "SDL__haptic_8h.html#ae2185c0814f107dd5851dd743e9ea71c":[45,0,5,2,1,32,41],
 "SDL__haptic_8h.html#ae333ef77753ba700875fa20858b9021d":[45,0,5,2,1,32,40],
 "SDL__haptic_8h.html#ae8123eaa51511507375ba6ef9220fa46":[45,0,5,2,1,32,28],
-"SDL__haptic_8h.html#af0181e59ecd14c6aecd1fd3c5099330a":[45,0,5,2,1,32,52],
-"SDL__haptic_8h.html#af10eb937a64a8f602e9c46682ac0d868":[45,0,5,2,1,32,20],
-"SDL__haptic_8h.html#af44cbecefe14da5a7476013ce06f38b9":[45,0,5,2,1,32,54],
-"SDL__haptic_8h.html#af4d7e7825bf98ca5a5aa8194b77b0754":[45,0,5,2,1,32,30],
-"SDL__haptic_8h.html#af8b2430a363a968de2a5b64c8f663d3b":[45,0,5,2,1,32,9],
-"SDL__haptic_8h.html#af967093786a8e460fc42c9b502472d85":[45,0,5,2,1,32,37],
-"SDL__haptic_8h.html#afc6e5a5701fe80004d529d762132ad6b":[45,0,5,2,1,32,46]
+"SDL__haptic_8h.html#af0181e59ecd14c6aecd1fd3c5099330a":[45,0,5,2,1,32,52]
 };

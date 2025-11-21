@@ -4,6 +4,7 @@ var classViewerApp =
     [ "~ViewerApp", "classViewerApp.html#a46f2542925089dbd0d8dc3742b458df6", null ],
     [ "buildNavmeshDebugLines", "classViewerApp.html#a30b4ae10e356bfd02ba48f305e5e4e5c", null ],
     [ "buildNavmeshFromMeshes", "classViewerApp.html#ae3d85da22e1bfac7ff7219b4410034ed", null ],
+    [ "BuildStaticMap", "classViewerApp.html#adedb16a94f7e1707d83c258e2d009016", null ],
     [ "Init", "classViewerApp.html#adf79f3b7e38626f1b21ca54b3194e1d5", null ],
     [ "Run", "classViewerApp.html#ac32b6821de5456c23b16f33b6e8b87e0", null ],
     [ "Shutdown", "classViewerApp.html#a65f11dc51628f197699e624a44817df1", null ]

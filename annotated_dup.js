@@ -92,6 +92,8 @@ var annotated_dup =
     [ "gladGLversionStruct", "structgladGLversionStruct.html", "structgladGLversionStruct" ],
     [ "GLCheckerTexture", "classGLCheckerTexture.html", "classGLCheckerTexture" ],
     [ "GraphParams", "structGraphParams.html", "structGraphParams" ],
+    [ "GtaHandler", "classGtaHandler.html", "classGtaHandler" ],
+    [ "GtaHandlerMenu", "classGtaHandlerMenu.html", "classGtaHandlerMenu" ],
     [ "GtaNavGeometry", "classGtaNavGeometry.html", "classGtaNavGeometry" ],
     [ "GtaNavProps", "classGtaNavProps.html", "classGtaNavProps" ],
     [ "GtaNavTiles", "classGtaNavTiles.html", "classGtaNavTiles" ],

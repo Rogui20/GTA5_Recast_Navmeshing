@@ -95,6 +95,8 @@ var hierarchy =
     [ "gladGLversionStruct", "structgladGLversionStruct.html", null ],
     [ "GLCheckerTexture", "classGLCheckerTexture.html", null ],
     [ "GraphParams", "structGraphParams.html", null ],
+    [ "GtaHandler", "classGtaHandler.html", null ],
+    [ "GtaHandlerMenu", "classGtaHandlerMenu.html", null ],
     [ "GtaNavGeometry", "classGtaNavGeometry.html", null ],
     [ "GtaNavProps", "classGtaNavProps.html", null ],
     [ "GtaNavTiles", "classGtaNavTiles.html", null ],

@@ -1,5 +1,11 @@
 var NAVTREEINDEX20 =
 {
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da888f500415721a8d9e1a051495b7ab8c":[45,0,5,2,1,37,5,184],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da89bbf1b20a4acd6793285b12cf92ade8":[45,0,5,2,1,37,5,241],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da8ba06fd8f9d70aa1a8b635c49f007aa2":[45,0,5,2,1,37,5,37],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da8e699a8a087d13b04abf889d121b22cb":[45,0,5,2,1,37,5,177],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da8f4989889ef6b89540727579fa876723":[45,0,5,2,1,37,5,141],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da8fb6cc9db269afdf6f0ed66bfd9735c1":[45,0,5,2,1,37,5,171],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da922a6a5d41d871b257da50d987c72f6e":[45,0,5,2,1,37,5,120],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da93ebc12c0116504c3fdbdd490035f598":[45,0,5,2,1,37,5,17],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da95a48d56f776924d2d3b21552eb3860f":[45,0,5,2,1,37,5,202],
@@ -243,11 +249,5 @@ var NAVTREEINDEX20 =
 "SDL__mouse_8h.html#a2f2259cdf30272b3c4cc1e3236cb8071":[45,0,5,2,1,45,32],
 "SDL__mouse_8h.html#a395cc3d18523a9240cb132f1c5d0034a":[45,0,5,2,1,45,22],
 "SDL__mouse_8h.html#a3e8083d1d8ce4c5a1ba76bfc2be8e732":[45,0,5,2,1,45,15],
-"SDL__mouse_8h.html#a3e8083d1d8ce4c5a1ba76bfc2be8e732a04d6abe3f01b1c4b8d77af1b2ef5e4e9":[45,0,5,2,1,45,15,8],
-"SDL__mouse_8h.html#a3e8083d1d8ce4c5a1ba76bfc2be8e732a09cd11742bffaafbd1073afeea03f7bc":[45,0,5,2,1,45,15,11],
-"SDL__mouse_8h.html#a3e8083d1d8ce4c5a1ba76bfc2be8e732a0ea5055b7ef96598a39570abf365b9f9":[45,0,5,2,1,45,15,0],
-"SDL__mouse_8h.html#a3e8083d1d8ce4c5a1ba76bfc2be8e732a0eb8a498162417265c0ec79c1eacb30e":[45,0,5,2,1,45,15,5],
-"SDL__mouse_8h.html#a3e8083d1d8ce4c5a1ba76bfc2be8e732a5b70e5fee565ccf9a6a99f92c571b4ed":[45,0,5,2,1,45,15,6],
-"SDL__mouse_8h.html#a3e8083d1d8ce4c5a1ba76bfc2be8e732a5f3b85170a85ffb62aa477f9c31987fb":[45,0,5,2,1,45,15,1],
-"SDL__mouse_8h.html#a3e8083d1d8ce4c5a1ba76bfc2be8e732a70a8b0dec44a0f63d7af72e649de3b62":[45,0,5,2,1,45,15,10]
+"SDL__mouse_8h.html#a3e8083d1d8ce4c5a1ba76bfc2be8e732a04d6abe3f01b1c4b8d77af1b2ef5e4e9":[45,0,5,2,1,45,15,8]
 };
