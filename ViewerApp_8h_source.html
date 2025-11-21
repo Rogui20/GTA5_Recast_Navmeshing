@@ -321,23 +321,24 @@ $(document).ready(function(){initNavTree('ViewerApp_8h_source.html',''); initRes
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="keywordtype">bool</span> rightButtonDragged = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <span class="keywordtype">int</span> rightButtonDownX = 0;</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <span class="keywordtype">int</span> rightButtonDownY = 0;</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <span class="keyword">struct </span>NavmeshJobResult</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    {</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        <span class="keywordtype">bool</span> success = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        <a class="code hl_class" href="classNavMeshData.html">NavMeshData</a> navData;</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        std::vector&lt;glm::vec3&gt; tris;</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        std::vector&lt;glm::vec3&gt; lines;</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    };</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    std::thread navmeshWorker;</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    std::atomic&lt;bool&gt; navmeshJobRunning{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    std::atomic&lt;bool&gt; navmeshJobCompleted{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keywordtype">bool</span> navmeshJobQueued = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordtype">bool</span> navmeshJobQueuedBuildTilesNow = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    std::mutex navmeshJobMutex;</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    std::unique_ptr&lt;NavmeshJobResult&gt; navmeshJobResult;</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>};</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keywordtype">bool</span> drawMeshOutlines = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="keyword">struct </span>NavmeshJobResult</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    {</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        <span class="keywordtype">bool</span> success = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        <a class="code hl_class" href="classNavMeshData.html">NavMeshData</a> navData;</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        std::vector&lt;glm::vec3&gt; tris;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        std::vector&lt;glm::vec3&gt; lines;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    };</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    std::thread navmeshWorker;</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    std::atomic&lt;bool&gt; navmeshJobRunning{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    std::atomic&lt;bool&gt; navmeshJobCompleted{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordtype">bool</span> navmeshJobQueued = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="keywordtype">bool</span> navmeshJobQueuedBuildTilesNow = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    std::mutex navmeshJobMutex;</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    std::unique_ptr&lt;NavmeshJobResult&gt; navmeshJobResult;</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>};</div>
 </div>
 <div class="ttc" id="aDetourNavMeshQuery_8h_html"><div class="ttname"><a href="DetourNavMeshQuery_8h.html">DetourNavMeshQuery.h</a></div></div>
 <div class="ttc" id="aGtaNavAPI_8h_html"><div class="ttname"><a href="GtaNavAPI_8h.html">GtaNavAPI.h</a></div></div>
@@ -361,10 +362,10 @@ $(document).ready(function(){initNavTree('ViewerApp_8h_source.html',''); initRes
 <div class="ttc" id="aclassViewerApp_html"><div class="ttname"><a href="classViewerApp.html">ViewerApp</a></div><div class="ttdef"><b>Definition</b> ViewerApp.h:26</div></div>
 <div class="ttc" id="aclassViewerApp_html_a30b4ae10e356bfd02ba48f305e5e4e5c"><div class="ttname"><a href="classViewerApp.html#a30b4ae10e356bfd02ba48f305e5e4e5c">ViewerApp::buildNavmeshDebugLines</a></div><div class="ttdeci">void buildNavmeshDebugLines()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:136</div></div>
 <div class="ttc" id="aclassViewerApp_html_a46f2542925089dbd0d8dc3742b458df6"><div class="ttname"><a href="classViewerApp.html#a46f2542925089dbd0d8dc3742b458df6">ViewerApp::~ViewerApp</a></div><div class="ttdeci">~ViewerApp()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:35</div></div>
-<div class="ttc" id="aclassViewerApp_html_a65f11dc51628f197699e624a44817df1"><div class="ttname"><a href="classViewerApp.html#a65f11dc51628f197699e624a44817df1">ViewerApp::Shutdown</a></div><div class="ttdeci">void Shutdown()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:327</div></div>
+<div class="ttc" id="aclassViewerApp_html_a65f11dc51628f197699e624a44817df1"><div class="ttname"><a href="classViewerApp.html#a65f11dc51628f197699e624a44817df1">ViewerApp::Shutdown</a></div><div class="ttdeci">void Shutdown()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:322</div></div>
 <div class="ttc" id="aclassViewerApp_html_aae7f24aed89ead6de9de655db8b00757"><div class="ttname"><a href="classViewerApp.html#aae7f24aed89ead6de9de655db8b00757">ViewerApp::ViewerApp</a></div><div class="ttdeci">ViewerApp()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:30</div></div>
-<div class="ttc" id="aclassViewerApp_html_ac32b6821de5456c23b16f33b6e8b87e0"><div class="ttname"><a href="classViewerApp.html#ac32b6821de5456c23b16f33b6e8b87e0">ViewerApp::Run</a></div><div class="ttdeci">void Run()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:529</div></div>
-<div class="ttc" id="aclassViewerApp_html_adf79f3b7e38626f1b21ca54b3194e1d5"><div class="ttname"><a href="classViewerApp.html#adf79f3b7e38626f1b21ca54b3194e1d5">ViewerApp::Init</a></div><div class="ttdeci">bool Init()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:312</div></div>
+<div class="ttc" id="aclassViewerApp_html_ac32b6821de5456c23b16f33b6e8b87e0"><div class="ttname"><a href="classViewerApp.html#ac32b6821de5456c23b16f33b6e8b87e0">ViewerApp::Run</a></div><div class="ttdeci">void Run()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:524</div></div>
+<div class="ttc" id="aclassViewerApp_html_adf79f3b7e38626f1b21ca54b3194e1d5"><div class="ttname"><a href="classViewerApp.html#adf79f3b7e38626f1b21ca54b3194e1d5">ViewerApp::Init</a></div><div class="ttdeci">bool Init()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:307</div></div>
 <div class="ttc" id="aclassViewerApp_html_ae3d85da22e1bfac7ff7219b4410034ed"><div class="ttname"><a href="classViewerApp.html#ae3d85da22e1bfac7ff7219b4410034ed">ViewerApp::buildNavmeshFromMeshes</a></div><div class="ttdeci">bool buildNavmeshFromMeshes(bool buildTilesNow=true)</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:44</div></div>
 <div class="ttc" id="aclassViewerCamera_html"><div class="ttname"><a href="classViewerCamera.html">ViewerCamera</a></div><div class="ttdef"><b>Definition</b> ViewerCamera.h:11</div></div>
 <div class="ttc" id="aclassdtNavMeshQuery_html"><div class="ttname"><a href="classdtNavMeshQuery.html">dtNavMeshQuery</a></div><div class="ttdoc">Provides the ability to perform pathfinding related queries against a navigation mesh.</div><div class="ttdef"><b>Definition</b> DetourNavMeshQuery.h:166</div></div>
