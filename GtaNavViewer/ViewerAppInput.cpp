@@ -157,6 +157,7 @@ void ViewerApp::ProcessEvents()
                     offmeshTarget = hitPoint;
                     hasOffmeshTarget = true;
                     navData.AddOffmeshLink(offmeshStart, offmeshTarget, navGenSettings.agentRadius, offmeshBidirectional);
+                    RebuildOffmeshLinkLines();
                     printf("[ViewerApp] Offmesh link adicionado. Start=(%.2f, %.2f, %.2f) Target=(%.2f, %.2f, %.2f) BiDir=%s\n",
                            offmeshStart.x, offmeshStart.y, offmeshStart.z,
                            offmeshTarget.x, offmeshTarget.y, offmeshTarget.z,

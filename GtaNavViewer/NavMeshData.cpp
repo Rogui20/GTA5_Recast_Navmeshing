@@ -56,6 +56,11 @@ void NavMeshData::AddOffmeshLink(const glm::vec3& start,
     m_offmeshLinks.push_back(link);
 }
 
+void NavMeshData::SetOffmeshLinks(std::vector<OffmeshLink> links)
+{
+    m_offmeshLinks = std::move(links);
+}
+
 void NavMeshData::ClearOffmeshLinks()
 {
     m_offmeshLinks.clear();
@@ -87,6 +92,7 @@ NavMeshData& NavMeshData::operator=(NavMeshData&& other) noexcept
         m_cachedTileWidthCount = other.m_cachedTileWidthCount;
         m_cachedTileHeightCount = other.m_cachedTileHeightCount;
         m_hasTiledCache = other.m_hasTiledCache;
+        m_offmeshLinks = std::move(other.m_offmeshLinks);
 
         std::memset(other.m_cachedBMin, 0, sizeof(other.m_cachedBMin));
         std::memset(other.m_cachedBMax, 0, sizeof(other.m_cachedBMax));

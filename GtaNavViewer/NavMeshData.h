@@ -95,6 +95,7 @@ public:
                         const glm::vec3& end,
                         float radius,
                         bool bidirectional);
+    void SetOffmeshLinks(std::vector<OffmeshLink> links);
     const std::vector<OffmeshLink>& GetOffmeshLinks() const { return m_offmeshLinks; }
     void ClearOffmeshLinks();
 

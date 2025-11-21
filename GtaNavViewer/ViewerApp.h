@@ -178,6 +178,7 @@ private:
     std::vector<glm::vec3> navMeshTris;
     std::vector<glm::vec3> navMeshLines;
     std::vector<DebugLine> m_navmeshLines; // apenas isso por enquanto
+    std::vector<DebugLine> offmeshLinkLines;
 
 
 
@@ -234,6 +235,7 @@ private:
     void RequestStopNavmeshBuild();
     void ClearNavmesh();
     void RebuildDebugLineBuffer();
+    void RebuildOffmeshLinkLines();
     bool IsNavmeshJobRunning() const { return navmeshJobRunning.load(); }
 
     ImGui::FileBrowser directoryBrowser;
