@@ -18,6 +18,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/geometric.hpp>
 #include <filesystem>
 #include <fstream>
 #include <algorithm>
@@ -205,6 +206,153 @@ bool ViewerApp::BuildStaticMap(GtaHandler& handler, const std::filesystem::path&
 
     printf("[ViewerApp] BuildStaticMap: %zu/%zu meshes carregadas.\n", loaded, sources.size());
     return loaded > 0;
+}
+
+void ViewerApp::SetProceduralTestEnabled(bool enabled)
+{
+    proceduralTestEnabled = enabled;
+    proceduralHasLastScan = false;
+    proceduralBuiltTiles.clear();
+    proceduralNavmeshPending = false;
+    proceduralNavmeshNeedsRebuild = enabled;
+}
+
+bool ViewerApp::PrepareProceduralNavmeshIfNeeded()
+{
+    if (IsNavmeshJobRunning())
+        return false;
+
+    if (proceduralNavmeshPending)
+    {
+        if (navData.IsLoaded() && navData.HasTiledCache())
+        {
+            proceduralNavmeshPending = false;
+            return true;
+        }
+
+        proceduralNavmeshNeedsRebuild = true;
+        proceduralNavmeshPending = false;
+    }
+
+    if (!proceduralNavmeshNeedsRebuild)
+        return navData.IsLoaded() && navData.HasTiledCache();
+
+    if (navGenSettings.mode != NavmeshBuildMode::Tiled)
+    {
+        printf("[ViewerApp] Procedural Test: forçando modo tiled para cache incremental.\n");
+        navGenSettings.mode = NavmeshBuildMode::Tiled;
+    }
+
+    if (meshInstances.empty())
+        return false;
+
+    if (buildNavmeshFromMeshes(false))
+    {
+        proceduralNavmeshPending = true;
+        proceduralNavmeshNeedsRebuild = false;
+    }
+
+    return false;
+}
+
+void ViewerApp::RunProceduralTestStep()
+{
+    if (!proceduralTestEnabled)
+        return;
+
+    if (!camera)
+        return;
+
+    const float scanRange = gtaHandlerMenu.GetScanRange();
+    const auto& meshDir = gtaHandlerMenu.GetMeshDirectory();
+
+    if (meshDir.empty() || scanRange <= 0.0f || !gtaHandler.HasCache())
+        return;
+
+    glm::vec3 gtaPos = ToGtaCoords(camera->pos);
+    glm::vec3 delta = gtaPos - proceduralLastScanGtaPos;
+    float distSq = glm::dot(delta, delta);
+    float thresholdSq = scanRange * scanRange;
+
+    if (!proceduralHasLastScan || distSq >= thresholdSq)
+    {
+        if (BuildStaticMap(gtaHandler, meshDir, scanRange))
+        {
+            proceduralLastScanGtaPos = gtaPos;
+            proceduralHasLastScan = true;
+            proceduralBuiltTiles.clear();
+            proceduralNavmeshNeedsRebuild = true;
+            proceduralNavmeshPending = false;
+        }
+    }
+
+    if (!PrepareProceduralNavmeshIfNeeded())
+        return;
+
+    BuildProceduralTilesAroundCamera();
+}
+
+void ViewerApp::BuildProceduralTilesAroundCamera()
+{
+    if (!navData.IsLoaded() || !navData.HasTiledCache())
+        return;
+
+    if (IsNavmeshJobRunning())
+        return;
+
+    const float tileWorldSize = navGenSettings.tileSize * navGenSettings.cellSize;
+    if (tileWorldSize <= 0.0f)
+        return;
+
+    int gridLayers = std::max(1, gtaHandlerMenu.GetProceduralTileGridLayers());
+    float halfExtentScale = std::max(0.001f, static_cast<float>(gridLayers - 1));
+
+    glm::vec3 center = camera->pos;
+    glm::vec3 halfExtents(tileWorldSize * halfExtentScale, tileWorldSize * halfExtentScale, tileWorldSize * halfExtentScale);
+
+    glm::vec3 bmin = center - halfExtents;
+    glm::vec3 bmax = center + halfExtents;
+
+    std::vector<std::pair<int, int>> tiles;
+    if (!navData.CollectTilesInBounds(bmin, bmax, false, tiles))
+        return;
+
+    const auto tileKey = [](int tx, int ty) -> uint64_t
+    {
+        return (static_cast<uint64_t>(static_cast<uint32_t>(tx)) << 32) | static_cast<uint32_t>(ty);
+    };
+
+    std::vector<std::pair<int, int>> tilesToBuild;
+    tilesToBuild.reserve(tiles.size());
+
+    for (const auto& tile : tiles)
+    {
+        uint64_t key = tileKey(tile.first, tile.second);
+        if (proceduralBuiltTiles.find(key) == proceduralBuiltTiles.end())
+        {
+            tilesToBuild.push_back(tile);
+        }
+    }
+
+    if (tilesToBuild.empty())
+        return;
+
+    std::vector<std::pair<int, int>> touchedTiles;
+    if (!navData.RebuildSpecificTiles(tilesToBuild, navGenSettings, false, &touchedTiles))
+        return;
+
+    for (const auto& tile : tilesToBuild)
+    {
+        proceduralBuiltTiles.insert(tileKey(tile.first, tile.second));
+    }
+
+    if (!touchedTiles.empty())
+    {
+        buildNavmeshDebugLines();
+        navQueryReady = false;
+        if (hasPathStart && hasPathTarget)
+            TryRunPathfind();
+    }
 }
 
 void ViewerApp::DrawSelectedMeshHighlight()
@@ -655,6 +803,8 @@ void ViewerApp::ProcessNavmeshJob()
 void ViewerApp::RenderFrame()
 {
     ProcessNavmeshJob();
+
+    RunProceduralTestStep();
 
     // --- Iniciar nova frame ImGui ---
     ImGui_ImplOpenGL3_NewFrame();
