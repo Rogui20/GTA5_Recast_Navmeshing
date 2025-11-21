@@ -48,7 +48,9 @@ public:
                        const std::vector<unsigned int>& indices,
                        const NavmeshGenerationSettings& settings,
                        bool buildTilesNow = true,
-                       const std::atomic_bool* cancelFlag = nullptr);
+                       const std::atomic_bool* cancelFlag = nullptr,
+                       bool useCache = true,
+                       const char* cachePath = nullptr);
 
     bool BuildTileAt(const glm::vec3& worldPos,
                      const NavmeshGenerationSettings& settings,
