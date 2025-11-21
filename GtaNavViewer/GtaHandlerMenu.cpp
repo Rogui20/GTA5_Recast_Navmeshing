@@ -45,6 +45,11 @@ void GtaHandlerMenu::Draw(GtaHandler& handler, ViewerApp& app)
 
     ImGui::SliderFloat("Scan Range", &scanRange, 0.0f, 10000.0f, "%.1f");
 
+    if (ImGui::Checkbox("Procedural Test", &proceduralTest))
+    {
+        app.SetProceduralTestEnabled(proceduralTest);
+    }
+
     bool canBuild = handler.HasCache() && !meshDirectory.empty();
     ImGui::BeginDisabled(!canBuild);
     if (ImGui::Button("Build Static Map"))
