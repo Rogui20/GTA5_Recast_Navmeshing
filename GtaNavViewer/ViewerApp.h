@@ -14,6 +14,7 @@
 #include <vector>
 #include <unordered_map>
 
+struct Ray;
 class ViewerCamera;
 class RendererGL;
 
@@ -102,7 +103,28 @@ private:
         BuildTileAt = 1,
         RemoveTileAt = 2,
         Pathfind_Normal = 3,
-        Pathfind_MinEdge = 4
+        Pathfind_MinEdge = 4,
+        EditMesh = 5
+    };
+
+    enum class MeshEditMode
+    {
+        Move = 0,
+        Rotate = 1
+    };
+
+    enum class MoveTransformMode
+    {
+        GlobalTransform = 0,
+        LocalTransform = 1
+    };
+
+    enum class GizmoAxis
+    {
+        None,
+        X,
+        Y,
+        Z
     };
 
     ViewportClickMode viewportClickMode = ViewportClickMode::PickTriangle;
@@ -115,6 +137,19 @@ private:
     dtNavMeshQuery* navQuery = nullptr;
     dtQueryFilter pathQueryFilter{};
     bool navQueryReady = false;
+
+    MeshEditMode meshEditMode = MeshEditMode::Move;
+    MoveTransformMode moveTransformMode = MoveTransformMode::GlobalTransform;
+    GizmoAxis activeGizmoAxis = GizmoAxis::None;
+    bool editDragActive = false;
+    bool leftMouseDown = false;
+    glm::vec3 gizmoGrabStart{};
+    glm::vec3 gizmoAxisDir{1.0f, 0.0f, 0.0f};
+    glm::vec3 gizmoOrigin{};
+    float gizmoStartParam = 0.0f;
+    glm::vec3 meshStartPosition{};
+    glm::vec3 rotationStartVec{};
+    glm::vec3 rotationStartAngles{};
 
     // buffers para desenhar navmesh no renderer
     std::vector<glm::vec3> navMeshTris;
@@ -144,6 +179,18 @@ private:
     bool InitNavQueryForCurrentNavmesh();
     void TryRunPathfind();
     bool IsPathfindModeActive() const;
+    glm::vec3 NormalizeEuler(glm::vec3 angles) const;
+    void NormalizeMeshRotation(MeshInstance& instance) const;
+    glm::vec3 ToGtaCoords(const glm::vec3& internal) const;
+    glm::vec3 FromGtaCoords(const glm::vec3& gta) const;
+    glm::mat3 GetRotationMatrix(const glm::vec3& eulerDegrees) const;
+    glm::vec3 GetAxisDirection(const MeshInstance& instance, GizmoAxis axis) const;
+    glm::vec3 GetRotationAxisDirection(const MeshInstance& instance, GizmoAxis axis) const;
+    bool TryBeginMoveDrag(const Ray& ray, MeshInstance& instance);
+    bool TryBeginRotateDrag(const Ray& ray, MeshInstance& instance);
+    void UpdateEditDrag(int mouseX, int mouseY);
+    void DrawSelectedMeshHighlight();
+    void DrawEditGizmo();
 
     void ProcessEvents();
     void RenderFrame();
