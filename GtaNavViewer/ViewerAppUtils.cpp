@@ -9,6 +9,8 @@
 #include <cmath>
 #include <limits>
 #include <array>
+#include <algorithm>
+#include <unordered_set>
 
 namespace
 {
@@ -362,6 +364,7 @@ void ViewerApp::UpdateEditDrag(int mouseX, int mouseY)
         if (newPos != instance.position)
         {
             instance.position = newPos;
+            OnInstanceTransformUpdated(pickedMeshIndex, true, false);
             HandleAutoBuild(NavmeshAutoBuildFlag::OnMove);
         }
     }
@@ -391,7 +394,204 @@ void ViewerApp::UpdateEditDrag(int mouseX, int mouseY)
         if (newAngles != instance.rotation)
         {
             instance.rotation = newAngles;
+            OnInstanceTransformUpdated(pickedMeshIndex, false, true);
             HandleAutoBuild(NavmeshAutoBuildFlag::OnRotate);
         }
+    }
+}
+
+ViewerApp::MeshInstance* ViewerApp::FindMeshById(uint64_t id)
+{
+    for (auto& inst : meshInstances)
+    {
+        if (inst.id == id)
+            return &inst;
+    }
+    return nullptr;
+}
+
+const ViewerApp::MeshInstance* ViewerApp::FindMeshById(uint64_t id) const
+{
+    for (const auto& inst : meshInstances)
+    {
+        if (inst.id == id)
+            return &inst;
+    }
+    return nullptr;
+}
+
+void ViewerApp::UpdateChildTransforms(uint64_t parentId)
+{
+    const MeshInstance* parent = FindMeshById(parentId);
+    if (!parent)
+        return;
+
+    glm::mat3 parentRot = GetRotationMatrix(parent->rotation);
+
+    for (auto& child : meshInstances)
+    {
+        if (child.parentId != parentId)
+            continue;
+
+        child.position = parent->position + parentRot * child.parentOffsetPos;
+        child.rotation = NormalizeEuler(parent->rotation + child.parentOffsetRot);
+        UpdateChildTransforms(child.id);
+    }
+}
+
+void ViewerApp::OnInstanceTransformUpdated(size_t index, bool positionChanged, bool rotationChanged)
+{
+    if (index >= meshInstances.size())
+        return;
+
+    MeshInstance& instance = meshInstances[index];
+    if (instance.parentId != 0)
+    {
+        const MeshInstance* parent = FindMeshById(instance.parentId);
+        if (parent)
+        {
+            glm::mat3 parentRot = GetRotationMatrix(parent->rotation);
+            glm::mat3 parentRotInv = glm::transpose(parentRot);
+            instance.parentOffsetPos = parentRotInv * (instance.position - parent->position);
+            instance.parentOffsetRot = NormalizeEuler(instance.rotation - parent->rotation);
+        }
+        else
+        {
+            instance.parentId = 0;
+            instance.parentOffsetPos = glm::vec3(0.0f);
+            instance.parentOffsetRot = glm::vec3(0.0f);
+        }
+    }
+
+    if (positionChanged || rotationChanged)
+    {
+        UpdateChildTransforms(instance.id);
+    }
+}
+
+bool ViewerApp::WouldCreateCycle(uint64_t childId, uint64_t newParentId) const
+{
+    uint64_t current = newParentId;
+    while (current != 0)
+    {
+        if (current == childId)
+            return true;
+
+        const MeshInstance* parent = FindMeshById(current);
+        if (!parent)
+            break;
+        current = parent->parentId;
+    }
+    return false;
+}
+
+void ViewerApp::SetMeshParent(size_t childIndex, uint64_t newParentId)
+{
+    if (childIndex >= meshInstances.size())
+        return;
+
+    MeshInstance& child = meshInstances[childIndex];
+    if (child.id == newParentId)
+        return;
+
+    if (newParentId != 0)
+    {
+        const MeshInstance* parent = FindMeshById(newParentId);
+        if (!parent)
+            return;
+
+        if (WouldCreateCycle(child.id, newParentId))
+            return;
+
+        glm::mat3 parentRot = GetRotationMatrix(parent->rotation);
+        glm::mat3 parentRotInv = glm::transpose(parentRot);
+        child.parentOffsetPos = parentRotInv * (child.position - parent->position);
+        child.parentOffsetRot = NormalizeEuler(child.rotation - parent->rotation);
+        child.parentId = newParentId;
+    }
+    else
+    {
+        child.parentId = 0;
+        child.parentOffsetPos = glm::vec3(0.0f);
+        child.parentOffsetRot = glm::vec3(0.0f);
+    }
+
+    UpdateChildTransforms(child.id);
+}
+
+void ViewerApp::DetachChildren(uint64_t parentId)
+{
+    for (auto& inst : meshInstances)
+    {
+        if (inst.parentId == parentId)
+        {
+            inst.parentId = 0;
+            inst.parentOffsetPos = glm::vec3(0.0f);
+            inst.parentOffsetRot = glm::vec3(0.0f);
+        }
+    }
+}
+
+void ViewerApp::CollectSubtreeIds(uint64_t rootId, std::vector<uint64_t>& outIds) const
+{
+    const MeshInstance* root = FindMeshById(rootId);
+    if (!root)
+        return;
+
+    outIds.push_back(rootId);
+    for (const auto& inst : meshInstances)
+    {
+        if (inst.parentId == rootId)
+        {
+            CollectSubtreeIds(inst.id, outIds);
+        }
+    }
+}
+
+void ViewerApp::RemoveMeshSubtree(uint64_t rootId)
+{
+    std::vector<uint64_t> ids;
+    CollectSubtreeIds(rootId, ids);
+    if (ids.empty())
+        return;
+
+    std::unordered_set<uint64_t> removeSet(ids.begin(), ids.end());
+    uint64_t selectedId = 0;
+    if (pickedMeshIndex >= 0 && pickedMeshIndex < static_cast<int>(meshInstances.size()))
+        selectedId = meshInstances[pickedMeshIndex].id;
+
+    meshInstances.erase(std::remove_if(meshInstances.begin(), meshInstances.end(), [&](const MeshInstance& inst)
+    {
+        return removeSet.find(inst.id) != removeSet.end();
+    }), meshInstances.end());
+
+    pickedMeshIndex = -1;
+    pickedTri = -1;
+    if (selectedId != 0)
+    {
+        for (size_t i = 0; i < meshInstances.size(); ++i)
+        {
+            if (meshInstances[i].id == selectedId)
+            {
+                pickedMeshIndex = static_cast<int>(i);
+                break;
+            }
+        }
+    }
+
+    for (uint64_t id : removeSet)
+    {
+        meshStateCache.erase(id);
+    }
+
+    HandleAutoBuild(NavmeshAutoBuildFlag::OnRemove);
+
+    if (meshInstances.empty())
+    {
+        navMeshTris.clear();
+        navMeshLines.clear();
+        m_navmeshLines.clear();
+        ResetPathState();
+        navQueryReady = false;
     }
 }
