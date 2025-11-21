@@ -43,6 +43,42 @@ NavMeshData::~NavMeshData()
     }
 }
 
+NavMeshData::NavMeshData(NavMeshData&& other) noexcept
+{
+    *this = std::move(other);
+}
+
+NavMeshData& NavMeshData::operator=(NavMeshData&& other) noexcept
+{
+    if (this != &other)
+    {
+        if (m_nav)
+        {
+            dtFreeNavMesh(m_nav);
+        }
+
+        m_nav = other.m_nav;
+        other.m_nav = nullptr;
+
+        m_cachedVerts = std::move(other.m_cachedVerts);
+        m_cachedTris = std::move(other.m_cachedTris);
+        std::memcpy(m_cachedBMin, other.m_cachedBMin, sizeof(m_cachedBMin));
+        std::memcpy(m_cachedBMax, other.m_cachedBMax, sizeof(m_cachedBMax));
+        m_cachedBaseCfg = other.m_cachedBaseCfg;
+        m_cachedSettings = other.m_cachedSettings;
+        m_cachedTileWidthCount = other.m_cachedTileWidthCount;
+        m_cachedTileHeightCount = other.m_cachedTileHeightCount;
+        m_hasTiledCache = other.m_hasTiledCache;
+
+        std::memset(other.m_cachedBMin, 0, sizeof(other.m_cachedBMin));
+        std::memset(other.m_cachedBMax, 0, sizeof(other.m_cachedBMax));
+        other.m_cachedTileWidthCount = 0;
+        other.m_cachedTileHeightCount = 0;
+        other.m_hasTiledCache = false;
+    }
+    return *this;
+}
+
 bool NavMeshData::Load(const char* path)
 {
     FILE* f = fopen(path, "rb");

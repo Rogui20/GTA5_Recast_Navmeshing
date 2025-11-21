@@ -43,6 +43,14 @@ ViewerApp::~ViewerApp()
 
 bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
 {
+    if (IsNavmeshJobRunning())
+    {
+        navmeshJobQueued = true;
+        navmeshJobQueuedBuildTilesNow = navmeshJobQueuedBuildTilesNow || buildTilesNow;
+        printf("[ViewerApp] buildNavmeshFromMeshes: já existe um build em andamento. Marcando rebuild pendente...\n");
+        return false;
+    }
+
     if (meshInstances.empty())
     {
         printf("[ViewerApp] buildNavmeshFromMeshes: sem meshes carregadas.\n");
@@ -53,9 +61,6 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
         navQueryReady = false;
         return false;
     }
-
-    ResetPathState();
-    navQueryReady = false;
 
     std::vector<glm::vec3> combinedVerts;
     std::vector<unsigned int> combinedIdx;
@@ -80,14 +85,51 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
         baseIndex += static_cast<unsigned int>(instance.mesh->renderVertices.size());
     }
 
-    if (!navData.BuildFromMesh(combinedVerts, combinedIdx, navGenSettings, buildTilesNow))
-    {
-        printf("[ViewerApp] BuildFromMesh falhou.\n");
-        return false;
-    }
+    editDragActive = false;
+    activeGizmoAxis = GizmoAxis::None;
 
-    InitNavQueryForCurrentNavmesh();
-    buildNavmeshDebugLines();
+    JoinNavmeshWorker();
+    navmeshJobResult.reset();
+    navmeshJobCompleted.store(false);
+    navmeshJobRunning.store(true);
+    navmeshJobQueued = false;
+    navmeshJobQueuedBuildTilesNow = buildTilesNow;
+
+    const auto settingsCopy = navGenSettings;
+
+    navmeshWorker = std::thread([
+        this,
+        verts = std::move(combinedVerts),
+        idx = std::move(combinedIdx),
+        settingsCopy,
+        buildTilesNow
+    ]() mutable
+    {
+        auto result = std::make_unique<NavmeshJobResult>();
+        if (!verts.empty() && !idx.empty())
+        {
+            result->success = result->navData.BuildFromMesh(verts, idx, settingsCopy, buildTilesNow);
+        }
+
+        if (result->success)
+        {
+            result->navData.ExtractDebugMesh(result->tris, result->lines);
+            printf("[ViewerApp] Navmesh build finalizado em worker.\n");
+        }
+        else
+        {
+            printf("[ViewerApp] BuildFromMesh falhou no worker.\n");
+        }
+
+        {
+            std::lock_guard<std::mutex> lock(navmeshJobMutex);
+            navmeshJobResult = std::move(result);
+        }
+
+        navmeshJobRunning.store(false);
+        navmeshJobCompleted.store(true);
+    });
+
     return true;
 }
 
@@ -98,6 +140,12 @@ void ViewerApp::buildNavmeshDebugLines()
     m_navmeshLines.clear();
 
     navData.ExtractDebugMesh(navMeshTris, navMeshLines);
+    RebuildDebugLineBuffer();
+}
+
+void ViewerApp::RebuildDebugLineBuffer()
+{
+    m_navmeshLines.clear();
 
     for (size_t i = 0; i + 1 < navMeshLines.size(); i += 2)
     {
@@ -278,6 +326,8 @@ bool ViewerApp::Init()
 
 void ViewerApp::Shutdown()
 {
+    JoinNavmeshWorker();
+
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
@@ -485,18 +535,78 @@ void ViewerApp::Run()
     }
 }
 
+void ViewerApp::JoinNavmeshWorker()
+{
+    if (navmeshWorker.joinable())
+    {
+        navmeshWorker.join();
+    }
+}
+
+void ViewerApp::ProcessNavmeshJob()
+{
+    if (!navmeshJobCompleted.load())
+        return;
+
+    JoinNavmeshWorker();
+    navmeshJobCompleted.store(false);
+
+    std::unique_ptr<NavmeshJobResult> result;
+    {
+        std::lock_guard<std::mutex> lock(navmeshJobMutex);
+        result = std::move(navmeshJobResult);
+    }
+
+    if (result && result->success)
+    {
+        navData = std::move(result->navData);
+        navMeshTris = std::move(result->tris);
+        navMeshLines = std::move(result->lines);
+        RebuildDebugLineBuffer();
+        navQueryReady = false;
+
+        const bool queryOk = InitNavQueryForCurrentNavmesh();
+        if (queryOk && hasPathStart && hasPathTarget)
+        {
+            TryRunPathfind();
+        }
+        else if (!queryOk)
+        {
+            ResetPathState();
+        }
+
+        printf("[ViewerApp] Navmesh worker aplicado na thread principal.\n");
+    }
+    else if (result)
+    {
+        printf("[ViewerApp] Navmesh worker falhou. Mantendo navmesh atual.\n");
+    }
+
+    if (navmeshJobQueued)
+    {
+        bool buildTilesNow = navmeshJobQueuedBuildTilesNow;
+        navmeshJobQueued = false;
+        buildNavmeshFromMeshes(buildTilesNow);
+    }
+}
+
 
 
 
 
 void ViewerApp::RenderFrame()
 {
+    ProcessNavmeshJob();
+
     // --- Iniciar nova frame ImGui ---
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    UpdateNavmeshTiles();
+    if (!IsNavmeshJobRunning())
+        UpdateNavmeshTiles();
+
+    const bool navmeshBusy = IsNavmeshJobRunning();
 
     if (viewportClickMode == ViewportClickMode::EditMesh && editDragActive && leftMouseDown)
     {
@@ -543,7 +653,7 @@ void ViewerApp::RenderFrame()
         if (ImGui::BeginMenu("Navmesh"))
         {
             bool hasMesh = !meshInstances.empty();
-            ImGui::BeginDisabled(!hasMesh);
+            ImGui::BeginDisabled(!hasMesh || navmeshBusy);
             if (ImGui::MenuItem("Rebuild Navmesh"))
             {
                 buildNavmeshFromMeshes();
@@ -551,6 +661,7 @@ void ViewerApp::RenderFrame()
             ImGui::EndDisabled();
 
             ImGui::Separator();
+            ImGui::BeginDisabled(navmeshBusy);
             bool autoOnAdd    = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd)) != 0;
             bool autoOnRemove = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove)) != 0;
             bool autoOnMove   = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove)) != 0;
@@ -584,6 +695,7 @@ void ViewerApp::RenderFrame()
                 else
                     navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
             }
+            ImGui::EndDisabled();
 
             ImGui::EndMenu();
         }
@@ -776,6 +888,7 @@ void ViewerApp::RenderFrame()
 
                 if (ImGui::CollapsingHeader("Navmesh Tests"))
                 {
+                    ImGui::BeginDisabled(navmeshBusy);
                     bool updateTiles = navmeshUpdateTiles;
                     if (ImGui::Checkbox("Update Tiles", &updateTiles))
                     {
@@ -818,10 +931,12 @@ void ViewerApp::RenderFrame()
                     }
                     ImGui::SameLine();
                     ImGui::TextDisabled("(prepara grid/caches e gera tiles no clique)");
+                    ImGui::EndDisabled();
                 }
 
                 if (ImGui::CollapsingHeader("Meshes", ImGuiTreeNodeFlags_DefaultOpen))
                 {
+                    ImGui::BeginDisabled(navmeshBusy);
                     ImGui::InputTextWithHint("##meshFilter", "Filtrar por nome", meshFilter, IM_ARRAYSIZE(meshFilter));
                     if (ImGui::BeginTable("MeshTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
                     {
@@ -906,10 +1021,12 @@ void ViewerApp::RenderFrame()
                     {
                         ImGui::TextDisabled("Nenhuma mesh carregada.");
                     }
+                    ImGui::EndDisabled();
                 }
 
                 if (ImGui::CollapsingHeader("Navmesh Gen Settings", ImGuiTreeNodeFlags_DefaultOpen))
                 {
+                    ImGui::BeginDisabled(navmeshBusy);
                     int buildMode = navGenSettings.mode == NavmeshBuildMode::Tiled ? 1 : 0;
                     if (ImGui::RadioButton("Navmesh normal (single)", buildMode == 0))
                     {
@@ -947,6 +1064,7 @@ void ViewerApp::RenderFrame()
 
                     navGenSettings.maxVertsPerPoly = std::max(3, navGenSettings.maxVertsPerPoly);
                     navGenSettings.tileSize = std::max(1, navGenSettings.tileSize);
+                    ImGui::EndDisabled();
                 }
 
                 if (ImGui::CollapsingHeader("Navmesh", ImGuiTreeNodeFlags_DefaultOpen))
@@ -954,7 +1072,12 @@ void ViewerApp::RenderFrame()
                     bool hasMesh = !meshInstances.empty();
                     ImGui::Text("Meshes carregadas: %zu", meshInstances.size());
 
-                    ImGui::BeginDisabled(!hasMesh);
+                    if (navmeshBusy)
+                    {
+                        ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Navmesh build em andamento... câmera e pathfind continuam ativos.");
+                    }
+
+                    ImGui::BeginDisabled(!hasMesh || navmeshBusy);
                     if (ImGui::Button("Rebuild Navmesh"))
                     {
                         buildNavmeshFromMeshes();
@@ -976,6 +1099,7 @@ void ViewerApp::RenderFrame()
                     ImGui::Checkbox("Mostrar linhas da navmesh", &navmeshShowLines);
 
                     ImGui::SeparatorText("Construção Automática");
+                    ImGui::BeginDisabled(navmeshBusy);
                     bool autoOnAdd    = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnAdd)) != 0;
                     bool autoOnRemove = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRemove)) != 0;
                     bool autoOnMove   = (navmeshAutoBuildMask & static_cast<uint32_t>(NavmeshAutoBuildFlag::OnMove)) != 0;
@@ -1012,6 +1136,7 @@ void ViewerApp::RenderFrame()
                         else
                             navmeshAutoBuildMask &= ~static_cast<uint32_t>(NavmeshAutoBuildFlag::OnRotate);
                     }
+                    ImGui::EndDisabled();
 
                     ImGui::Separator();
                     ImGui::Text("Tris: %zu", navMeshTris.size() / 3);

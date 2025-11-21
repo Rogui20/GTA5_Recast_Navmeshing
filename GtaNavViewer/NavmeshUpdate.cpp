@@ -7,6 +7,9 @@
 
 void ViewerApp::UpdateNavmeshTiles()
 {
+    if (IsNavmeshJobRunning())
+        return;
+
     if (!navmeshUpdateTiles)
         return;
 

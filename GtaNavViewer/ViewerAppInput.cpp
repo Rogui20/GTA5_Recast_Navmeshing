@@ -15,6 +15,7 @@ void ViewerApp::ProcessEvents()
         ImGui_ImplSDL2_ProcessEvent(&e);
         ImGuiIO& io = ImGui::GetIO();
         const bool mouseOnUI = io.WantCaptureMouse;
+        const bool navmeshBusy = IsNavmeshJobRunning();
 
         if (e.type == SDL_QUIT)
             running = false;
@@ -55,6 +56,12 @@ void ViewerApp::ProcessEvents()
 
             if (meshInstances.empty())
                 continue;
+
+            if (navmeshBusy && !IsPathfindModeActive())
+            {
+                printf("[ViewerApp] Operações de clique bloqueadas enquanto o navmesh é gerado.\n");
+                continue;
+            }
 
             int mx = e.button.x;
             int my = e.button.y;

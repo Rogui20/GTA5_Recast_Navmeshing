@@ -34,6 +34,11 @@ struct NavmeshGenerationSettings
 class NavMeshData
 {
 public:
+    NavMeshData() = default;
+    NavMeshData(const NavMeshData&) = delete;
+    NavMeshData& operator=(const NavMeshData&) = delete;
+    NavMeshData(NavMeshData&& other) noexcept;
+    NavMeshData& operator=(NavMeshData&& other) noexcept;
     ~NavMeshData();
     bool Load(const char* path);
     bool IsLoaded() const { return m_nav != nullptr; }
