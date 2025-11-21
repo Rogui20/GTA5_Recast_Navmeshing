@@ -418,8 +418,19 @@ void RendererGL::DrawAxisGizmoScreen(const ViewerCamera* cam, int screenW, int s
     glUniformMatrix4fv(glGetUniformLocation(shader,"uProj"),1,GL_FALSE,&proj[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(shader,"uView"),1,GL_FALSE,&view[0][0]);
 
-    glm::mat4 model(1.0f);
-    glUniformMatrix4fv(glGetUniformLocation(shader,"uModel"),1,GL_FALSE,&model[0][0]);
+    // Transform axes to match GTA coordinates used by ViewerApp::ToGtaCoords
+    // GTA axes expressed in the internal (viewer) basis:
+    // X -> X
+    // Y -> -Z
+    // Z -> Y
+    glm::mat4 gtaAxisToInternal(
+        glm::vec4(1,  0,  0, 0),  // GTA +X = internal +X
+        glm::vec4(0,  0, -1, 0),  // GTA +Y = internal -Z
+        glm::vec4(0,  1,  0, 0),  // GTA +Z = internal +Y
+        glm::vec4(0,  0,  0, 1)
+    );
+
+    glUniformMatrix4fv(glGetUniformLocation(shader,"uModel"),1,GL_FALSE,&gtaAxisToInternal[0][0]);
 
     // --- 4. Renderizar eixos ---
     glBindVertexArray(vaoAxis);
