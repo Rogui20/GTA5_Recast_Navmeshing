@@ -338,7 +338,7 @@ var searchData=
   ['ptexuploadbuffer_335',['pTexUploadBuffer',['../structImGui__ImplDX12__Data.html#a3d14785a755125fc3b084d15eca4650e',1,'ImGui_ImplDX12_Data']]],
   ['ptexuploadbuffermapped_336',['pTexUploadBufferMapped',['../structImGui__ImplDX12__Data.html#a514832521523557012a3d8df61d68a0f',1,'ImGui_ImplDX12_Data']]],
   ['ptexuploadbuffersize_337',['pTexUploadBufferSize',['../structImGui__ImplDX12__Data.html#a1a82495a0db7010acb79157b74ae0aa4',1,'ImGui_ImplDX12_Data']]],
-  ['ptr_338',['ptr',['../structImGuiPtrOrIndex.html#a9171d3539aed08cc1ffd543c63ce2891',1,'ImGuiPtrOrIndex::Ptr'],['../structSDL__RWops.html#a3f68b93789331775de802d51a2934f0a',1,'SDL_RWops::ptr'],['../structSDL__RWops.html#a51baff579726790887a4ca41ce14873c',1,'SDL_RWops::ptr'],['../unionImGL3WProcs.html#a332efdc371d8ffb91e74105620208117',1,'ImGL3WProcs::ptr']]],
+  ['ptr_338',['ptr',['../unionImGL3WProcs.html#a332efdc371d8ffb91e74105620208117',1,'ImGL3WProcs::ptr'],['../structImGuiPtrOrIndex.html#a9171d3539aed08cc1ffd543c63ce2891',1,'ImGuiPtrOrIndex::Ptr'],['../structSDL__RWops.html#a3f68b93789331775de802d51a2934f0a',1,'SDL_RWops::ptr'],['../structSDL__RWops.html#a51baff579726790887a4ca41ce14873c',1,'SDL_RWops::ptr']]],
   ['ptr_5ffrom_5foffset_339',['ptr_from_offset',['../structImChunkStream.html#a385c84c0a5eca2d402f3550530af587e',1,'ImChunkStream']]],
   ['ptrstride_340',['ptrstride',['../SDL__opengl__glext_8h.html#ab619b4939586b3f5856bc6c08dd62842',1,'SDL_opengl_glext.h']]],
   ['pull_20request_341',['pull request',['../md_external_2SDL2_2docs_2CONTRIBUTING.html#opening-a-pull-request',1,'Opening a pull request'],['../md_CONTRIBUTING.html#submitting-a-pull-request',1,'Submitting a Pull Request']]],

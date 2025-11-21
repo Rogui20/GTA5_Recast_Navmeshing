@@ -287,30 +287,31 @@ $(document).ready(function(){initNavTree('ViewerApp_8h_source.html',''); initRes
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keywordtype">void</span> NormalizeMeshRotation(MeshInstance&amp; instance) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    glm::mat3 GetRotationMatrix(<span class="keyword">const</span> glm::vec3&amp; eulerDegrees) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    glm::vec3 GetAxisDirection(<span class="keyword">const</span> MeshInstance&amp; instance, GizmoAxis axis) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="keywordtype">bool</span> TryBeginMoveDrag(<span class="keyword">const</span> <a class="code hl_struct" href="structRay.html">Ray</a>&amp; ray, MeshInstance&amp; instance);</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keywordtype">bool</span> TryBeginRotateDrag(<span class="keyword">const</span> <a class="code hl_struct" href="structRay.html">Ray</a>&amp; ray, MeshInstance&amp; instance);</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keywordtype">void</span> UpdateEditDrag(<span class="keywordtype">int</span> mouseX, <span class="keywordtype">int</span> mouseY);</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordtype">void</span> DrawSelectedMeshHighlight();</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keywordtype">void</span> DrawEditGizmo();</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keywordtype">void</span> ProcessEvents();</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keywordtype">void</span> RenderFrame();</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    std::string currentDirectory;</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    std::string selectedEntry;</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordtype">bool</span> showSidePanel = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keywordtype">bool</span> showMeshBrowserWindow = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordtype">bool</span> showDebugInfo = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    <span class="keywordtype">char</span> meshFilter[64] = {0};</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keywordtype">int</span> pickedMeshIndex = -1;</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="keywordtype">int</span> pickedTri = -1;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordtype">bool</span> rightButtonDown = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordtype">bool</span> rightButtonDragged = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keywordtype">int</span> rightButtonDownX = 0;</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordtype">int</span> rightButtonDownY = 0;</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>};</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    glm::vec3 GetRotationAxisDirection(<span class="keyword">const</span> MeshInstance&amp; instance, GizmoAxis axis) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keywordtype">bool</span> TryBeginMoveDrag(<span class="keyword">const</span> <a class="code hl_struct" href="structRay.html">Ray</a>&amp; ray, MeshInstance&amp; instance);</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keywordtype">bool</span> TryBeginRotateDrag(<span class="keyword">const</span> <a class="code hl_struct" href="structRay.html">Ray</a>&amp; ray, MeshInstance&amp; instance);</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordtype">void</span> UpdateEditDrag(<span class="keywordtype">int</span> mouseX, <span class="keywordtype">int</span> mouseY);</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keywordtype">void</span> DrawSelectedMeshHighlight();</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="keywordtype">void</span> DrawEditGizmo();</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keywordtype">void</span> ProcessEvents();</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keywordtype">void</span> RenderFrame();</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    std::string currentDirectory;</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    std::string selectedEntry;</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keywordtype">bool</span> showSidePanel = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordtype">bool</span> showMeshBrowserWindow = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    <span class="keywordtype">bool</span> showDebugInfo = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keywordtype">char</span> meshFilter[64] = {0};</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="keywordtype">int</span> pickedMeshIndex = -1;</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordtype">int</span> pickedTri = -1;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordtype">bool</span> rightButtonDown = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keywordtype">bool</span> rightButtonDragged = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordtype">int</span> rightButtonDownX = 0;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keywordtype">int</span> rightButtonDownY = 0;</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>};</div>
 </div>
 <div class="ttc" id="aDetourNavMeshQuery_8h_html"><div class="ttname"><a href="DetourNavMeshQuery_8h.html">DetourNavMeshQuery.h</a></div></div>
 <div class="ttc" id="aGtaNavAPI_8h_html"><div class="ttname"><a href="GtaNavAPI_8h.html">GtaNavAPI.h</a></div></div>
@@ -334,10 +335,10 @@ $(document).ready(function(){initNavTree('ViewerApp_8h_source.html',''); initRes
 <div class="ttc" id="aclassViewerApp_html"><div class="ttname"><a href="classViewerApp.html">ViewerApp</a></div><div class="ttdef"><b>Definition</b> ViewerApp.h:23</div></div>
 <div class="ttc" id="aclassViewerApp_html_a30b4ae10e356bfd02ba48f305e5e4e5c"><div class="ttname"><a href="classViewerApp.html#a30b4ae10e356bfd02ba48f305e5e4e5c">ViewerApp::buildNavmeshDebugLines</a></div><div class="ttdeci">void buildNavmeshDebugLines()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:94</div></div>
 <div class="ttc" id="aclassViewerApp_html_a46f2542925089dbd0d8dc3742b458df6"><div class="ttname"><a href="classViewerApp.html#a46f2542925089dbd0d8dc3742b458df6">ViewerApp::~ViewerApp</a></div><div class="ttdeci">~ViewerApp()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:35</div></div>
-<div class="ttc" id="aclassViewerApp_html_a65f11dc51628f197699e624a44817df1"><div class="ttname"><a href="classViewerApp.html#a65f11dc51628f197699e624a44817df1">ViewerApp::Shutdown</a></div><div class="ttdeci">void Shutdown()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:280</div></div>
+<div class="ttc" id="aclassViewerApp_html_a65f11dc51628f197699e624a44817df1"><div class="ttname"><a href="classViewerApp.html#a65f11dc51628f197699e624a44817df1">ViewerApp::Shutdown</a></div><div class="ttdeci">void Shutdown()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:279</div></div>
 <div class="ttc" id="aclassViewerApp_html_aae7f24aed89ead6de9de655db8b00757"><div class="ttname"><a href="classViewerApp.html#aae7f24aed89ead6de9de655db8b00757">ViewerApp::ViewerApp</a></div><div class="ttdeci">ViewerApp()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:30</div></div>
-<div class="ttc" id="aclassViewerApp_html_ac32b6821de5456c23b16f33b6e8b87e0"><div class="ttname"><a href="classViewerApp.html#ac32b6821de5456c23b16f33b6e8b87e0">ViewerApp::Run</a></div><div class="ttdeci">void Run()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:480</div></div>
-<div class="ttc" id="aclassViewerApp_html_adf79f3b7e38626f1b21ca54b3194e1d5"><div class="ttname"><a href="classViewerApp.html#adf79f3b7e38626f1b21ca54b3194e1d5">ViewerApp::Init</a></div><div class="ttdeci">bool Init()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:265</div></div>
+<div class="ttc" id="aclassViewerApp_html_ac32b6821de5456c23b16f33b6e8b87e0"><div class="ttname"><a href="classViewerApp.html#ac32b6821de5456c23b16f33b6e8b87e0">ViewerApp::Run</a></div><div class="ttdeci">void Run()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:479</div></div>
+<div class="ttc" id="aclassViewerApp_html_adf79f3b7e38626f1b21ca54b3194e1d5"><div class="ttname"><a href="classViewerApp.html#adf79f3b7e38626f1b21ca54b3194e1d5">ViewerApp::Init</a></div><div class="ttdeci">bool Init()</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:264</div></div>
 <div class="ttc" id="aclassViewerApp_html_ae3d85da22e1bfac7ff7219b4410034ed"><div class="ttname"><a href="classViewerApp.html#ae3d85da22e1bfac7ff7219b4410034ed">ViewerApp::buildNavmeshFromMeshes</a></div><div class="ttdeci">bool buildNavmeshFromMeshes(bool buildTilesNow=true)</div><div class="ttdef"><b>Definition</b> ViewerApp.cpp:44</div></div>
 <div class="ttc" id="aclassViewerCamera_html"><div class="ttname"><a href="classViewerCamera.html">ViewerCamera</a></div><div class="ttdef"><b>Definition</b> ViewerCamera.h:11</div></div>
 <div class="ttc" id="aclassdtNavMeshQuery_html"><div class="ttname"><a href="classdtNavMeshQuery.html">dtNavMeshQuery</a></div><div class="ttdoc">Provides the ability to perform pathfinding related queries against a navigation mesh.</div><div class="ttdef"><b>Definition</b> DetourNavMeshQuery.h:166</div></div>
