@@ -49,6 +49,7 @@ void ViewerApp::ProcessEvents()
         }
         if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
         {
+            leftMouseDown = true;
             if (mouseOnUI)
                 continue;
 
@@ -62,6 +63,33 @@ void ViewerApp::ProcessEvents()
             {
                 pickedTri = -1;
                 pickedMeshIndex = -1;
+            }
+
+            if (viewportClickMode == ViewportClickMode::EditMesh)
+            {
+                int screenW = 1600;
+                int screenH = 900;
+                SDL_GetWindowSize(window, &screenW, &screenH);
+                Ray ray = camera->GetRayFromScreen(mx, my, screenW, screenH);
+
+                if (pickedMeshIndex >= 0 && pickedMeshIndex < static_cast<int>(meshInstances.size()))
+                {
+                    auto& instance = meshInstances[pickedMeshIndex];
+                    if (meshEditMode == MeshEditMode::Move && TryBeginMoveDrag(ray, instance))
+                        continue;
+                    if (meshEditMode == MeshEditMode::Rotate && TryBeginRotateDrag(ray, instance))
+                        continue;
+                }
+
+                glm::vec3 hitPoint(0.0f);
+                int hitTri = -1;
+                int hitMesh = -1;
+                if (ComputeRayMeshHit(mx, my, hitPoint, &hitTri, &hitMesh))
+                {
+                    pickedTri = hitTri;
+                    pickedMeshIndex = hitMesh;
+                }
+                continue;
             }
 
             glm::vec3 hitPoint(0.0f);
@@ -109,7 +137,16 @@ void ViewerApp::ProcessEvents()
                 hasPathTarget = true;
                 TryRunPathfind();
                 break;
+            case ViewportClickMode::EditMesh:
+                break;
             }
+        }
+
+        if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT)
+        {
+            leftMouseDown = false;
+            editDragActive = false;
+            activeGizmoAxis = GizmoAxis::None;
         }
 
 

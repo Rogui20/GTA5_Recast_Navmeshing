@@ -17,11 +17,14 @@
 #include <backends/imgui_impl_opengl3.h>
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/constants.hpp>
 #include <filesystem>
 #include <fstream>
 #include <algorithm>
 #include <cctype>
 #include <unordered_set>
+#include <array>
+#include <cmath>
 
 
 ViewerApp::ViewerApp()
@@ -109,6 +112,152 @@ void ViewerApp::buildNavmeshDebugLines()
     }
 
     printf("[ViewerApp] Linhas de navmesh: %zu segmentos.\n", m_navmeshLines.size());
+}
+
+void ViewerApp::DrawSelectedMeshHighlight()
+{
+    if (pickedMeshIndex < 0 || pickedMeshIndex >= static_cast<int>(meshInstances.size()))
+        return;
+
+    const auto& instance = meshInstances[pickedMeshIndex];
+    if (!instance.mesh)
+        return;
+
+    glm::mat4 model = GetModelMatrix(instance);
+    std::vector<glm::vec3> worldTris;
+    worldTris.reserve(instance.mesh->indices.size());
+
+    std::unordered_set<uint64_t> edgeSet;
+    std::vector<DebugLine> outlines;
+    outlines.reserve(instance.mesh->indices.size());
+
+    auto addEdge = [&](int ia, int ib)
+    {
+        int minIdx = std::min(ia, ib);
+        int maxIdx = std::max(ia, ib);
+        uint64_t key = (static_cast<uint64_t>(minIdx) << 32) | static_cast<uint32_t>(maxIdx);
+        if (edgeSet.insert(key).second)
+        {
+            glm::vec3 a = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[ia], 1.0f));
+            glm::vec3 b = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[ib], 1.0f));
+
+            DebugLine l{a.x, a.y, a.z, b.x, b.y, b.z};
+            outlines.push_back(l);
+        }
+    };
+
+    for (size_t i = 0; i + 2 < instance.mesh->indices.size(); i += 3)
+    {
+        int i0 = instance.mesh->indices[i+0];
+        int i1 = instance.mesh->indices[i+1];
+        int i2 = instance.mesh->indices[i+2];
+
+        glm::vec3 v0 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i0], 1.0f));
+        glm::vec3 v1 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i1], 1.0f));
+        glm::vec3 v2 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i2], 1.0f));
+
+        worldTris.push_back(v0);
+        worldTris.push_back(v1);
+        worldTris.push_back(v2);
+
+        addEdge(i0, i1);
+        addEdge(i1, i2);
+        addEdge(i2, i0);
+    }
+
+    if (!worldTris.empty())
+    {
+        renderer->drawNavmeshTriangles(worldTris, glm::vec3(1.0f, 1.0f, 0.2f), 0.45f);
+    }
+
+    if (!outlines.empty())
+    {
+        glDisable(GL_DEPTH_TEST);
+        renderer->drawNavmeshLines(outlines, glm::vec3(1.0f, 0.5f, 0.0f), 3.0f);
+        glEnable(GL_DEPTH_TEST);
+    }
+}
+
+void ViewerApp::DrawEditGizmo()
+{
+    if (viewportClickMode != ViewportClickMode::EditMesh)
+        return;
+
+    if (pickedMeshIndex < 0 || pickedMeshIndex >= static_cast<int>(meshInstances.size()))
+        return;
+
+    const auto& instance = meshInstances[pickedMeshIndex];
+    glm::vec3 origin = instance.position;
+    float camDist = glm::length(camera->pos - origin);
+    float axisLength = 4.0f + camDist * 0.05f;
+    float lineWidth = 5.0f;
+
+    glm::vec3 axisX = moveTransformMode == MoveTransformMode::LocalTransform ? GetAxisDirection(instance, GizmoAxis::X) : glm::vec3(1,0,0);
+    glm::vec3 axisY = moveTransformMode == MoveTransformMode::LocalTransform ? GetAxisDirection(instance, GizmoAxis::Y) : glm::vec3(0,1,0);
+    glm::vec3 axisZ = moveTransformMode == MoveTransformMode::LocalTransform ? GetAxisDirection(instance, GizmoAxis::Z) : glm::vec3(0,0,1);
+
+    auto gizmoColor = [&](GizmoAxis axis, const glm::vec3& baseColor)
+    {
+        if (activeGizmoAxis == axis)
+            return baseColor * 1.2f;
+        return baseColor;
+    };
+
+    if (meshEditMode == MeshEditMode::Move)
+    {
+        std::array<std::pair<GizmoAxis, glm::vec3>, 3> axisInfo = {
+            std::make_pair(GizmoAxis::X, axisX),
+            std::make_pair(GizmoAxis::Y, axisY),
+            std::make_pair(GizmoAxis::Z, axisZ)
+        };
+
+        for (const auto& axis : axisInfo)
+        {
+            glm::vec3 dir = glm::normalize(axis.second);
+            DebugLine line{origin.x, origin.y, origin.z,
+                           origin.x + dir.x * axisLength,
+                           origin.y + dir.y * axisLength,
+                           origin.z + dir.z * axisLength};
+
+            glm::vec3 color(1,0,0);
+            if (axis.first == GizmoAxis::Y) color = glm::vec3(0,1,0);
+            else if (axis.first == GizmoAxis::Z) color = glm::vec3(0,0,1);
+
+            renderer->drawNavmeshLines({line}, gizmoColor(axis.first, color), lineWidth);
+        }
+    }
+
+    if (meshEditMode == MeshEditMode::Rotate)
+    {
+        float radius = 3.5f + camDist * 0.03f;
+        const int segments = 64;
+
+    auto drawCircle = [&](GizmoAxis axis, const glm::vec3& basisA, const glm::vec3& basisB, const glm::vec3& color)
+    {
+        std::vector<DebugLine> circle;
+        circle.reserve(segments);
+        for (int i = 0; i < segments; ++i)
+        {
+            float a0 = (static_cast<float>(i) / segments) * glm::two_pi<float>();
+            float a1 = (static_cast<float>(i + 1) / segments) * glm::two_pi<float>();
+
+            glm::vec3 p0 = origin + basisA * std::cos(a0) * radius + basisB * std::sin(a0) * radius;
+            glm::vec3 p1 = origin + basisA * std::cos(a1) * radius + basisB * std::sin(a1) * radius;
+
+            circle.push_back({p0.x, p0.y, p0.z, p1.x, p1.y, p1.z});
+        }
+
+        renderer->drawNavmeshLines(circle, gizmoColor(axis, color), 3.0f);
+    };
+
+        glm::vec3 right = GetAxisDirection(instance, GizmoAxis::X);
+        glm::vec3 up    = GetAxisDirection(instance, GizmoAxis::Y);
+        glm::vec3 fwd   = GetAxisDirection(instance, GizmoAxis::Z);
+
+        drawCircle(GizmoAxis::X, up, fwd, glm::vec3(1,0,0));
+        drawCircle(GizmoAxis::Y, right, fwd, glm::vec3(0,1,0));
+        drawCircle(GizmoAxis::Z, glm::vec3(1,0,0), glm::vec3(0,0,1), glm::vec3(0,0,1));
+    }
 }
 
 
@@ -349,6 +498,19 @@ void ViewerApp::RenderFrame()
 
     UpdateNavmeshTiles();
 
+    if (viewportClickMode == ViewportClickMode::EditMesh && editDragActive && leftMouseDown)
+    {
+        int mx = 0;
+        int my = 0;
+        SDL_GetMouseState(&mx, &my);
+        UpdateEditDrag(mx, my);
+    }
+    else if (!leftMouseDown && editDragActive)
+    {
+        editDragActive = false;
+        activeGizmoAxis = GizmoAxis::None;
+    }
+
     // --- Barra de menus principal ---
     if (ImGui::BeginMainMenuBar())
     {
@@ -562,11 +724,35 @@ void ViewerApp::RenderFrame()
                     ImGui::RadioButton("removeTileMode", &viewportModeValue, static_cast<int>(ViewportClickMode::RemoveTileAt));
                     ImGui::RadioButton("Pathfind", &viewportModeValue, static_cast<int>(ViewportClickMode::Pathfind_Normal));
                     ImGui::RadioButton("Pathfind With Min Edge Distance", &viewportModeValue, static_cast<int>(ViewportClickMode::Pathfind_MinEdge));
+                    ImGui::RadioButton("Edit Mesh", &viewportModeValue, static_cast<int>(ViewportClickMode::EditMesh));
 
                     viewportClickMode = static_cast<ViewportClickMode>(viewportModeValue);
                     ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::Pathfind_MinEdge);
                     ImGui::SliderFloat("Min Edge Distance", &pathfindMinEdgeDistance, 0.0f, 100.0f, "%.2f");
                     ImGui::EndDisabled();
+
+                    if (viewportClickMode != ViewportClickMode::EditMesh)
+                    {
+                        editDragActive = false;
+                        activeGizmoAxis = GizmoAxis::None;
+                    }
+
+                    if (viewportClickMode == ViewportClickMode::EditMesh)
+                    {
+                        int editModeValue = static_cast<int>(meshEditMode);
+                        ImGui::SeparatorText("Mesh Edit Mode");
+                        ImGui::RadioButton("Move", &editModeValue, static_cast<int>(MeshEditMode::Move));
+                        ImGui::RadioButton("Rotate", &editModeValue, static_cast<int>(MeshEditMode::Rotate));
+                        meshEditMode = static_cast<MeshEditMode>(editModeValue);
+
+                        if (meshEditMode == MeshEditMode::Move)
+                        {
+                            int moveMode = static_cast<int>(moveTransformMode);
+                            ImGui::RadioButton("Global", &moveMode, static_cast<int>(MoveTransformMode::GlobalTransform));
+                            ImGui::RadioButton("Local", &moveMode, static_cast<int>(MoveTransformMode::LocalTransform));
+                            moveTransformMode = static_cast<MoveTransformMode>(moveMode);
+                        }
+                    }
 
                     if (!IsPathfindModeActive() && (previousMode == ViewportClickMode::Pathfind_Normal || previousMode == ViewportClickMode::Pathfind_MinEdge))
                     {
@@ -581,6 +767,7 @@ void ViewerApp::RenderFrame()
                     case ViewportClickMode::RemoveTileAt: activeMode = "removeTileMode"; break;
                     case ViewportClickMode::Pathfind_Normal: activeMode = "Pathfind"; break;
                     case ViewportClickMode::Pathfind_MinEdge: activeMode = "Pathfind With Min Edge Distance"; break;
+                    case ViewportClickMode::EditMesh: activeMode = "Edit Mesh"; break;
                     }
                     
                     ImGui::Text("Modo ativo: %s", activeMode);
@@ -640,7 +827,7 @@ void ViewerApp::RenderFrame()
                     {
                         ImGui::TableSetupColumn("Mesh");
                         ImGui::TableSetupColumn("Transform");
-                        ImGui::TableSetupColumn("Ações", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+                        ImGui::TableSetupColumn("Ações", ImGuiTableColumnFlags_WidthFixed, 180.0f);
                         ImGui::TableHeadersRow();
 
                         for (size_t i = 0; i < meshInstances.size(); )
@@ -670,11 +857,18 @@ void ViewerApp::RenderFrame()
                             ImGui::TableNextColumn();
                             glm::vec3 previousPos = instance.position;
                             glm::vec3 previousRot = instance.rotation;
-                            bool moved = ImGui::DragFloat3("Pos", &instance.position.x, 0.25f);
+                            glm::vec3 gtaPos = ToGtaCoords(instance.position);
+                            glm::vec3 previousGtaPos = ToGtaCoords(previousPos);
+                            bool moved = ImGui::DragFloat3("Pos", &gtaPos.x, 0.25f);
                             bool rotated = ImGui::DragFloat3("Rot", &instance.rotation.x, 0.25f);
-
-                            if (moved && instance.position != previousPos)
+                            if (rotated)
                             {
+                                NormalizeMeshRotation(instance);
+                            }
+
+                            if (moved && gtaPos != previousGtaPos)
+                            {
+                                instance.position = FromGtaCoords(gtaPos);
                                 HandleAutoBuild(NavmeshAutoBuildFlag::OnMove);
                             }
                             if (rotated && instance.rotation != previousRot)
@@ -683,6 +877,15 @@ void ViewerApp::RenderFrame()
                             }
 
                             ImGui::TableNextColumn();
+                            ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::EditMesh);
+                            if (ImGui::Button("Selecionar"))
+                            {
+                                pickedMeshIndex = static_cast<int>(i);
+                                pickedTri = -1;
+                            }
+                            ImGui::EndDisabled();
+                            ImGui::SameLine();
+
                             if (ImGui::Button("Remover"))
                             {
                                 ImGui::PopID();
@@ -963,10 +1166,13 @@ void ViewerApp::RenderFrame()
         renderer->drawNavmeshLines(pathLines, glm::vec3(1.0f, 0.0f, 0.0f));
     }
 
+    DrawSelectedMeshHighlight();
+
     // desenhar grid e eixo sempre no modo 99
     glDisable(GL_DEPTH_TEST);   // Gizmos ficam por cima
 
     renderer->Begin(camera, RenderMode::None); // vai setar modo=99
+    DrawEditGizmo();
     renderer->DrawGrid();
     renderer->DrawAxisGizmoScreen(camera, 1600, 900);
     renderer->End();

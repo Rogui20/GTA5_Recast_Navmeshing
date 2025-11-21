@@ -30,7 +30,7 @@ public:
     void DrawAxisGizmoScreen(const ViewerCamera* cam, int screenW, int screenH);
 
     void DrawTriangleHighlight(glm::vec3 a, glm::vec3 b, glm::vec3 c);
-    void drawNavmeshLines(const std::vector<DebugLine>& lines, const glm::vec3& color = glm::vec3(0.0f));
+    void drawNavmeshLines(const std::vector<DebugLine>& lines, const glm::vec3& color = glm::vec3(0.0f), float lineWidth = 1.5f);
     void drawNavmeshTriangles(const std::vector<glm::vec3>& tris, const glm::vec3& color, float alpha);
 
     bool Load(const char* path);
