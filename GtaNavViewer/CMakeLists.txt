@@ -73,6 +73,10 @@ add_executable(GtaNavViewer
     NavMeshData.cpp
     NavMeshData.h
     NavMeshBuild.h
+    GtaHandler.cpp
+    GtaHandler.h
+    GtaHandlerMenu.cpp
+    GtaHandlerMenu.h
     json.hpp
     imfilebrowser.h
     ${GLAD_SRC}

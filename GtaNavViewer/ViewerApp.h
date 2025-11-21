@@ -9,6 +9,8 @@
 #include "GtaNavAPI.h"
 #include "NavMeshData.h"
 #include "RendererGL.h"
+#include "GtaHandler.h"
+#include "GtaHandlerMenu.h"
 #include "imfilebrowser.h"
 #include <DetourNavMeshQuery.h>
 #include <memory>
@@ -21,6 +23,8 @@
 struct Ray;
 class ViewerCamera;
 class RendererGL;
+class GtaHandler;
+class GtaHandlerMenu;
 
 
 class ViewerApp
@@ -34,6 +38,7 @@ public:
     void Shutdown();
     bool buildNavmeshFromMeshes(bool buildTilesNow = true);
     void buildNavmeshDebugLines();
+    bool BuildStaticMap(GtaHandler& handler, const std::filesystem::path& meshDirectory, float scanRange);
 
 private:
     // SDL
@@ -77,6 +82,8 @@ private:
     bool preferBin = true;
     NavMeshData navData;
     NavmeshGenerationSettings navGenSettings{};
+    GtaHandler gtaHandler;
+    GtaHandlerMenu gtaHandlerMenu;
 
     enum class NavmeshRenderMode
     {
@@ -172,6 +179,7 @@ private:
     bool InitImGui();
 
     bool LoadMeshFromPath(const std::string& path);
+    bool LoadMeshFromPathWithOptions(const std::string& path, bool center, bool tryLoadBin);
     void LoadLastDirectory();
     void SaveLastDirectory(const std::filesystem::path& directory);
     std::filesystem::path GetConfigFilePath() const;
@@ -208,6 +216,7 @@ private:
     void DetachChildren(uint64_t parentId);
     void CollectSubtreeIds(uint64_t rootId, std::vector<uint64_t>& outIds) const;
     void RemoveMeshSubtree(uint64_t rootId);
+    bool IsMeshAlreadyLoaded(const std::filesystem::path& path) const;
 
     void ProcessEvents();
     void RenderFrame();
