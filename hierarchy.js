@@ -90,6 +90,7 @@ var hierarchy =
     [ "ExampleDualListBox", "structExampleDualListBox.html", null ],
     [ "ExampleMemberInfo", "structExampleMemberInfo.html", null ],
     [ "ExampleTreeNode", "structExampleTreeNode.html", null ],
+    [ "ImGui::FileBrowser", "classImGui_1_1FileBrowser.html", null ],
     [ "FrameResources", "structFrameResources.html", null ],
     [ "gladGLversionStruct", "structgladGLversionStruct.html", null ],
     [ "GLCheckerTexture", "classGLCheckerTexture.html", null ],

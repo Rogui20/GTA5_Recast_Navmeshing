@@ -1,5 +1,8 @@
 var annotated_dup =
 [
+    [ "ImGui", "namespaceImGui.html", [
+      [ "FileBrowser", "classImGui_1_1FileBrowser.html", "classImGui_1_1FileBrowser" ]
+    ] ],
     [ "BoundsItem", "structBoundsItem.html", "structBoundsItem" ],
     [ "BuildContext", "classBuildContext.html", "classBuildContext" ],
     [ "BuildSettings", "structBuildSettings.html", "structBuildSettings" ],

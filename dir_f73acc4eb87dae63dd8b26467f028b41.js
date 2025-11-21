@@ -1,6 +1,7 @@
 var dir_f73acc4eb87dae63dd8b26467f028b41 =
 [
     [ "imgui", "dir_3a684df7e1285a78aadbc3265bd77f31.html", "dir_3a684df7e1285a78aadbc3265bd77f31" ],
+    [ "imfilebrowser.h", "imfilebrowser_8h.html", "imfilebrowser_8h" ],
     [ "main.cpp", "GtaNavViewer_2main_8cpp.html", "GtaNavViewer_2main_8cpp" ],
     [ "MathUtils.cpp", "MathUtils_8cpp.html", "MathUtils_8cpp" ],
     [ "MathUtils.h", "MathUtils_8h.html", "MathUtils_8h" ],
