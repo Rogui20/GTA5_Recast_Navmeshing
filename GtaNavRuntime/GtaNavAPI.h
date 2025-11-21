@@ -38,3 +38,10 @@ GTANAV_API bool GtaNav_BuildTilesAroundPositionAPI(NavMeshContext* ctx,
                                                    const float* pos,
                                                    int numTilesX,
                                                    int numTilesZ);
+
+// Cache
+GTANAV_API bool GtaNav_SaveTileCache(NavMeshContext* ctx, const char* cachePath);
+GTANAV_API bool GtaNav_LoadTileCache(NavMeshContext* ctx,
+                                     const char* cachePath,
+                                     bool validateGeometry,
+                                     bool rewriteOutdatedCache);

@@ -41,7 +41,22 @@ public:
     );
 
     // ================================================================
-    // 5) Utilitários internos
+    // 5) Cache de tiles em disco
+    // ================================================================
+    static bool SaveTileCache(
+        NavMeshContext* ctx,
+        const char* cachePath
+    );
+
+    static bool LoadTileCache(
+        NavMeshContext* ctx,
+        const char* cachePath,
+        bool validateGeometry = true,
+        bool rewriteOutdatedCache = true
+    );
+
+    // ================================================================
+    // 6) Utilitários internos
     // ================================================================
     static void CalcTileBounds(
         const NavMeshContext* ctx,

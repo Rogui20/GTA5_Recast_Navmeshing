@@ -72,3 +72,16 @@ GTANAV_API bool GtaNav_BuildTilesAroundPositionAPI(NavMeshContext* ctx,
 
     return GtaNavTiles::BuildTilesAroundPosition(ctx, pos, radiusMeters);
 }
+
+GTANAV_API bool GtaNav_SaveTileCache(NavMeshContext* ctx, const char* cachePath)
+{
+    return GtaNavTiles::SaveTileCache(ctx, cachePath);
+}
+
+GTANAV_API bool GtaNav_LoadTileCache(NavMeshContext* ctx,
+                                     const char* cachePath,
+                                     bool validateGeometry,
+                                     bool rewriteOutdatedCache)
+{
+    return GtaNavTiles::LoadTileCache(ctx, cachePath, validateGeometry, rewriteOutdatedCache);
+}
