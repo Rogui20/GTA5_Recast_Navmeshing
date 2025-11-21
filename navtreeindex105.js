@@ -1,5 +1,6 @@
 var NAVTREEINDEX105 =
 {
+"structSDL__JoyAxisEvent.html#a8bf5144fddc19686c2003add1f0e1565":[44,0,400,3],
 "structSDL__JoyAxisEvent.html#a965719f4703a7091bcc5f07f79fcf7e1":[44,0,400,8],
 "structSDL__JoyAxisEvent.html#ad5407250032f618fde7437ac5f229257":[44,0,400,2],
 "structSDL__JoyAxisEvent.html#ae8e17bced478530638982f0382a0dafa":[44,0,400,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__TouchFingerEvent.html#ad7a6f39ec9af1bf47b160d18314edd70":[44,0,432,5],
 "structSDL__UserEvent.html":[44,0,433],
 "structSDL__UserEvent.html#aae4dbf65c34d654c9edf519eb061b7cf":[44,0,433,2],
-"structSDL__UserEvent.html#ab2893a12be2f97195f16463a23107913":[44,0,433,1],
-"structSDL__UserEvent.html#ab7afa8b98dbd7b52bef41155e10f7340":[44,0,433,4]
+"structSDL__UserEvent.html#ab2893a12be2f97195f16463a23107913":[44,0,433,1]
 };

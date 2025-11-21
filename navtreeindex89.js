@@ -1,5 +1,6 @@
 var NAVTREEINDEX89 =
 {
+"imstb__truetype_8h.html#aa82d35f758bc70bd675c48da381e7ea7":[45,0,7,0,11,68],
 "imstb__truetype_8h.html#aad275d7211530a3d817fcd8647690b7b":[45,0,7,0,11,81],
 "imstb__truetype_8h.html#aafc4974ee424f18246f47b0926a1cd31":[45,0,7,0,11,24],
 "imstb__truetype_8h.html#ab0896826867ac841bba5b6060b3dab09":[45,0,7,0,11,27],
@@ -248,6 +249,5 @@ var NAVTREEINDEX89 =
 "ps2.html#getting-ps2-dev":[29,3],
 "ps2.html#hints":[29,1],
 "ps2.html#notes-2":[29,2],
-"ps2.html#running-on-pcsx2-emulator":[29,4],
-"ps2.html#to-do":[29,5]
+"ps2.html#running-on-pcsx2-emulator":[29,4]
 };

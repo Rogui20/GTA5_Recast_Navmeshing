@@ -20,5 +20,6 @@ var classNavMeshData =
     [ "RebuildSpecificTiles", "classNavMeshData.html#a45dd6cd6c7451cd69d01757fc18765f8", null ],
     [ "RebuildTilesInBounds", "classNavMeshData.html#af793fd5a445cc980578e652d3158447d", null ],
     [ "RemoveTileAt", "classNavMeshData.html#a44c1dfa99e290e495f2e0acbf5888942", null ],
+    [ "SetOffmeshLinks", "classNavMeshData.html#adf147bf8231f15a083cc8544479797e5", null ],
     [ "UpdateCachedGeometry", "classNavMeshData.html#a05d23e3170de5a3bc8852e35e5777131", null ]
 ];

@@ -19,6 +19,7 @@ var NAVTREEINDEX67 =
 "classNavMeshData.html#ac03e109d7eb10ab8828d329ec17075a4":[44,0,310,7],
 "classNavMeshData.html#ac84ae20a294aebff442e62b0eebfc886":[44,0,310,5],
 "classNavMeshData.html#ad78beb7092a0cad7a0412fb48b5e665f":[44,0,310,2],
+"classNavMeshData.html#adf147bf8231f15a083cc8544479797e5":[44,0,310,20],
 "classNavMeshData.html#af793fd5a445cc980578e652d3158447d":[44,0,310,18],
 "classNavMeshPruneTool.html":[44,0,314],
 "classNavMeshPruneTool.html#a1d3466a23085cff3e97afd0952d1f4af":[44,0,314,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX67 =
 "classSample__TempObstacles.html#a6ab371394b122966ab5de8619bd8646aa2c426926db47a33bbb2d0568be000eb1":[44,0,363,0,2],
 "classSample__TempObstacles.html#a6ab371394b122966ab5de8619bd8646aa31dbf6b027635abacf086f1039c4a59f":[44,0,363,0,1],
 "classSample__TempObstacles.html#a6ab371394b122966ab5de8619bd8646aa6b45d4a6889c8d9b98d386cfbcd3e7a3":[44,0,363,0,8],
-"classSample__TempObstacles.html#a6ab371394b122966ab5de8619bd8646aad240eab884b6fce214ae17ee58ff1fc5":[44,0,363,0,7],
-"classSample__TempObstacles.html#a6ab371394b122966ab5de8619bd8646aadf002a04b3f50bc4732a5f0e83fe2b82":[44,0,363,0,5]
+"classSample__TempObstacles.html#a6ab371394b122966ab5de8619bd8646aad240eab884b6fce214ae17ee58ff1fc5":[44,0,363,0,7]
 };
