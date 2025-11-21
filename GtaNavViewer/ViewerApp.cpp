@@ -858,6 +858,7 @@ void ViewerApp::RenderFrame()
                             glm::vec3 previousPos = instance.position;
                             glm::vec3 previousRot = instance.rotation;
                             glm::vec3 gtaPos = ToGtaCoords(instance.position);
+                            glm::vec3 previousGtaPos = ToGtaCoords(previousPos);
                             bool moved = ImGui::DragFloat3("Pos", &gtaPos.x, 0.25f);
                             bool rotated = ImGui::DragFloat3("Rot", &instance.rotation.x, 0.25f);
                             if (rotated)
@@ -865,7 +866,7 @@ void ViewerApp::RenderFrame()
                                 NormalizeMeshRotation(instance);
                             }
 
-                            if (moved && instance.position != previousPos)
+                            if (moved && gtaPos != previousGtaPos)
                             {
                                 instance.position = FromGtaCoords(gtaPos);
                                 HandleAutoBuild(NavmeshAutoBuildFlag::OnMove);
