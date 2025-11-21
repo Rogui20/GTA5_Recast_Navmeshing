@@ -505,7 +505,9 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
                                 const std::vector<unsigned int>& idxIn,
                                 const NavmeshGenerationSettings& settings,
                                 bool buildTilesNow,
-                                const std::atomic_bool* cancelFlag)
+                                const std::atomic_bool* cancelFlag,
+                                bool useCache,
+                                const char* cachePath)
 {
     m_hasTiledCache = false;
     LoggingRcContext ctx;
@@ -638,7 +640,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     }
     else
     {
-        ok = BuildTiledNavMesh(buildInput, settings, newNav, buildTilesNow, nullptr, nullptr, cancelFlag);
+        ok = BuildTiledNavMesh(buildInput, settings, newNav, buildTilesNow, nullptr, nullptr, cancelFlag, useCache, cachePath);
     }
 
     if (!ok)

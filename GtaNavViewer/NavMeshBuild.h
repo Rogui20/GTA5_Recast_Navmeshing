@@ -30,7 +30,9 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                        bool buildTilesNow = true,
                        int* outTilesBuilt = nullptr,
                        int* outTilesSkipped = nullptr,
-                       const std::atomic_bool* cancelFlag = nullptr);
+                       const std::atomic_bool* cancelFlag = nullptr,
+                       bool useCache = true,
+                       const char* cachePath = nullptr);
 
 bool BuildSingleTile(const NavmeshBuildInput& input,
                      const NavmeshGenerationSettings& settings,
