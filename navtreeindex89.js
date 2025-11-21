@@ -1,5 +1,11 @@
 var NAVTREEINDEX89 =
 {
+"imstb__truetype_8h.html#ab459250c5579b1d942e0d8eb23936827":[45,0,7,0,11,11],
+"imstb__truetype_8h.html#ab51e492c4b320b8af6ef557ad3388140":[45,0,7,0,11,71],
+"imstb__truetype_8h.html#ab593f3066f2a8a7e33e7b7011d1b1f9a":[45,0,7,0,11,52],
+"imstb__truetype_8h.html#ab638ddcf9ae1b15ea18b2de58443136e":[45,0,7,0,11,58],
+"imstb__truetype_8h.html#ab6eca9e0104838ca2483dea24dd9e631":[45,0,7,0,11,76],
+"imstb__truetype_8h.html#ab7f7e3a2bc7ae72720057b07a13c400f":[45,0,7,0,11,31],
 "imstb__truetype_8h.html#ab8fd8e5e0b82b0f7da54532035e47b22":[45,0,7,0,11,18],
 "imstb__truetype_8h.html#abbca8f4e5de8209200a7be6c1c57661e":[45,0,7,0,11,60],
 "imstb__truetype_8h.html#abbfa26d9cbfeae7e224f2f62ef6c096d":[45,0,7,0,11,36],
@@ -243,11 +249,5 @@ var NAVTREEINDEX89 =
 "ps2.html#to-do":[29,5],
 "psp.html":[30],
 "psp.html#building-2":[30,0],
-"psp.html#compiling-a-helloworld":[30,3],
-"psp.html#getting-psp-dev":[30,1],
-"psp.html#running-on-ppsspp-emulator":[30,2],
-"psp.html#to-do-1":[30,4],
-"raspberry-pi.html":[31],
-"raspberry-pi.html#apps-dont-work-or-poor-videoaudio-performance":[31,4],
-"raspberry-pi.html#cross-compiling-from-x86-linux":[31,3]
+"psp.html#compiling-a-helloworld":[30,3]
 };

@@ -5,5 +5,7 @@ var classGtaNavTiles =
     [ "BuildTilesInBounds", "classGtaNavTiles.html#a9e0bcdfdd87c50f0f2bce5fff609ac7c", null ],
     [ "CalcTileBounds", "classGtaNavTiles.html#af8248cbb8b0d55c71ab6bf0c3de8f9d1", null ],
     [ "CalcTileRangeForAABB", "classGtaNavTiles.html#a1388dbc7a63741576d22b1380c56a867", null ],
-    [ "RebuildTilesAffectedByDynamic", "classGtaNavTiles.html#a85c79c25b8b892f8b0c2b5a229f83d39", null ]
+    [ "LoadTileCache", "classGtaNavTiles.html#ab2f87b5bb5a83f30a1611a2e7ca968a9", null ],
+    [ "RebuildTilesAffectedByDynamic", "classGtaNavTiles.html#a85c79c25b8b892f8b0c2b5a229f83d39", null ],
+    [ "SaveTileCache", "classGtaNavTiles.html#a03b292273f02fc04bd84bf32956a8c33", null ]
 ];

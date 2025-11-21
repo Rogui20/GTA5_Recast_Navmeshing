@@ -1,5 +1,9 @@
 var NAVTREEINDEX18 =
 {
+"SDL__haptic_8h.html#ae2185c0814f107dd5851dd743e9ea71c":[45,0,5,2,1,32,41],
+"SDL__haptic_8h.html#ae333ef77753ba700875fa20858b9021d":[45,0,5,2,1,32,40],
+"SDL__haptic_8h.html#ae8123eaa51511507375ba6ef9220fa46":[45,0,5,2,1,32,28],
+"SDL__haptic_8h.html#af0181e59ecd14c6aecd1fd3c5099330a":[45,0,5,2,1,32,52],
 "SDL__haptic_8h.html#af10eb937a64a8f602e9c46682ac0d868":[45,0,5,2,1,32,20],
 "SDL__haptic_8h.html#af44cbecefe14da5a7476013ce06f38b9":[45,0,5,2,1,32,54],
 "SDL__haptic_8h.html#af4d7e7825bf98ca5a5aa8194b77b0754":[45,0,5,2,1,32,30],
@@ -245,9 +249,5 @@ var NAVTREEINDEX18 =
 "SDL__hints_8h.html#afcb9274e7e5e4fd0cba54acc673279bf":[45,0,5,2,1,34,41],
 "SDL__hints_8h.html#afd9e992ec99ebab318a9f73c6d9ba2ce":[45,0,5,2,1,34,194],
 "SDL__hints_8h.html#aff84d56f5de197e49a778e18ad76ab0e":[45,0,5,2,1,34,203],
-"SDL__hints_8h_source.html":[45,0,5,2,1,34],
-"SDL__joystick_8h.html":[45,0,5,2,1,35],
-"SDL__joystick_8h.html#a01a289030d76adc1666951fd6021c2ea":[45,0,5,2,1,35,19],
-"SDL__joystick_8h.html#a01a289030d76adc1666951fd6021c2eaa00190ed35e476fe91ff5ca23c82116fc":[45,0,5,2,1,35,19,5],
-"SDL__joystick_8h.html#a01a289030d76adc1666951fd6021c2eaa3d7a52c076bb13f177da3ac9051ffca9":[45,0,5,2,1,35,19,8]
+"SDL__hints_8h_source.html":[45,0,5,2,1,34]
 };

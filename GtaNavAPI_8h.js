@@ -7,5 +7,7 @@ var GtaNavAPI_8h =
     [ "GtaNav_InitDynamicContext", "GtaNavAPI_8h.html#a1305af62b1e4043afaab4d7097385db0", null ],
     [ "GtaNav_InitNavMesh", "GtaNavAPI_8h.html#aad1c0bdb748f6c59de98270787f776b5", null ],
     [ "GtaNav_IsDynamicContextReady", "GtaNavAPI_8h.html#a3f370a288528b476ad9cc4e2f0fede83", null ],
+    [ "GtaNav_LoadTileCache", "GtaNavAPI_8h.html#aba69a190b3cda4a1972325ffda9eaf3d", null ],
+    [ "GtaNav_SaveTileCache", "GtaNavAPI_8h.html#a58f24db03a7257bf71440edb0b637091", null ],
     [ "GtaNav_SetCombinedGeometry", "GtaNavAPI_8h.html#a02f04c1206d1e976a87580ceb348b58b", null ]
 ];
