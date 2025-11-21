@@ -104,12 +104,94 @@ $(document).ready(function(){initNavTree('classObjLoader.html',''); initResizabl
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:adab62fa2dd73699be059017eb2b5bd30" id="r_adab62fa2dd73699be059017eb2b5bd30"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classMesh.html">Mesh</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classObjLoader.html#adab62fa2dd73699be059017eb2b5bd30">LoadObj</a> (const std::string &amp;<a class="el" href="SDL__opengl__glext_8h.html#ab25d8cd967ccbd19b630d7100ff8f67e">path</a>, bool centerMesh=true)</td></tr>
-<tr class="separator:adab62fa2dd73699be059017eb2b5bd30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b1791aa8f4dd47569535666bdb05f76" id="r_a3b1791aa8f4dd47569535666bdb05f76"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classMesh.html">Mesh</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classObjLoader.html#a3b1791aa8f4dd47569535666bdb05f76">LoadMesh</a> (const std::string &amp;<a class="el" href="SDL__opengl__glext_8h.html#ab25d8cd967ccbd19b630d7100ff8f67e">path</a>, bool centerMesh=true, bool tryLoadBin=true)</td></tr>
+<tr class="separator:a3b1791aa8f4dd47569535666bdb05f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a184f44f17e2d6b31e890135502faa3bb" id="r_a184f44f17e2d6b31e890135502faa3bb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classMesh.html">Mesh</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classObjLoader.html#a184f44f17e2d6b31e890135502faa3bb">LoadMeshFromBin</a> (const std::string &amp;<a class="el" href="SDL__opengl__glext_8h.html#ab25d8cd967ccbd19b630d7100ff8f67e">path</a>, bool centerMesh=true)</td></tr>
+<tr class="separator:a184f44f17e2d6b31e890135502faa3bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0e10418b543ff4165db55fb23259e37" id="r_af0e10418b543ff4165db55fb23259e37"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classMesh.html">Mesh</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classObjLoader.html#af0e10418b543ff4165db55fb23259e37">LoadObj</a> (const std::string &amp;<a class="el" href="SDL__opengl__glext_8h.html#ab25d8cd967ccbd19b630d7100ff8f67e">path</a>, bool centerMesh=true, bool tryLoadBin=false)</td></tr>
+<tr class="separator:af0e10418b543ff4165db55fb23259e37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="adab62fa2dd73699be059017eb2b5bd30" name="adab62fa2dd73699be059017eb2b5bd30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adab62fa2dd73699be059017eb2b5bd30">&#9670;&#160;</a></span>LoadObj()</h2>
+<a id="a3b1791aa8f4dd47569535666bdb05f76" name="a3b1791aa8f4dd47569535666bdb05f76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b1791aa8f4dd47569535666bdb05f76">&#9670;&#160;</a></span>LoadMesh()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classMesh.html">Mesh</a> * ObjLoader::LoadMesh </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>centerMesh</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>tryLoadBin</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a184f44f17e2d6b31e890135502faa3bb" name="a184f44f17e2d6b31e890135502faa3bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a184f44f17e2d6b31e890135502faa3bb">&#9670;&#160;</a></span>LoadMeshFromBin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classMesh.html">Mesh</a> * ObjLoader::LoadMeshFromBin </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>centerMesh</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af0e10418b543ff4165db55fb23259e37" name="af0e10418b543ff4165db55fb23259e37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0e10418b543ff4165db55fb23259e37">&#9670;&#160;</a></span>LoadObj()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -127,7 +209,13 @@ Static Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>centerMesh</em> = <code>true</code>&#160;</td>
+          <td class="paramname"><em>centerMesh</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>tryLoadBin</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>

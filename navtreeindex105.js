@@ -1,5 +1,8 @@
 var NAVTREEINDEX105 =
 {
+"structSDL__JoyHatEvent.html#afbe72b6702cf7f70ccbe206737ab2e49":[44,0,402,1],
+"structSDL__KeyboardEvent.html":[44,0,403],
+"structSDL__KeyboardEvent.html#a110558eb96c113c86cfa31a7018c2346":[44,0,403,4],
 "structSDL__KeyboardEvent.html#a2a57ba820a298f2c02ad5d41fd2b1aa8":[44,0,403,0],
 "structSDL__KeyboardEvent.html#a3da1d8f6892e7f6ee28d9eafdb5e7d02":[44,0,403,5],
 "structSDL__KeyboardEvent.html#a3edac3b36304812d533795c9df4ed4c1":[44,0,403,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__VirtualJoystickDesc.html#af6e00afdc0711aae8a44613612e1703f":[44,0,433,1],
 "structSDL__VirtualJoystickDesc.html#afb2468ddc1b70e80bd09236edfe899f4":[44,0,433,22],
 "structSDL__WindowEvent.html":[44,0,434],
-"structSDL__WindowEvent.html#a01c8c8fbe8564e690f958d2db560f657":[44,0,434,7],
-"structSDL__WindowEvent.html#a01da0025428d3434c80021f3e4089fec":[44,0,434,0],
-"structSDL__WindowEvent.html#a09ee59114246eceed4a281033ec6609b":[44,0,434,3],
-"structSDL__WindowEvent.html#a485cd1f07f0f22fdb9f4c4bf214011dc":[44,0,434,2]
+"structSDL__WindowEvent.html#a01c8c8fbe8564e690f958d2db560f657":[44,0,434,7]
 };

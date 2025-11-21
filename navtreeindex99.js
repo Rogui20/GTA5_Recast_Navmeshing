@@ -1,5 +1,8 @@
 var NAVTREEINDEX99 =
 {
+"structImGuiTextFilter.html#a39ed87cfdf3cb0cdb8389b017bb00067":[44,0,270,8],
+"structImGuiTextFilter.html#a493158f2ab8f45fcf303c3f953be9b88":[44,0,270,5],
+"structImGuiTextFilter.html#a88d73ff8b81fbbd0a129b1bf3498d8aa":[44,0,270,6],
 "structImGuiTextFilter.html#a9043c1f0c33d29e6fc9b75ae81f9705a":[44,0,270,3],
 "structImGuiTextFilter.html#a931c25e689204333a4daadf5c138f316":[44,0,270,1],
 "structImGuiTextFilter.html#ab93ad5985019ff9d3781606551fc26cc":[44,0,270,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX99 =
 "structImGuiWindowClass.html#abeed6d608ce09234746eca22351b230a":[44,0,278,5],
 "structImGuiWindowClass.html#ac81fee42f78ec8226e0b04e263ff442f":[44,0,278,3],
 "structImGuiWindowClass.html#ad82c41766d99d228bff2b74f79536e99":[44,0,278,6],
-"structImGuiWindowClass.html#ae4001c457f0d2bccb1c7450b57eec46f":[44,0,278,2],
-"structImGuiWindowClass.html#afb2a905344bf0fec5be7c28332c369be":[44,0,278,7],
-"structImGuiWindowClass.html#afc6a3e871f04100997f28f53527211dc":[44,0,278,0],
-"structImGuiWindowDockStyle.html":[44,0,279]
+"structImGuiWindowClass.html#ae4001c457f0d2bccb1c7450b57eec46f":[44,0,278,2]
 };

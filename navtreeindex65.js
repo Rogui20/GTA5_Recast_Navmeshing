@@ -1,5 +1,6 @@
 var NAVTREEINDEX65 =
 {
+"SDL__video_8h.html#a5a2ad98e8920f8069bf89eb3f9bbc377":[45,0,5,2,1,89,92],
 "SDL__video_8h.html#a5abcf18592f00019c517e791f8ba53fc":[45,0,5,2,1,89,53],
 "SDL__video_8h.html#a5cbfffcfec91c22a7ca95fd1d5163db5":[45,0,5,2,1,89,78],
 "SDL__video_8h.html#a6051ce26885b32b80bc7285b4facd0a1":[45,0,5,2,1,89,127],
@@ -248,6 +249,5 @@ var NAVTREEINDEX65 =
 "ViewerCamera_8h.html":[45,0,7,24],
 "ViewerCamera_8h_source.html":[45,0,7,24],
 "android.html":[9],
-"android.html#a-note-regarding-the-use-of-the-dirty-rectangles-rendering-technique":[9,16],
-"android.html#building-an-app":[9,2]
+"android.html#a-note-regarding-the-use-of-the-dirty-rectangles-rendering-technique":[9,16]
 };

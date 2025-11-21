@@ -1,5 +1,8 @@
 var NAVTREEINDEX88 =
 {
+"imgui__internal_8h.html#aff17f7cf217f07d7a502535ed963364b":[45,0,7,0,6,92],
+"imgui__internal_8h.html#aff5fe59b050fb1d9a54f6b44d5c83b45":[45,0,7,0,6,541],
+"imgui__internal_8h.html#aff7a453b89555bb074f2fe46a159ac25":[45,0,7,0,6,198],
 "imgui__internal_8h.html#affbabc4a2c721b20ab7106d62be19385":[45,0,7,0,6,832],
 "imgui__internal_8h.html#affe95a2dc969f0d15fbd4b588c94ac1a":[45,0,7,0,6,286],
 "imgui__internal_8h.html#afffd29bc37cf04eb5f07511185ee6c01":[45,0,7,0,6,130],
@@ -246,8 +249,5 @@ var NAVTREEINDEX88 =
 "ios.html#game-center":[18,12],
 "ios.html#notes----accelerometer-as-joystick":[18,4],
 "ios.html#notes----application-events":[18,3],
-"ios.html#notes----corebluetoothframework":[18,11],
-"ios.html#notes----iphone-sdl-limitations":[18,10],
-"ios.html#notes----keyboard":[18,6],
-"ios.html#notes----mouse":[18,7]
+"ios.html#notes----corebluetoothframework":[18,11]
 };

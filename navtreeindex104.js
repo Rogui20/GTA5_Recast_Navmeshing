@@ -1,5 +1,8 @@
 var NAVTREEINDEX104 =
 {
+"structSDL__AssertData.html#ad026d8573970d2402230d5fa3c550b0f":[44,0,366,4],
+"structSDL__AssertData.html#aec6d372462fa8c94a9d04c1168cd38c9":[44,0,366,1],
+"structSDL__AudioCVT.html":[44,0,368],
 "structSDL__AudioCVT.html#a080db27b929efa983c5161360ffce310":[44,0,368,0],
 "structSDL__AudioCVT.html#a35093b3ad3331c17416c593a76012b63":[44,0,368,2],
 "structSDL__AudioCVT.html#a5628ff5ccf711de9d77c0a4a9f57d2f0":[44,0,368,7],
@@ -246,8 +249,5 @@ var NAVTREEINDEX104 =
 "structSDL__JoyHatEvent.html#ac583dafab46c44354e210a542aff57cc":[44,0,402,4],
 "structSDL__JoyHatEvent.html#ac9d9bb179f9116d16b3da47cacd74b55":[44,0,402,6],
 "structSDL__JoyHatEvent.html#adaca3e99773130ae456690ba83feb420":[44,0,402,2],
-"structSDL__JoyHatEvent.html#ade58ecb3e75aad4ef9809f040519a021":[44,0,402,3],
-"structSDL__JoyHatEvent.html#afbe72b6702cf7f70ccbe206737ab2e49":[44,0,402,1],
-"structSDL__KeyboardEvent.html":[44,0,403],
-"structSDL__KeyboardEvent.html#a110558eb96c113c86cfa31a7018c2346":[44,0,403,4]
+"structSDL__JoyHatEvent.html#ade58ecb3e75aad4ef9809f040519a021":[44,0,402,3]
 };

@@ -1,5 +1,8 @@
 var NAVTREEINDEX89 =
 {
+"ios.html#notes----iphone-sdl-limitations":[18,10],
+"ios.html#notes----keyboard":[18,6],
+"ios.html#notes----mouse":[18,7],
 "ios.html#notes----opengl-es":[18,5],
 "ios.html#notes----reading-and-writing-files":[18,8],
 "ios.html#notes----retina--high-dpi-and-window-sizes":[18,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX89 =
 "structBVItem.html#a93bd79d5cff1032583c104c06c1496ec":[44,0,4,0],
 "structBoundsItem.html":[44,0,1],
 "structBoundsItem.html#a1e8b825ec2613b2b80c8c2164cf8f4e6":[44,0,1,0],
-"structBoundsItem.html#a28e5203861495d89e1192ddde959e9ab":[44,0,1,1],
-"structBoundsItem.html#ab05a8256e9a88d9c1a24c88c424f88fc":[44,0,1,2],
-"structBuildSettings.html":[44,0,3],
-"structBuildSettings.html#a0c915a250455abe4d5bbfe8411533fe8":[44,0,3,0]
+"structBoundsItem.html#a28e5203861495d89e1192ddde959e9ab":[44,0,1,1]
 };

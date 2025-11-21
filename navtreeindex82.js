@@ -1,5 +1,8 @@
 var NAVTREEINDEX82 =
 {
+"imgui__impl__sdl2_8cpp.html#ade47a1476d35b1ab416cba6dc5b1ca7d":[45,0,7,0,0,25,49],
+"imgui__impl__sdl2_8cpp.html#ade7f27ebdb4261e5e9184379677e0bac":[45,0,7,0,0,25,34],
+"imgui__impl__sdl2_8cpp.html#ae7d148dd2c382c50e59d125907530838":[45,0,7,0,0,25,26],
 "imgui__impl__sdl2_8cpp.html#aea2eeaab96a591241a01aa9cda35be47":[45,0,7,0,0,25,9],
 "imgui__impl__sdl2_8cpp.html#aee3cb86ae119d8c5b03197b398498de6":[45,0,7,0,0,25,52],
 "imgui__impl__sdl2_8cpp.html#af02f4ad765d4f65b334eb14a4065f8eb":[45,0,7,0,0,25,36],
@@ -246,8 +249,5 @@ var NAVTREEINDEX82 =
 "imgui__impl__vulkan_8h.html#aeb3568e376007954c96ec0548f9fbb38":[45,0,7,0,0,37,16],
 "imgui__impl__vulkan_8h.html#afb26a54fbcc1421ce2c8d186b1503b1a":[45,0,7,0,0,37,6],
 "imgui__impl__vulkan_8h_source.html":[45,0,7,0,0,37],
-"imgui__impl__wgpu_8cpp.html":[45,0,7,0,0,38],
-"imgui__impl__wgpu_8cpp.html#a0420b5ad2d794718fef03685eef9d4ce":[45,0,7,0,0,38,11],
-"imgui__impl__wgpu_8cpp.html#a09885b971a1886a76f5ce8fe1fcfc90b":[45,0,7,0,0,38,13],
-"imgui__impl__wgpu_8cpp.html#a1dbae471b43ebf44868ee706fd817332":[45,0,7,0,0,38,5]
+"imgui__impl__wgpu_8cpp.html":[45,0,7,0,0,38]
 };

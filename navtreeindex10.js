@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"RecastDebugDraw_8h.html#aa0dcb87104fd153b14d82061253f05a3":[45,0,0,0,2,0],
 "RecastDebugDraw_8h.html#aa27138eac68bd4fba98a18940998b89c":[45,0,0,0,2,13],
 "RecastDebugDraw_8h.html#aad3643ecdf0a8b18414baebc88acb048":[45,0,0,0,2,14],
 "RecastDebugDraw_8h.html#ab61190774f8a73f704db0a69ebff30da":[45,0,0,0,2,12],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "RecastRasterization_8cpp.html#a395fca228305f4ce5e001277d6e11ed7":[45,0,8,1,9,6],
 "RecastRasterization_8cpp.html#a62b583caa984b1e6c218932f3218789b":[45,0,8,1,9,0],
 "RecastRasterization_8cpp.html#a62b583caa984b1e6c218932f3218789ba4f552701c96db6d643c5ae3741030fda":[45,0,8,1,9,0,0],
-"RecastRasterization_8cpp.html#a62b583caa984b1e6c218932f3218789ba505b172a6e189588ed8d8607e857f432":[45,0,8,1,9,0,1],
-"RecastRasterization_8cpp.html#a62b583caa984b1e6c218932f3218789ba5b56c442d066db5cc6e612ae9bcadcf4":[45,0,8,1,9,0,2]
+"RecastRasterization_8cpp.html#a62b583caa984b1e6c218932f3218789ba505b172a6e189588ed8d8607e857f432":[45,0,8,1,9,0,1]
 };

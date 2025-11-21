@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"RecastRasterization_8cpp.html#a62b583caa984b1e6c218932f3218789ba5b56c442d066db5cc6e612ae9bcadcf4":[45,0,8,1,9,0,2],
 "RecastRasterization_8cpp.html#aa4ff34a2ddb3783399f347167e294fb3":[45,0,8,1,9,1],
 "RecastRasterization_8cpp.html#ad16e8ad5fc4ebec8d71d58217215ff60":[45,0,8,1,9,5],
 "RecastRasterization_8cpp.html#af54026b5ecdfeabb867b7147d8730303":[45,0,8,1,9,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "SDL__audio_8h.html#aaffc0931336d0d79717a144039670223":[45,0,5,2,1,5,10],
 "SDL__audio_8h.html#ab070cdd4d92ee3824cafefe24c620326":[45,0,5,2,1,5,34],
 "SDL__audio_8h.html#ab093ff9871e917dac8d2fa5169970cf5":[45,0,5,2,1,5,61],
-"SDL__audio_8h.html#ab4c8e2a896ccf86599435af81fca928c":[45,0,5,2,1,5,82],
-"SDL__audio_8h.html#ab9ad945b4b15d816802f5a79da06c9f9":[45,0,5,2,1,5,76]
+"SDL__audio_8h.html#ab4c8e2a896ccf86599435af81fca928c":[45,0,5,2,1,5,82]
 };

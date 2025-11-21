@@ -104,6 +104,7 @@ $(document).ready(function(){initNavTree('ObjLoader_8cpp.html',''); initResizabl
 <code>#include &lt;sstream&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;cfloat&gt;</code><br />
+<code>#include &lt;filesystem&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -114,6 +115,8 @@ Classes</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:abe5f51de0d57f15c688e511431bcebb6" id="r_abe5f51de0d57f15c688e511431bcebb6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structTempVertex.html">TempVertex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ObjLoader_8cpp.html#abe5f51de0d57f15c688e511431bcebb6">ParseFaceElement</a> (const <a class="el" href="glad_8h.html#ae84541b4f3d8e1ea24ec0f466a8c568b">std::string</a> &amp;token)</td></tr>
 <tr class="separator:abe5f51de0d57f15c688e511431bcebb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef3895dd8c9833dafcab966e136b5bbd" id="r_aef3895dd8c9833dafcab966e136b5bbd"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ObjLoader_8cpp.html#aef3895dd8c9833dafcab966e136b5bbd">SaveMeshToBin</a> (const <a class="el" href="glad_8h.html#ae84541b4f3d8e1ea24ec0f466a8c568b">std::string</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ab25d8cd967ccbd19b630d7100ff8f67e">path</a>, const std::vector&lt; glm::vec3 &gt; &amp;originalVertices, const std::vector&lt; unsigned int &gt; &amp;<a class="el" href="glad_8h.html#a94ae715eebfc1eb65456c0ab9b97f1e9">indices</a>, const glm::vec3 &amp;navMinB, const glm::vec3 &amp;navMaxB)</td></tr>
+<tr class="separator:aef3895dd8c9833dafcab966e136b5bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="abe5f51de0d57f15c688e511431bcebb6" name="abe5f51de0d57f15c688e511431bcebb6"></a>
@@ -131,6 +134,60 @@ Functions</h2></td></tr>
           <td class="paramtype">const <a class="el" href="glad_8h.html#ae84541b4f3d8e1ea24ec0f466a8c568b">std::string</a> &amp;&#160;</td>
           <td class="paramname"><em>token</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aef3895dd8c9833dafcab966e136b5bbd" name="aef3895dd8c9833dafcab966e136b5bbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef3895dd8c9833dafcab966e136b5bbd">&#9670;&#160;</a></span>SaveMeshToBin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool SaveMeshToBin </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="glad_8h.html#ae84541b4f3d8e1ea24ec0f466a8c568b">std::string</a> &amp;&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; glm::vec3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>originalVertices</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; unsigned int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>indices</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>navMinB</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>navMaxB</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>

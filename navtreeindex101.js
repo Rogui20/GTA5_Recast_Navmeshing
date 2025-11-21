@@ -1,5 +1,8 @@
 var NAVTREEINDEX101 =
 {
+"structImGui__ImplOpenGL2__Data.html":[44,0,142],
+"structImGui__ImplOpenGL2__Data.html#a048c7b389a00313e4f483eeb2d39b6d8":[44,0,142,0],
+"structImGui__ImplOpenGL3__Data.html":[44,0,143],
 "structImGui__ImplOpenGL3__Data.html#a0fe508e011d4b62e6a27883c1fc0b19a":[44,0,143,1],
 "structImGui__ImplOpenGL3__Data.html#a207e0bc0e956f26b8a3279e7242707c5":[44,0,143,11],
 "structImGui__ImplOpenGL3__Data.html#a2778e5caad83bc7b69981c53d5e9ed5e":[44,0,143,14],
@@ -246,8 +249,5 @@ var NAVTREEINDEX101 =
 "structImGui__ImplWGPU__InitInfo.html#abcd6605045f0999f26bcca5ee6329af7":[44,0,170,4],
 "structImGui__ImplWGPU__InitInfo.html#ada0c7e772195e1466be60c78cf0b52e0":[44,0,170,3],
 "structImGui__ImplWGPU__InitInfo.html#ae5463ab195f701fe7d5fde07035f15b9":[44,0,170,0],
-"structImGui__ImplWGPU__InitInfo.html#ae63cbe11129eea4fc73fef1348ffc974":[44,0,170,5],
-"structImGui__ImplWGPU__InitInfo.html#ae9a8f8f3fd94b8763d9c9d73ceabea42":[44,0,170,2],
-"structImGui__ImplWGPU__RenderState.html":[44,0,171],
-"structImGui__ImplWGPU__RenderState.html#a973eeb1fd5d1655ace41ea66c41f9e5a":[44,0,171,0]
+"structImGui__ImplWGPU__InitInfo.html#ae63cbe11129eea4fc73fef1348ffc974":[44,0,170,5]
 };

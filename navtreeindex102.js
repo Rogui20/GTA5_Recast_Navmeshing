@@ -1,5 +1,8 @@
 var NAVTREEINDEX102 =
 {
+"structImGui__ImplWGPU__InitInfo.html#ae9a8f8f3fd94b8763d9c9d73ceabea42":[44,0,170,2],
+"structImGui__ImplWGPU__RenderState.html":[44,0,171],
+"structImGui__ImplWGPU__RenderState.html#a973eeb1fd5d1655ace41ea66c41f9e5a":[44,0,171,0],
 "structImGui__ImplWGPU__RenderState.html#ad8078c526f71cd7d93cfbdd046debcce":[44,0,171,1],
 "structImGui__ImplWGPU__Texture.html":[44,0,172],
 "structImGui__ImplWGPU__Texture.html#a308da602199a59b967a92105a72d2f34":[44,0,172,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX102 =
 "structImVector.html#a6df36345c5943c83cf11b8e827584bf9":[44,0,300,31],
 "structImVector.html#a6e2ee59d8b2fa1583617a2110a56aed4":[44,0,300,4],
 "structImVector.html#a6f55b8b7351295c06eeb4f4f28af14ae":[44,0,300,28],
-"structImVector.html#a74b5478f1f6fd471cc71219bce483db6":[44,0,300,1],
-"structImVector.html#a87a4cae517c156b73823c5cd5e86378a":[44,0,300,21],
-"structImVector.html#a8bd77e4e7581d8e5f9e98d7c2f3c2a80":[44,0,300,2],
-"structImVector.html#a8c903ecb1aaee0601b6a8ad835a4a435":[44,0,300,43]
+"structImVector.html#a74b5478f1f6fd471cc71219bce483db6":[44,0,300,1]
 };

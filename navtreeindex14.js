@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"SDL__config__macosx_8h.html#a575cd33d7c103a84b4d54759e71ea78d":[45,0,5,2,1,13,28],
 "SDL__config__macosx_8h.html#a5807a152fd68558b1eac13d9e3c94e59":[45,0,5,2,1,13,117],
 "SDL__config__macosx_8h.html#a59f02a19ebe275d970009bb77b6f361d":[45,0,5,2,1,13,135],
 "SDL__config__macosx_8h.html#a5d1948f54475325c483e4e487435c543":[45,0,5,2,1,13,89],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[45,0,5,2,1,16,84],
 "SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[45,0,5,2,1,16,85],
 "SDL__config__os2_8h.html#ad4c234dd1625255dc626a15886306e7d":[45,0,5,2,1,16,65],
-"SDL__config__os2_8h.html#ad5351e07e3ee3d8d34e1689351c47c75":[45,0,5,2,1,16,95],
-"SDL__config__os2_8h.html#ad7c2edb2365c947f4bff624c7be9f890":[45,0,5,2,1,16,76]
+"SDL__config__os2_8h.html#ad5351e07e3ee3d8d34e1689351c47c75":[45,0,5,2,1,16,95]
 };

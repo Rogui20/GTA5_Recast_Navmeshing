@@ -1,5 +1,8 @@
 var NAVTREEINDEX90 =
 {
+"structBoundsItem.html#ab05a8256e9a88d9c1a24c88c424f88fc":[44,0,1,2],
+"structBuildSettings.html":[44,0,3],
+"structBuildSettings.html#a0c915a250455abe4d5bbfe8411533fe8":[44,0,3,0],
 "structBuildSettings.html#a1c247eac02103152762034a47530086b":[44,0,3,12],
 "structBuildSettings.html#a3d005a4039976ee34798ff06775f6d73":[44,0,3,14],
 "structBuildSettings.html#a5b8f1ba1531e71e839b1a5f340a674e4":[44,0,3,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX90 =
 "structImChunkStream.html#ab3dccb857d0b35ae295d14ff7f9dd0ac":[44,0,96,7],
 "structImChunkStream.html#ac6036044bd7eae552342b430527cc620":[44,0,96,11],
 "structImChunkStream.html#adbd734ea08939c0bce519e90b26c9d28":[44,0,96,10],
-"structImChunkStream.html#aef1d3eeb4c1aa2980da6a14ae96d2499":[44,0,96,4],
-"structImColor.html":[44,0,97],
-"structImColor.html#a10f1de242f13c93f8be64545e4cbcb0a":[44,0,97,7],
-"structImColor.html#a4134d15305bf349209ddd6571d727848":[44,0,97,3]
+"structImChunkStream.html#aef1d3eeb4c1aa2980da6a14ae96d2499":[44,0,96,4]
 };
