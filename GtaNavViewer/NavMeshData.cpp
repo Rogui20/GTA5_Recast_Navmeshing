@@ -43,6 +43,24 @@ NavMeshData::~NavMeshData()
     }
 }
 
+void NavMeshData::AddOffmeshLink(const glm::vec3& start,
+                                 const glm::vec3& end,
+                                 float radius,
+                                 bool bidirectional)
+{
+    OffmeshLink link{};
+    link.start = start;
+    link.end = end;
+    link.radius = radius;
+    link.bidirectional = bidirectional;
+    m_offmeshLinks.push_back(link);
+}
+
+void NavMeshData::ClearOffmeshLinks()
+{
+    m_offmeshLinks.clear();
+}
+
 NavMeshData::NavMeshData(NavMeshData&& other) noexcept
 {
     *this = std::move(other);
@@ -186,6 +204,7 @@ bool NavMeshData::BuildTileAt(const glm::vec3& worldPos,
     rcVcopy(buildInput.meshBMin, m_cachedBMin);
     rcVcopy(buildInput.meshBMax, m_cachedBMax);
     buildInput.baseCfg = m_cachedBaseCfg;
+    buildInput.offmeshLinks = &m_offmeshLinks;
 
     bool built = false;
     bool empty = false;
@@ -365,6 +384,7 @@ bool NavMeshData::RebuildSpecificTiles(const std::vector<std::pair<int, int>>& t
     rcVcopy(buildInput.meshBMin, m_cachedBMin);
     rcVcopy(buildInput.meshBMax, m_cachedBMax);
     buildInput.baseCfg = m_cachedBaseCfg;
+    buildInput.offmeshLinks = &m_offmeshLinks;
 
     bool anyTouched = false;
 
@@ -631,6 +651,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     rcVcopy(buildInput.meshBMin, meshBMin);
     rcVcopy(buildInput.meshBMax, meshBMax);
     buildInput.baseCfg = baseCfg;
+    buildInput.offmeshLinks = &m_offmeshLinks;
 
     dtNavMesh* newNav = nullptr;
     bool ok = false;

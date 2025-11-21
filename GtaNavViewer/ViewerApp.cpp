@@ -1139,6 +1139,7 @@ void ViewerApp::RenderFrame()
                     ImGui::RadioButton("Pathfind", &viewportModeValue, static_cast<int>(ViewportClickMode::Pathfind_Normal));
                     ImGui::RadioButton("Pathfind With Min Edge Distance", &viewportModeValue, static_cast<int>(ViewportClickMode::Pathfind_MinEdge));
                     ImGui::RadioButton("Edit Mesh", &viewportModeValue, static_cast<int>(ViewportClickMode::EditMesh));
+                    ImGui::RadioButton("Add Offmesh Link", &viewportModeValue, static_cast<int>(ViewportClickMode::AddOffmeshLink));
 
                     viewportClickMode = static_cast<ViewportClickMode>(viewportModeValue);
                     ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::Pathfind_MinEdge);
@@ -1154,6 +1155,12 @@ void ViewerApp::RenderFrame()
                             pickedMeshIndex = -1;
                             pickedTri = -1;
                         }
+                    }
+
+                    if (previousMode == ViewportClickMode::AddOffmeshLink && viewportClickMode != ViewportClickMode::AddOffmeshLink)
+                    {
+                        hasOffmeshStart = false;
+                        hasOffmeshTarget = false;
                     }
 
                     if (viewportClickMode == ViewportClickMode::EditMesh)
@@ -1189,10 +1196,15 @@ void ViewerApp::RenderFrame()
                     case ViewportClickMode::Pathfind_Normal: activeMode = "Pathfind"; break;
                     case ViewportClickMode::Pathfind_MinEdge: activeMode = "Pathfind With Min Edge Distance"; break;
                     case ViewportClickMode::EditMesh: activeMode = "Edit Mesh"; break;
+                    case ViewportClickMode::AddOffmeshLink: activeMode = "Add Offmesh Link"; break;
                     }
-                    
+
                     ImGui::Text("Modo ativo: %s", activeMode);
                     ImGui::Text("Start: %s | Target: %s", hasPathStart ? "definido" : "pendente", hasPathTarget ? "definido" : "pendente");
+                    ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::AddOffmeshLink);
+                    ImGui::Checkbox("BiDir", &offmeshBidirectional);
+                    ImGui::Text("Offmesh Start: %s | Offmesh Target: %s", hasOffmeshStart ? "definido" : "pendente", hasOffmeshTarget ? "definido" : "pendente");
+                    ImGui::EndDisabled();
                 }
 
                 if (ImGui::CollapsingHeader("GTA Handler", ImGuiTreeNodeFlags_DefaultOpen))

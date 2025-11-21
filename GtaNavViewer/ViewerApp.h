@@ -121,7 +121,8 @@ private:
         RemoveTileAt = 2,
         Pathfind_Normal = 3,
         Pathfind_MinEdge = 4,
-        EditMesh = 5
+        EditMesh = 5,
+        AddOffmeshLink = 6
     };
 
     enum class MeshEditMode
@@ -150,6 +151,11 @@ private:
     bool hasPathTarget = false;
     glm::vec3 pathStart{0.0f};
     glm::vec3 pathTarget{0.0f};
+    bool offmeshBidirectional = true;
+    bool hasOffmeshStart = false;
+    bool hasOffmeshTarget = false;
+    glm::vec3 offmeshStart{0.0f};
+    glm::vec3 offmeshTarget{0.0f};
     std::vector<DebugLine> pathLines;
     dtNavMeshQuery* navQuery = nullptr;
     dtQueryFilter pathQueryFilter{};
