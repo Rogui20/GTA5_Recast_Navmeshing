@@ -229,7 +229,6 @@ void ViewerApp::DrawEditGizmo()
 
     if (meshEditMode == MeshEditMode::Rotate)
     {
-        glm::mat3 rot = GetRotationMatrix(instance.rotation);
         float radius = 3.5f + camDist * 0.03f;
         const int segments = 64;
 
@@ -251,13 +250,13 @@ void ViewerApp::DrawEditGizmo()
         renderer->drawNavmeshLines(circle, gizmoColor(axis, color), 3.0f);
     };
 
-        glm::vec3 right = rot * glm::vec3(1,0,0);
-        glm::vec3 up    = rot * glm::vec3(0,1,0);
-        glm::vec3 fwd   = rot * glm::vec3(0,0,1);
+        glm::vec3 right = GetAxisDirection(instance, GizmoAxis::X);
+        glm::vec3 up    = GetAxisDirection(instance, GizmoAxis::Y);
+        glm::vec3 fwd   = GetAxisDirection(instance, GizmoAxis::Z);
 
         drawCircle(GizmoAxis::X, up, fwd, glm::vec3(1,0,0));
         drawCircle(GizmoAxis::Y, right, fwd, glm::vec3(0,1,0));
-        drawCircle(GizmoAxis::Z, right, up, glm::vec3(0,0,1));
+        drawCircle(GizmoAxis::Z, glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1));
     }
 }
 

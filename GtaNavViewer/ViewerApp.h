@@ -183,6 +183,7 @@ private:
     void NormalizeMeshRotation(MeshInstance& instance) const;
     glm::mat3 GetRotationMatrix(const glm::vec3& eulerDegrees) const;
     glm::vec3 GetAxisDirection(const MeshInstance& instance, GizmoAxis axis) const;
+    glm::vec3 GetRotationAxisDirection(const MeshInstance& instance, GizmoAxis axis) const;
     bool TryBeginMoveDrag(const Ray& ray, MeshInstance& instance);
     bool TryBeginRotateDrag(const Ray& ray, MeshInstance& instance);
     void UpdateEditDrag(int mouseX, int mouseY);

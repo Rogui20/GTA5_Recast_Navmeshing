@@ -233,6 +233,14 @@ glm::vec3 ViewerApp::GetAxisDirection(const MeshInstance& instance, GizmoAxis ax
     }
 }
 
+glm::vec3 ViewerApp::GetRotationAxisDirection(const MeshInstance& instance, GizmoAxis axis) const
+{
+    if (axis == GizmoAxis::Z)
+        return glm::vec3(0,0,1);
+
+    return GetAxisDirection(instance, axis);
+}
+
 bool ViewerApp::TryBeginMoveDrag(const Ray& ray, MeshInstance& instance)
 {
     float camDist = glm::length(camera->pos - instance.position);
@@ -294,7 +302,7 @@ bool ViewerApp::TryBeginRotateDrag(const Ray& ray, MeshInstance& instance)
     std::array<GizmoAxis, 3> axes = { GizmoAxis::X, GizmoAxis::Y, GizmoAxis::Z };
     for (auto axis : axes)
     {
-        glm::vec3 axisDir = GetAxisDirection(instance, axis);
+        glm::vec3 axisDir = GetRotationAxisDirection(instance, axis);
         glm::vec3 hitPoint;
         if (!ProjectRayOntoPlane(ray, instance.position, axisDir, hitPoint))
             continue;
