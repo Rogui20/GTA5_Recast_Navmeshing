@@ -36,6 +36,7 @@ in vec3 vWorldPos;
 uniform int uRenderMode;
 uniform vec3 uSolidColor;
 uniform float uSolidAlpha;
+uniform vec3 uBaseColor;
 
 out vec4 FragColor;
 
@@ -46,7 +47,7 @@ void main()
 
     if (uRenderMode == 0) {
         // Blender-like SOLID shading (lambert + subtle fill light)
-        vec3 baseColor = vec3(0.72, 0.76, 0.82);
+        vec3 baseColor = uBaseColor;
 
         // Key light similar to Blender's default solid lighting
         vec3 L1 = normalize(vec3(0.45, 0.80, 0.35));
@@ -77,7 +78,7 @@ void main()
         // ---- LIT estilo Blender SOLID ----
         vec3 L = normalize(vec3(0.4,1.0,0.2));
         float diff = max(dot(N,L), 0.0);
-        vec3 base = vec3(0.8, 0.8, 0.9);
+        vec3 base = uBaseColor;
         vec3 col  = base*(0.15 + diff*0.85);
         FragColor = vec4(col,1);
     }
@@ -250,6 +251,11 @@ void RendererGL::Begin(ViewerCamera* cam, RenderMode mode)
     glUseProgram(shader);
     glUniform1i(glGetUniformLocation(shader, "uRenderMode"), (int)mode);
     glUniform1f(glGetUniformLocation(shader, "uSolidAlpha"), 1.0f);
+
+    glm::vec3 baseColor = glm::vec3(0.72f, 0.76f, 0.82f);
+    if (mode == RenderMode::Lit)
+        baseColor = glm::vec3(0.8f, 0.8f, 0.9f);
+    glUniform3f(glGetUniformLocation(shader, "uBaseColor"), baseColor.x, baseColor.y, baseColor.z);
 
 
     // Matriz de projeção e view sempre iguais

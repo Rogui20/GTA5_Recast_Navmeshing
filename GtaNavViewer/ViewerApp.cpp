@@ -164,6 +164,12 @@ void ViewerApp::RebuildDebugLineBuffer()
 
 void ViewerApp::DrawSelectedMeshHighlight()
 {
+    if (viewportClickMode != ViewportClickMode::EditMesh)
+        return;
+
+    if (!drawMeshOutlines)
+        return;
+
     if (pickedMeshIndex < 0 || pickedMeshIndex >= static_cast<int>(meshInstances.size()))
         return;
 
@@ -172,8 +178,6 @@ void ViewerApp::DrawSelectedMeshHighlight()
         return;
 
     glm::mat4 model = GetModelMatrix(instance);
-    std::vector<glm::vec3> worldTris;
-    worldTris.reserve(instance.mesh->indices.size());
 
     std::unordered_set<uint64_t> edgeSet;
     std::vector<DebugLine> outlines;
@@ -204,18 +208,9 @@ void ViewerApp::DrawSelectedMeshHighlight()
         glm::vec3 v1 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i1], 1.0f));
         glm::vec3 v2 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i2], 1.0f));
 
-        worldTris.push_back(v0);
-        worldTris.push_back(v1);
-        worldTris.push_back(v2);
-
         addEdge(i0, i1);
         addEdge(i1, i2);
         addEdge(i2, i0);
-    }
-
-    if (!worldTris.empty())
-    {
-        renderer->drawNavmeshTriangles(worldTris, glm::vec3(1.0f, 1.0f, 0.2f), 0.45f);
     }
 
     if (!outlines.empty())
@@ -847,6 +842,11 @@ void ViewerApp::RenderFrame()
                     {
                         editDragActive = false;
                         activeGizmoAxis = GizmoAxis::None;
+                        if (previousMode == ViewportClickMode::EditMesh)
+                        {
+                            pickedMeshIndex = -1;
+                            pickedTri = -1;
+                        }
                     }
 
                     if (viewportClickMode == ViewportClickMode::EditMesh)
@@ -856,6 +856,8 @@ void ViewerApp::RenderFrame()
                         ImGui::RadioButton("Move", &editModeValue, static_cast<int>(MeshEditMode::Move));
                         ImGui::RadioButton("Rotate", &editModeValue, static_cast<int>(MeshEditMode::Rotate));
                         meshEditMode = static_cast<MeshEditMode>(editModeValue);
+
+                        ImGui::Checkbox("Draw Mesh Outlines", &drawMeshOutlines);
 
                         if (meshEditMode == MeshEditMode::Move)
                         {
@@ -959,15 +961,20 @@ void ViewerApp::RenderFrame()
                                 continue;
                             }
 
+                            bool allowMeshSelection = viewportClickMode == ViewportClickMode::EditMesh;
+
                             ImGui::PushID(static_cast<int>(i));
                             ImGui::TableNextRow();
 
                             ImGui::TableNextColumn();
-                            bool isSelected = static_cast<int>(i) == pickedMeshIndex;
+                            bool isSelected = allowMeshSelection && static_cast<int>(i) == pickedMeshIndex;
+                            ImGui::BeginDisabled(!allowMeshSelection);
                             if (ImGui::Selectable(instance.name.c_str(), isSelected))
                             {
                                 pickedMeshIndex = static_cast<int>(i);
+                                pickedTri = -1;
                             }
+                            ImGui::EndDisabled();
 
                             ImGui::TableNextColumn();
                             glm::vec3 previousPos = instance.position;
@@ -1230,15 +1237,23 @@ void ViewerApp::RenderFrame()
     renderer->Begin(camera, renderMode);
     glUniform3f(glGetUniformLocation(renderer->GetShader(), "uSolidColor"), 1,1,1);
 
+    glm::vec3 defaultBaseColor = renderMode == RenderMode::Lit ?
+        glm::vec3(0.8f, 0.8f, 0.9f) : glm::vec3(0.72f, 0.76f, 0.82f);
+
     for (size_t meshIdx = 0; meshIdx < meshInstances.size(); ++meshIdx)
     {
         const auto& instance = meshInstances[meshIdx];
         if (!instance.mesh)
             continue;
 
+        bool isSelected = viewportClickMode == ViewportClickMode::EditMesh &&
+            static_cast<int>(meshIdx) == pickedMeshIndex;
+
         glm::mat4 model = GetModelMatrix(instance);
 
         glUseProgram(renderer->GetShader());
+        glm::vec3 meshColor = isSelected ? glm::vec3(1.0f, 0.6f, 0.2f) : defaultBaseColor;
+        glUniform3f(glGetUniformLocation(renderer->GetShader(), "uBaseColor"), meshColor.x, meshColor.y, meshColor.z);
         glUniformMatrix4fv(
             glGetUniformLocation(renderer->GetShader(), "uModel"),
             1, GL_FALSE, &model[0][0]
