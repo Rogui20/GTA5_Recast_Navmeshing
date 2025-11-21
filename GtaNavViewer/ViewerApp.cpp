@@ -414,8 +414,8 @@ bool ViewerApp::InitImGui()
 }
 
 bool ViewerApp::LoadMeshFromPath(const std::string& path)
-{ 
-    std::unique_ptr<Mesh> newMesh(ObjLoader::LoadObj(path, centerMesh));
+{
+    std::unique_ptr<Mesh> newMesh(ObjLoader::LoadMesh(path, centerMesh, preferBin));
     if (!newMesh)
     {
         printf("Falha ao carregar OBJ!\n");
@@ -799,6 +799,8 @@ void ViewerApp::RenderFrame()
                     LoadMeshFromPath(selectedEntry);
                 }
             }
+
+            ImGui::Checkbox("Preferir BIN", &preferBin);
         }
         else
         {
