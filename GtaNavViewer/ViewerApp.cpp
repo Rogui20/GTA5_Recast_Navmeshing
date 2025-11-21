@@ -1,4 +1,5 @@
 // ViewerApp.cpp
+#include <imgui.h>
 #include "ViewerApp.h"
 #include "ViewerCamera.h"
 #include "RendererGL.h"
@@ -12,7 +13,6 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
-#include <imgui.h>
 #include <backends/imgui_impl_sdl2.h>
 #include <backends/imgui_impl_opengl3.h>
 
