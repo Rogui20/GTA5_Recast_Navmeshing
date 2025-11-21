@@ -217,6 +217,7 @@ private:
     bool rightButtonDragged = false;
     int rightButtonDownX = 0;
     int rightButtonDownY = 0;
+    bool drawMeshOutlines = true;
 
     struct NavmeshJobResult
     {
