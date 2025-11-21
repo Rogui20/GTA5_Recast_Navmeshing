@@ -1,5 +1,11 @@
 var NAVTREEINDEX13 =
 {
+"SDL__config__emscripten_8h.html#a753e4dbf1eeb6e98c20be4f4957e7f0b":[45,0,5,2,1,11,20],
+"SDL__config__emscripten_8h.html#a7981d8bf53b0cb48f41ab0e4ddb7c629":[45,0,5,2,1,11,50],
+"SDL__config__emscripten_8h.html#a7b300f836d3d79d0d9b0039a6b842ded":[45,0,5,2,1,11,54],
+"SDL__config__emscripten_8h.html#a7bf58a312adc4323d27c76164b73faab":[45,0,5,2,1,11,57],
+"SDL__config__emscripten_8h.html#a7ff023a4e451532aa34a6dace7f6255e":[45,0,5,2,1,11,33],
+"SDL__config__emscripten_8h.html#a82d9e6e346639f8e561c4179386c4e5b":[45,0,5,2,1,11,26],
 "SDL__config__emscripten_8h.html#a8842122c022f68c0be435220abeeced9":[45,0,5,2,1,11,32],
 "SDL__config__emscripten_8h.html#a8a106b4b1b82a5b9dc1878e2a7913b04":[45,0,5,2,1,11,25],
 "SDL__config__emscripten_8h.html#a8bcdbb0550d2cf79483efdfb3fe9013f":[45,0,5,2,1,11,134],
@@ -108,8 +114,8 @@ var NAVTREEINDEX13 =
 "SDL__config__iphoneos_8h.html#a49afaaefcf9868c6d3a9fb43706af4db":[45,0,5,2,1,12,94],
 "SDL__config__iphoneos_8h.html#a4ac6a60cb19181437136206238f16497":[45,0,5,2,1,12,98],
 "SDL__config__iphoneos_8h.html#a4ae0130997c433d6207e0484df21b1c3":[45,0,5,2,1,12,105],
-"SDL__config__iphoneos_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[45,0,5,2,1,12,61],
 "SDL__config__iphoneos_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[45,0,5,2,1,12,62],
+"SDL__config__iphoneos_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[45,0,5,2,1,12,61],
 "SDL__config__iphoneos_8h.html#a4e31ef0be24f881a3a13e42723db7095":[45,0,5,2,1,12,30],
 "SDL__config__iphoneos_8h.html#a4f6ff4162269254c4c4b86bc9892ecce":[45,0,5,2,1,12,41],
 "SDL__config__iphoneos_8h.html#a511125742370c737572a74059e66813a":[45,0,5,2,1,12,92],
@@ -243,11 +249,5 @@ var NAVTREEINDEX13 =
 "SDL__config__macosx_8h.html#a550e5c272cc3cf3814651721167dcd23":[45,0,5,2,1,13,139],
 "SDL__config__macosx_8h.html#a561075a6afb23894833fc887a1552928":[45,0,5,2,1,13,66],
 "SDL__config__macosx_8h.html#a575cd33d7c103a84b4d54759e71ea78d":[45,0,5,2,1,13,28],
-"SDL__config__macosx_8h.html#a5807a152fd68558b1eac13d9e3c94e59":[45,0,5,2,1,13,117],
-"SDL__config__macosx_8h.html#a59f02a19ebe275d970009bb77b6f361d":[45,0,5,2,1,13,135],
-"SDL__config__macosx_8h.html#a5d1948f54475325c483e4e487435c543":[45,0,5,2,1,13,89],
-"SDL__config__macosx_8h.html#a61909f2610e1cfb79b200baa2d6c6ce7":[45,0,5,2,1,13,9],
-"SDL__config__macosx_8h.html#a631f7011e0e3afd6f6732e18ea7be4ac":[45,0,5,2,1,13,15],
-"SDL__config__macosx_8h.html#a63b337f095e6d3a5408da0ec0e936646":[45,0,5,2,1,13,124],
-"SDL__config__macosx_8h.html#a68fd2b96dc8470cbc16cda329e896122":[45,0,5,2,1,13,37]
+"SDL__config__macosx_8h.html#a5807a152fd68558b1eac13d9e3c94e59":[45,0,5,2,1,13,117]
 };

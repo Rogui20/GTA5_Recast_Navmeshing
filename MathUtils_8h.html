@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Recast Navigation: ViewerApp.cpp File Reference</title>
+<title>Recast Navigation: MathUtils.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -67,7 +67,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('ViewerApp_8cpp.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('MathUtils_8h.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -93,36 +93,75 @@ $(document).ready(function(){initNavTree('ViewerApp_8cpp.html',''); initResizabl
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ViewerApp.cpp File Reference</div></div>
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">MathUtils.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="ViewerApp_8h_source.html">ViewerApp.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;glm/glm.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="ViewerCamera_8h_source.html">ViewerCamera.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="RendererGL_8h_source.html">RendererGL.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ObjLoader_8h_source.html">ObjLoader.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Mesh_8h_source.html">Mesh.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="RenderMode_8h_source.html">RenderMode.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="NavMeshData_8h_source.html">NavMeshData.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="GtaNavAPI_8h_source.html">GtaNavAPI.h</a>&quot;</code><br />
-<code>#include &lt;<a class="el" href="glad_8h_source.html">glad/glad.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="SDL_8h_source.html">SDL.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="SDL__opengl_8h_source.html">SDL_opengl.h</a>&gt;</code><br />
-<code>#include &lt;imgui.h&gt;</code><br />
-<code>#include &lt;<a class="el" href="imgui__impl__sdl2_8h_source.html">backends/imgui_impl_sdl2.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="imgui__impl__opengl3_8h_source.html">backends/imgui_impl_opengl3.h</a>&gt;</code><br />
-<code>#include &lt;glm/gtc/matrix_transform.hpp&gt;</code><br />
-<code>#include &lt;filesystem&gt;</code><br />
-<code>#include &lt;fstream&gt;</code><br />
-<code>#include &lt;algorithm&gt;</code><br />
-<code>#include &lt;cctype&gt;</code><br />
-<code>#include &lt;unordered_set&gt;</code><br />
-</div></div><!-- contents -->
+</div>
+<p><a href="MathUtils_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:adf63b9e3629488ddbbfe2472a2c3e06d" id="r_adf63b9e3629488ddbbfe2472a2c3e06d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="MathUtils_8h.html#adf63b9e3629488ddbbfe2472a2c3e06d">RayTriangleIntersect</a> (const <a class="el" href="structRay.html">Ray</a> &amp;<a class="el" href="glad_8h.html#abe08814c2f72843fde4d8df41440d5a0">r</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#aa13d73852e3d050fbad707978af4ce40">v0</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#aabdd9aabede45fcf97cea04f88d2ad60">v1</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ae35401c8c2fcdcc48c20ba325ee473ea">v2</a>, float &amp;outDist)</td></tr>
+<tr class="separator:adf63b9e3629488ddbbfe2472a2c3e06d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="adf63b9e3629488ddbbfe2472a2c3e06d" name="adf63b9e3629488ddbbfe2472a2c3e06d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf63b9e3629488ddbbfe2472a2c3e06d">&#9670;&#160;</a></span>RayTriangleIntersect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool RayTriangleIntersect </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structRay.html">Ray</a> &amp;&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>v0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>v1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>v2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &amp;&#160;</td>
+          <td class="paramname"><em>outDist</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_f73acc4eb87dae63dd8b26467f028b41.html">GtaNavViewer</a></li><li class="navelem"><a class="el" href="ViewerApp_8cpp.html">ViewerApp.cpp</a></li>
+    <li class="navelem"><a class="el" href="dir_f73acc4eb87dae63dd8b26467f028b41.html">GtaNavViewer</a></li><li class="navelem"><a class="el" href="MathUtils_8h.html">MathUtils.h</a></li>
       &nbsp;&nbsp;<a href="https://github.com/recastnavigation/recastnavigation">Project Home</a> 
       | <a href="./License.txt">Licence (ZLib)</a>
       | Copyright 2009 Mikko Mononen

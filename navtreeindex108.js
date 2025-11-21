@@ -1,5 +1,11 @@
 var NAVTREEINDEX108 =
 {
+"structstbtt__pack__range.html#a3b414cbee1e164c29dd138e0ae3d5759":[44,0,457,2],
+"structstbtt__pack__range.html#a6288f14006e257544db3d015c32b4113":[44,0,457,6],
+"structstbtt__pack__range.html#a7a642139ce446c58fde5c48553bcf008":[44,0,457,4],
+"structstbtt__pack__range.html#aa8f7ddd637ed341ea39b08466fab9284":[44,0,457,1],
+"structstbtt__packedchar.html":[44,0,458],
+"structstbtt__packedchar.html#a02cb73a5af37ed60dafd5e4b731af09e":[44,0,458,0],
 "structstbtt__packedchar.html#a28707ae98d1fa946b3390840aeff76ab":[44,0,458,2],
 "structstbtt__packedchar.html#a2ec5bbd1010c9a9b7cbdeb7503dcaffa":[44,0,458,8],
 "structstbtt__packedchar.html#a3a33880f925ca826c908cbf9f0673c9f":[44,0,458,4],

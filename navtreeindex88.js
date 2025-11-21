@@ -1,5 +1,11 @@
 var NAVTREEINDEX88 =
 {
+"imgui__widgets_8cpp.html#a295377d91a81714e475c3675142944aa":[45,0,7,0,8,18],
+"imgui__widgets_8cpp.html#a295cb58de3f221694160b173529ca4d7":[45,0,7,0,8,33],
+"imgui__widgets_8cpp.html#a2ea656cfbf6ddece46394066baefc358":[45,0,7,0,8,54],
+"imgui__widgets_8cpp.html#a323d394bcc27c05c96d74812a43aee1d":[45,0,7,0,8,66],
+"imgui__widgets_8cpp.html#a349b079acfb7872afca79e1db09c5d6d":[45,0,7,0,8,16],
+"imgui__widgets_8cpp.html#a37d97a872107a822af8f40f9be7876b3":[45,0,7,0,8,87],
 "imgui__widgets_8cpp.html#a391f5186e44833b2f1f368c722498982":[45,0,7,0,8,116],
 "imgui__widgets_8cpp.html#a39c26e8d64b2991841314baacb3fbfee":[45,0,7,0,8,100],
 "imgui__widgets_8cpp.html#a3a68672a788f293779faf265ff2c33a1":[45,0,7,0,8,95],
@@ -243,11 +249,5 @@ var NAVTREEINDEX88 =
 "md_CHANGELOG.html#autotoc_md120---2009-06-17":[5,5],
 "md_CHANGELOG.html#autotoc_md131---2009-07-14":[5,4],
 "md_CHANGELOG.html#autotoc_md131---2009-07-24":[5,3],
-"md_CHANGELOG.html#autotoc_md140---2009-08-24":[5,2],
-"md_CHANGELOG.html#autotoc_md150---2016-01-24":[5,1],
-"md_CHANGELOG.html#autotoc_md151httpsgithubcomrecastnavigationrecastnavigationcompare150151---2016-02-22":[5,0],
-"md_CODE__OF__CONDUCT.html":[6],
-"md_CODE__OF__CONDUCT.html#attribution":[6,6],
-"md_CODE__OF__CONDUCT.html#autotoc_md1-correction":[6,5,0],
-"md_CODE__OF__CONDUCT.html#autotoc_md2-warning":[6,5,1]
+"md_CHANGELOG.html#autotoc_md140---2009-08-24":[5,2]
 };

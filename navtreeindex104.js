@@ -1,5 +1,11 @@
 var NAVTREEINDEX104 =
 {
+"structSDL__ControllerAxisEvent.html#afc92dba0b4d1652a1ecf9e85606d1f14":[44,0,372,5],
+"structSDL__ControllerButtonEvent.html":[44,0,373],
+"structSDL__ControllerButtonEvent.html#a00c46683f86674c2a4f74404ee3e857c":[44,0,373,3],
+"structSDL__ControllerButtonEvent.html#a039da6cd31c3c62e62a3ae17cc64d0db":[44,0,373,0],
+"structSDL__ControllerButtonEvent.html#a09869d792031e47a88673d85915c209f":[44,0,373,5],
+"structSDL__ControllerButtonEvent.html#a34d3e43fc1994288b9b083c874bc0899":[44,0,373,1],
 "structSDL__ControllerButtonEvent.html#a73003712734c4d2f966db3d7c2ce826b":[44,0,373,4],
 "structSDL__ControllerButtonEvent.html#a8caf56a3921227913cfb652d5de1eec4":[44,0,373,2],
 "structSDL__ControllerButtonEvent.html#a98777e88b5d5cae83eef16ffd4bcacc1":[44,0,373,6],
@@ -243,11 +249,5 @@ var NAVTREEINDEX104 =
 "structSDL__MouseButtonEvent.html#ab3b855d4b543b5d02fcf5d56e4421393":[44,0,409,7],
 "structSDL__MouseButtonEvent.html#af64cb09ea68b8081ecc8ee498552e3d7":[44,0,409,5],
 "structSDL__MouseMotionEvent.html":[44,0,410],
-"structSDL__MouseMotionEvent.html#a1c01d9aba2a20778fb45a15dca39ef58":[44,0,410,6],
-"structSDL__MouseMotionEvent.html#a36398bb4a5308446a262b0bfc8baa80a":[44,0,410,5],
-"structSDL__MouseMotionEvent.html#a3f6e9bad9d959b824881ba09e05b7024":[44,0,410,0],
-"structSDL__MouseMotionEvent.html#a431dd28cd6db6a7335cf633dbeb80cfb":[44,0,410,2],
-"structSDL__MouseMotionEvent.html#a6f04c17b4305683915e2fd2dc3c36dbc":[44,0,410,3],
-"structSDL__MouseMotionEvent.html#a7674c8b92d039ab948f671a180fa7b30":[44,0,410,8],
-"structSDL__MouseMotionEvent.html#a7e6a7b1f8713d1968dc913908e8ea448":[44,0,410,7]
+"structSDL__MouseMotionEvent.html#a1c01d9aba2a20778fb45a15dca39ef58":[44,0,410,6]
 };

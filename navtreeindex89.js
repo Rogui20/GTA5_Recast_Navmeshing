@@ -1,5 +1,11 @@
 var NAVTREEINDEX89 =
 {
+"md_CHANGELOG.html#autotoc_md150---2016-01-24":[5,1],
+"md_CHANGELOG.html#autotoc_md151httpsgithubcomrecastnavigationrecastnavigationcompare150151---2016-02-22":[5,0],
+"md_CODE__OF__CONDUCT.html":[6],
+"md_CODE__OF__CONDUCT.html#attribution":[6,6],
+"md_CODE__OF__CONDUCT.html#autotoc_md1-correction":[6,5,0],
+"md_CODE__OF__CONDUCT.html#autotoc_md2-warning":[6,5,1],
 "md_CODE__OF__CONDUCT.html#autotoc_md3-temporary-ban":[6,5,2],
 "md_CODE__OF__CONDUCT.html#autotoc_md4-permanent-ban":[6,5,3],
 "md_CODE__OF__CONDUCT.html#enforcement":[6,4],
@@ -243,11 +249,5 @@ var NAVTREEINDEX89 =
 "structCrowdToolParams.html#a8481d268ff04bf7e6b49458c911936cb":[44,0,8,8],
 "structCrowdToolParams.html#a85e1edfba62c2a2e5315ad05a0eaf0f9":[44,0,8,11],
 "structCrowdToolParams.html#a9627c513e79f26b6024c8d01843bc528":[44,0,8,5],
-"structCrowdToolParams.html#aa7340bfdeed7994d7899f8161744a3f6":[44,0,8,12],
-"structCrowdToolParams.html#aaf7a605017a4343c0536704cf0a4f1b0":[44,0,8,15],
-"structCrowdToolParams.html#abb28bf8b771767150348b0264c649991":[44,0,8,17],
-"structCrowdToolParams.html#abd5dd62a05171d60b075e10d9290e7b3":[44,0,8,4],
-"structCrowdToolParams.html#ad4a5ed9be39d3f974e5fae65ced6c7b1":[44,0,8,0],
-"structCrowdToolParams.html#ae078b3f35f3d5b2865139b3960708426":[44,0,8,14],
-"structDebugLine.html":[44,0,12]
+"structCrowdToolParams.html#aa7340bfdeed7994d7899f8161744a3f6":[44,0,8,12]
 };

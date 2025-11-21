@@ -1,5 +1,11 @@
 var NAVTREEINDEX14 =
 {
+"SDL__config__macosx_8h.html#a59f02a19ebe275d970009bb77b6f361d":[45,0,5,2,1,13,135],
+"SDL__config__macosx_8h.html#a5d1948f54475325c483e4e487435c543":[45,0,5,2,1,13,89],
+"SDL__config__macosx_8h.html#a61909f2610e1cfb79b200baa2d6c6ce7":[45,0,5,2,1,13,9],
+"SDL__config__macosx_8h.html#a631f7011e0e3afd6f6732e18ea7be4ac":[45,0,5,2,1,13,15],
+"SDL__config__macosx_8h.html#a63b337f095e6d3a5408da0ec0e936646":[45,0,5,2,1,13,124],
+"SDL__config__macosx_8h.html#a68fd2b96dc8470cbc16cda329e896122":[45,0,5,2,1,13,37],
 "SDL__config__macosx_8h.html#a69dc70bea5d1f8bd2be9740e974fa666":[45,0,5,2,1,13,90],
 "SDL__config__macosx_8h.html#a6b9c27181277250e218629da3b335a16":[45,0,5,2,1,13,80],
 "SDL__config__macosx_8h.html#a6ba924613e4ef2c39b349122b91e327e":[45,0,5,2,1,13,106],
@@ -238,16 +244,10 @@ var NAVTREEINDEX14 =
 "SDL__config__os2_8h.html#acc0a82e924c3573aabbfdd996ae56bde":[45,0,5,2,1,16,82],
 "SDL__config__os2_8h.html#acc2bed5d68d90c16dff96bcf1bcde0b4":[45,0,5,2,1,16,88],
 "SDL__config__os2_8h.html#acce0cf4223f69a5aa693ac36ebffcbf6":[45,0,5,2,1,16,104],
-"SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[45,0,5,2,1,16,85],
 "SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[45,0,5,2,1,16,84],
+"SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[45,0,5,2,1,16,85],
 "SDL__config__os2_8h.html#ad4c234dd1625255dc626a15886306e7d":[45,0,5,2,1,16,65],
 "SDL__config__os2_8h.html#ad5351e07e3ee3d8d34e1689351c47c75":[45,0,5,2,1,16,95],
 "SDL__config__os2_8h.html#ad7c2edb2365c947f4bff624c7be9f890":[45,0,5,2,1,16,76],
-"SDL__config__os2_8h.html#adb4fd1059ec949b0d8add00e3602c44e":[45,0,5,2,1,16,86],
-"SDL__config__os2_8h.html#adca0e8e7c3827189abcd6ceae6f60c32":[45,0,5,2,1,16,75],
-"SDL__config__os2_8h.html#ae021ce4fe74984428cc97427b7358fda":[45,0,5,2,1,16,59],
-"SDL__config__os2_8h.html#ae1bedb7f7b2e73bea7dfb335ddb6c58c":[45,0,5,2,1,16,9],
-"SDL__config__os2_8h.html#ae4a04ebc256919da1ad32f7aa36042d1":[45,0,5,2,1,16,91],
-"SDL__config__os2_8h.html#ae91f4e5a39dc5d860202b397c9aaa37c":[45,0,5,2,1,16,16],
-"SDL__config__os2_8h.html#ae93a78f9d076138897af441c9f86f285":[45,0,5,2,1,16,43]
+"SDL__config__os2_8h.html#adb4fd1059ec949b0d8add00e3602c44e":[45,0,5,2,1,16,86]
 };
