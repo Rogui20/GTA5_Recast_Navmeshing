@@ -1,5 +1,6 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__VirtualJoystickDesc.html#a4c0622068b0138e314bc5b1c6e4303b2":[44,0,435,16],
 "structSDL__VirtualJoystickDesc.html#a5246e9220cba211c368203413812419e":[44,0,435,12],
 "structSDL__VirtualJoystickDesc.html#a5e249fd0fc51a456d7e003863284c1fb":[44,0,435,19],
 "structSDL__VirtualJoystickDesc.html#a6c488b4411d3301ba8343a2beb2c992a":[44,0,435,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX106 =
 "structdtTempContour.html#af7144f4b212231221298f01f47e461d3":[44,0,58,2],
 "structdtTileCacheAlloc.html":[44,0,60],
 "structdtTileCacheAlloc.html#a04f61863b2c6a81e1fbfd96dd519a733":[44,0,60,3],
-"structdtTileCacheAlloc.html#a8507c465095ee62fed991ba5a3781c0c":[44,0,60,0],
-"structdtTileCacheAlloc.html#aeb9afcb80b4e923d173b2c1706c56130":[44,0,60,2]
+"structdtTileCacheAlloc.html#a8507c465095ee62fed991ba5a3781c0c":[44,0,60,0]
 };

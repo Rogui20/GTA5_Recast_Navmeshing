@@ -1,5 +1,6 @@
 var NAVTREEINDEX103 =
 {
+"structImVector.html#a168658df8e0e1df5698ebe7a69946389":[44,0,302,37],
 "structImVector.html#a1aac88ee8dded24c94801a41ed41b793":[44,0,302,34],
 "structImVector.html#a1e10cf9afeb244d7d42131682531f865":[44,0,302,10],
 "structImVector.html#a1fb6def3d26d7efeae0881e8dffb3f79":[44,0,302,23],
@@ -248,6 +249,5 @@ var NAVTREEINDEX103 =
 "structSDLTest__RandomContext.html#a8bd6d1b4e1677ed1c06f5cc09f1af5b6":[44,0,442,4],
 "structSDLTest__SurfaceImage__s.html":[44,0,443],
 "structSDLTest__SurfaceImage__s.html#a2daf91bab3d79fb9dfa25e8ade43e606":[44,0,443,0],
-"structSDLTest__SurfaceImage__s.html#a310092874695556e4b7f1f63aec24213":[44,0,443,1],
-"structSDLTest__SurfaceImage__s.html#a3cbacf6b015a22832ab4d3f509719609":[44,0,443,3]
+"structSDLTest__SurfaceImage__s.html#a310092874695556e4b7f1f63aec24213":[44,0,443,1]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX102 =
 {
+"structImGui__ImplWGPU__CreateSurfaceInfo.html#a2aaca68f00720d8d8811d2f46089464c":[44,0,170,1],
 "structImGui__ImplWGPU__CreateSurfaceInfo.html#a2ac4e540f9f9343a26307815c5ed0a31":[44,0,170,5],
 "structImGui__ImplWGPU__CreateSurfaceInfo.html#a500471c0b07be0e280d9fbcd7ecc2ace":[44,0,170,3],
 "structImGui__ImplWGPU__CreateSurfaceInfo.html#a64e9de9a0b4b1fc58a7bf8d4c0d1871a":[44,0,170,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX102 =
 "structImVec4.html#afeed5acd9f0d2043175f4da229d12a38":[44,0,301,2],
 "structImVector.html":[44,0,302],
 "structImVector.html#a07f501e40783436616156682ec668327":[44,0,302,25],
-"structImVector.html#a0f14f5736c3372157856eebb67123b75":[44,0,302,38],
-"structImVector.html#a168658df8e0e1df5698ebe7a69946389":[44,0,302,37]
+"structImVector.html#a0f14f5736c3372157856eebb67123b75":[44,0,302,38]
 };

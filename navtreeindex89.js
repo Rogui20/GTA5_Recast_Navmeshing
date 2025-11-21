@@ -1,5 +1,6 @@
 var NAVTREEINDEX89 =
 {
+"imstb__truetype_8h.html#ab8fd8e5e0b82b0f7da54532035e47b22":[45,0,7,0,11,18],
 "imstb__truetype_8h.html#abbca8f4e5de8209200a7be6c1c57661e":[45,0,7,0,11,60],
 "imstb__truetype_8h.html#abbfa26d9cbfeae7e224f2f62ef6c096d":[45,0,7,0,11,36],
 "imstb__truetype_8h.html#ac3b6bda1851d0b1a4fd53f5f353668e5":[45,0,7,0,11,62],
@@ -248,6 +249,5 @@ var NAVTREEINDEX89 =
 "psp.html#to-do-1":[30,4],
 "raspberry-pi.html":[31],
 "raspberry-pi.html#apps-dont-work-or-poor-videoaudio-performance":[31,4],
-"raspberry-pi.html#cross-compiling-from-x86-linux":[31,3],
-"raspberry-pi.html#features":[31,0]
+"raspberry-pi.html#cross-compiling-from-x86-linux":[31,3]
 };
