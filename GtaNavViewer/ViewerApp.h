@@ -71,6 +71,7 @@ private:
     std::vector<MeshInstance> meshInstances;
     RenderMode renderMode = RenderMode::Solid;
     bool centerMesh = true;
+    bool preferBin = true;
     NavMeshData navData;
     NavmeshGenerationSettings navGenSettings{};
 
