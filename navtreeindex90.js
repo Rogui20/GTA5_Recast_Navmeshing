@@ -1,5 +1,7 @@
 var NAVTREEINDEX90 =
 {
+"structCrowdToolParams.html#a9627c513e79f26b6024c8d01843bc528":[44,0,8,5],
+"structCrowdToolParams.html#aa7340bfdeed7994d7899f8161744a3f6":[44,0,8,12],
 "structCrowdToolParams.html#aaf7a605017a4343c0536704cf0a4f1b0":[44,0,8,15],
 "structCrowdToolParams.html#abb28bf8b771767150348b0264c649991":[44,0,8,17],
 "structCrowdToolParams.html#abd5dd62a05171d60b075e10d9290e7b3":[44,0,8,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX90 =
 "structImDrawData.html#adc0bbc2881c15f78bdabe51d82582f4e":[44,0,100,6],
 "structImDrawData.html#af0035b52cdf91932b25eaf2da853965a":[44,0,100,13],
 "structImDrawData.html#afe3a34d1f384c37e99627e6efbc91815":[44,0,100,10],
-"structImDrawDataBuilder.html":[44,0,101],
-"structImDrawDataBuilder.html#a635ca1e2e9b8e918a1fa56cd65a4c775":[44,0,101,2],
-"structImDrawDataBuilder.html#a7f48c257b34f92235d41982d94b558a9":[44,0,101,1]
+"structImDrawDataBuilder.html":[44,0,101]
 };

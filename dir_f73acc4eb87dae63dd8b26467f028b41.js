@@ -11,6 +11,7 @@ var dir_f73acc4eb87dae63dd8b26467f028b41 =
     [ "NavMeshBuild.h", "NavMeshBuild_8h.html", "NavMeshBuild_8h" ],
     [ "NavMeshData.cpp", "NavMeshData_8cpp.html", null ],
     [ "NavMeshData.h", "NavMeshData_8h.html", "NavMeshData_8h" ],
+    [ "NavmeshUpdate.cpp", "NavmeshUpdate_8cpp.html", null ],
     [ "ObjLoader.cpp", "ObjLoader_8cpp.html", "ObjLoader_8cpp" ],
     [ "ObjLoader.h", "ObjLoader_8h.html", "ObjLoader_8h" ],
     [ "Pathfind.cpp", "Pathfind_8cpp.html", null ],
@@ -19,6 +20,7 @@ var dir_f73acc4eb87dae63dd8b26467f028b41 =
     [ "RenderMode.h", "RenderMode_8h.html", "RenderMode_8h" ],
     [ "ViewerApp.cpp", "ViewerApp_8cpp.html", null ],
     [ "ViewerApp.h", "ViewerApp_8h.html", "ViewerApp_8h" ],
+    [ "ViewerAppInput.cpp", "ViewerAppInput_8cpp.html", null ],
     [ "ViewerAppUtils.cpp", "ViewerAppUtils_8cpp.html", null ],
     [ "ViewerCamera.cpp", "ViewerCamera_8cpp.html", null ],
     [ "ViewerCamera.h", "ViewerCamera_8h.html", "ViewerCamera_8h" ]

@@ -1,5 +1,6 @@
 var NAVTREEINDEX65 =
 {
+"SDL__video_8h.html#a5abcf18592f00019c517e791f8ba53fc":[45,0,5,2,1,89,53],
 "SDL__video_8h.html#a5cbfffcfec91c22a7ca95fd1d5163db5":[45,0,5,2,1,89,78],
 "SDL__video_8h.html#a6051ce26885b32b80bc7285b4facd0a1":[45,0,5,2,1,89,127],
 "SDL__video_8h.html#a61016989f88ade9a0f331c63fd200d78":[45,0,5,2,1,89,65],
@@ -237,17 +238,16 @@ var NAVTREEINDEX65 =
 "ValueHistory_8h.html#ac579b593d7d8316a79163fba0140aa92":[45,0,9,0,19,2],
 "ValueHistory_8h.html#afffb45be2045eb5a3b2e0a21be12ff8a":[45,0,9,0,19,3],
 "ValueHistory_8h_source.html":[45,0,9,0,19],
-"ViewerAppUtils_8cpp.html":[45,0,7,19],
-"ViewerApp_8cpp.html":[45,0,7,17],
-"ViewerApp_8h.html":[45,0,7,18],
-"ViewerApp_8h_source.html":[45,0,7,18],
-"ViewerCamera_8cpp.html":[45,0,7,20],
-"ViewerCamera_8h.html":[45,0,7,21],
-"ViewerCamera_8h_source.html":[45,0,7,21],
+"ViewerAppInput_8cpp.html":[45,0,7,20],
+"ViewerAppUtils_8cpp.html":[45,0,7,21],
+"ViewerApp_8cpp.html":[45,0,7,18],
+"ViewerApp_8h.html":[45,0,7,19],
+"ViewerApp_8h_source.html":[45,0,7,19],
+"ViewerCamera_8cpp.html":[45,0,7,22],
+"ViewerCamera_8h.html":[45,0,7,23],
+"ViewerCamera_8h_source.html":[45,0,7,23],
 "android.html":[9],
 "android.html#a-note-regarding-the-use-of-the-dirty-rectangles-rendering-technique":[9,16],
 "android.html#building-an-app":[9,2],
-"android.html#customizing-your-application-icon":[9,4],
-"android.html#customizing-your-application-name":[9,3],
-"android.html#ending-your-application":[9,17]
+"android.html#customizing-your-application-icon":[9,4]
 };

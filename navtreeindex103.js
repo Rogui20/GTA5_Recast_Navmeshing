@@ -1,5 +1,7 @@
 var NAVTREEINDEX103 =
 {
+"structMyDocument.html#aa8b4127cad19be82ea13993d621367a1":[44,0,304,9],
+"structMyDocument.html#ab204604930ba2489fb0f1ef2a53206a9":[44,0,304,1],
 "structMyDocument.html#abe5ed4d7f257d5a2fe5cf2a1844b22f9":[44,0,304,7],
 "structMyDocument.html#adcd14ce86b5e8cb1ac5e013851c24cc9":[44,0,304,0],
 "structMyDocument.html#af8b004a985bc4c4b8fe0d0f1323226b9":[44,0,304,6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX103 =
 "structSDL__ControllerAxisEvent.html#a4a04fcd20a54db21c5258ab0e40c6ab5":[44,0,372,2],
 "structSDL__ControllerAxisEvent.html#aa904b61e4763d28d887cf8afcc3cbb7c":[44,0,372,6],
 "structSDL__ControllerAxisEvent.html#ab82598fe5621dca9b1a41f7b2ca1e9a0":[44,0,372,3],
-"structSDL__ControllerAxisEvent.html#aba6543c143521aebce06a41a8cf79db0":[44,0,372,0],
-"structSDL__ControllerAxisEvent.html#ae0ad0f279b9978bbbac9f5b22ae8020b":[44,0,372,4],
-"structSDL__ControllerAxisEvent.html#af980495b1e24f9a868f2ccb25ce9629b":[44,0,372,1]
+"structSDL__ControllerAxisEvent.html#aba6543c143521aebce06a41a8cf79db0":[44,0,372,0]
 };
