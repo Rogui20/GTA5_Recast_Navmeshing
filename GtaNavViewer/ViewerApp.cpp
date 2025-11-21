@@ -256,7 +256,7 @@ void ViewerApp::DrawEditGizmo()
 
         drawCircle(GizmoAxis::X, up, fwd, glm::vec3(1,0,0));
         drawCircle(GizmoAxis::Y, right, fwd, glm::vec3(0,1,0));
-        drawCircle(GizmoAxis::Z, glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1));
+        drawCircle(GizmoAxis::Z, glm::vec3(1,0,0), glm::vec3(0,0,1), glm::vec3(0,0,1));
     }
 }
 
@@ -857,7 +857,8 @@ void ViewerApp::RenderFrame()
                             ImGui::TableNextColumn();
                             glm::vec3 previousPos = instance.position;
                             glm::vec3 previousRot = instance.rotation;
-                            bool moved = ImGui::DragFloat3("Pos", &instance.position.x, 0.25f);
+                            glm::vec3 gtaPos = ToGtaCoords(instance.position);
+                            bool moved = ImGui::DragFloat3("Pos", &gtaPos.x, 0.25f);
                             bool rotated = ImGui::DragFloat3("Rot", &instance.rotation.x, 0.25f);
                             if (rotated)
                             {
@@ -866,6 +867,7 @@ void ViewerApp::RenderFrame()
 
                             if (moved && instance.position != previousPos)
                             {
+                                instance.position = FromGtaCoords(gtaPos);
                                 HandleAutoBuild(NavmeshAutoBuildFlag::OnMove);
                             }
                             if (rotated && instance.rotation != previousRot)

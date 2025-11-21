@@ -181,6 +181,8 @@ private:
     bool IsPathfindModeActive() const;
     glm::vec3 NormalizeEuler(glm::vec3 angles) const;
     void NormalizeMeshRotation(MeshInstance& instance) const;
+    glm::vec3 ToGtaCoords(const glm::vec3& internal) const;
+    glm::vec3 FromGtaCoords(const glm::vec3& gta) const;
     glm::mat3 GetRotationMatrix(const glm::vec3& eulerDegrees) const;
     glm::vec3 GetAxisDirection(const MeshInstance& instance, GizmoAxis axis) const;
     glm::vec3 GetRotationAxisDirection(const MeshInstance& instance, GizmoAxis axis) const;

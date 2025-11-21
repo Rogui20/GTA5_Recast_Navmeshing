@@ -211,6 +211,16 @@ void ViewerApp::NormalizeMeshRotation(MeshInstance& instance) const
     instance.rotation = NormalizeEuler(instance.rotation);
 }
 
+glm::vec3 ViewerApp::ToGtaCoords(const glm::vec3& internal) const
+{
+    return glm::vec3(internal.x, internal.z, -internal.y);
+}
+
+glm::vec3 ViewerApp::FromGtaCoords(const glm::vec3& gta) const
+{
+    return glm::vec3(gta.x, -gta.z, gta.y);
+}
+
 glm::mat3 ViewerApp::GetRotationMatrix(const glm::vec3& eulerDegrees) const
 {
     glm::vec3 normalized = NormalizeEuler(eulerDegrees);
@@ -236,7 +246,7 @@ glm::vec3 ViewerApp::GetAxisDirection(const MeshInstance& instance, GizmoAxis ax
 glm::vec3 ViewerApp::GetRotationAxisDirection(const MeshInstance& instance, GizmoAxis axis) const
 {
     if (axis == GizmoAxis::Z)
-        return glm::vec3(0,0,1);
+        return glm::vec3(0,1,0);
 
     return GetAxisDirection(instance, axis);
 }
