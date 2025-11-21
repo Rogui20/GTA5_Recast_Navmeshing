@@ -54,6 +54,10 @@ add_executable(GtaNavViewer
     main.cpp
     ViewerApp.cpp
     ViewerApp.h
+    ViewerAppUtils.cpp
+    Pathfind.cpp
+    MathUtils.cpp
+    MathUtils.h
     ViewerCamera.cpp
     ViewerCamera.h
     RendererGL.cpp
