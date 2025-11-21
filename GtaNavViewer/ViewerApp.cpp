@@ -304,8 +304,11 @@ void ViewerApp::BuildProceduralTilesAroundCamera()
     if (tileWorldSize <= 0.0f)
         return;
 
+    int gridLayers = std::max(1, gtaHandlerMenu.GetProceduralTileGridLayers());
+    float halfExtentScale = std::max(0.001f, static_cast<float>(gridLayers - 1));
+
     glm::vec3 center = camera->pos;
-    glm::vec3 halfExtents(tileWorldSize, tileWorldSize, tileWorldSize);
+    glm::vec3 halfExtents(tileWorldSize * halfExtentScale, tileWorldSize * halfExtentScale, tileWorldSize * halfExtentScale);
 
     glm::vec3 bmin = center - halfExtents;
     glm::vec3 bmax = center + halfExtents;
