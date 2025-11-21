@@ -1,5 +1,7 @@
 var NAVTREEINDEX90 =
 {
+"raspberry-pi.html#neon":[31,2],
+"raspberry-pi.html#no-hdmi-audio":[31,6],
 "raspberry-pi.html#no-input":[31,5],
 "raspberry-pi.html#notes-3":[31,9],
 "raspberry-pi.html#opengl-problems":[31,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX90 =
 "structImBitArray.html#a52c1f3ec6a89c91e2090bf75e00152ac":[44,0,96,4],
 "structImBitArray.html#a7a3a4472aaf1eb8a6fe5f7aeed155b54":[44,0,96,6],
 "structImBitArray.html#a803e52b9d1653dca6cac959cb84d64e9":[44,0,96,7],
-"structImBitArray.html#a8c4d1a352cbd565200c8fe983c879022":[44,0,96,5],
-"structImBitArray.html#ae0cc61bba70a3f2994f28130d9de76f4":[44,0,96,1],
-"structImBitArray.html#ae1b3a57b35efd1f1ffb51629cce38c14":[44,0,96,3]
+"structImBitArray.html#a8c4d1a352cbd565200c8fe983c879022":[44,0,96,5]
 };

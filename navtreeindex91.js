@@ -1,5 +1,7 @@
 var NAVTREEINDEX91 =
 {
+"structImBitArray.html#ae0cc61bba70a3f2994f28130d9de76f4":[44,0,96,1],
+"structImBitArray.html#ae1b3a57b35efd1f1ffb51629cce38c14":[44,0,96,3],
 "structImBitVector.html":[44,0,97],
 "structImBitVector.html#a2e25a0809000ad27bfc3fb89f3d04829":[44,0,97,2],
 "structImBitVector.html#a419abda300de5270b4475eac6ce250c2":[44,0,97,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX91 =
 "structImFontAtlas.html#a3a6b1a8afb01ba5e7c4d86957d6d2625":[44,0,111,22],
 "structImFontAtlas.html#a3ede4bd513bec044c77ac392ad9c6e86":[44,0,111,17],
 "structImFontAtlas.html#a3f5bcbb7a2683b1af106fcf4e1217662":[44,0,111,16],
-"structImFontAtlas.html#a46d65b05462b548396d3a8ee6644f3ee":[44,0,111,25],
-"structImFontAtlas.html#a4985c51d8a5270ff027f13fa44a14371":[44,0,111,28],
-"structImFontAtlas.html#a4b2f96a0b67dd06c69547e93ccd4652f":[44,0,111,19]
+"structImFontAtlas.html#a46d65b05462b548396d3a8ee6644f3ee":[44,0,111,25]
 };

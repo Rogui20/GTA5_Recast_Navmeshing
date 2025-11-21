@@ -1,5 +1,7 @@
 var NAVTREEINDEX77 =
 {
+"glad_8h.html#ae644ef6b281c9378fa49d9b1ccefaf31":[45,0,5,0,0,0,0,299],
+"glad_8h.html#ae64973345479169d6b1a2698bb9d30f8":[45,0,5,0,0,0,0,458],
 "glad_8h.html#ae66ff668f4fa5063d78479fc6a51549b":[45,0,5,0,0,0,0,220],
 "glad_8h.html#ae67346f059e05b267a9f972854df2c15":[45,0,5,0,0,0,0,1780],
 "glad_8h.html#ae6a0a2dca1b86176367fab8941e9ab8f":[45,0,5,0,0,0,0,1132],
@@ -247,7 +249,5 @@ var NAVTREEINDEX77 =
 "globals_func_z.html":[45,1,1,21],
 "globals_g.html":[45,1,0,7],
 "globals_h.html":[45,1,0,8],
-"globals_i.html":[45,1,0,9],
-"globals_k.html":[45,1,0,10],
-"globals_l.html":[45,1,0,11]
+"globals_i.html":[45,1,0,9]
 };

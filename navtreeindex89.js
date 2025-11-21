@@ -1,5 +1,7 @@
 var NAVTREEINDEX89 =
 {
+"imstb__truetype_8h.html#abbca8f4e5de8209200a7be6c1c57661e":[45,0,7,0,11,60],
+"imstb__truetype_8h.html#abbfa26d9cbfeae7e224f2f62ef6c096d":[45,0,7,0,11,36],
 "imstb__truetype_8h.html#ac3b6bda1851d0b1a4fd53f5f353668e5":[45,0,7,0,11,62],
 "imstb__truetype_8h.html#ac914b70667c9abbe432dcc4c048e6542":[45,0,7,0,11,13],
 "imstb__truetype_8h.html#accb2ecf3e0d840362ebba3fe3da192da":[45,0,7,0,11,15],
@@ -247,7 +249,5 @@ var NAVTREEINDEX89 =
 "raspberry-pi.html":[31],
 "raspberry-pi.html#apps-dont-work-or-poor-videoaudio-performance":[31,4],
 "raspberry-pi.html#cross-compiling-from-x86-linux":[31,3],
-"raspberry-pi.html#features":[31,0],
-"raspberry-pi.html#neon":[31,2],
-"raspberry-pi.html#no-hdmi-audio":[31,6]
+"raspberry-pi.html#features":[31,0]
 };
