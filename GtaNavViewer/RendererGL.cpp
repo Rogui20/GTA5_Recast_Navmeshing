@@ -477,7 +477,7 @@ void RendererGL::drawNavmeshTriangles(const std::vector<glm::vec3>& tris, const 
     glBindVertexArray(0);
 }
 
-void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines, const glm::vec3& color)
+void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines, const glm::vec3& color, float lineWidth)
 {
     if (lines.empty())
         return;
@@ -514,7 +514,7 @@ void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines, const glm
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glLineWidth(1.5f);
+    glLineWidth(lineWidth);
     glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(verts.size() / 3));
 
     glBindVertexArray(0);
