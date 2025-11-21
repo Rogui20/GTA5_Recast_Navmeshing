@@ -13,6 +13,9 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 struct Ray;
 class ViewerCamera;
@@ -195,6 +198,11 @@ private:
     void ProcessEvents();
     void RenderFrame();
 
+    void ProcessNavmeshJob();
+    void JoinNavmeshWorker();
+    void RebuildDebugLineBuffer();
+    bool IsNavmeshJobRunning() const { return navmeshJobRunning.load(); }
+
     std::string currentDirectory;
     std::string selectedEntry;
 
@@ -209,4 +217,20 @@ private:
     bool rightButtonDragged = false;
     int rightButtonDownX = 0;
     int rightButtonDownY = 0;
+
+    struct NavmeshJobResult
+    {
+        bool success = false;
+        NavMeshData navData;
+        std::vector<glm::vec3> tris;
+        std::vector<glm::vec3> lines;
+    };
+
+    std::thread navmeshWorker;
+    std::atomic<bool> navmeshJobRunning{false};
+    std::atomic<bool> navmeshJobCompleted{false};
+    bool navmeshJobQueued = false;
+    bool navmeshJobQueuedBuildTilesNow = true;
+    std::mutex navmeshJobMutex;
+    std::unique_ptr<NavmeshJobResult> navmeshJobResult;
 };
