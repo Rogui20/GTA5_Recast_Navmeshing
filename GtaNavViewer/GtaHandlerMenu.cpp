@@ -1,7 +1,9 @@
 #include "GtaHandlerMenu.h"
 
 #include <imgui.h>
+#include <SDL.h>
 #include <cstdio>
+#include <fstream>
 
 #include "GtaHandler.h"
 #include "ViewerApp.h"
@@ -13,6 +15,8 @@ GtaHandlerMenu::GtaHandlerMenu()
     instancesBrowser.SetTitle("Selecionar navmesh_instances.json");
     instancesBrowser.SetTypeFilters({".json"});
     meshDirectoryBrowser.SetTitle("Selecionar pasta de meshes");
+
+    LoadLastSelections();
 }
 
 void GtaHandlerMenu::Draw(GtaHandler& handler, ViewerApp& app)
@@ -45,6 +49,11 @@ void GtaHandlerMenu::Draw(GtaHandler& handler, ViewerApp& app)
 
     ImGui::SliderFloat("Scan Range", &scanRange, 0.0f, 10000.0f, "%.1f");
 
+    if (ImGui::Checkbox("Procedural Test", &proceduralTest))
+    {
+        app.SetProceduralTestEnabled(proceduralTest);
+    }
+
     bool canBuild = handler.HasCache() && !meshDirectory.empty();
     ImGui::BeginDisabled(!canBuild);
     if (ImGui::Button("Build Static Map"))
@@ -69,6 +78,7 @@ void GtaHandlerMenu::Draw(GtaHandler& handler, ViewerApp& app)
     {
         instancesFile = instancesBrowser.GetSelected();
         instancesBrowser.ClearSelected();
+        SaveLastSelections();
     }
 
     meshDirectoryBrowser.Display();
@@ -76,5 +86,58 @@ void GtaHandlerMenu::Draw(GtaHandler& handler, ViewerApp& app)
     {
         meshDirectory = meshDirectoryBrowser.GetSelected();
         meshDirectoryBrowser.ClearSelected();
+        SaveLastSelections();
     }
+}
+
+std::filesystem::path GtaHandlerMenu::GetConfigFilePath() const
+{
+    char* basePath = SDL_GetBasePath();
+    if (basePath)
+    {
+        std::filesystem::path result = std::filesystem::path(basePath) / "gta_handler_paths.txt";
+        SDL_free(basePath);
+        return result;
+    }
+
+    return "gta_handler_paths.txt";
+}
+
+void GtaHandlerMenu::LoadLastSelections()
+{
+    std::filesystem::path configPath = GetConfigFilePath();
+    std::ifstream file(configPath);
+    if (!file)
+        return;
+
+    std::string lastInstances;
+    std::string lastMeshDir;
+
+    std::getline(file, lastInstances);
+    std::getline(file, lastMeshDir);
+
+    if (!lastInstances.empty())
+    {
+        std::filesystem::path candidate = lastInstances;
+        if (std::filesystem::exists(candidate))
+            instancesFile = candidate;
+    }
+
+    if (!lastMeshDir.empty())
+    {
+        std::filesystem::path candidate = lastMeshDir;
+        if (std::filesystem::exists(candidate) && std::filesystem::is_directory(candidate))
+            meshDirectory = candidate;
+    }
+}
+
+void GtaHandlerMenu::SaveLastSelections() const
+{
+    std::filesystem::path configPath = GetConfigFilePath();
+    std::ofstream file(configPath, std::ios::trunc);
+    if (!file)
+        return;
+
+    file << instancesFile.string() << "\n";
+    file << meshDirectory.string() << "\n";
 }

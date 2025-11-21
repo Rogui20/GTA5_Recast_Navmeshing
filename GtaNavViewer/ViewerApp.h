@@ -16,6 +16,7 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <thread>
 #include <atomic>
 #include <mutex>
@@ -39,6 +40,7 @@ public:
     bool buildNavmeshFromMeshes(bool buildTilesNow = true);
     void buildNavmeshDebugLines();
     bool BuildStaticMap(GtaHandler& handler, const std::filesystem::path& meshDirectory, float scanRange);
+    void SetProceduralTestEnabled(bool enabled);
 
 private:
     // SDL
@@ -258,4 +260,16 @@ private:
     bool navmeshJobQueuedBuildTilesNow = true;
     std::mutex navmeshJobMutex;
     std::unique_ptr<NavmeshJobResult> navmeshJobResult;
+
+    // Procedural loading helpers
+    void RunProceduralTestStep();
+    bool PrepareProceduralNavmeshIfNeeded();
+    void BuildProceduralTilesAroundCamera();
+
+    bool proceduralTestEnabled = false;
+    bool proceduralHasLastScan = false;
+    glm::vec3 proceduralLastScanGtaPos{0.0f};
+    bool proceduralNavmeshPending = false;
+    bool proceduralNavmeshNeedsRebuild = false;
+    std::unordered_set<uint64_t> proceduralBuiltTiles;
 };
