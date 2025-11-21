@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <atomic>
 #include <glm/glm.hpp>
 #include <Recast.h>
 #include <DetourNavMesh.h>
@@ -28,7 +29,8 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                        dtNavMesh*& outNav,
                        bool buildTilesNow = true,
                        int* outTilesBuilt = nullptr,
-                       int* outTilesSkipped = nullptr);
+                       int* outTilesSkipped = nullptr,
+                       const std::atomic_bool* cancelFlag = nullptr);
 
 bool BuildSingleTile(const NavmeshBuildInput& input,
                      const NavmeshGenerationSettings& settings,

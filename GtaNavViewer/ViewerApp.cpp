@@ -96,6 +96,7 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
     navmeshJobResult.reset();
     navmeshJobCompleted.store(false);
     navmeshJobRunning.store(true);
+    navmeshCancelRequested.store(false);
     navmeshJobQueued = false;
     navmeshJobQueuedBuildTilesNow = buildTilesNow;
 
@@ -112,7 +113,7 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
         auto result = std::make_unique<NavmeshJobResult>();
         if (!verts.empty() && !idx.empty())
         {
-            result->success = result->navData.BuildFromMesh(verts, idx, settingsCopy, buildTilesNow);
+            result->success = result->navData.BuildFromMesh(verts, idx, settingsCopy, buildTilesNow, &navmeshCancelRequested);
         }
 
         if (result->success)
@@ -171,6 +172,12 @@ bool ViewerApp::BuildStaticMap(GtaHandler& handler, const std::filesystem::path&
     if (!camera)
     {
         printf("[ViewerApp] BuildStaticMap falhou: câmera inválida.\n");
+        return false;
+    }
+
+    if (IsNavmeshJobRunning())
+    {
+        printf("[ViewerApp] BuildStaticMap adiado: navmesh está sendo gerado.\n");
         return false;
     }
 
@@ -336,6 +343,13 @@ void ViewerApp::BuildProceduralTilesAroundCamera()
 
     if (tilesToBuild.empty())
         return;
+
+    const size_t maxTilesPerStep = 512;
+    if (tilesToBuild.size() > maxTilesPerStep)
+    {
+        printf("[ViewerApp] Procedural: limitando rebuild para %zu tiles (solicitados=%zu).\n", maxTilesPerStep, tilesToBuild.size());
+        tilesToBuild.resize(maxTilesPerStep);
+    }
 
     std::vector<std::pair<int, int>> touchedTiles;
     if (!navData.RebuildSpecificTiles(tilesToBuild, navGenSettings, false, &touchedTiles))
@@ -610,6 +624,12 @@ bool ViewerApp::LoadMeshFromPath(const std::string& path)
 
 bool ViewerApp::LoadMeshFromPathWithOptions(const std::string& path, bool center, bool tryLoadBin)
 {
+    if (IsNavmeshJobRunning())
+    {
+        printf("[ViewerApp] Carregamento de mesh bloqueado: navmesh está em construção.\n");
+        return false;
+    }
+
     std::unique_ptr<Mesh> newMesh(ObjLoader::LoadMesh(path, center, tryLoadBin));
     if (!newMesh)
     {
@@ -749,6 +769,39 @@ void ViewerApp::JoinNavmeshWorker()
     }
 }
 
+void ViewerApp::RequestStopNavmeshBuild()
+{
+    if (!IsNavmeshJobRunning())
+        return;
+
+    navmeshCancelRequested.store(true);
+    navmeshJobQueued = false;
+    printf("[ViewerApp] Cancelamento do build de navmesh solicitado.\n");
+}
+
+void ViewerApp::ClearNavmesh()
+{
+    if (IsNavmeshJobRunning())
+        return;
+
+    JoinNavmeshWorker();
+
+    if (navQuery)
+    {
+        dtFreeNavMeshQuery(navQuery);
+        navQuery = nullptr;
+    }
+
+    navData = {};
+    navMeshTris.clear();
+    navMeshLines.clear();
+    m_navmeshLines.clear();
+    navQueryReady = false;
+    ResetPathState();
+
+    printf("[ViewerApp] Navmesh limpo.\n");
+}
+
 void ViewerApp::ProcessNavmeshJob()
 {
     if (!navmeshJobCompleted.load())
@@ -815,6 +868,7 @@ void ViewerApp::RenderFrame()
         UpdateNavmeshTiles();
 
     const bool navmeshBusy = IsNavmeshJobRunning();
+    const bool navmeshStopRequested = navmeshCancelRequested.load();
 
     if (viewportClickMode == ViewportClickMode::EditMesh && editDragActive && leftMouseDown)
     {
@@ -861,10 +915,25 @@ void ViewerApp::RenderFrame()
         if (ImGui::BeginMenu("Navmesh"))
         {
             bool hasMesh = !meshInstances.empty();
+            bool hasNavmesh = navData.IsLoaded();
             ImGui::BeginDisabled(!hasMesh || navmeshBusy);
-            if (ImGui::MenuItem("Rebuild Navmesh"))
+            if (ImGui::MenuItem("Build Navmesh"))
             {
                 buildNavmeshFromMeshes();
+            }
+            ImGui::EndDisabled();
+
+            ImGui::BeginDisabled(navmeshBusy || !hasNavmesh);
+            if (ImGui::MenuItem("Clear Navmesh"))
+            {
+                ClearNavmesh();
+            }
+            ImGui::EndDisabled();
+
+            ImGui::BeginDisabled(!navmeshBusy);
+            if (ImGui::MenuItem("Stop Build"))
+            {
+                RequestStopNavmeshBuild();
             }
             ImGui::EndDisabled();
 
@@ -924,6 +993,12 @@ void ViewerApp::RenderFrame()
         if (!std::filesystem::exists(currentDirectory))
         {
             currentDirectory = std::filesystem::current_path().string();
+        }
+
+        if (navmeshBusy)
+        {
+            ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Carregamento bloqueado: navmesh em construção.");
+            ImGui::BeginDisabled();
         }
 
         ImGui::Text("Diretório: %s", currentDirectory.c_str());
@@ -1024,6 +1099,9 @@ void ViewerApp::RenderFrame()
             selectedEntry.clear();
             directoryBrowser.ClearSelected();
         }
+
+        if (navmeshBusy)
+            ImGui::EndDisabled();
 
         ImGui::End();
     }
@@ -1367,17 +1445,36 @@ void ViewerApp::RenderFrame()
                 if (ImGui::CollapsingHeader("Navmesh", ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     bool hasMesh = !meshInstances.empty();
+                    bool hasNavmesh = navData.IsLoaded();
                     ImGui::Text("Meshes carregadas: %zu", meshInstances.size());
 
                     if (navmeshBusy)
                     {
                         ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Navmesh build em andamento... câmera e pathfind continuam ativos.");
+                        if (navmeshStopRequested)
+                        {
+                            ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "Cancelamento requisitado. Aguardando término seguro do worker.");
+                        }
                     }
 
                     ImGui::BeginDisabled(!hasMesh || navmeshBusy);
-                    if (ImGui::Button("Rebuild Navmesh"))
+                    if (ImGui::Button("Build Navmesh"))
                     {
                         buildNavmeshFromMeshes();
+                    }
+                    ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(navmeshBusy || !hasNavmesh);
+                    if (ImGui::Button("Clear Navmesh"))
+                    {
+                        ClearNavmesh();
+                    }
+                    ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(!navmeshBusy);
+                    if (ImGui::Button("Stop Build"))
+                    {
+                        RequestStopNavmeshBuild();
                     }
                     ImGui::EndDisabled();
 

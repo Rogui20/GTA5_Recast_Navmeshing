@@ -1,6 +1,7 @@
 #pragma once
 #include <utility>
 #include <vector>
+#include <atomic>
 #include <glm/glm.hpp>
 #include <Recast.h>
 
@@ -46,7 +47,8 @@ public:
     bool BuildFromMesh(const std::vector<glm::vec3>& verts,
                        const std::vector<unsigned int>& indices,
                        const NavmeshGenerationSettings& settings,
-                       bool buildTilesNow = true);
+                       bool buildTilesNow = true,
+                       const std::atomic_bool* cancelFlag = nullptr);
 
     bool BuildTileAt(const glm::vec3& worldPos,
                      const NavmeshGenerationSettings& settings,

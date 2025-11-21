@@ -242,8 +242,14 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                        dtNavMesh*& outNav,
                        bool buildTilesNow,
                        int* outTilesBuilt,
-                       int* outTilesSkipped)
+                       int* outTilesSkipped,
+                       const std::atomic_bool* cancelFlag)
 {
+    auto isCancelled = [cancelFlag]()
+    {
+        return cancelFlag && cancelFlag->load();
+    };
+
     rcConfig cfg = input.baseCfg;
     cfg.borderSize = cfg.walkableRadius + 3;
     cfg.tileSize = std::max(1, settings.tileSize);
@@ -255,6 +261,15 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
     {
         printf("[NavMeshData] BuildFromMesh (tiled): contagem de tiles invalida (%d x %d).\n",
                tileWidthCount, tileHeightCount);
+        return false;
+    }
+
+    const int tileCountTotal = tileWidthCount * tileHeightCount;
+    const int maxAllowedTiles = 32768;
+    if (tileCountTotal > maxAllowedTiles)
+    {
+        printf("[NavMeshData] BuildFromMesh (tiled): quantidade de tiles (%d) excede limite seguro (%d). Ajuste tileSize ou reduza a area.\n",
+               tileCountTotal, maxAllowedTiles);
         return false;
     }
 
@@ -276,6 +291,11 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
 
     for (int ty = 0; ty < tileHeightCount; ++ty)
     {
+        if (isCancelled())
+        {
+            printf("[NavMeshData] BuildFromMesh (tiled): cancelado durante preparacao de tiles.\n");
+            return false;
+        }
         for (int tx = 0; tx < tileWidthCount; ++tx)
         {
             rcConfig tileCfg = cfg;
@@ -306,6 +326,11 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
 
             for (int i = 0; i < input.ntris; ++i)
             {
+                if (isCancelled())
+                {
+                    printf("[NavMeshData] BuildFromMesh (tiled): cancelado durante filtragem de triangulos.\n");
+                    return false;
+                }
                 const float* v0 = &input.verts[input.tris[i*3+0] * 3];
                 const float* v1 = &input.verts[input.tris[i*3+1] * 3];
                 const float* v2 = &input.verts[input.tris[i*3+2] * 3];
@@ -347,7 +372,6 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
         return false;
     }
 
-    const int tileCountTotal = tileWidthCount * tileHeightCount;
     printf("[NavMeshData] Tiles com geometria: %zu / %d\n", tilesToBuild.size(), tileCountTotal);
 
     dtNavMesh* nav = dtAllocNavMesh();
@@ -400,6 +424,12 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
     {
         for (const TileInput& inputTile : tilesToBuild)
         {
+            if (isCancelled())
+            {
+                printf("[NavMeshData] BuildFromMesh (tiled): cancelado durante construcao dos tiles.\n");
+                dtFreeNavMesh(nav);
+                return false;
+            }
             dtNavMeshCreateParams params{};
             unsigned char* navMeshData = nullptr;
             int navMeshDataSize = 0;
