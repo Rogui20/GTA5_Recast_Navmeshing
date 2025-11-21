@@ -165,6 +165,48 @@ void ViewerApp::RebuildDebugLineBuffer()
     printf("[ViewerApp] Linhas de navmesh: %zu segmentos.\n", m_navmeshLines.size());
 }
 
+bool ViewerApp::BuildStaticMap(GtaHandler& handler, const std::filesystem::path& meshDirectory, float scanRange)
+{
+    if (!camera)
+    {
+        printf("[ViewerApp] BuildStaticMap falhou: câmera inválida.\n");
+        return false;
+    }
+
+    glm::vec3 gtaPos = ToGtaCoords(camera->pos);
+    auto sources = handler.LookupSources(gtaPos, scanRange);
+
+    if (sources.empty())
+    {
+        printf("[ViewerApp] BuildStaticMap: nenhuma instância encontrada no raio %.2f.\n", scanRange);
+        return false;
+    }
+
+    size_t loaded = 0;
+    for (const auto& source : sources)
+    {
+        std::filesystem::path fullPath = meshDirectory / source;
+        if (IsMeshAlreadyLoaded(fullPath))
+        {
+            continue;
+        }
+
+        if (!std::filesystem::exists(fullPath))
+        {
+            printf("[ViewerApp] BuildStaticMap: arquivo não encontrado %s.\n", fullPath.string().c_str());
+            continue;
+        }
+
+        if (LoadMeshFromPathWithOptions(fullPath.string(), false, true))
+        {
+            ++loaded;
+        }
+    }
+
+    printf("[ViewerApp] BuildStaticMap: %zu/%zu meshes carregadas.\n", loaded, sources.size());
+    return loaded > 0;
+}
+
 void ViewerApp::DrawSelectedMeshHighlight()
 {
     if (viewportClickMode != ViewportClickMode::EditMesh)
@@ -415,7 +457,12 @@ bool ViewerApp::InitImGui()
 
 bool ViewerApp::LoadMeshFromPath(const std::string& path)
 {
-    std::unique_ptr<Mesh> newMesh(ObjLoader::LoadMesh(path, centerMesh, preferBin));
+    return LoadMeshFromPathWithOptions(path, centerMesh, preferBin);
+}
+
+bool ViewerApp::LoadMeshFromPathWithOptions(const std::string& path, bool center, bool tryLoadBin)
+{
+    std::unique_ptr<Mesh> newMesh(ObjLoader::LoadMesh(path, center, tryLoadBin));
     if (!newMesh)
     {
         printf("Falha ao carregar OBJ!\n");
@@ -492,6 +539,16 @@ void ViewerApp::HandleAutoBuild(NavmeshAutoBuildFlag flag)
     {
         buildNavmeshFromMeshes();
     }
+}
+
+bool ViewerApp::IsMeshAlreadyLoaded(const std::filesystem::path& path) const
+{
+    for (const auto& instance : meshInstances)
+    {
+        if (instance.sourcePath == path)
+            return true;
+    }
+    return false;
 }
 
 
@@ -908,6 +965,11 @@ void ViewerApp::RenderFrame()
                     
                     ImGui::Text("Modo ativo: %s", activeMode);
                     ImGui::Text("Start: %s | Target: %s", hasPathStart ? "definido" : "pendente", hasPathTarget ? "definido" : "pendente");
+                }
+
+                if (ImGui::CollapsingHeader("GTA Handler", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    gtaHandlerMenu.Draw(gtaHandler, *this);
                 }
 
                 if (ImGui::CollapsingHeader("Navmesh Tests"))
