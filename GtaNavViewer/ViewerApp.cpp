@@ -101,16 +101,19 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
     navmeshJobQueuedBuildTilesNow = buildTilesNow;
 
     const auto settingsCopy = navGenSettings;
+    const auto offmeshLinksCopy = navData.GetOffmeshLinks();
 
     navmeshWorker = std::thread([
         this,
         verts = std::move(combinedVerts),
         idx = std::move(combinedIdx),
         settingsCopy,
-        buildTilesNow
+        buildTilesNow,
+        offmeshLinksCopy
     ]() mutable
     {
         auto result = std::make_unique<NavmeshJobResult>();
+        result->navData.SetOffmeshLinks(offmeshLinksCopy);
         if (!verts.empty() && !idx.empty())
         {
             result->success = result->navData.BuildFromMesh(verts, idx, settingsCopy, buildTilesNow, &navmeshCancelRequested);
@@ -164,7 +167,28 @@ void ViewerApp::RebuildDebugLineBuffer()
         m_navmeshLines.push_back(dl);
     }
 
-    printf("[ViewerApp] Linhas de navmesh: %zu segmentos.\n", m_navmeshLines.size());
+    RebuildOffmeshLinkLines();
+
+    printf("[ViewerApp] Linhas de navmesh: %zu segmentos. Offmesh links: %zu.\n",
+           m_navmeshLines.size(), offmeshLinkLines.size());
+}
+
+void ViewerApp::RebuildOffmeshLinkLines()
+{
+    offmeshLinkLines.clear();
+
+    const auto& offmeshLinks = navData.GetOffmeshLinks();
+    for (const auto& link : offmeshLinks)
+    {
+        DebugLine dl{};
+        dl.x0 = link.start.x;
+        dl.y0 = link.start.y;
+        dl.z0 = link.start.z;
+        dl.x1 = link.end.x;
+        dl.y1 = link.end.y;
+        dl.z1 = link.end.z;
+        offmeshLinkLines.push_back(dl);
+    }
 }
 
 bool ViewerApp::BuildStaticMap(GtaHandler& handler, const std::filesystem::path& meshDirectory, float scanRange)
@@ -796,6 +820,7 @@ void ViewerApp::ClearNavmesh()
     navMeshTris.clear();
     navMeshLines.clear();
     m_navmeshLines.clear();
+    offmeshLinkLines.clear();
     navQueryReady = false;
     ResetPathState();
 
@@ -1139,6 +1164,7 @@ void ViewerApp::RenderFrame()
                     ImGui::RadioButton("Pathfind", &viewportModeValue, static_cast<int>(ViewportClickMode::Pathfind_Normal));
                     ImGui::RadioButton("Pathfind With Min Edge Distance", &viewportModeValue, static_cast<int>(ViewportClickMode::Pathfind_MinEdge));
                     ImGui::RadioButton("Edit Mesh", &viewportModeValue, static_cast<int>(ViewportClickMode::EditMesh));
+                    ImGui::RadioButton("Add Offmesh Link", &viewportModeValue, static_cast<int>(ViewportClickMode::AddOffmeshLink));
 
                     viewportClickMode = static_cast<ViewportClickMode>(viewportModeValue);
                     ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::Pathfind_MinEdge);
@@ -1154,6 +1180,12 @@ void ViewerApp::RenderFrame()
                             pickedMeshIndex = -1;
                             pickedTri = -1;
                         }
+                    }
+
+                    if (previousMode == ViewportClickMode::AddOffmeshLink && viewportClickMode != ViewportClickMode::AddOffmeshLink)
+                    {
+                        hasOffmeshStart = false;
+                        hasOffmeshTarget = false;
                     }
 
                     if (viewportClickMode == ViewportClickMode::EditMesh)
@@ -1189,10 +1221,15 @@ void ViewerApp::RenderFrame()
                     case ViewportClickMode::Pathfind_Normal: activeMode = "Pathfind"; break;
                     case ViewportClickMode::Pathfind_MinEdge: activeMode = "Pathfind With Min Edge Distance"; break;
                     case ViewportClickMode::EditMesh: activeMode = "Edit Mesh"; break;
+                    case ViewportClickMode::AddOffmeshLink: activeMode = "Add Offmesh Link"; break;
                     }
-                    
+
                     ImGui::Text("Modo ativo: %s", activeMode);
                     ImGui::Text("Start: %s | Target: %s", hasPathStart ? "definido" : "pendente", hasPathTarget ? "definido" : "pendente");
+                    ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::AddOffmeshLink);
+                    ImGui::Checkbox("BiDir", &offmeshBidirectional);
+                    ImGui::Text("Offmesh Start: %s | Offmesh Target: %s", hasOffmeshStart ? "definido" : "pendente", hasOffmeshTarget ? "definido" : "pendente");
+                    ImGui::EndDisabled();
                 }
 
                 if (ImGui::CollapsingHeader("GTA Handler", ImGuiTreeNodeFlags_DefaultOpen))
@@ -1535,6 +1572,7 @@ void ViewerApp::RenderFrame()
                     ImGui::Separator();
                     ImGui::Text("Tris: %zu", navMeshTris.size() / 3);
                     ImGui::Text("Linhas: %zu", m_navmeshLines.size());
+                    ImGui::Text("Offmesh Links: %zu", navData.GetOffmeshLinks().size());
                 }
 
                 ImGui::EndTabItem();
@@ -1676,6 +1714,8 @@ void ViewerApp::RenderFrame()
         navmeshRenderMode != NavmeshRenderMode::FacesOnly &&
         !m_navmeshLines.empty();
     bool drawPath = !pathLines.empty();
+    bool drawOffmeshLinks = !offmeshLinkLines.empty() &&
+        (navmeshVisible || viewportClickMode == ViewportClickMode::AddOffmeshLink);
 
     if (drawFaces)
     {
@@ -1686,6 +1726,11 @@ void ViewerApp::RenderFrame()
     if (drawLines)
     {
         renderer->drawNavmeshLines(m_navmeshLines);
+    }
+
+    if (drawOffmeshLinks)
+    {
+        renderer->drawNavmeshLines(offmeshLinkLines, glm::vec3(0.6f, 0.0f, 0.8f), 2.0f);
     }
 
     if (drawPath)

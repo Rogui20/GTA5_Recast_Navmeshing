@@ -32,6 +32,14 @@ struct NavmeshGenerationSettings
     int tileSize = 48;
 };
 
+struct OffmeshLink
+{
+    glm::vec3 start{0.0f};
+    glm::vec3 end{0.0f};
+    float radius = 1.0f;
+    bool bidirectional = true;
+};
+
 class NavMeshData
 {
 public:
@@ -83,6 +91,14 @@ public:
 
     dtNavMesh* GetNavMesh() const { return m_nav; }
 
+    void AddOffmeshLink(const glm::vec3& start,
+                        const glm::vec3& end,
+                        float radius,
+                        bool bidirectional);
+    void SetOffmeshLinks(std::vector<OffmeshLink> links);
+    const std::vector<OffmeshLink>& GetOffmeshLinks() const { return m_offmeshLinks; }
+    void ClearOffmeshLinks();
+
 
     // Conversão para desenhar no viewer
     void ExtractDebugMesh(
@@ -102,4 +118,5 @@ private:
     int m_cachedTileWidthCount = 0;
     int m_cachedTileHeightCount = 0;
     bool m_hasTiledCache = false;
+    std::vector<OffmeshLink> m_offmeshLinks;
 };

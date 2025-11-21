@@ -284,6 +284,48 @@ namespace
         params.tileY = tileY;
         params.tileLayer = 0;
 
+        std::vector<float> offmeshVerts;
+        std::vector<float> offmeshRads;
+        std::vector<unsigned char> offmeshDirs;
+        std::vector<unsigned char> offmeshAreas;
+        std::vector<unsigned short> offmeshFlags;
+        std::vector<unsigned int> offmeshIds;
+
+        if (input.offmeshLinks && !input.offmeshLinks->empty())
+        {
+            offmeshVerts.reserve(input.offmeshLinks->size() * 6);
+            offmeshRads.reserve(input.offmeshLinks->size());
+            offmeshDirs.reserve(input.offmeshLinks->size());
+            offmeshAreas.reserve(input.offmeshLinks->size());
+            offmeshFlags.reserve(input.offmeshLinks->size());
+            offmeshIds.reserve(input.offmeshLinks->size());
+
+            unsigned int baseId = 1000;
+            for (const auto& link : *input.offmeshLinks)
+            {
+                offmeshVerts.push_back(link.start.x);
+                offmeshVerts.push_back(link.start.y);
+                offmeshVerts.push_back(link.start.z);
+                offmeshVerts.push_back(link.end.x);
+                offmeshVerts.push_back(link.end.y);
+                offmeshVerts.push_back(link.end.z);
+
+                offmeshRads.push_back(link.radius);
+                offmeshDirs.push_back(link.bidirectional ? 1 : 0);
+                offmeshAreas.push_back(RC_WALKABLE_AREA);
+                offmeshFlags.push_back(1);
+                offmeshIds.push_back(baseId++);
+            }
+
+            params.offMeshConVerts = offmeshVerts.data();
+            params.offMeshConRad = offmeshRads.data();
+            params.offMeshConDir = offmeshDirs.data();
+            params.offMeshConAreas = offmeshAreas.data();
+            params.offMeshConFlags = offmeshFlags.data();
+            params.offMeshConUserID = offmeshIds.data();
+            params.offMeshConCount = static_cast<int>(offmeshDirs.size());
+        }
+
         bool ok = dtCreateNavMeshData(&params, &navData, &navDataSize);
         if (!ok)
         {
