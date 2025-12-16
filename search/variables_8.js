@@ -30,7 +30,7 @@ var searchData=
   ['hfontsrvcpudeschandle_27',['hFontSrvCpuDescHandle',['../structImGui__ImplDX12__Texture.html#a8f67608a65e4ab0b1b448a82df4b8045',1,'ImGui_ImplDX12_Texture']]],
   ['hfontsrvgpudeschandle_28',['hFontSrvGpuDescHandle',['../structImGui__ImplDX12__Texture.html#a291af746010d7674fc52fa5c2e63162d',1,'ImGui_ImplDX12_Texture']]],
   ['hhea_29',['hhea',['../structstbtt__fontinfo.html#a91b82ae03d68892eb7f3fbd3a8b990e5',1,'stbtt_fontinfo']]],
-  ['hidden_30',['hidden',['../structSDL__RWops.html#a354b4677b722f11060fb7c4a0125ed37',1,'SDL_RWops::hidden'],['../structImGuiWindow.html#a49e0f1e5eff5af0df7da7f4d14aedcce',1,'ImGuiWindow::Hidden']]],
+  ['hidden_30',['hidden',['../structImGuiWindow.html#a49e0f1e5eff5af0df7da7f4d14aedcce',1,'ImGuiWindow::Hidden'],['../structSDL__RWops.html#a354b4677b722f11060fb7c4a0125ed37',1,'SDL_RWops::hidden']]],
   ['hiddenframescannotskipitems_31',['HiddenFramesCannotSkipItems',['../structImGuiWindow.html#a7756e042598a3fd79830288ef04c3e4c',1,'ImGuiWindow']]],
   ['hiddenframescanskipitems_32',['HiddenFramesCanSkipItems',['../structImGuiWindow.html#af1d2d851f229310e1c9bfdaaa792500e',1,'ImGuiWindow']]],
   ['hiddenframesforrenderonly_33',['HiddenFramesForRenderOnly',['../structImGuiWindow.html#a6439e813f1f2b40b81cba70e86b46d41',1,'ImGuiWindow']]],
@@ -98,7 +98,7 @@ var searchData=
   ['hoveritemunlockedstationaryid_95',['HoverItemUnlockedStationaryId',['../structImGuiContext.html#a47e8a4a544d940b22238aaf45a79072b',1,'ImGuiContext']]],
   ['hoverstationarydelay_96',['HoverStationaryDelay',['../structImGuiStyle.html#acc9238d7c4075d17f609ce6330a5cbe6',1,'ImGuiStyle']]],
   ['hoverwindowunlockedstationaryid_97',['HoverWindowUnlockedStationaryId',['../structImGuiContext.html#a955abe10fd2747c00a2b0de10529ce4d',1,'ImGuiContext']]],
-  ['hwnd_98',['hwnd',['../structImGui__ImplWin32__Data.html#a73c8b66f6315225a32f5143165d61df4',1,'ImGui_ImplWin32_Data::hWnd'],['../structImGui__ImplWin32__ViewportData.html#a9aee71e39e654a81a6bfa395570a26e2',1,'ImGui_ImplWin32_ViewportData::Hwnd']]],
+  ['hwnd_98',['hwnd',['../structImGui__ImplWin32__ViewportData.html#a9aee71e39e654a81a6bfa395570a26e2',1,'ImGui_ImplWin32_ViewportData::Hwnd'],['../structImGui__ImplWin32__Data.html#a73c8b66f6315225a32f5143165d61df4',1,'ImGui_ImplWin32_Data::hWnd']]],
   ['hwndowned_99',['HwndOwned',['../structImGui__ImplWin32__ViewportData.html#a95fd97a8c3df832fd0f207fb43be39b5',1,'ImGui_ImplWin32_ViewportData']]],
   ['hwndparent_100',['HwndParent',['../structImGui__ImplWin32__ViewportData.html#a8efd6bfe614c3593dbb832f4d4566a69',1,'ImGui_ImplWin32_ViewportData']]]
 ];

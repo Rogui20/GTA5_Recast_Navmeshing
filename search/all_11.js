@@ -98,7 +98,7 @@ var searchData=
   ['getbykey_95',['GetByKey',['../structImPool.html#ae53033af46a5df28084f1d946c9face3',1,'ImPool']]],
   ['getcapacity_96',['getCapacity',['../classdtNodeQueue.html#a3bd1e5d3450e90384d8d8ce7f59080de',1,'dtNodeQueue']]],
   ['getcellsize_97',['getCellSize',['../classdtProximityGrid.html#aca646eb6926a096bb8062e7bf3a09945',1,'dtProximityGrid']]],
-  ['getcenter_98',['getcenter',['../structImGuiViewport.html#aecb8b050853aae709f64b82319699bf8',1,'ImGuiViewport::GetCenter()'],['../structImRect.html#aae13f8003184fd84f29d27c3c074cf43',1,'ImRect::GetCenter()'],['../classdtLocalBoundary.html#a41584b7104508fa7331cc00a709a590d',1,'dtLocalBoundary::getCenter()']]],
+  ['getcenter_98',['getcenter',['../classdtLocalBoundary.html#a41584b7104508fa7331cc00a709a590d',1,'dtLocalBoundary::getCenter()'],['../structImGuiViewport.html#aecb8b050853aae709f64b82319699bf8',1,'ImGuiViewport::GetCenter()'],['../structImRect.html#aae13f8003184fd84f29d27c3c074cf43',1,'ImRect::GetCenter()']]],
   ['getcharadvance_99',['GetCharAdvance',['../structImFontBaked.html#a4aa1c5f921bd4c0c90458b8613f6a51c',1,'ImFontBaked']]],
   ['getchunkymesh_100',['getchunkymesh',['../classInputGeom.html#a6c6fea33ddaff00ddd0d2f3e622637b8',1,'InputGeom::getChunkyMesh() const'],['../classInputGeom.html#a6c6fea33ddaff00ddd0d2f3e622637b8',1,'InputGeom::getChunkyMesh() const']]],
   ['getclipboardtext_101',['GetClipboardText',['../namespaceImGui.html#a11837daee819fd90e17d80ab1eef1f99',1,'ImGui']]],
