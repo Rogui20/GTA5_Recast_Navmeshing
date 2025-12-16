@@ -194,6 +194,7 @@ private:
     std::filesystem::path GetConfigFilePath() const;
 
     void RemoveMesh(size_t index);
+    void ClearMeshes();
     void HandleAutoBuild(NavmeshAutoBuildFlag flag);
     glm::mat4 GetModelMatrix(const MeshInstance& instance) const;
     MeshBoundsState ComputeMeshBounds(const MeshInstance& instance) const;
