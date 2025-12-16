@@ -775,6 +775,21 @@ void ViewerApp::RemoveMesh(size_t index)
     }
 }
 
+void ViewerApp::ClearMeshes()
+{
+    if (meshInstances.empty())
+        return;
+
+    ClearNavmesh();
+
+    meshInstances.clear();
+    meshStateCache.clear();
+    pickedMeshIndex = -1;
+    pickedTri = -1;
+
+    HandleAutoBuild(NavmeshAutoBuildFlag::OnRemove);
+}
+
 
 void ViewerApp::Run()
 {
@@ -1289,6 +1304,12 @@ void ViewerApp::RenderFrame()
                 {
                     ImGui::BeginDisabled(navmeshBusy);
                     ImGui::InputTextWithHint("##meshFilter", "Filtrar por nome", meshFilter, IM_ARRAYSIZE(meshFilter));
+                    ImGui::BeginDisabled(meshInstances.empty());
+                    if (ImGui::Button("Limpar Meshes"))
+                    {
+                        ClearMeshes();
+                    }
+                    ImGui::EndDisabled();
                     if (ImGui::BeginTable("MeshTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
                     {
                         ImGui::TableSetupColumn("Mesh");
