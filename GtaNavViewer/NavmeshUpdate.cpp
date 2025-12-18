@@ -16,7 +16,7 @@ void ViewerApp::UpdateNavmeshTiles()
     if (navGenSettings.mode != NavmeshBuildMode::Tiled)
         return;
 
-    if (!navData.IsLoaded() || !navData.HasTiledCache())
+    if (!CurrentNavData().IsLoaded() || !CurrentNavData().HasTiledCache())
         return;
 
     std::vector<std::pair<glm::vec3, glm::vec3>> dirtyBounds;
@@ -89,7 +89,7 @@ void ViewerApp::UpdateNavmeshTiles()
     if (!hasGeometry || combinedVerts.empty() || combinedIdx.empty())
         return;
 
-    if (!navData.UpdateCachedGeometry(combinedVerts, combinedIdx))
+    if (!CurrentNavData().UpdateCachedGeometry(combinedVerts, combinedIdx))
         return;
 
     const auto tileKey = [](int tx, int ty) -> uint64_t
@@ -100,7 +100,7 @@ void ViewerApp::UpdateNavmeshTiles()
     for (const auto& bounds : dirtyBounds)
     {
         std::vector<std::pair<int, int>> tilesInBounds;
-        if (!navData.CollectTilesInBounds(bounds.first, bounds.second, true, tilesInBounds))
+        if (!CurrentNavData().CollectTilesInBounds(bounds.first, bounds.second, true, tilesInBounds))
         {
             printf("[ViewerApp] UpdateNavmeshTiles: falha ao coletar tiles alteradas.\\n");
             continue;
@@ -125,7 +125,7 @@ void ViewerApp::UpdateNavmeshTiles()
     }
 
     std::vector<std::pair<int, int>> touchedTiles;
-    if (!navData.RebuildSpecificTiles(tilesToRebuild, navGenSettings, true, &touchedTiles))
+    if (!CurrentNavData().RebuildSpecificTiles(tilesToRebuild, navGenSettings, true, &touchedTiles))
     {
         printf("[ViewerApp] UpdateNavmeshTiles: falha ao reconstruir tiles.\\n");
         return;
@@ -134,8 +134,8 @@ void ViewerApp::UpdateNavmeshTiles()
     if (!touchedTiles.empty())
     {
         buildNavmeshDebugLines();
-        navQueryReady = false;
-        if (hasPathStart && hasPathTarget)
+        CurrentNavQueryReady() = false;
+        if (CurrentHasPathStart() && CurrentHasPathTarget())
             TryRunPathfind();
     }
 }
