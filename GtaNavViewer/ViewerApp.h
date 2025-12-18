@@ -122,7 +122,8 @@ private:
         Pathfind_Normal = 3,
         Pathfind_MinEdge = 4,
         EditMesh = 5,
-        AddOffmeshLink = 6
+        AddOffmeshLink = 6,
+        RemoveOffmeshLink = 7
     };
 
     enum class MeshEditMode

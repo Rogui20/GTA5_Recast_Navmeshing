@@ -171,6 +171,27 @@ void ViewerApp::ProcessEvents()
                     }
                 }
                 break;
+            case ViewportClickMode::RemoveOffmeshLink:
+            {
+                if (navData.RemoveNearestOffmeshLink(hitPoint))
+                {
+                    hasOffmeshStart = false;
+                    hasOffmeshTarget = false;
+                    RebuildOffmeshLinkLines();
+                    printf("[ViewerApp] Offmesh link mais próximo removido. Clique=(%.2f, %.2f, %.2f)\n",
+                           hitPoint.x, hitPoint.y, hitPoint.z);
+
+                    if (navData.IsLoaded())
+                    {
+                        buildNavmeshFromMeshes();
+                    }
+                }
+                else
+                {
+                    printf("[ViewerApp] Nenhum offmesh link para remover.\n");
+                }
+                break;
+            }
             }
         }
 
