@@ -20,6 +20,7 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
+#include <array>
 
 struct Ray;
 class ViewerCamera;
@@ -37,8 +38,8 @@ public:
     bool Init();
     void Run();
     void Shutdown();
-    bool buildNavmeshFromMeshes(bool buildTilesNow = true);
-    void buildNavmeshDebugLines();
+    bool buildNavmeshFromMeshes(bool buildTilesNow = true, int slotIndex = -1);
+    void buildNavmeshDebugLines(int slotIndex = -1);
     bool BuildStaticMap(GtaHandler& handler, const std::filesystem::path& meshDirectory, float scanRange);
     void SetProceduralTestEnabled(bool enabled);
 
@@ -82,7 +83,24 @@ private:
     RenderMode renderMode = RenderMode::Solid;
     bool centerMesh = true;
     bool preferBin = true;
-    NavMeshData navData;
+    static constexpr int kMaxNavmeshSlots = 10;
+    int currentNavmeshSlot = 0;
+    std::array<NavMeshData, kMaxNavmeshSlots> navmeshDataSlots{};
+    std::array<std::vector<glm::vec3>, kMaxNavmeshSlots> navMeshTrisSlots{};
+    std::array<std::vector<glm::vec3>, kMaxNavmeshSlots> navMeshLinesSlots{};
+    std::array<std::vector<DebugLine>, kMaxNavmeshSlots> navmeshLineBufferSlots{};
+    std::array<std::vector<DebugLine>, kMaxNavmeshSlots> offmeshLinkLinesSlots{};
+    std::array<std::vector<DebugLine>, kMaxNavmeshSlots> pathLinesSlots{};
+    std::array<dtNavMeshQuery*, kMaxNavmeshSlots> navQuerySlots{};
+    std::array<bool, kMaxNavmeshSlots> navQueryReadySlots{};
+    std::array<bool, kMaxNavmeshSlots> hasPathStartSlots{};
+    std::array<bool, kMaxNavmeshSlots> hasPathTargetSlots{};
+    std::array<glm::vec3, kMaxNavmeshSlots> pathStartSlots{};
+    std::array<glm::vec3, kMaxNavmeshSlots> pathTargetSlots{};
+    std::array<bool, kMaxNavmeshSlots> hasOffmeshStartSlots{};
+    std::array<bool, kMaxNavmeshSlots> hasOffmeshTargetSlots{};
+    std::array<glm::vec3, kMaxNavmeshSlots> offmeshStartSlots{};
+    std::array<glm::vec3, kMaxNavmeshSlots> offmeshTargetSlots{};
     NavmeshGenerationSettings navGenSettings{};
     GtaHandler gtaHandler;
     GtaHandlerMenu gtaHandlerMenu;
@@ -148,19 +166,8 @@ private:
 
     ViewportClickMode viewportClickMode = ViewportClickMode::PickTriangle;
     float pathfindMinEdgeDistance = 0.0f;
-    bool hasPathStart = false;
-    bool hasPathTarget = false;
-    glm::vec3 pathStart{0.0f};
-    glm::vec3 pathTarget{0.0f};
     bool offmeshBidirectional = true;
-    bool hasOffmeshStart = false;
-    bool hasOffmeshTarget = false;
-    glm::vec3 offmeshStart{0.0f};
-    glm::vec3 offmeshTarget{0.0f};
-    std::vector<DebugLine> pathLines;
-    dtNavMeshQuery* navQuery = nullptr;
     dtQueryFilter pathQueryFilter{};
-    bool navQueryReady = false;
 
     MeshEditMode meshEditMode = MeshEditMode::Move;
     MoveTransformMode moveTransformMode = MoveTransformMode::GlobalTransform;
@@ -174,14 +181,6 @@ private:
     glm::vec3 meshStartPosition{};
     glm::vec3 rotationStartVec{};
     glm::vec3 rotationStartAngles{};
-
-    // buffers para desenhar navmesh no renderer
-    std::vector<glm::vec3> navMeshTris;
-    std::vector<glm::vec3> navMeshLines;
-    std::vector<DebugLine> m_navmeshLines; // apenas isso por enquanto
-    std::vector<DebugLine> offmeshLinkLines;
-
-
 
 private:
     bool InitSDL();
@@ -202,7 +201,7 @@ private:
     bool HasMeshChanged(const MeshBoundsState& previous, const MeshBoundsState& current) const;
     void UpdateNavmeshTiles();
     bool ComputeRayMeshHit(int mx, int my, glm::vec3& outPoint, int* outTri, int* outMeshIndex);
-    void ResetPathState();
+    void ResetPathState(int slotIndex = -1);
     bool InitNavQueryForCurrentNavmesh();
     void TryRunPathfind();
     bool IsPathfindModeActive() const;
@@ -236,8 +235,8 @@ private:
     void JoinNavmeshWorker();
     void RequestStopNavmeshBuild();
     void ClearNavmesh();
-    void RebuildDebugLineBuffer();
-    void RebuildOffmeshLinkLines();
+    void RebuildDebugLineBuffer(int slotIndex = -1);
+    void RebuildOffmeshLinkLines(int slotIndex = -1);
     bool IsNavmeshJobRunning() const { return navmeshJobRunning.load(); }
 
     ImGui::FileBrowser directoryBrowser;
@@ -271,6 +270,7 @@ private:
     std::atomic<bool> navmeshCancelRequested{false};
     bool navmeshJobQueued = false;
     bool navmeshJobQueuedBuildTilesNow = true;
+    int navmeshJobQueuedSlot = -1;
     std::mutex navmeshJobMutex;
     std::unique_ptr<NavmeshJobResult> navmeshJobResult;
 
@@ -278,6 +278,28 @@ private:
     void RunProceduralTestStep();
     bool PrepareProceduralNavmeshIfNeeded();
     void BuildProceduralTilesAroundCamera();
+
+    NavMeshData& CurrentNavData() { return navmeshDataSlots[currentNavmeshSlot]; }
+    const NavMeshData& CurrentNavData() const { return navmeshDataSlots[currentNavmeshSlot]; }
+    std::vector<glm::vec3>& CurrentNavMeshTris() { return navMeshTrisSlots[currentNavmeshSlot]; }
+    std::vector<glm::vec3>& CurrentNavMeshLines() { return navMeshLinesSlots[currentNavmeshSlot]; }
+    std::vector<DebugLine>& CurrentNavmeshLineBuffer() { return navmeshLineBufferSlots[currentNavmeshSlot]; }
+    std::vector<DebugLine>& CurrentOffmeshLinkLines() { return offmeshLinkLinesSlots[currentNavmeshSlot]; }
+    std::vector<DebugLine>& CurrentPathLines() { return pathLinesSlots[currentNavmeshSlot]; }
+    dtNavMeshQuery*& CurrentNavQuery() { return navQuerySlots[currentNavmeshSlot]; }
+    bool& CurrentNavQueryReady() { return navQueryReadySlots[currentNavmeshSlot]; }
+    bool& CurrentHasPathStart() { return hasPathStartSlots[currentNavmeshSlot]; }
+    bool& CurrentHasPathTarget() { return hasPathTargetSlots[currentNavmeshSlot]; }
+    glm::vec3& CurrentPathStart() { return pathStartSlots[currentNavmeshSlot]; }
+    glm::vec3& CurrentPathTarget() { return pathTargetSlots[currentNavmeshSlot]; }
+    bool& CurrentHasOffmeshStart() { return hasOffmeshStartSlots[currentNavmeshSlot]; }
+    bool& CurrentHasOffmeshTarget() { return hasOffmeshTargetSlots[currentNavmeshSlot]; }
+    glm::vec3& CurrentOffmeshStart() { return offmeshStartSlots[currentNavmeshSlot]; }
+    glm::vec3& CurrentOffmeshTarget() { return offmeshTargetSlots[currentNavmeshSlot]; }
+    void SwitchNavmeshSlot(int slotIndex);
+    bool IsValidSlot(int slotIndex) const { return slotIndex >= 0 && slotIndex < kMaxNavmeshSlots; }
+    void ClearNavmeshSlotData(int slotIndex);
+    void ResetAllNavmeshSlots();
 
     bool proceduralTestEnabled = false;
     bool proceduralHasLastScan = false;
