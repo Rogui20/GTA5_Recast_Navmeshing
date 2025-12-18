@@ -259,6 +259,7 @@ private:
     struct NavmeshJobResult
     {
         bool success = false;
+        int slotIndex = 0;
         NavMeshData navData;
         std::vector<glm::vec3> tris;
         std::vector<glm::vec3> lines;
