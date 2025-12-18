@@ -1180,6 +1180,7 @@ void ViewerApp::RenderFrame()
                     ImGui::RadioButton("Pathfind With Min Edge Distance", &viewportModeValue, static_cast<int>(ViewportClickMode::Pathfind_MinEdge));
                     ImGui::RadioButton("Edit Mesh", &viewportModeValue, static_cast<int>(ViewportClickMode::EditMesh));
                     ImGui::RadioButton("Add Offmesh Link", &viewportModeValue, static_cast<int>(ViewportClickMode::AddOffmeshLink));
+                    ImGui::RadioButton("Remove Offmesh Link", &viewportModeValue, static_cast<int>(ViewportClickMode::RemoveOffmeshLink));
 
                     viewportClickMode = static_cast<ViewportClickMode>(viewportModeValue);
                     ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::Pathfind_MinEdge);
@@ -1237,6 +1238,7 @@ void ViewerApp::RenderFrame()
                     case ViewportClickMode::Pathfind_MinEdge: activeMode = "Pathfind With Min Edge Distance"; break;
                     case ViewportClickMode::EditMesh: activeMode = "Edit Mesh"; break;
                     case ViewportClickMode::AddOffmeshLink: activeMode = "Add Offmesh Link"; break;
+                    case ViewportClickMode::RemoveOffmeshLink: activeMode = "Remove Offmesh Link"; break;
                     }
 
                     ImGui::Text("Modo ativo: %s", activeMode);
@@ -1244,6 +1246,22 @@ void ViewerApp::RenderFrame()
                     ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::AddOffmeshLink);
                     ImGui::Checkbox("BiDir", &offmeshBidirectional);
                     ImGui::Text("Offmesh Start: %s | Offmesh Target: %s", hasOffmeshStart ? "definido" : "pendente", hasOffmeshTarget ? "definido" : "pendente");
+                    ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(navData.GetOffmeshLinks().empty());
+                    if (ImGui::Button("Limpar Offmesh Links"))
+                    {
+                        navData.ClearOffmeshLinks();
+                        RebuildOffmeshLinkLines();
+                        hasOffmeshStart = false;
+                        hasOffmeshTarget = false;
+                        printf("[ViewerApp] Offmesh links limpos.\n");
+
+                        if (navData.IsLoaded())
+                        {
+                            buildNavmeshFromMeshes();
+                        }
+                    }
                     ImGui::EndDisabled();
                 }
 

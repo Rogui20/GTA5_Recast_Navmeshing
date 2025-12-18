@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <cstring>
 #include <cmath>
+#include <limits>
 
 namespace
 {
@@ -54,6 +55,42 @@ void NavMeshData::AddOffmeshLink(const glm::vec3& start,
     link.radius = radius;
     link.bidirectional = bidirectional;
     m_offmeshLinks.push_back(link);
+}
+
+bool NavMeshData::RemoveNearestOffmeshLink(const glm::vec3& point)
+{
+    if (m_offmeshLinks.empty())
+        return false;
+
+    const auto pointToSegmentDistSq = [](const glm::vec3& p, const glm::vec3& a, const glm::vec3& b)
+    {
+        const glm::vec3 ab = b - a;
+        const float denom = glm::dot(ab, ab);
+        if (denom <= 0.0f)
+            return glm::dot(p - a, p - a);
+
+        float t = glm::dot(p - a, ab) / denom;
+        t = glm::clamp(t, 0.0f, 1.0f);
+        const glm::vec3 closest = a + ab * t;
+        return glm::dot(p - closest, p - closest);
+    };
+
+    size_t nearestIndex = 0;
+    float nearestDistSq = std::numeric_limits<float>::max();
+
+    for (size_t i = 0; i < m_offmeshLinks.size(); ++i)
+    {
+        const auto& link = m_offmeshLinks[i];
+        float distSq = pointToSegmentDistSq(point, link.start, link.end);
+        if (distSq < nearestDistSq)
+        {
+            nearestDistSq = distSq;
+            nearestIndex = i;
+        }
+    }
+
+    m_offmeshLinks.erase(m_offmeshLinks.begin() + static_cast<std::ptrdiff_t>(nearestIndex));
+    return true;
 }
 
 void NavMeshData::SetOffmeshLinks(std::vector<OffmeshLink> links)
