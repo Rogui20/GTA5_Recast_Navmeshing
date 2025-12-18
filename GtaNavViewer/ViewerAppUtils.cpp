@@ -113,40 +113,41 @@ bool ViewerApp::HasMeshChanged(const MeshBoundsState& previous, const MeshBounds
     return differentVec3(previous.bmin, current.bmin) || differentVec3(previous.bmax, current.bmax);
 }
 
-void ViewerApp::ResetPathState()
+void ViewerApp::ResetPathState(int slotIndex)
 {
-    hasPathStart = false;
-    hasPathTarget = false;
-    pathLines.clear();
-    hasOffmeshStart = false;
-    hasOffmeshTarget = false;
+    const int slot = IsValidSlot(slotIndex) ? slotIndex : currentNavmeshSlot;
+    hasPathStartSlots[slot] = false;
+    hasPathTargetSlots[slot] = false;
+    pathLinesSlots[slot].clear();
+    hasOffmeshStartSlots[slot] = false;
+    hasOffmeshTargetSlots[slot] = false;
 }
 
 bool ViewerApp::InitNavQueryForCurrentNavmesh()
 {
-    navQueryReady = false;
+    CurrentNavQueryReady() = false;
 
-    if (!navData.IsLoaded())
+    if (!CurrentNavData().IsLoaded())
         return false;
 
-    if (!navQuery)
+    if (!CurrentNavQuery())
     {
-        navQuery = dtAllocNavMeshQuery();
-        if (!navQuery)
+        CurrentNavQuery() = dtAllocNavMeshQuery();
+        if (!CurrentNavQuery())
         {
             printf("[ViewerApp] InitNavQueryForCurrentNavmesh: dtAllocNavMeshQuery falhou.\n");
             return false;
         }
     }
 
-    const dtStatus status = navQuery->init(navData.GetNavMesh(), 2048);
+    const dtStatus status = CurrentNavQuery()->init(CurrentNavData().GetNavMesh(), 2048);
     if (dtStatusFailed(status))
     {
         printf("[ViewerApp] InitNavQueryForCurrentNavmesh: navQuery->init falhou.\n");
         return false;
     }
 
-    navQueryReady = true;
+    CurrentNavQueryReady() = true;
     return true;
 }
 
@@ -590,10 +591,6 @@ void ViewerApp::RemoveMeshSubtree(uint64_t rootId)
 
     if (meshInstances.empty())
     {
-        navMeshTris.clear();
-        navMeshLines.clear();
-        m_navmeshLines.clear();
-        ResetPathState();
-        navQueryReady = false;
+        ResetAllNavmeshSlots();
     }
 }

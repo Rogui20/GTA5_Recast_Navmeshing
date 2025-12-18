@@ -115,7 +115,7 @@ void ViewerApp::ProcessEvents()
             {
                 int tileX = -1;
                 int tileY = -1;
-                if (navData.BuildTileAt(hitPoint, navGenSettings, tileX, tileY))
+                if (CurrentNavData().BuildTileAt(hitPoint, navGenSettings, tileX, tileY))
                 {
                     ResetPathState();
                     buildNavmeshDebugLines();
@@ -131,7 +131,7 @@ void ViewerApp::ProcessEvents()
             {
                 int tileX = -1;
                 int tileY = -1;
-                if (navData.RemoveTileAt(hitPoint, tileX, tileY))
+                if (CurrentNavData().RemoveTileAt(hitPoint, tileX, tileY))
                 {
                     ResetPathState();
                     buildNavmeshDebugLines();
@@ -140,50 +140,50 @@ void ViewerApp::ProcessEvents()
             }
             case ViewportClickMode::Pathfind_Normal:
             case ViewportClickMode::Pathfind_MinEdge:
-                pathTarget = hitPoint;
-                hasPathTarget = true;
+                CurrentPathTarget() = hitPoint;
+                CurrentHasPathTarget() = true;
                 TryRunPathfind();
                 break;
             case ViewportClickMode::EditMesh:
                 break;
             case ViewportClickMode::AddOffmeshLink:
-                if (!hasOffmeshStart)
+                if (!CurrentHasOffmeshStart())
                 {
-                    offmeshStart = hitPoint;
-                    hasOffmeshStart = true;
+                    CurrentOffmeshStart() = hitPoint;
+                    CurrentHasOffmeshStart() = true;
                 }
                 else
                 {
-                    offmeshTarget = hitPoint;
-                    hasOffmeshTarget = true;
-                    navData.AddOffmeshLink(offmeshStart, offmeshTarget, navGenSettings.agentRadius, offmeshBidirectional);
+                    CurrentOffmeshTarget() = hitPoint;
+                    CurrentHasOffmeshTarget() = true;
+                    CurrentNavData().AddOffmeshLink(CurrentOffmeshStart(), CurrentOffmeshTarget(), navGenSettings.agentRadius, offmeshBidirectional);
                     RebuildOffmeshLinkLines();
                     printf("[ViewerApp] Offmesh link adicionado. Start=(%.2f, %.2f, %.2f) Target=(%.2f, %.2f, %.2f) BiDir=%s\n",
-                           offmeshStart.x, offmeshStart.y, offmeshStart.z,
-                           offmeshTarget.x, offmeshTarget.y, offmeshTarget.z,
+                           CurrentOffmeshStart().x, CurrentOffmeshStart().y, CurrentOffmeshStart().z,
+                           CurrentOffmeshTarget().x, CurrentOffmeshTarget().y, CurrentOffmeshTarget().z,
                            offmeshBidirectional ? "true" : "false");
-                    hasOffmeshStart = false;
-                    hasOffmeshTarget = false;
+                    CurrentHasOffmeshStart() = false;
+                    CurrentHasOffmeshTarget() = false;
 
-                    if (navData.IsLoaded())
+                    if (CurrentNavData().IsLoaded())
                     {
-                        buildNavmeshFromMeshes();
+                        buildNavmeshFromMeshes(true, currentNavmeshSlot);
                     }
                 }
                 break;
             case ViewportClickMode::RemoveOffmeshLink:
             {
-                if (navData.RemoveNearestOffmeshLink(hitPoint))
+                if (CurrentNavData().RemoveNearestOffmeshLink(hitPoint))
                 {
-                    hasOffmeshStart = false;
-                    hasOffmeshTarget = false;
+                    CurrentHasOffmeshStart() = false;
+                    CurrentHasOffmeshTarget() = false;
                     RebuildOffmeshLinkLines();
                     printf("[ViewerApp] Offmesh link mais próximo removido. Clique=(%.2f, %.2f, %.2f)\n",
                            hitPoint.x, hitPoint.y, hitPoint.z);
 
-                    if (navData.IsLoaded())
+                    if (CurrentNavData().IsLoaded())
                     {
-                        buildNavmeshFromMeshes();
+                        buildNavmeshFromMeshes(true, currentNavmeshSlot);
                     }
                 }
                 else
@@ -246,8 +246,8 @@ void ViewerApp::ProcessEvents()
                 glm::vec3 hitPoint(0.0f);
                 if (ComputeRayMeshHit(rightButtonDownX, rightButtonDownY, hitPoint, nullptr, nullptr))
                 {
-                    pathStart = hitPoint;
-                    hasPathStart = true;
+                    CurrentPathStart() = hitPoint;
+                    CurrentHasPathStart() = true;
                     TryRunPathfind();
                 }
             }
