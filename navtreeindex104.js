@@ -1,5 +1,6 @@
 var NAVTREEINDEX104 =
 {
+"structSDLTest__CommonState.html#aff43a763af98b8eb651c41ec931e5d93":[44,0,440,14],
 "structSDLTest__Crc32Context.html":[44,0,441],
 "structSDLTest__Crc32Context.html#ae95d0d0b48bafc4e2f6f032f754ffa4c":[44,0,441,0],
 "structSDLTest__Md5Context.html":[44,0,442],
@@ -248,6 +249,5 @@ var NAVTREEINDEX104 =
 "structSDL__JoyAxisEvent.html":[44,0,400],
 "structSDL__JoyAxisEvent.html#a0beac2fb161e45771c424bd0b6daeabb":[44,0,400,0],
 "structSDL__JoyAxisEvent.html#a53ee73e7c367934dd6edb69963be5556":[44,0,400,7],
-"structSDL__JoyAxisEvent.html#a604b258940a8cd8beaa5efeb55d6f825":[44,0,400,4],
-"structSDL__JoyAxisEvent.html#a60ecfc70df9eeef8e33b5dd7dc060389":[44,0,400,5]
+"structSDL__JoyAxisEvent.html#a604b258940a8cd8beaa5efeb55d6f825":[44,0,400,4]
 };

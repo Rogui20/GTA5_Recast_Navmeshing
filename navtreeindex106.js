@@ -1,5 +1,6 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__UserEvent.html#ab2893a12be2f97195f16463a23107913":[44,0,433,1],
 "structSDL__UserEvent.html#ab7afa8b98dbd7b52bef41155e10f7340":[44,0,433,4],
 "structSDL__UserEvent.html#abccefa10e0e0e3a0801bc6d836a08da7":[44,0,433,5],
 "structSDL__UserEvent.html#adbf1d34c73138a0c549310e5d4ad0c35":[44,0,433,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX106 =
 "structdtPolyDetail.html#aaccd8de89ab39454558ce4bfe6230c98":[44,0,51,0],
 "structdtPolyDetail.html#ae3f408c9c8974ccd058a98f781c58801":[44,0,51,2],
 "structdtPolyDetail.html#aef53174e1c31d4304bc07da5d677528c":[44,0,51,1],
-"structdtPolyState.html":[44,0,53],
-"structdtPolyState.html#a8e3a8a1c15338bbe761ef4d9ca2b4949":[44,0,53,1]
+"structdtPolyState.html":[44,0,53]
 };
