@@ -76,7 +76,7 @@ var searchData=
   ['addboxobstacle_73',['addboxobstacle',['../classdtTileCache.html#a7bc032ae2bfec09d3ede528841c80ac6',1,'dtTileCache::addBoxObstacle(const float *bmin, const float *bmax, dtObstacleRef *result)'],['../classdtTileCache.html#ac37b6e2373ec3994e87b19606b135522',1,'dtTileCache::addBoxObstacle(const float *center, const float *halfExtents, const float yRadians, dtObstacleRef *result)']]],
   ['addcallback_74',['AddCallback',['../structImDrawList.html#a37a53f9597188ba5e49a88329ceab6c9',1,'ImDrawList']]],
   ['addchar_75',['AddChar',['../structImFontGlyphRangesBuilder.html#a6d3f5e3e377a73f4f4324c4cf98600dd',1,'ImFontGlyphRangesBuilder']]],
-  ['addcircle_76',['addcircle',['../classdtObstacleAvoidanceQuery.html#aca861fb3e13b8785124b655b8313de45',1,'dtObstacleAvoidanceQuery::addCircle()'],['../structImDrawList.html#a9b73eea0ebf7a9f02bc8a104deb7de9d',1,'ImDrawList::AddCircle(const ImVec2 &amp;center, float radius, ImU32 col, int num_segments=0, float thickness=1.0f)']]],
+  ['addcircle_76',['addcircle',['../structImDrawList.html#a9b73eea0ebf7a9f02bc8a104deb7de9d',1,'ImDrawList::AddCircle()'],['../classdtObstacleAvoidanceQuery.html#aca861fb3e13b8785124b655b8313de45',1,'dtObstacleAvoidanceQuery::addCircle()']]],
   ['addcirclefilled_77',['AddCircleFilled',['../structImDrawList.html#aef950cf8b0293b2c5e4708af72de045b',1,'ImDrawList']]],
   ['addconcavepolyfilled_78',['AddConcavePolyFilled',['../structImDrawList.html#ab8234d7fe8665c9ad5aa873824a5fad9',1,'ImDrawList']]],
   ['addcontexthook_79',['AddContextHook',['../namespaceImGui.html#a1e7bb4d83fee6646718773e5746e53ad',1,'ImGui']]],

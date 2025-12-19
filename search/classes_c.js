@@ -39,5 +39,7 @@ var searchData=
   ['rcvectorbase_3c_20t_2c_20rc_5falloc_5fperm_20_3e_36',['rcVectorBase&lt; T, RC_ALLOC_PERM &gt;',['../classrcVectorBase.html',1,'']]],
   ['rcvectorbase_3c_20t_2c_20rc_5falloc_5ftemp_20_3e_37',['rcVectorBase&lt; T, RC_ALLOC_TEMP &gt;',['../classrcVectorBase.html',1,'']]],
   ['renderergl_38',['RendererGL',['../classRendererGL.html',1,'']]],
-  ['renderresources_39',['RenderResources',['../structRenderResources.html',1,'']]]
+  ['renderresources_39',['RenderResources',['../structRenderResources.html',1,'']]],
+  ['routerequestslot_40',['RouteRequestSlot',['../structMemoryHandler_1_1RouteRequestSlot.html',1,'MemoryHandler']]],
+  ['routeresultpoint_41',['RouteResultPoint',['../structMemoryHandler_1_1RouteResultPoint.html',1,'MemoryHandler']]]
 ];
