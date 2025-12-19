@@ -509,12 +509,12 @@ var NAVTREEINDEX =
 "structImGui__ImplDX12__RenderBuffers.html#a6643010c24e4046769271a36d596398a",
 "structImGui__ImplVulkan__InitInfo.html#a1230ad3b011207b44124ea62ee66b2cb",
 "structImTriangulator.html#adf26cdf6f488de52f187d383cfbe87ec",
-"structRenderResources.html#a4dac394ca31925180b5bf88a584597c8",
-"structSDL__HapticConstant.html#aeb994c356b1d236b060f277d157e98ec",
-"structSDL__Surface.html#a17294cb1ec1ef7f77f75cdad26ac795f",
-"structdtLink.html#a62d34d0e6350fe9790e91ec287bc1423",
-"structrcHeightfieldLayer.html#a58d4448da1f29c63229a11ffc886b351",
-"unionSDL__Event.html#aa4fc65c559d69f33c057c0c23d8414b8"
+"structRenderResources.html#a4d79ab9a299fa9cf584e9741d810ea1e",
+"structSDL__HapticConstant.html#ab1f7f0df856f4cf1fdf937cb886226b4",
+"structSDL__Surface.html#a0a90721f947c10c3b79e02ccb419ca62",
+"structdtLink.html#a475b893f03bf4c942ab6376d83dca82e",
+"structrcHeightfieldLayer.html#a4e3df2893e1773e801e6f41d077715d6",
+"unionSDL__Event.html#a9a7e3b67b2654d4c5fc509676c6a7183"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

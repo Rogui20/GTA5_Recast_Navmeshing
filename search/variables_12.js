@@ -42,7 +42,7 @@ var searchData=
   ['readlinefn_39',['ReadLineFn',['../structImGuiSettingsHandler.html#a0a02bad8569c2d9f22e1a532d1e2de60',1,'ImGuiSettingsHandler']]],
   ['readopenfn_40',['ReadOpenFn',['../structImGuiSettingsHandler.html#a461105eb071f511b480695f9915c821b',1,'ImGuiSettingsHandler']]],
   ['readpixels_41',['ReadPixels',['../unionImGL3WProcs.html#af062bdc89cd28e7ac6fff3f35c808da3',1,'ImGL3WProcs']]],
-  ['rect_42',['rect',['../structSDLTest__TextWindow.html#a1f9f249b1add14f3a53972808031ea1a',1,'SDLTest_TextWindow::rect'],['../structimguiGfxCmd.html#a83f785a85c31c45d64870075d76e9b50',1,'imguiGfxCmd::rect'],['../structImGuiLastItemData.html#ad6ff8db4173ff40874ef015e58d726ae',1,'ImGuiLastItemData::Rect']]],
+  ['rect_42',['rect',['../structImGuiLastItemData.html#ad6ff8db4173ff40874ef015e58d726ae',1,'ImGuiLastItemData::Rect'],['../structSDLTest__TextWindow.html#a1f9f249b1add14f3a53972808031ea1a',1,'SDLTest_TextWindow::rect'],['../structimguiGfxCmd.html#a83f785a85c31c45d64870075d76e9b50',1,'imguiGfxCmd::rect']]],
   ['rectrel_43',['RectRel',['../structImGuiNavItemData.html#a62029a2962e6eb2969306437bcada51d',1,'ImGuiNavItemData']]],
   ['rects_44',['Rects',['../structImFontAtlasBuilder.html#a4f9256a923b50e99cc2c22b22a4a72ec',1,'ImFontAtlasBuilder']]],
   ['rectsdiscardedcount_45',['RectsDiscardedCount',['../structImFontAtlasBuilder.html#ae3f83de5a911b1d2279f76784deb4d40',1,'ImFontAtlasBuilder']]],
