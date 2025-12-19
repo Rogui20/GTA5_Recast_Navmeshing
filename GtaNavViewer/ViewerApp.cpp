@@ -2131,6 +2131,15 @@ void ViewerApp::RenderFrame()
 
                         if (ImGui::Button("Teleport Camera to Mesh Center"))
                             camera->pos = renderCenter + glm::vec3(0,50,150);
+
+                        if (ImGui::Button("Teleport Camera to Selected Mesh"))
+                        {
+                            const auto& instance = CurrentMeshes()[CurrentPickedMeshIndex()];
+                            if (instance.mesh)
+                            {
+                                camera->pos = glm::vec3(instance.position.x,instance.position.y,instance.position.z);
+                            }
+                        }
                     }
                     else
                     {
