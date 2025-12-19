@@ -62,6 +62,7 @@ public:
         int32_t state = 0; // 0 ready, 1 busy, 2 finished
         uint8_t request = 0;
         uint8_t padding[3]{};
+        int32_t pointsCount = 0;
     };
 
     struct RouteResultPoint
