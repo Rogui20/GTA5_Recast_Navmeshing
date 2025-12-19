@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 #if defined(_WIN32)
@@ -28,6 +29,8 @@ MemoryHandler::MemoryHandler()
     static_assert(std::is_standard_layout<RouteRequestSlot>::value, "RouteRequestSlot precisa ser standard layout");
     static_assert(std::is_standard_layout<RouteResultPoint>::value, "RouteResultPoint precisa ser standard layout");
     layoutFilePath = ResolveLayoutFilePath();
+    configFilePath = ResolveConfigFilePath();
+    LoadSavedConfig();
     statusMessage = "Monitoramento inativo.";
 }
 
@@ -317,6 +320,157 @@ bool MemoryHandler::WriteLayoutFile() const
     return true;
 }
 
+bool MemoryHandler::SetPropHashFile(const std::filesystem::path& path)
+{
+    if (path.empty() || !std::filesystem::exists(path))
+        return false;
+
+    propHashFile = path;
+    SaveConfig();
+    return LoadPropHashMapping();
+}
+
+bool MemoryHandler::SetObjDirectory(const std::filesystem::path& path)
+{
+    if (path.empty() || !std::filesystem::exists(path) || !std::filesystem::is_directory(path))
+        return false;
+
+    objDirectory = path;
+    SaveConfig();
+    return true;
+}
+
+bool MemoryHandler::LoadPropHashMapping()
+{
+    ClearMappings();
+    if (propHashFile.empty())
+        return false;
+
+    std::ifstream file(propHashFile);
+    if (!file)
+        return false;
+
+    nlohmann::json data;
+    try
+    {
+        file >> data;
+    }
+    catch (...)
+    {
+        return false;
+    }
+
+    if (!data.is_object())
+        return false;
+
+    for (auto it = data.begin(); it != data.end(); ++it)
+    {
+        if (it.value().is_string())
+        {
+            propHashToName[it.key()] = it.value().get<std::string>();
+        }
+    }
+
+    return !propHashToName.empty();
+}
+
+bool MemoryHandler::TryResolvePropName(const std::string& hashKey, std::string& outName) const
+{
+    auto it = propHashToName.find(hashKey);
+    if (it == propHashToName.end())
+        return false;
+
+    outName = it->second;
+    return true;
+}
+
+void MemoryHandler::LoadSavedConfig()
+{
+    if (configFilePath.empty())
+        return;
+
+    std::ifstream file(configFilePath);
+    if (!file)
+        return;
+
+    std::string propPath;
+    std::string objPath;
+    std::getline(file, propPath);
+    std::getline(file, objPath);
+
+    if (!propPath.empty())
+    {
+        std::filesystem::path candidate = propPath;
+        if (std::filesystem::exists(candidate))
+        {
+            propHashFile = candidate;
+            LoadPropHashMapping();
+        }
+    }
+
+    if (!objPath.empty())
+    {
+        std::filesystem::path candidate = objPath;
+        if (std::filesystem::exists(candidate) && std::filesystem::is_directory(candidate))
+        {
+            objDirectory = candidate;
+        }
+    }
+}
+
+bool MemoryHandler::FetchGeometrySlots(std::vector<GeometrySlot>& outSlots) const
+{
+#if defined(_WIN32)
+    if (!HasValidBuffers())
+        return false;
+
+    outSlots.resize(static_cast<size_t>(kGeometrySlotCount));
+    return ReadRemote(outSlots.data(), geometryBufferAddress, GeometryBufferSize());
+#else
+    (void)outSlots;
+    return false;
+#endif
+}
+
+bool MemoryHandler::WriteGeometrySlot(int index, const GeometrySlot& slot) const
+{
+#if defined(_WIN32)
+    if (!HasValidBuffers() || index < 0 || index >= kGeometrySlotCount)
+        return false;
+
+    const uintptr_t address = geometryBufferAddress + static_cast<uintptr_t>(index) * sizeof(GeometrySlot);
+    return WriteRemote(address, &slot, sizeof(GeometrySlot));
+#else
+    (void)index;
+    (void)slot;
+    return false;
+#endif
+}
+
+bool MemoryHandler::ClearGeometrySlot(int index) const
+{
+#if defined(_WIN32)
+    if (!HasValidBuffers() || index < 0 || index >= kGeometrySlotCount)
+        return false;
+
+    GeometrySlot zeroSlot{};
+    return WriteGeometrySlot(index, zeroSlot);
+#else
+    (void)index;
+    return false;
+#endif
+}
+
+bool MemoryHandler::HasValidBuffers() const
+{
+    return monitoringActive && geometryBufferAddress != 0;
+}
+
+size_t MemoryHandler::GeometryBufferSize() const
+{
+    return sizeof(GeometrySlot) * static_cast<size_t>(kGeometrySlotCount);
+}
+
 bool MemoryHandler::ZeroRemoteBuffer(uintptr_t address, size_t size) const
 {
 #if defined(_WIN32)
@@ -350,6 +504,19 @@ std::filesystem::path MemoryHandler::ResolveLayoutFilePath() const
     return std::filesystem::current_path() / "gta_tracker_layout.json";
 }
 
+std::filesystem::path MemoryHandler::ResolveConfigFilePath() const
+{
+    char* basePath = SDL_GetBasePath();
+    if (basePath)
+    {
+        std::filesystem::path result = std::filesystem::path(basePath) / "gta_tracker_config.txt";
+        SDL_free(basePath);
+        return result;
+    }
+
+    return std::filesystem::current_path() / "gta_tracker_config.txt";
+}
+
 std::string MemoryHandler::AddressToHex(uintptr_t address) const
 {
     std::ostringstream oss;
@@ -370,6 +537,64 @@ bool MemoryHandler::IsProcessAlive() const
 
     return exitCode == STILL_ACTIVE;
 #else
+    return false;
+#endif
+}
+
+void MemoryHandler::SaveConfig() const
+{
+    if (configFilePath.empty())
+        return;
+
+    std::ofstream file(configFilePath, std::ios::trunc);
+    if (!file)
+        return;
+
+    file << propHashFile.string() << "\n";
+    file << objDirectory.string() << "\n";
+}
+
+void MemoryHandler::ClearMappings()
+{
+    propHashToName.clear();
+}
+
+bool MemoryHandler::ReadRemote(void* dest, uintptr_t address, size_t size) const
+{
+#if defined(_WIN32)
+    HANDLE handle = static_cast<HANDLE>(processHandle);
+    if (!handle || !address || size == 0)
+        return false;
+
+    SIZE_T read = 0;
+    if (!ReadProcessMemory(handle, reinterpret_cast<void*>(address), dest, size, &read))
+        return false;
+
+    return read == size;
+#else
+    (void)dest;
+    (void)address;
+    (void)size;
+    return false;
+#endif
+}
+
+bool MemoryHandler::WriteRemote(uintptr_t address, const void* data, size_t size) const
+{
+#if defined(_WIN32)
+    HANDLE handle = static_cast<HANDLE>(processHandle);
+    if (!handle || !address || size == 0)
+        return false;
+
+    SIZE_T written = 0;
+    if (!WriteProcessMemory(handle, reinterpret_cast<void*>(address), data, size, &written))
+        return false;
+
+    return written == size;
+#else
+    (void)address;
+    (void)data;
+    (void)size;
     return false;
 #endif
 }

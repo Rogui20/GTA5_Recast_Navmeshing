@@ -5,6 +5,8 @@
 #include <filesystem>
 #include <string>
 #include <type_traits>
+#include <unordered_map>
+#include <vector>
 
 class MemoryHandler
 {
@@ -18,13 +20,20 @@ public:
     bool IsMonitoringActive() const { return monitoringActive; }
     std::string GetStatus() const { return statusMessage; }
     std::filesystem::path GetLayoutFilePath() const { return layoutFilePath; }
+    std::filesystem::path GetPropHashFile() const { return propHashFile; }
+    std::filesystem::path GetObjDirectory() const { return objDirectory; }
+    bool SetPropHashFile(const std::filesystem::path& path);
+    bool SetObjDirectory(const std::filesystem::path& path);
+    bool LoadPropHashMapping();
+    bool HasPropHashMapping() const { return !propHashToName.empty(); }
+    bool TryResolvePropName(const std::string& hashKey, std::string& outName) const;
+    void LoadSavedConfig();
 
     static constexpr int kGeometrySlotCount = 400;
     static constexpr int kRouteRequestCount = 80;
     static constexpr int kRouteResultPoints = 255;
     static constexpr size_t kModelHashStringSize = 64;
 
-private:
     struct Vector3
     {
         float x = 0.0f;
@@ -59,6 +68,13 @@ private:
         Vector3 point{};
     };
 
+    bool FetchGeometrySlots(std::vector<GeometrySlot>& outSlots) const;
+    bool WriteGeometrySlot(int index, const GeometrySlot& slot) const;
+    bool ClearGeometrySlot(int index) const;
+    bool HasValidBuffers() const;
+    size_t GeometryBufferSize() const;
+
+private:
     bool EnsureAttached();
     void ReleaseResources(bool resetStatus);
     bool FindProcess(uint32_t& pidOut, std::string& nameOut);
@@ -66,8 +82,13 @@ private:
     bool WriteLayoutFile() const;
     bool ZeroRemoteBuffer(uintptr_t address, size_t size) const;
     std::filesystem::path ResolveLayoutFilePath() const;
+    std::filesystem::path ResolveConfigFilePath() const;
     std::string AddressToHex(uintptr_t address) const;
     bool IsProcessAlive() const;
+    void SaveConfig() const;
+    void ClearMappings();
+    bool ReadRemote(void* dest, uintptr_t address, size_t size) const;
+    bool WriteRemote(uintptr_t address, const void* data, size_t size) const;
 
     bool monitoringRequested = false;
     bool monitoringActive = false;
@@ -78,5 +99,9 @@ private:
     uintptr_t routeRequestBufferAddress = 0;
     uintptr_t routeResultBufferAddress = 0;
     std::filesystem::path layoutFilePath;
+    std::filesystem::path configFilePath;
+    std::filesystem::path propHashFile;
+    std::filesystem::path objDirectory;
     std::string statusMessage;
+    std::unordered_map<std::string, std::string> propHashToName;
 };
