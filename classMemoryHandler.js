@@ -21,6 +21,7 @@ var classMemoryHandler =
     [ "IsMonitoringRequested", "classMemoryHandler.html#a3b70de37075081ef6d95617f6c78e6ed", null ],
     [ "LoadPropHashMapping", "classMemoryHandler.html#acbf97b87f92ae7b44ca3a78f217107b9", null ],
     [ "LoadSavedConfig", "classMemoryHandler.html#ac5f402d4b39c1c5900100d083918aae8", null ],
+    [ "ReleaseResources", "classMemoryHandler.html#a7be9591090dae74a938cde58e203ab16", null ],
     [ "SetMonitoringEnabled", "classMemoryHandler.html#a5d96f86df3b53645a819b33f3c7fbef7", null ],
     [ "SetObjDirectory", "classMemoryHandler.html#aec65406c72cf07a4a60f113f9396a4cf", null ],
     [ "SetPropHashFile", "classMemoryHandler.html#a5f3c50129b4a5d0c81b4f6cbbed0fe16", null ],

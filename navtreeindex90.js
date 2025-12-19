@@ -1,5 +1,6 @@
 var NAVTREEINDEX90 =
 {
+"md_external_2SDL2_2docs_2README-versions.html":[34],
 "md_external_2SDL2_2docs_2README-versions.html#before-2230":[34,1],
 "md_external_2SDL2_2docs_2README-versions.html#since-2230":[34,0],
 "md_external_2SDL2_2docs_2README-windows.html":[38],
@@ -248,6 +249,5 @@ var NAVTREEINDEX90 =
 "structFrameResources.html":[44,0,86],
 "structFrameResources.html#a2e11d2b6738b5641d3a3041be1a213a6":[44,0,86,4],
 "structFrameResources.html#a40399cf0ff9d5b63ec4b5a0ee57a9689":[44,0,86,2],
-"structFrameResources.html#a8d47cfe492e18a15f10722b9203f5b6c":[44,0,86,5],
-"structFrameResources.html#adb51b091a1d65761a46efdb28a57460d":[44,0,86,0]
+"structFrameResources.html#a8d47cfe492e18a15f10722b9203f5b6c":[44,0,86,5]
 };

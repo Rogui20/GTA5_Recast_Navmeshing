@@ -1,5 +1,6 @@
 var NAVTREEINDEX102 =
 {
+"structImGui__ImplVulkan__InitInfo.html#a1230ad3b011207b44124ea62ee66b2cb":[44,0,161,14],
 "structImGui__ImplVulkan__InitInfo.html#a2200c0dc31e49210eea3e381f9c0a4aa":[44,0,161,0],
 "structImGui__ImplVulkan__InitInfo.html#a2293c3129c2b5e2dd2fe3ea7f61016fa":[44,0,161,10],
 "structImGui__ImplVulkan__InitInfo.html#a3e7df3cc0f943c2dddb83dd6fedc57b1":[44,0,161,15],
@@ -248,6 +249,5 @@ var NAVTREEINDEX102 =
 "structImTriangulator.html#a9acf0c6964688f3e99e90ebf2360bb92":[44,0,294,2],
 "structImTriangulator.html#ac347ef75d88cbf545d50ad85e77cbe3d":[44,0,294,10],
 "structImTriangulator.html#ad04a4a686a69d19bc246aa81209599bf":[44,0,294,7],
-"structImTriangulator.html#ada070a1b9bf5641714dfb4cf69200625":[44,0,294,13],
-"structImTriangulator.html#adf26cdf6f488de52f187d383cfbe87ec":[44,0,294,6]
+"structImTriangulator.html#ada070a1b9bf5641714dfb4cf69200625":[44,0,294,13]
 };

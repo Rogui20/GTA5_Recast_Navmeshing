@@ -1,5 +1,6 @@
 var NAVTREEINDEX101 =
 {
+"structImGui__ImplDX12__RenderBuffers.html#a6643010c24e4046769271a36d596398a":[44,0,135,3],
 "structImGui__ImplDX12__RenderBuffers.html#adea8d9622af0a5c6376f4b98840b0812":[44,0,135,0],
 "structImGui__ImplDX12__RenderState.html":[44,0,136],
 "structImGui__ImplDX12__RenderState.html#a014293355a89a8b544565164d4bf27ad":[44,0,136,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX101 =
 "structImGui__ImplVulkan__FrameRenderBuffers.html#af89d68d85a89683a7a17308365a745cf":[44,0,160,1],
 "structImGui__ImplVulkan__InitInfo.html":[44,0,161],
 "structImGui__ImplVulkan__InitInfo.html#a0a9a0a08571e832b4cdf800be51f9ee7":[44,0,161,18],
-"structImGui__ImplVulkan__InitInfo.html#a0b188b31d5dd36b3e5e5fb038f816915":[44,0,161,6],
-"structImGui__ImplVulkan__InitInfo.html#a1230ad3b011207b44124ea62ee66b2cb":[44,0,161,14]
+"structImGui__ImplVulkan__InitInfo.html#a0b188b31d5dd36b3e5e5fb038f816915":[44,0,161,6]
 };
