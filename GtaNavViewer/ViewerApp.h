@@ -85,6 +85,7 @@ private:
     static constexpr int kMaxNavmeshSlots = 10;
     int currentNavmeshSlot = 0;
     int currentGeometrySlot = 0;
+    std::array<int, kMaxNavmeshSlots> geometrySlotForNavSlot{};
     std::array<std::vector<MeshInstance>, kMaxNavmeshSlots> meshInstancesSlots{};
     std::array<uint64_t, kMaxNavmeshSlots> nextMeshIdSlots{};
     std::array<std::unordered_map<uint64_t, MeshBoundsState>, kMaxNavmeshSlots> meshStateCacheSlots{};

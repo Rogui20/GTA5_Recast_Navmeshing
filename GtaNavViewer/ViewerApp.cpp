@@ -37,6 +37,10 @@ ViewerApp::ViewerApp()
     directoryBrowser.SetDirectory(currentDirectory);
     for (auto& idCounter : nextMeshIdSlots)
         idCounter = 1;
+    for (int i = 0; i < kMaxNavmeshSlots; ++i)
+    {
+        geometrySlotForNavSlot[i] = i;
+    }
     for (auto& picked : pickedMeshIndexSlots)
         picked = -1;
     for (auto& pickedTri : pickedTriSlots)
@@ -84,6 +88,7 @@ void ViewerApp::ClearNavmeshSlotData(int slotIndex)
     nextMeshIdSlots[slotIndex] = 1;
     pickedMeshIndexSlots[slotIndex] = -1;
     pickedTriSlots[slotIndex] = -1;
+    geometrySlotForNavSlot[slotIndex] = slotIndex;
 }
 
 void ViewerApp::ResetAllNavmeshSlots()
@@ -91,6 +96,7 @@ void ViewerApp::ResetAllNavmeshSlots()
     for (int slot = 0; slot < kMaxNavmeshSlots; ++slot)
     {
         ClearNavmeshSlotData(slot);
+        geometrySlotForNavSlot[slot] = slot;
     }
     currentNavmeshSlot = 0;
     ResetPathState(currentNavmeshSlot);
@@ -103,8 +109,11 @@ void ViewerApp::SwitchNavmeshSlot(int slotIndex)
 
     const int previousNavSlot = currentNavmeshSlot;
     currentNavmeshSlot = slotIndex;
-    if (currentGeometrySlot == previousNavSlot)
-        currentGeometrySlot = slotIndex;
+    int desiredGeometrySlot = geometrySlotForNavSlot[slotIndex];
+    if (!IsValidSlot(desiredGeometrySlot))
+        desiredGeometrySlot = slotIndex;
+    if (currentGeometrySlot == previousNavSlot || !IsValidSlot(currentGeometrySlot))
+        currentGeometrySlot = desiredGeometrySlot;
 }
 
 bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow, int slotIndex)
@@ -1435,6 +1444,7 @@ void ViewerApp::RenderFrame()
                             if (ImGui::Selectable(label, selected))
                             {
                                 currentGeometrySlot = slot;
+                                geometrySlotForNavSlot[currentNavmeshSlot] = slot;
                             }
                         }
                         ImGui::EndCombo();
