@@ -79,12 +79,17 @@ private:
     // Engine components
     ViewerCamera* camera = nullptr;
     RendererGL* renderer = nullptr;
-    std::vector<MeshInstance> meshInstances;
     RenderMode renderMode = RenderMode::Solid;
     bool centerMesh = true;
     bool preferBin = true;
     static constexpr int kMaxNavmeshSlots = 10;
     int currentNavmeshSlot = 0;
+    int currentGeometrySlot = 0;
+    std::array<std::vector<MeshInstance>, kMaxNavmeshSlots> meshInstancesSlots{};
+    std::array<uint64_t, kMaxNavmeshSlots> nextMeshIdSlots{};
+    std::array<std::unordered_map<uint64_t, MeshBoundsState>, kMaxNavmeshSlots> meshStateCacheSlots{};
+    std::array<int, kMaxNavmeshSlots> pickedMeshIndexSlots{};
+    std::array<int, kMaxNavmeshSlots> pickedTriSlots{};
     std::array<NavMeshData, kMaxNavmeshSlots> navmeshDataSlots{};
     std::array<std::vector<glm::vec3>, kMaxNavmeshSlots> navMeshTrisSlots{};
     std::array<std::vector<glm::vec3>, kMaxNavmeshSlots> navMeshLinesSlots{};
@@ -129,8 +134,6 @@ private:
     };
 
     uint32_t navmeshAutoBuildMask = 0;
-    uint64_t nextMeshId = 1;
-    std::unordered_map<uint64_t, MeshBoundsState> meshStateCache;
 
     enum class ViewportClickMode
     {
@@ -248,8 +251,6 @@ private:
     bool showDebugInfo = true;
     char meshFilter[64] = {0};
 
-    int pickedMeshIndex = -1;
-    int pickedTri = -1;
     bool rightButtonDown = false;
     bool rightButtonDragged = false;
     int rightButtonDownX = 0;
@@ -282,6 +283,13 @@ private:
 
     NavMeshData& CurrentNavData() { return navmeshDataSlots[currentNavmeshSlot]; }
     const NavMeshData& CurrentNavData() const { return navmeshDataSlots[currentNavmeshSlot]; }
+    std::vector<MeshInstance>& CurrentMeshes() { return meshInstancesSlots[currentGeometrySlot]; }
+    const std::vector<MeshInstance>& CurrentMeshes() const { return meshInstancesSlots[currentGeometrySlot]; }
+    std::unordered_map<uint64_t, MeshBoundsState>& CurrentMeshStateCache() { return meshStateCacheSlots[currentGeometrySlot]; }
+    const std::unordered_map<uint64_t, MeshBoundsState>& CurrentMeshStateCache() const { return meshStateCacheSlots[currentGeometrySlot]; }
+    uint64_t& CurrentNextMeshId() { return nextMeshIdSlots[currentGeometrySlot]; }
+    int& CurrentPickedMeshIndex() { return pickedMeshIndexSlots[currentGeometrySlot]; }
+    int& CurrentPickedTri() { return pickedTriSlots[currentGeometrySlot]; }
     std::vector<glm::vec3>& CurrentNavMeshTris() { return navMeshTrisSlots[currentNavmeshSlot]; }
     std::vector<glm::vec3>& CurrentNavMeshLines() { return navMeshLinesSlots[currentNavmeshSlot]; }
     std::vector<DebugLine>& CurrentNavmeshLineBuffer() { return navmeshLineBufferSlots[currentNavmeshSlot]; }

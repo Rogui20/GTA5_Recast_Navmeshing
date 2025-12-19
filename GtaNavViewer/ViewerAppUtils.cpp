@@ -166,9 +166,9 @@ bool ViewerApp::ComputeRayMeshHit(int mx, int my, glm::vec3& outPoint, int* outT
     if (outMeshIndex)
         *outMeshIndex = -1;
 
-    for (size_t meshIdx = 0; meshIdx < meshInstances.size(); ++meshIdx)
+    for (size_t meshIdx = 0; meshIdx < CurrentMeshes().size(); ++meshIdx)
     {
-        const auto& instance = meshInstances[meshIdx];
+        const auto& instance = CurrentMeshes()[meshIdx];
         if (!instance.mesh)
             continue;
 
@@ -347,10 +347,10 @@ void ViewerApp::UpdateEditDrag(int mouseX, int mouseY)
     if (!editDragActive || activeGizmoAxis == GizmoAxis::None)
         return;
 
-    if (pickedMeshIndex < 0 || pickedMeshIndex >= static_cast<int>(meshInstances.size()))
+    if (CurrentPickedMeshIndex() < 0 || CurrentPickedMeshIndex() >= static_cast<int>(CurrentMeshes().size()))
         return;
 
-    MeshInstance& instance = meshInstances[pickedMeshIndex];
+    MeshInstance& instance = CurrentMeshes()[CurrentPickedMeshIndex()];
     int screenW = 1600;
     int screenH = 900;
     SDL_GetWindowSize(window, &screenW, &screenH);
@@ -367,7 +367,7 @@ void ViewerApp::UpdateEditDrag(int mouseX, int mouseY)
         if (newPos != instance.position)
         {
             instance.position = newPos;
-            OnInstanceTransformUpdated(pickedMeshIndex, true, false);
+            OnInstanceTransformUpdated(CurrentPickedMeshIndex(), true, false);
             HandleAutoBuild(NavmeshAutoBuildFlag::OnMove);
         }
     }
@@ -397,7 +397,7 @@ void ViewerApp::UpdateEditDrag(int mouseX, int mouseY)
         if (newAngles != instance.rotation)
         {
             instance.rotation = newAngles;
-            OnInstanceTransformUpdated(pickedMeshIndex, false, true);
+            OnInstanceTransformUpdated(CurrentPickedMeshIndex(), false, true);
             HandleAutoBuild(NavmeshAutoBuildFlag::OnRotate);
         }
     }
@@ -405,7 +405,7 @@ void ViewerApp::UpdateEditDrag(int mouseX, int mouseY)
 
 ViewerApp::MeshInstance* ViewerApp::FindMeshById(uint64_t id)
 {
-    for (auto& inst : meshInstances)
+    for (auto& inst : CurrentMeshes())
     {
         if (inst.id == id)
             return &inst;
@@ -415,7 +415,7 @@ ViewerApp::MeshInstance* ViewerApp::FindMeshById(uint64_t id)
 
 const ViewerApp::MeshInstance* ViewerApp::FindMeshById(uint64_t id) const
 {
-    for (const auto& inst : meshInstances)
+    for (const auto& inst : CurrentMeshes())
     {
         if (inst.id == id)
             return &inst;
@@ -431,7 +431,7 @@ void ViewerApp::UpdateChildTransforms(uint64_t parentId)
 
     glm::mat3 parentRot = GetRotationMatrix(parent->rotation);
 
-    for (auto& child : meshInstances)
+    for (auto& child : CurrentMeshes())
     {
         if (child.parentId != parentId)
             continue;
@@ -444,10 +444,10 @@ void ViewerApp::UpdateChildTransforms(uint64_t parentId)
 
 void ViewerApp::OnInstanceTransformUpdated(size_t index, bool positionChanged, bool rotationChanged)
 {
-    if (index >= meshInstances.size())
+    if (index >= CurrentMeshes().size())
         return;
 
-    MeshInstance& instance = meshInstances[index];
+    MeshInstance& instance = CurrentMeshes()[index];
     if (instance.parentId != 0)
     {
         const MeshInstance* parent = FindMeshById(instance.parentId);
@@ -490,10 +490,10 @@ bool ViewerApp::WouldCreateCycle(uint64_t childId, uint64_t newParentId) const
 
 void ViewerApp::SetMeshParent(size_t childIndex, uint64_t newParentId)
 {
-    if (childIndex >= meshInstances.size())
+    if (childIndex >= CurrentMeshes().size())
         return;
 
-    MeshInstance& child = meshInstances[childIndex];
+    MeshInstance& child = CurrentMeshes()[childIndex];
     if (child.id == newParentId)
         return;
 
@@ -524,7 +524,7 @@ void ViewerApp::SetMeshParent(size_t childIndex, uint64_t newParentId)
 
 void ViewerApp::DetachChildren(uint64_t parentId)
 {
-    for (auto& inst : meshInstances)
+    for (auto& inst : CurrentMeshes())
     {
         if (inst.parentId == parentId)
         {
@@ -542,7 +542,7 @@ void ViewerApp::CollectSubtreeIds(uint64_t rootId, std::vector<uint64_t>& outIds
         return;
 
     outIds.push_back(rootId);
-    for (const auto& inst : meshInstances)
+    for (const auto& inst : CurrentMeshes())
     {
         if (inst.parentId == rootId)
         {
@@ -560,23 +560,23 @@ void ViewerApp::RemoveMeshSubtree(uint64_t rootId)
 
     std::unordered_set<uint64_t> removeSet(ids.begin(), ids.end());
     uint64_t selectedId = 0;
-    if (pickedMeshIndex >= 0 && pickedMeshIndex < static_cast<int>(meshInstances.size()))
-        selectedId = meshInstances[pickedMeshIndex].id;
+    if (CurrentPickedMeshIndex() >= 0 && CurrentPickedMeshIndex() < static_cast<int>(CurrentMeshes().size()))
+        selectedId = CurrentMeshes()[CurrentPickedMeshIndex()].id;
 
-    meshInstances.erase(std::remove_if(meshInstances.begin(), meshInstances.end(), [&](const MeshInstance& inst)
+    CurrentMeshes().erase(std::remove_if(CurrentMeshes().begin(), CurrentMeshes().end(), [&](const MeshInstance& inst)
     {
         return removeSet.find(inst.id) != removeSet.end();
-    }), meshInstances.end());
+    }), CurrentMeshes().end());
 
-    pickedMeshIndex = -1;
-    pickedTri = -1;
+    CurrentPickedMeshIndex() = -1;
+    CurrentPickedTri() = -1;
     if (selectedId != 0)
     {
-        for (size_t i = 0; i < meshInstances.size(); ++i)
+        for (size_t i = 0; i < CurrentMeshes().size(); ++i)
         {
-            if (meshInstances[i].id == selectedId)
+            if (CurrentMeshes()[i].id == selectedId)
             {
-                pickedMeshIndex = static_cast<int>(i);
+                CurrentPickedMeshIndex() = static_cast<int>(i);
                 break;
             }
         }
@@ -584,13 +584,13 @@ void ViewerApp::RemoveMeshSubtree(uint64_t rootId)
 
     for (uint64_t id : removeSet)
     {
-        meshStateCache.erase(id);
+        CurrentMeshStateCache().erase(id);
     }
 
     HandleAutoBuild(NavmeshAutoBuildFlag::OnRemove);
 
-    if (meshInstances.empty())
+    if (CurrentMeshes().empty())
     {
-        ResetAllNavmeshSlots();
+        ClearNavmeshSlotData(currentGeometrySlot);
     }
 }

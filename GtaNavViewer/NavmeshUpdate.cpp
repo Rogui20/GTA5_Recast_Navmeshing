@@ -21,10 +21,10 @@ void ViewerApp::UpdateNavmeshTiles()
 
     std::vector<std::pair<glm::vec3, glm::vec3>> dirtyBounds;
     std::unordered_map<uint64_t, MeshBoundsState> currentStates;
-    currentStates.reserve(meshInstances.size());
+    currentStates.reserve(CurrentMeshes().size());
     std::unordered_set<uint64_t> dirtyTiles;
 
-    for (const auto& instance : meshInstances)
+    for (const auto& instance : CurrentMeshes())
     {
         MeshBoundsState state = ComputeMeshBounds(instance);
         if (!state.valid)
@@ -32,8 +32,8 @@ void ViewerApp::UpdateNavmeshTiles()
 
         currentStates[instance.id] = state;
 
-        auto itPrev = meshStateCache.find(instance.id);
-        if (itPrev == meshStateCache.end())
+        auto itPrev = CurrentMeshStateCache().find(instance.id);
+        if (itPrev == CurrentMeshStateCache().end())
         {
             dirtyBounds.emplace_back(state.bmin, state.bmax);
             continue;
@@ -47,7 +47,7 @@ void ViewerApp::UpdateNavmeshTiles()
         }
     }
 
-    for (const auto& [prevId, prevState] : meshStateCache)
+    for (const auto& [prevId, prevState] : CurrentMeshStateCache())
     {
         if (currentStates.find(prevId) == currentStates.end() && prevState.valid)
         {
@@ -55,7 +55,7 @@ void ViewerApp::UpdateNavmeshTiles()
         }
     }
 
-    meshStateCache = std::move(currentStates);
+    CurrentMeshStateCache() = std::move(currentStates);
 
     if (dirtyBounds.empty())
         return;
@@ -65,7 +65,7 @@ void ViewerApp::UpdateNavmeshTiles()
     unsigned int baseIndex = 0;
     bool hasGeometry = false;
 
-    for (const auto& instance : meshInstances)
+    for (const auto& instance : CurrentMeshes())
     {
         if (!instance.mesh)
             continue;

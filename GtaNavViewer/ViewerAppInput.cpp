@@ -54,7 +54,7 @@ void ViewerApp::ProcessEvents()
             if (mouseOnUI)
                 continue;
 
-            if (meshInstances.empty())
+            if (CurrentMeshes().empty())
                 continue;
 
             if (navmeshBusy && !IsPathfindModeActive())
@@ -68,8 +68,8 @@ void ViewerApp::ProcessEvents()
 
             if (viewportClickMode == ViewportClickMode::PickTriangle)
             {
-                pickedTri = -1;
-                pickedMeshIndex = -1;
+                CurrentPickedTri() = -1;
+                CurrentPickedMeshIndex() = -1;
             }
 
             if (viewportClickMode == ViewportClickMode::EditMesh)
@@ -79,9 +79,9 @@ void ViewerApp::ProcessEvents()
                 SDL_GetWindowSize(window, &screenW, &screenH);
                 Ray ray = camera->GetRayFromScreen(mx, my, screenW, screenH);
 
-                if (pickedMeshIndex >= 0 && pickedMeshIndex < static_cast<int>(meshInstances.size()))
+                if (CurrentPickedMeshIndex() >= 0 && CurrentPickedMeshIndex() < static_cast<int>(CurrentMeshes().size()))
                 {
-                    auto& instance = meshInstances[pickedMeshIndex];
+                    auto& instance = CurrentMeshes()[CurrentPickedMeshIndex()];
                     if (meshEditMode == MeshEditMode::Move && TryBeginMoveDrag(ray, instance))
                         continue;
                     if (meshEditMode == MeshEditMode::Rotate && TryBeginRotateDrag(ray, instance))
@@ -93,16 +93,16 @@ void ViewerApp::ProcessEvents()
                 int hitMesh = -1;
                 if (ComputeRayMeshHit(mx, my, hitPoint, &hitTri, &hitMesh))
                 {
-                    pickedTri = hitTri;
-                    pickedMeshIndex = hitMesh;
+                    CurrentPickedTri() = hitTri;
+                    CurrentPickedMeshIndex() = hitMesh;
                 }
                 continue;
             }
 
             glm::vec3 hitPoint(0.0f);
             bool hasHit = ComputeRayMeshHit(mx, my, hitPoint,
-                                            viewportClickMode == ViewportClickMode::PickTriangle ? &pickedTri : nullptr,
-                                            viewportClickMode == ViewportClickMode::PickTriangle ? &pickedMeshIndex : nullptr);
+                                            viewportClickMode == ViewportClickMode::PickTriangle ? &CurrentPickedTri() : nullptr,
+                                            viewportClickMode == ViewportClickMode::PickTriangle ? &CurrentPickedMeshIndex() : nullptr);
 
             if (!hasHit)
                 continue;
@@ -241,7 +241,7 @@ void ViewerApp::ProcessEvents()
             if (mouseOnUI)
                 continue;
 
-            if (shouldHandleClick && IsPathfindModeActive() && !meshInstances.empty())
+            if (shouldHandleClick && IsPathfindModeActive() && !CurrentMeshes().empty())
             {
                 glm::vec3 hitPoint(0.0f);
                 if (ComputeRayMeshHit(rightButtonDownX, rightButtonDownY, hitPoint, nullptr, nullptr))
