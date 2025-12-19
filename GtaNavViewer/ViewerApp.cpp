@@ -23,6 +23,7 @@
 #include <fstream>
 #include <algorithm>
 #include <cctype>
+#include <cstring>
 #include <unordered_set>
 #include <array>
 #include <cmath>
@@ -31,10 +32,15 @@
 
 ViewerApp::ViewerApp()
     : directoryBrowser(ImGuiFileBrowserFlags_SelectDirectory | ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_NoTitleBar)
+    , propHashBrowser(ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_NoTitleBar)
+    , objDirectoryBrowser(ImGuiFileBrowserFlags_SelectDirectory | ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_NoTitleBar)
 {
     currentDirectory = std::filesystem::current_path().string();
     directoryBrowser.SetTitle("Selecionar pasta");
     directoryBrowser.SetDirectory(currentDirectory);
+    propHashBrowser.SetTitle("Selecionar PropHashToName.json");
+    propHashBrowser.SetTypeFilters({".json"});
+    objDirectoryBrowser.SetTitle("Selecionar pasta OBJ (Memory Handler)");
     for (auto& idCounter : nextMeshIdSlots)
         idCounter = 1;
     for (int i = 0; i < kMaxNavmeshSlots; ++i)
@@ -45,10 +51,20 @@ ViewerApp::ViewerApp()
         picked = -1;
     for (auto& pickedTri : pickedTriSlots)
         pickedTri = -1;
+
+    if (!memoryHandler.GetPropHashFile().empty())
+    {
+        propHashBrowser.SetPwd(memoryHandler.GetPropHashFile().parent_path());
+    }
+    if (!memoryHandler.GetObjDirectory().empty())
+    {
+        objDirectoryBrowser.SetPwd(memoryHandler.GetObjDirectory());
+    }
 }
 
 ViewerApp::~ViewerApp()
 {
+    memoryHandler.SetMonitoringEnabled(false);
     for (auto& query : navQuerySlots)
     {
         if (query)
@@ -782,6 +798,26 @@ std::filesystem::path ViewerApp::GetConfigFilePath() const
     return "last_directory.txt";
 }
 
+std::filesystem::path ViewerApp::ResolveMemoryHandlerObjPath(const std::string& propName) const
+{
+    if (memoryHandler.GetObjDirectory().empty())
+        return {};
+
+    std::filesystem::path base = memoryHandler.GetObjDirectory();
+    std::filesystem::path direct = base / propName;
+    if (std::filesystem::exists(direct))
+        return direct;
+
+    std::filesystem::path withExt = direct;
+    if (!withExt.has_extension())
+        withExt.replace_extension(".obj");
+
+    if (std::filesystem::exists(withExt))
+        return withExt;
+
+    return {};
+}
+
 void ViewerApp::LoadLastDirectory()
 {
     std::filesystem::path configPath = GetConfigFilePath();
@@ -982,6 +1018,277 @@ void ViewerApp::ProcessNavmeshJob()
     }
 }
 
+void ViewerApp::ProcessMemoryGeometryRequests()
+{
+    if (!memoryHandler.IsMonitoringActive() || IsNavmeshJobRunning())
+        return;
+
+    std::vector<MemoryHandler::GeometrySlot> slots;
+    if (!memoryHandler.FetchGeometrySlots(slots))
+        return;
+
+    for (int i = 0; i < static_cast<int>(slots.size()); ++i)
+    {
+        auto& slot = slots[static_cast<size_t>(i)];
+
+        if (slot.remove)
+        {
+            auto mapIt = memorySlotToMeshId.find(i);
+            if (mapIt != memorySlotToMeshId.end())
+            {
+                int meshIdx = FindMeshIndexById(mapIt->second);
+                if (meshIdx >= 0)
+                {
+                    RemoveMesh(static_cast<size_t>(meshIdx));
+                }
+                memorySlotToMeshId.erase(mapIt);
+            }
+            memoryHandler.ClearGeometrySlot(i);
+            continue;
+        }
+
+        if (!slot.update)
+            continue;
+
+        auto safeStrnlen = [](const char* str, size_t maxLen)
+        {
+            size_t len = 0;
+            while (len < maxLen && str[len] != '\0')
+            {
+                ++len;
+            }
+            return len;
+        };
+
+        auto decodeHashKey = [&](const MemoryHandler::GeometrySlot& s) -> std::string
+        {
+            const size_t len = safeStrnlen(s.modelHash, MemoryHandler::kModelHashStringSize);
+            if (len > 0)
+            {
+                std::string candidate(s.modelHash, len);
+                bool printable = std::all_of(candidate.begin(), candidate.end(), [](char c)
+                {
+                    return c >= 32 && c <= 126;
+                });
+                if (printable)
+                {
+                    return candidate;
+                }
+            }
+
+            uint64_t rawHash = 0;
+            std::memcpy(&rawHash, s.modelHash, sizeof(uint64_t));
+            if (rawHash != 0)
+            {
+                return std::to_string(rawHash);
+            }
+            return {};
+        };
+
+        std::string hashStr = decodeHashKey(slot);
+        if (hashStr.empty())
+        {
+            slot.update = 0;
+            memoryHandler.WriteGeometrySlot(i, slot);
+            continue;
+        }
+
+        std::string propName;
+        if (!memoryHandler.TryResolvePropName(hashStr, propName))
+        {
+            slot.update = 0;
+            memoryHandler.WriteGeometrySlot(i, slot);
+            continue;
+        }
+
+        std::filesystem::path objPath = ResolveMemoryHandlerObjPath(propName);
+        if (objPath.empty())
+        {
+            slot.update = 0;
+            memoryHandler.WriteGeometrySlot(i, slot);
+            continue;
+        }
+
+        uint64_t meshId = 0;
+        MeshInstance* targetInstance = nullptr;
+
+        auto existingMap = memorySlotToMeshId.find(i);
+        if (existingMap != memorySlotToMeshId.end())
+        {
+            meshId = existingMap->second;
+            targetInstance = FindMeshById(meshId);
+        }
+
+        if (!targetInstance)
+        {
+            for (size_t meshIdx = 0; meshIdx < CurrentMeshes().size(); ++meshIdx)
+            {
+                if (CurrentMeshes()[meshIdx].sourcePath == objPath)
+                {
+                    targetInstance = &CurrentMeshes()[meshIdx];
+                    memorySlotToMeshId[i] = targetInstance->id;
+                    meshId = targetInstance->id;
+                    break;
+                }
+            }
+        }
+
+        if (!targetInstance)
+        {
+
+            if (!LoadMeshFromPathWithOptions(objPath.string(), centerMesh, preferBin))
+                continue;
+
+            targetInstance = &CurrentMeshes().back();
+            memorySlotToMeshId[i] = targetInstance->id;
+            meshId = targetInstance->id;
+        }
+
+        int targetIndex = FindMeshIndexById(meshId);
+        if (targetIndex < 0 || !targetInstance)
+            continue;
+
+        glm::vec3 newPos = FromGtaCoords(glm::vec3(slot.position.x, slot.position.y, slot.position.z));
+        glm::vec3 newRot = FromGtaRotation(glm::vec3(slot.rotation.x, slot.rotation.y, slot.rotation.z));
+
+        bool posChanged = targetInstance->position != newPos;
+        bool rotChanged = targetInstance->rotation != newRot;
+
+        targetInstance->position = newPos;
+        targetInstance->rotation = newRot;
+
+        if (slot.parentId != 0)
+        {
+            auto parentIt = memorySlotToMeshId.find(static_cast<int>(slot.parentId));
+            if (parentIt != memorySlotToMeshId.end())
+            {
+                SetMeshParent(static_cast<size_t>(targetIndex), parentIt->second);
+            }
+        }
+
+        OnInstanceTransformUpdated(static_cast<size_t>(targetIndex), posChanged, rotChanged);
+
+        slot.update = 0;
+        memoryHandler.WriteGeometrySlot(i, slot);
+    }
+}
+
+void ViewerApp::ProcessMemoryRouteRequests()
+{
+    if (!memoryHandler.IsMonitoringActive() || IsNavmeshJobRunning())
+        return;
+
+    std::vector<MemoryHandler::RouteRequestSlot> requests;
+    if (!memoryHandler.FetchRouteRequests(requests))
+        return;
+
+    const bool hasNavmesh = CurrentNavData().IsLoaded();
+    if (hasNavmesh && !CurrentNavQueryReady())
+    {
+        InitNavQueryForCurrentNavmesh();
+    }
+
+    for (int i = 0; i < static_cast<int>(requests.size()); ++i)
+    {
+        const auto& slot = requests[static_cast<size_t>(i)];
+        if (!slot.request)
+            continue;
+
+        MemoryHandler::RouteRequestSlot writable = slot;
+        glm::vec3 startInternal = FromGtaCoords(glm::vec3(slot.start.x, slot.start.y, slot.start.z));
+        glm::vec3 targetInternal = FromGtaCoords(glm::vec3(slot.target.x, slot.target.y, slot.target.z));
+        const float extents[3]  = { navGenSettings.agentRadius * 4.0f + 0.1f, navGenSettings.agentHeight * 0.5f + 0.1f, navGenSettings.agentRadius * 4.0f + 0.1f };
+
+        // Immediately reset request and payload to keep protocol functional.
+        writable.request = 0;
+        writable.start = {};
+        writable.target = {};
+        writable.flags = 0;
+        writable.state = 1; // busy
+        memoryHandler.WriteRouteRequestSlot(i, writable);
+
+        auto finishWithEmpty = [&](int newState)
+        {
+            memoryHandler.WriteRouteResultPoints(i, {});
+            writable.state = newState;
+            memoryHandler.WriteRouteRequestSlot(i, writable);
+        };
+
+        if (!hasNavmesh || !CurrentNavQuery())
+        {
+            finishWithEmpty(2);
+            continue;
+        }
+
+        dtPolyRef startRef = 0, endRef = 0;
+        float startNearest[3]{};
+        float endNearest[3]{};
+
+        const float startPos[3] = { startInternal.x, startInternal.y, startInternal.z };
+        const float endPos[3]   = { targetInternal.x, targetInternal.y, targetInternal.z };
+
+        if (dtStatusFailed(CurrentNavQuery()->findNearestPoly(startPos, extents, &pathQueryFilter, &startRef, startNearest)) || startRef == 0)
+        {
+            finishWithEmpty(2);
+            continue;
+        }
+
+        if (dtStatusFailed(CurrentNavQuery()->findNearestPoly(endPos, extents, &pathQueryFilter, &endRef, endNearest)) || endRef == 0)
+        {
+            finishWithEmpty(2);
+            continue;
+        }
+
+        dtPolyRef polys[256];
+        int polyCount = 0;
+        const dtStatus pathStatus = CurrentNavQuery()->findPath(startRef, endRef, startNearest, endNearest, &pathQueryFilter, polys, &polyCount, 256);
+        if (dtStatusFailed(pathStatus) || polyCount == 0)
+        {
+            finishWithEmpty(2);
+            continue;
+        }
+
+        float straight[256 * 3];
+        unsigned char straightFlags[256];
+        dtPolyRef straightRefs[256];
+        int straightCount = 0;
+
+        dtStatus straightStatus = DT_FAILURE;
+        if (slot.minEdgeDistance > 0.0f)
+        {
+            straightStatus = CurrentNavQuery()->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, slot.flags, slot.minEdgeDistance);
+        }
+        else
+        {
+            straightStatus = CurrentNavQuery()->findStraightPath(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, slot.flags);
+        }
+
+        if (dtStatusFailed(straightStatus) || straightCount == 0)
+        {
+            finishWithEmpty(2);
+            continue;
+        }
+
+        std::vector<MemoryHandler::Vector3> gtaPoints;
+        gtaPoints.reserve(static_cast<size_t>(straightCount));
+        for (int p = 0; p < straightCount; ++p)
+        {
+            glm::vec3 internalPoint(straight[p * 3 + 0], straight[p * 3 + 1], straight[p * 3 + 2]);
+            glm::vec3 gtaPoint = ToGtaCoords(internalPoint);
+            MemoryHandler::Vector3 v{};
+            v.x = gtaPoint.x;
+            v.y = gtaPoint.y;
+            v.z = gtaPoint.z;
+            gtaPoints.push_back(v);
+        }
+
+        memoryHandler.WriteRouteResultPoints(i, gtaPoints);
+
+        writable.state = 2; // finished
+        memoryHandler.WriteRouteRequestSlot(i, writable);
+    }
+}
+
 
 
 
@@ -991,6 +1298,10 @@ void ViewerApp::RenderFrame()
     ProcessNavmeshJob();
 
     RunProceduralTestStep();
+
+    memoryHandler.Tick();
+    ProcessMemoryGeometryRequests();
+    ProcessMemoryRouteRequests();
 
     // --- Iniciar nova frame ImGui ---
     ImGui_ImplOpenGL3_NewFrame();
@@ -1122,6 +1433,25 @@ void ViewerApp::RenderFrame()
                     SwitchNavmeshSlot(slot);
                 }
             }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("GTA Tracker"))
+        {
+            bool monitorGta = memoryHandler.IsMonitoringRequested();
+            if (ImGui::MenuItem("Monitorar GTA", nullptr, &monitorGta))
+            {
+                memoryHandler.SetMonitoringEnabled(monitorGta);
+            }
+
+            ImGui::Separator();
+            ImGui::TextWrapped("%s", memoryHandler.GetStatus().c_str());
+            const auto layoutPath = memoryHandler.GetLayoutFilePath();
+            if (!layoutPath.empty())
+            {
+                ImGui::TextDisabled("Layout JSON: %s", layoutPath.string().c_str());
+            }
+
             ImGui::EndMenu();
         }
 
@@ -1382,6 +1712,49 @@ void ViewerApp::RenderFrame()
                 if (ImGui::CollapsingHeader("GTA Handler", ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     gtaHandlerMenu.Draw(gtaHandler, *this);
+                }
+
+                if (ImGui::CollapsingHeader("Memory Handler", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    bool monitorGta = memoryHandler.IsMonitoringRequested();
+                    if (ImGui::Checkbox("Monitorar GTA", &monitorGta))
+                    {
+                        memoryHandler.SetMonitoringEnabled(monitorGta);
+                    }
+
+                    ImGui::TextWrapped("%s", memoryHandler.GetStatus().c_str());
+                    const auto layoutPath = memoryHandler.GetLayoutFilePath();
+                    if (!layoutPath.empty())
+                    {
+                        ImGui::TextDisabled("Layout JSON: %s", layoutPath.string().c_str());
+                    }
+
+                    if (ImGui::Button("Selecionar PropHashToName.json"))
+                    {
+                        propHashBrowser.SetPwd(memoryHandler.GetPropHashFile().empty() ?
+                            std::filesystem::current_path() : memoryHandler.GetPropHashFile().parent_path());
+                        propHashBrowser.Open();
+                    }
+                    ImGui::SameLine();
+                    ImGui::TextUnformatted(memoryHandler.GetPropHashFile().empty() ? "(nenhum arquivo selecionado)" : memoryHandler.GetPropHashFile().string().c_str());
+
+                    if (ImGui::Button("Selecionar pasta OBJ (Memory Handler)"))
+                    {
+                        objDirectoryBrowser.SetPwd(memoryHandler.GetObjDirectory().empty() ?
+                            std::filesystem::current_path() : memoryHandler.GetObjDirectory());
+                        objDirectoryBrowser.Open();
+                    }
+                    ImGui::SameLine();
+                    ImGui::TextUnformatted(memoryHandler.GetObjDirectory().empty() ? "(nenhuma pasta selecionada)" : memoryHandler.GetObjDirectory().string().c_str());
+
+                    ImGui::BeginDisabled(memoryHandler.GetPropHashFile().empty());
+                    if (ImGui::Button("Carregar PropHashToName"))
+                    {
+                        memoryHandler.LoadPropHashMapping();
+                    }
+                    ImGui::EndDisabled();
+
+                    ImGui::TextDisabled("Usa arquivo de hash para nome + pasta OBJ para carregar meshes automaticamente.");
                 }
 
                 if (ImGui::CollapsingHeader("Navmesh Tests"))
@@ -1817,6 +2190,22 @@ void ViewerApp::RenderFrame()
             }
 
             ImGui::EndTabBar();
+        }
+
+        propHashBrowser.Display();
+        if (propHashBrowser.HasSelected())
+        {
+            auto selected = propHashBrowser.GetSelected();
+            propHashBrowser.ClearSelected();
+            memoryHandler.SetPropHashFile(selected);
+        }
+
+        objDirectoryBrowser.Display();
+        if (objDirectoryBrowser.HasSelected())
+        {
+            auto selected = objDirectoryBrowser.GetSelected();
+            objDirectoryBrowser.ClearSelected();
+            memoryHandler.SetObjDirectory(selected);
         }
 
         ImGui::End();
