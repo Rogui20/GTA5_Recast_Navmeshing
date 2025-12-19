@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <algorithm>
 #include <utility>
 #include <vector>
 
@@ -469,6 +470,66 @@ bool MemoryHandler::HasValidBuffers() const
 size_t MemoryHandler::GeometryBufferSize() const
 {
     return sizeof(GeometrySlot) * static_cast<size_t>(kGeometrySlotCount);
+}
+
+bool MemoryHandler::FetchRouteRequests(std::vector<RouteRequestSlot>& outSlots) const
+{
+#if defined(_WIN32)
+    if (!HasValidRouteBuffers())
+        return false;
+
+    outSlots.resize(static_cast<size_t>(kRouteRequestCount));
+    const size_t sizeBytes = sizeof(RouteRequestSlot) * static_cast<size_t>(kRouteRequestCount);
+    return ReadRemote(outSlots.data(), routeRequestBufferAddress, sizeBytes);
+#else
+    (void)outSlots;
+    return false;
+#endif
+}
+
+bool MemoryHandler::WriteRouteRequestSlot(int index, const RouteRequestSlot& slot) const
+{
+#if defined(_WIN32)
+    if (!HasValidRouteBuffers() || index < 0 || index >= kRouteRequestCount)
+        return false;
+
+    const uintptr_t address = routeRequestBufferAddress + static_cast<uintptr_t>(index) * sizeof(RouteRequestSlot);
+    return WriteRemote(address, &slot, sizeof(RouteRequestSlot));
+#else
+    (void)index;
+    (void)slot;
+    return false;
+#endif
+}
+
+bool MemoryHandler::WriteRouteResultPoints(int routeIndex, const std::vector<Vector3>& points) const
+{
+#if defined(_WIN32)
+    if (!HasValidRouteBuffers() || routeIndex < 0 || routeIndex >= kRouteRequestCount)
+        return false;
+
+    const size_t maxPoints = static_cast<size_t>(kRouteResultPoints);
+    std::vector<RouteResultPoint> buffer(maxPoints);
+    const size_t copyCount = std::min(points.size(), maxPoints);
+    for (size_t i = 0; i < copyCount; ++i)
+    {
+        buffer[i].point = points[i];
+    }
+
+    const uintptr_t address = routeResultBufferAddress +
+        static_cast<uintptr_t>(routeIndex) * static_cast<uintptr_t>(kRouteResultPoints) * sizeof(RouteResultPoint);
+    const size_t bytes = buffer.size() * sizeof(RouteResultPoint);
+    return WriteRemote(address, buffer.data(), bytes);
+#else
+    (void)routeIndex;
+    (void)points;
+    return false;
+#endif
+}
+
+bool MemoryHandler::HasValidRouteBuffers() const
+{
+    return monitoringActive && routeRequestBufferAddress != 0 && routeResultBufferAddress != 0;
 }
 
 bool MemoryHandler::ZeroRemoteBuffer(uintptr_t address, size_t size) const

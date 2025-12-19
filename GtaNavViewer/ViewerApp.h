@@ -236,6 +236,7 @@ private:
     void RemoveMeshSubtree(uint64_t rootId);
     bool IsMeshAlreadyLoaded(const std::filesystem::path& path) const;
     void ProcessMemoryGeometryRequests();
+    void ProcessMemoryRouteRequests();
     glm::vec3 FromGtaRotation(const glm::vec3& gtaRot) const;
     int FindMeshIndexById(uint64_t id) const;
 

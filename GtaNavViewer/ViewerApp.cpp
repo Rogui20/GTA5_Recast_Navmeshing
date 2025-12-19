@@ -1173,6 +1173,122 @@ void ViewerApp::ProcessMemoryGeometryRequests()
     }
 }
 
+void ViewerApp::ProcessMemoryRouteRequests()
+{
+    if (!memoryHandler.IsMonitoringActive() || IsNavmeshJobRunning())
+        return;
+
+    std::vector<MemoryHandler::RouteRequestSlot> requests;
+    if (!memoryHandler.FetchRouteRequests(requests))
+        return;
+
+    const bool hasNavmesh = CurrentNavData().IsLoaded();
+    if (hasNavmesh && !CurrentNavQueryReady())
+    {
+        InitNavQueryForCurrentNavmesh();
+    }
+
+    for (int i = 0; i < static_cast<int>(requests.size()); ++i)
+    {
+        const auto& slot = requests[static_cast<size_t>(i)];
+        if (!slot.request)
+            continue;
+
+        MemoryHandler::RouteRequestSlot writable = slot;
+        glm::vec3 startInternal = FromGtaCoords(glm::vec3(slot.start.x, slot.start.y, slot.start.z));
+        glm::vec3 targetInternal = FromGtaCoords(glm::vec3(slot.target.x, slot.target.y, slot.target.z));
+        const float extents[3]  = { navGenSettings.agentRadius * 4.0f + 0.1f, navGenSettings.agentHeight * 0.5f + 0.1f, navGenSettings.agentRadius * 4.0f + 0.1f };
+
+        // Immediately reset request and payload to keep protocol functional.
+        writable.request = 0;
+        writable.start = {};
+        writable.target = {};
+        writable.flags = 0;
+        writable.state = 1; // busy
+        memoryHandler.WriteRouteRequestSlot(i, writable);
+
+        auto finishWithEmpty = [&](int newState)
+        {
+            memoryHandler.WriteRouteResultPoints(i, {});
+            writable.state = newState;
+            memoryHandler.WriteRouteRequestSlot(i, writable);
+        };
+
+        if (!hasNavmesh || !CurrentNavQuery())
+        {
+            finishWithEmpty(2);
+            continue;
+        }
+
+        dtPolyRef startRef = 0, endRef = 0;
+        float startNearest[3]{};
+        float endNearest[3]{};
+
+        const float startPos[3] = { startInternal.x, startInternal.y, startInternal.z };
+        const float endPos[3]   = { targetInternal.x, targetInternal.y, targetInternal.z };
+
+        if (dtStatusFailed(CurrentNavQuery()->findNearestPoly(startPos, extents, &pathQueryFilter, &startRef, startNearest)) || startRef == 0)
+        {
+            finishWithEmpty(2);
+            continue;
+        }
+
+        if (dtStatusFailed(CurrentNavQuery()->findNearestPoly(endPos, extents, &pathQueryFilter, &endRef, endNearest)) || endRef == 0)
+        {
+            finishWithEmpty(2);
+            continue;
+        }
+
+        dtPolyRef polys[256];
+        int polyCount = 0;
+        const dtStatus pathStatus = CurrentNavQuery()->findPath(startRef, endRef, startNearest, endNearest, &pathQueryFilter, polys, &polyCount, 256);
+        if (dtStatusFailed(pathStatus) || polyCount == 0)
+        {
+            finishWithEmpty(2);
+            continue;
+        }
+
+        float straight[256 * 3];
+        unsigned char straightFlags[256];
+        dtPolyRef straightRefs[256];
+        int straightCount = 0;
+
+        dtStatus straightStatus = DT_FAILURE;
+        if (slot.minEdgeDistance > 0.0f)
+        {
+            straightStatus = CurrentNavQuery()->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, slot.flags, slot.minEdgeDistance);
+        }
+        else
+        {
+            straightStatus = CurrentNavQuery()->findStraightPath(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, slot.flags);
+        }
+
+        if (dtStatusFailed(straightStatus) || straightCount == 0)
+        {
+            finishWithEmpty(2);
+            continue;
+        }
+
+        std::vector<MemoryHandler::Vector3> gtaPoints;
+        gtaPoints.reserve(static_cast<size_t>(straightCount));
+        for (int p = 0; p < straightCount; ++p)
+        {
+            glm::vec3 internalPoint(straight[p * 3 + 0], straight[p * 3 + 1], straight[p * 3 + 2]);
+            glm::vec3 gtaPoint = ToGtaCoords(internalPoint);
+            MemoryHandler::Vector3 v{};
+            v.x = gtaPoint.x;
+            v.y = gtaPoint.y;
+            v.z = gtaPoint.z;
+            gtaPoints.push_back(v);
+        }
+
+        memoryHandler.WriteRouteResultPoints(i, gtaPoints);
+
+        writable.state = 2; // finished
+        memoryHandler.WriteRouteRequestSlot(i, writable);
+    }
+}
+
 
 
 
@@ -1185,6 +1301,7 @@ void ViewerApp::RenderFrame()
 
     memoryHandler.Tick();
     ProcessMemoryGeometryRequests();
+    ProcessMemoryRouteRequests();
 
     // --- Iniciar nova frame ImGui ---
     ImGui_ImplOpenGL3_NewFrame();

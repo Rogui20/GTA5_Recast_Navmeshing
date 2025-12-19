@@ -73,6 +73,10 @@ public:
     bool ClearGeometrySlot(int index) const;
     bool HasValidBuffers() const;
     size_t GeometryBufferSize() const;
+    bool FetchRouteRequests(std::vector<RouteRequestSlot>& outSlots) const;
+    bool WriteRouteRequestSlot(int index, const RouteRequestSlot& slot) const;
+    bool WriteRouteResultPoints(int routeIndex, const std::vector<Vector3>& points) const;
+    bool HasValidRouteBuffers() const;
 
 private:
     bool EnsureAttached();
