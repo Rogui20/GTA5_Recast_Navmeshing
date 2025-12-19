@@ -510,7 +510,7 @@ bool MemoryHandler::WriteRouteResultPoints(int routeIndex, const std::vector<Vec
 
     const size_t maxPoints = static_cast<size_t>(kRouteResultPoints);
     std::vector<RouteResultPoint> buffer(maxPoints);
-    const size_t copyCount = std::min(points.size(), maxPoints);
+    const size_t copyCount = (std::min)(points.size(), maxPoints);
     for (size_t i = 0; i < copyCount; ++i)
     {
         buffer[i].point = points[i];
