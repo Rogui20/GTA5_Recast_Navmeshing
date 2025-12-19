@@ -307,6 +307,7 @@ var annotated_dup =
     [ "ImVector", "structImVector.html", "structImVector" ],
     [ "InputGeom", "classInputGeom.html", "classInputGeom" ],
     [ "LinearAllocator", "structLinearAllocator.html", "structLinearAllocator" ],
+    [ "MemoryHandler", "classMemoryHandler.html", "classMemoryHandler" ],
     [ "Mesh", "classMesh.html", "classMesh" ],
     [ "MeshProcess", "structMeshProcess.html", "structMeshProcess" ],
     [ "MyDocument", "structMyDocument.html", "structMyDocument" ],

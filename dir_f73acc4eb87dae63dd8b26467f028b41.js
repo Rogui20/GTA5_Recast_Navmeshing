@@ -9,6 +9,8 @@ var dir_f73acc4eb87dae63dd8b26467f028b41 =
     [ "main.cpp", "GtaNavViewer_2main_8cpp.html", "GtaNavViewer_2main_8cpp" ],
     [ "MathUtils.cpp", "MathUtils_8cpp.html", "MathUtils_8cpp" ],
     [ "MathUtils.h", "MathUtils_8h.html", "MathUtils_8h" ],
+    [ "MemoryHandler.cpp", "MemoryHandler_8cpp.html", null ],
+    [ "MemoryHandler.h", "MemoryHandler_8h.html", "MemoryHandler_8h" ],
     [ "Mesh.cpp", "Mesh_8cpp.html", null ],
     [ "Mesh.h", "Mesh_8h.html", "Mesh_8h" ],
     [ "NavMesh_Single.cpp", "NavMesh__Single_8cpp.html", "NavMesh__Single_8cpp" ],

@@ -405,6 +405,7 @@ var hierarchy =
     [ "ImVector< unsigned char >", "structImVector.html", null ],
     [ "ImVector< VkFormat >", "structImVector.html", null ],
     [ "InputGeom", "classInputGeom.html", null ],
+    [ "MemoryHandler", "classMemoryHandler.html", null ],
     [ "Mesh", "classMesh.html", null ],
     [ "MyDocument", "structMyDocument.html", null ],
     [ "NavmeshBuildInput", "structNavmeshBuildInput.html", null ],
