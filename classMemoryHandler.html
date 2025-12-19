@@ -159,6 +159,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aada054066244e64004db617ff8aff7cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35777c24b61bee374fa75fc7391a6140" id="r_a35777c24b61bee374fa75fc7391a6140"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#a35777c24b61bee374fa75fc7391a6140">GeometryBufferSize</a> () const</td></tr>
 <tr class="separator:a35777c24b61bee374fa75fc7391a6140"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a347740e97e0109ae5a0873b43068e6d8" id="r_a347740e97e0109ae5a0873b43068e6d8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#a347740e97e0109ae5a0873b43068e6d8">FetchRouteRequests</a> (std::vector&lt; <a class="el" href="structMemoryHandler_1_1RouteRequestSlot.html">RouteRequestSlot</a> &gt; &amp;outSlots) const</td></tr>
+<tr class="separator:a347740e97e0109ae5a0873b43068e6d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57e1d0fccb693b1badf8f0b1cb3b285d" id="r_a57e1d0fccb693b1badf8f0b1cb3b285d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#a57e1d0fccb693b1badf8f0b1cb3b285d">WriteRouteRequestSlot</a> (int <a class="el" href="glad_8h.html#a57f14e05b1900f16a2da82ade47d0c6d">index</a>, const <a class="el" href="structMemoryHandler_1_1RouteRequestSlot.html">RouteRequestSlot</a> &amp;slot) const</td></tr>
+<tr class="separator:a57e1d0fccb693b1badf8f0b1cb3b285d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d4c4c56b7a25d01b85de9289ce51fa8" id="r_a5d4c4c56b7a25d01b85de9289ce51fa8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#a5d4c4c56b7a25d01b85de9289ce51fa8">WriteRouteResultPoints</a> (int routeIndex, const std::vector&lt; <a class="el" href="structMemoryHandler_1_1Vector3.html">Vector3</a> &gt; &amp;<a class="el" href="SDL__opengl__glext_8h.html#a0c0cc65d03e264ad2c5262927b620d3f">points</a>) const</td></tr>
+<tr class="separator:a5d4c4c56b7a25d01b85de9289ce51fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a631ab90cf90083f8208055eeb9889700" id="r_a631ab90cf90083f8208055eeb9889700"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#a631ab90cf90083f8208055eeb9889700">HasValidRouteBuffers</a> () const</td></tr>
+<tr class="separator:a631ab90cf90083f8208055eeb9889700"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -235,6 +243,24 @@ Static Public Attributes</h2></td></tr>
           <td class="memname">bool MemoryHandler::FetchGeometrySlots </td>
           <td>(</td>
           <td class="paramtype">std::vector&lt; <a class="el" href="structMemoryHandler_1_1GeometrySlot.html">GeometrySlot</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>outSlots</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a347740e97e0109ae5a0873b43068e6d8" name="a347740e97e0109ae5a0873b43068e6d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a347740e97e0109ae5a0873b43068e6d8">&#9670;&#160;</a></span>FetchRouteRequests()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MemoryHandler::FetchRouteRequests </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structMemoryHandler_1_1RouteRequestSlot.html">RouteRequestSlot</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>outSlots</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -393,6 +419,23 @@ Static Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">bool MemoryHandler::HasValidBuffers </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a631ab90cf90083f8208055eeb9889700" name="a631ab90cf90083f8208055eeb9889700"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a631ab90cf90083f8208055eeb9889700">&#9670;&#160;</a></span>HasValidRouteBuffers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MemoryHandler::HasValidRouteBuffers </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -602,6 +645,62 @@ Static Public Attributes</h2></td></tr>
           <td></td>
           <td class="paramtype">const <a class="el" href="structMemoryHandler_1_1GeometrySlot.html">GeometrySlot</a> &amp;&#160;</td>
           <td class="paramname"><em>slot</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a57e1d0fccb693b1badf8f0b1cb3b285d" name="a57e1d0fccb693b1badf8f0b1cb3b285d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57e1d0fccb693b1badf8f0b1cb3b285d">&#9670;&#160;</a></span>WriteRouteRequestSlot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MemoryHandler::WriteRouteRequestSlot </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structMemoryHandler_1_1RouteRequestSlot.html">RouteRequestSlot</a> &amp;&#160;</td>
+          <td class="paramname"><em>slot</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5d4c4c56b7a25d01b85de9289ce51fa8" name="a5d4c4c56b7a25d01b85de9289ce51fa8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d4c4c56b7a25d01b85de9289ce51fa8">&#9670;&#160;</a></span>WriteRouteResultPoints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MemoryHandler::WriteRouteResultPoints </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>routeIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structMemoryHandler_1_1Vector3.html">Vector3</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>points</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

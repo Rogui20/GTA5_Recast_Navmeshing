@@ -1,5 +1,9 @@
 var NAVTREEINDEX91 =
 {
+"structFrameResources.html#aedd033e75b03dce1e79fdb5856c29a02":[44,0,86,3],
+"structFrameResources.html#afc67af1e5b7695064cfc88fa4800a65f":[44,0,86,1],
+"structGraphParams.html":[44,0,89],
+"structGraphParams.html#a6bc9e0c7d31219f865e533ee7f279518":[44,0,89,0],
 "structGraphParams.html#a884cdd1fb7c9f58c88dc5d061d7b7e4b":[44,0,89,4],
 "structGraphParams.html#a97a2e4045e8fef4ec319b1430892254b":[44,0,89,7],
 "structGraphParams.html#aaeedd456935f5b7bf3090cbfb0afbbbc":[44,0,89,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX91 =
 "structImDrawVertAllegro.html#ac19aa852b9e406d90bc97ab41243a7db":[44,0,109,0],
 "structImFont.html":[44,0,110],
 "structImFont.html#a1c2a7ed2d08e08465b884e1092798077":[44,0,110,15],
-"structImFont.html#a1d35b1eb7c2f6a3a648308531e88e7f1":[44,0,110,0],
-"structImFont.html#a377366ed7c5d076363ad4760aeff63ec":[44,0,110,1],
-"structImFont.html#a4374ffca4f2d9a23599aac21c57e2a66":[44,0,110,10],
-"structImFont.html#a47b4aabfba670cc965507d356e8faf5b":[44,0,110,13],
-"structImFont.html#a51df9d341917235207db60e775b11621":[44,0,110,16]
+"structImFont.html#a1d35b1eb7c2f6a3a648308531e88e7f1":[44,0,110,0]
 };

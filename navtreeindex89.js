@@ -1,5 +1,9 @@
 var NAVTREEINDEX89 =
 {
+"imstb__truetype_8h.html#a37d613643adacbed24c22718faf6afc7":[45,0,7,0,11,22],
+"imstb__truetype_8h.html#a3856cc4fbab4c126c2c438c6f567525d":[45,0,7,0,11,12],
+"imstb__truetype_8h.html#a404d8b8c23a01c8cdf71f02d6d47d185":[45,0,7,0,11,43],
+"imstb__truetype_8h.html#a42c4058f71988e703efdf4703d5dfe31":[45,0,7,0,11,17],
 "imstb__truetype_8h.html#a4416bb8395a4d2e717f613bb4903c7eb":[45,0,7,0,11,64],
 "imstb__truetype_8h.html#a4b3487c748701f5b89b7be56625df1be":[45,0,7,0,11,66],
 "imstb__truetype_8h.html#a4c55e174efbacaf82a8ddb9d1956717e":[45,0,7,0,11,77],
@@ -245,9 +249,5 @@ var NAVTREEINDEX89 =
 "md_external_2SDL2_2docs_2README-n3ds.html":[22],
 "md_external_2SDL2_2docs_2README-n3ds.html#building":[22,0],
 "md_external_2SDL2_2docs_2README-n3ds.html#notes-1":[22,1],
-"md_external_2SDL2_2docs_2README-versions.html":[34],
-"md_external_2SDL2_2docs_2README-versions.html#before-2230":[34,1],
-"md_external_2SDL2_2docs_2README-versions.html#since-2230":[34,0],
-"md_external_2SDL2_2docs_2README-windows.html":[38],
-"md_external_2SDL2_2docs_2README-windows.html#llvm-and-intel-c-compiler-support":[38,0]
+"md_external_2SDL2_2docs_2README-versions.html":[34]
 };

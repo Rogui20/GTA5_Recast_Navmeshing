@@ -1,5 +1,9 @@
 var NAVTREEINDEX80 =
 {
+"imgui__impl__dx12_8h.html#a70a3e717bf7a3903b1f231dfc2516f89":[45,0,7,0,0,9,2],
+"imgui__impl__dx12_8h.html#a78137837a4a658b502a2fff02c941d8e":[45,0,7,0,0,9,3],
+"imgui__impl__dx12_8h.html#a799eeac4f8d3194d1b70f2982233e5cd":[45,0,7,0,0,9,4],
+"imgui__impl__dx12_8h.html#a7aae7738912dbd5dea744193f8d27abc":[45,0,7,0,0,9,8],
 "imgui__impl__dx12_8h.html#a7e6a26cdbaaeeca9df86e8373c4a8547":[45,0,7,0,0,9,7],
 "imgui__impl__dx12_8h.html#afe3dcbbc97bc1fed9507f05c292c5e4c":[45,0,7,0,0,9,9],
 "imgui__impl__dx12_8h_source.html":[45,0,7,0,0,9],
@@ -245,9 +249,5 @@ var NAVTREEINDEX80 =
 "imgui__impl__opengl3_8cpp.html#ad215190229f4f300593911aa7b3821de":[45,0,7,0,0,21,21],
 "imgui__impl__opengl3_8cpp.html#adbec2f9206e8462a71fc4a8b1f710c08":[45,0,7,0,0,21,3],
 "imgui__impl__opengl3_8cpp.html#adefa3150bdf88f59f2b8daa899f0f80c":[45,0,7,0,0,21,1],
-"imgui__impl__opengl3_8h.html":[45,0,7,0,0,22],
-"imgui__impl__opengl3_8h.html#a0c2b59f0157154902aa47f8f1f8dfcf5":[45,0,7,0,0,22,4],
-"imgui__impl__opengl3_8h.html#a2d09c3502809e95462ccd1e604c50a68":[45,0,7,0,0,22,1],
-"imgui__impl__opengl3_8h.html#a305c13d8d366d5eb3ff10f481c1357ff":[45,0,7,0,0,22,2],
-"imgui__impl__opengl3_8h.html#a3bf17e1235c290ba19933f8ef23889bf":[45,0,7,0,0,22,3]
+"imgui__impl__opengl3_8h.html":[45,0,7,0,0,22]
 };

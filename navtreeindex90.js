@@ -1,5 +1,9 @@
 var NAVTREEINDEX90 =
 {
+"md_external_2SDL2_2docs_2README-versions.html#before-2230":[34,1],
+"md_external_2SDL2_2docs_2README-versions.html#since-2230":[34,0],
+"md_external_2SDL2_2docs_2README-windows.html":[38],
+"md_external_2SDL2_2docs_2README-windows.html#llvm-and-intel-c-compiler-support":[38,0],
 "md_external_2SDL2_2docs_2README-windows.html#opengl-es-2x-support":[38,1],
 "md_external_2SDL2_2docs_2README-windows.html#vulkan-surface-support":[38,2],
 "md_external_2SDL2_2docs_2README.html":[40],
@@ -245,9 +249,5 @@ var NAVTREEINDEX90 =
 "structFrameResources.html#a2e11d2b6738b5641d3a3041be1a213a6":[44,0,86,4],
 "structFrameResources.html#a40399cf0ff9d5b63ec4b5a0ee57a9689":[44,0,86,2],
 "structFrameResources.html#a8d47cfe492e18a15f10722b9203f5b6c":[44,0,86,5],
-"structFrameResources.html#adb51b091a1d65761a46efdb28a57460d":[44,0,86,0],
-"structFrameResources.html#aedd033e75b03dce1e79fdb5856c29a02":[44,0,86,3],
-"structFrameResources.html#afc67af1e5b7695064cfc88fa4800a65f":[44,0,86,1],
-"structGraphParams.html":[44,0,89],
-"structGraphParams.html#a6bc9e0c7d31219f865e533ee7f279518":[44,0,89,0]
+"structFrameResources.html#adb51b091a1d65761a46efdb28a57460d":[44,0,86,0]
 };

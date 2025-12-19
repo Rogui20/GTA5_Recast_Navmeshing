@@ -13,5 +13,7 @@ var searchData=
   ['windowsettingshandler_5fwriteall_10',['WindowSettingsHandler_WriteAll',['../GtaNavViewer_2imgui_2imgui_8cpp.html#a24623093a2b9a7babcc73f502bfabad0',1,'imgui.cpp']]],
   ['windowsyncownedviewport_11',['WindowSyncOwnedViewport',['../namespaceImGui.html#aa10671a357d79bda5447b19e54e03baa',1,'ImGui']]],
   ['write_12',['write',['../classFileIO.html#aa2ff5f1db6c224a0fa15f3b039a6009d',1,'FileIO::write()'],['../structduFileIO.html#aec33f1c0d1d0d1ec464fc1a5c135cb00',1,'duFileIO::write()']]],
-  ['writegeometryslot_13',['WriteGeometrySlot',['../classMemoryHandler.html#a34787edbb4b1601604aaee255e7a56f0',1,'MemoryHandler']]]
+  ['writegeometryslot_13',['WriteGeometrySlot',['../classMemoryHandler.html#a34787edbb4b1601604aaee255e7a56f0',1,'MemoryHandler']]],
+  ['writerouterequestslot_14',['WriteRouteRequestSlot',['../classMemoryHandler.html#a57e1d0fccb693b1badf8f0b1cb3b285d',1,'MemoryHandler']]],
+  ['writerouteresultpoints_15',['WriteRouteResultPoints',['../classMemoryHandler.html#a5d4c4c56b7a25d01b85de9289ce51fa8',1,'MemoryHandler']]]
 ];

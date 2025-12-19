@@ -1,5 +1,9 @@
 var NAVTREEINDEX96 =
 {
+"structImGuiInputTextState.html#a3928292f9f316fde3832aa908b316f91":[44,0,215,28],
+"structImGuiInputTextState.html#a3a61e87aee08d440eae6ebacadfc019b":[44,0,215,19],
+"structImGuiInputTextState.html#a3ac84b777a0390568e9b0c3562d9ae12":[44,0,215,1],
+"structImGuiInputTextState.html#a3b9b45306c132a7f81308dca662b004a":[44,0,215,18],
 "structImGuiInputTextState.html#a3ea23fdc7d6cc4983230055ba92bc422":[44,0,215,32],
 "structImGuiInputTextState.html#a408b8e34844be9aa85120589126e57d1":[44,0,215,10],
 "structImGuiInputTextState.html#a451153353e47a2aee5ca6c4b362fe2c1":[44,0,215,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX96 =
 "structImGuiOldColumns.html#ae8e14ed159e758560d196a9012ea617d":[44,0,235,10],
 "structImGuiOldColumns.html#af2350babd38168dc2a605474b6b8aae4":[44,0,235,6],
 "structImGuiOnceUponAFrame.html":[44,0,236],
-"structImGuiOnceUponAFrame.html#a2d44776b8e7bdeec217f88be9f832e08":[44,0,236,2],
-"structImGuiOnceUponAFrame.html#a3c912b79bc333ce746356001431c2504":[44,0,236,1],
-"structImGuiOnceUponAFrame.html#ac9513f72a884f6fe844869b157b23f1f":[44,0,236,0],
-"structImGuiPayload.html":[44,0,237],
-"structImGuiPayload.html#a1757c714dd47f09b645a8eba2912849d":[44,0,237,12]
+"structImGuiOnceUponAFrame.html#a2d44776b8e7bdeec217f88be9f832e08":[44,0,236,2]
 };
