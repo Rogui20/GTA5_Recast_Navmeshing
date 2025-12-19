@@ -664,6 +664,7 @@ void ViewerApp::Shutdown()
     SDL_GL_DeleteContext(glContext);
     SDL_DestroyWindow(window);
     SDL_Quit();
+    memoryHandler.ReleaseResources(false);
 
     delete camera;
     delete renderer;
@@ -1050,49 +1051,7 @@ void ViewerApp::ProcessMemoryGeometryRequests()
         if (!slot.update)
             continue;
 
-        auto safeStrnlen = [](const char* str, size_t maxLen)
-        {
-            size_t len = 0;
-            while (len < maxLen && str[len] != '\0')
-            {
-                ++len;
-            }
-            return len;
-        };
-
-        auto decodeHashKey = [&](const MemoryHandler::GeometrySlot& s) -> std::string
-        {
-            const size_t len = safeStrnlen(s.modelHash, MemoryHandler::kModelHashStringSize);
-            if (len > 0)
-            {
-                std::string candidate(s.modelHash, len);
-                bool printable = std::all_of(candidate.begin(), candidate.end(), [](char c)
-                {
-                    return c >= 32 && c <= 126;
-                });
-                if (printable)
-                {
-                    return candidate;
-                }
-            }
-
-            uint64_t rawHash = 0;
-            std::memcpy(&rawHash, s.modelHash, sizeof(uint64_t));
-            if (rawHash != 0)
-            {
-                return std::to_string(rawHash);
-            }
-            return {};
-        };
-
-        std::string hashStr = decodeHashKey(slot);
-        if (hashStr.empty())
-        {
-            slot.update = 0;
-            memoryHandler.WriteGeometrySlot(i, slot);
-            continue;
-        }
-
+        std::string hashStr = std::to_string(static_cast<int>(slot.modelHash));
         std::string propName;
         if (!memoryHandler.TryResolvePropName(hashStr, propName))
         {
