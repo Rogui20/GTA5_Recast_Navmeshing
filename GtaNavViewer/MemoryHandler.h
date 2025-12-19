@@ -43,7 +43,8 @@ public:
 
     struct GeometrySlot
     {
-        char modelHash[kModelHashStringSize]{};
+        //char modelHash[kModelHashStringSize]{};
+        uint64_t modelHash = 0;
         Vector3 position{};
         Vector3 rotation{};
         uint32_t parentId = 0;
@@ -77,10 +78,10 @@ public:
     bool WriteRouteRequestSlot(int index, const RouteRequestSlot& slot) const;
     bool WriteRouteResultPoints(int routeIndex, const std::vector<Vector3>& points) const;
     bool HasValidRouteBuffers() const;
+    void ReleaseResources(bool resetStatus);
 
 private:
     bool EnsureAttached();
-    void ReleaseResources(bool resetStatus);
     bool FindProcess(uint32_t& pidOut, std::string& nameOut);
     bool AllocateBuffers();
     bool WriteLayoutFile() const;
