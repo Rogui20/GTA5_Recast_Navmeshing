@@ -11,6 +11,7 @@
 #include "RendererGL.h"
 #include "GtaHandler.h"
 #include "GtaHandlerMenu.h"
+#include "MemoryHandler.h"
 #include "imfilebrowser.h"
 #include <DetourNavMeshQuery.h>
 #include <memory>
@@ -110,6 +111,8 @@ private:
     NavmeshGenerationSettings navGenSettings{};
     GtaHandler gtaHandler;
     GtaHandlerMenu gtaHandlerMenu;
+    MemoryHandler memoryHandler;
+    std::unordered_map<int, uint64_t> memorySlotToMeshId;
 
     enum class NavmeshRenderMode
     {
@@ -196,6 +199,7 @@ private:
     void LoadLastDirectory();
     void SaveLastDirectory(const std::filesystem::path& directory);
     std::filesystem::path GetConfigFilePath() const;
+    std::filesystem::path ResolveMemoryHandlerObjPath(const std::string& propName) const;
 
     void RemoveMesh(size_t index);
     void ClearMeshes();
@@ -231,6 +235,9 @@ private:
     void CollectSubtreeIds(uint64_t rootId, std::vector<uint64_t>& outIds) const;
     void RemoveMeshSubtree(uint64_t rootId);
     bool IsMeshAlreadyLoaded(const std::filesystem::path& path) const;
+    void ProcessMemoryGeometryRequests();
+    glm::vec3 FromGtaRotation(const glm::vec3& gtaRot) const;
+    int FindMeshIndexById(uint64_t id) const;
 
     void ProcessEvents();
     void RenderFrame();
@@ -244,6 +251,8 @@ private:
     bool IsNavmeshJobRunning() const { return navmeshJobRunning.load(); }
 
     ImGui::FileBrowser directoryBrowser;
+    ImGui::FileBrowser propHashBrowser;
+    ImGui::FileBrowser objDirectoryBrowser;
     std::string currentDirectory;
     std::string selectedEntry;
 
