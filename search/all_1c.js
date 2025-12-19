@@ -307,7 +307,7 @@ var searchData=
   ['recastregion_2ecpp_304',['RecastRegion.cpp',['../RecastRegion_8cpp.html',1,'']]],
   ['reclassifynode_305',['ReclassifyNode',['../structImTriangulator.html#a4acbba844b5b7241d1efbb61fefb895a',1,'ImTriangulator']]],
   ['recording_3a_306',['Recording:',['../dollar-gestures.html#recording',1,'']]],
-  ['rect_307',['rect',['../structimguiGfxCmd.html#a83f785a85c31c45d64870075d76e9b50',1,'imguiGfxCmd::rect'],['../structSDLTest__TextWindow.html#a1f9f249b1add14f3a53972808031ea1a',1,'SDLTest_TextWindow::rect'],['../structImGuiWindow.html#a147da28bf5d167cbe0a363c4a578dea1',1,'ImGuiWindow::Rect()'],['../structImGuiDockNode.html#a28f93c8dd99f51966d0e4dc2e3e86ca8',1,'ImGuiDockNode::Rect()'],['../structImGuiLastItemData.html#ad6ff8db4173ff40874ef015e58d726ae',1,'ImGuiLastItemData::Rect']]],
+  ['rect_307',['rect',['../structImGuiWindow.html#a147da28bf5d167cbe0a363c4a578dea1',1,'ImGuiWindow::Rect()'],['../structImGuiDockNode.html#a28f93c8dd99f51966d0e4dc2e3e86ca8',1,'ImGuiDockNode::Rect()'],['../structImGuiLastItemData.html#ad6ff8db4173ff40874ef015e58d726ae',1,'ImGuiLastItemData::Rect'],['../structimguiGfxCmd.html#a83f785a85c31c45d64870075d76e9b50',1,'imguiGfxCmd::rect'],['../structSDLTest__TextWindow.html#a1f9f249b1add14f3a53972808031ea1a',1,'SDLTest_TextWindow::rect']]],
   ['rectangles_20rendering_20technique_308',['A note regarding the use of the &quot;dirty rectangles&quot; rendering technique',['../android.html#a-note-regarding-the-use-of-the-dirty-rectangles-rendering-technique',1,'']]],
   ['rectrel_309',['RectRel',['../structImGuiNavItemData.html#a62029a2962e6eb2969306437bcada51d',1,'ImGuiNavItemData']]],
   ['rects_310',['Rects',['../structImFontAtlasBuilder.html#a4f9256a923b50e99cc2c22b22a4a72ec',1,'ImFontAtlasBuilder']]],
