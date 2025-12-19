@@ -1060,17 +1060,54 @@ void ViewerApp::ProcessMemoryGeometryRequests()
             return len;
         };
 
-        std::string hashStr(slot.modelHash, safeStrnlen(slot.modelHash, MemoryHandler::kModelHashStringSize));
+        auto decodeHashKey = [&](const MemoryHandler::GeometrySlot& s) -> std::string
+        {
+            const size_t len = safeStrnlen(s.modelHash, MemoryHandler::kModelHashStringSize);
+            if (len > 0)
+            {
+                std::string candidate(s.modelHash, len);
+                bool printable = std::all_of(candidate.begin(), candidate.end(), [](char c)
+                {
+                    return c >= 32 && c <= 126;
+                });
+                if (printable)
+                {
+                    return candidate;
+                }
+            }
+
+            uint64_t rawHash = 0;
+            std::memcpy(&rawHash, s.modelHash, sizeof(uint64_t));
+            if (rawHash != 0)
+            {
+                return std::to_string(rawHash);
+            }
+            return {};
+        };
+
+        std::string hashStr = decodeHashKey(slot);
         if (hashStr.empty())
+        {
+            slot.update = 0;
+            memoryHandler.WriteGeometrySlot(i, slot);
             continue;
+        }
 
         std::string propName;
         if (!memoryHandler.TryResolvePropName(hashStr, propName))
+        {
+            slot.update = 0;
+            memoryHandler.WriteGeometrySlot(i, slot);
             continue;
+        }
 
         std::filesystem::path objPath = ResolveMemoryHandlerObjPath(propName);
         if (objPath.empty())
+        {
+            slot.update = 0;
+            memoryHandler.WriteGeometrySlot(i, slot);
             continue;
+        }
 
         uint64_t meshId = 0;
         MeshInstance* targetInstance = nullptr;
