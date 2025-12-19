@@ -11,6 +11,7 @@
 #include "RendererGL.h"
 #include "GtaHandler.h"
 #include "GtaHandlerMenu.h"
+#include "MemoryHandler.h"
 #include "imfilebrowser.h"
 #include <DetourNavMeshQuery.h>
 #include <memory>
@@ -110,6 +111,7 @@ private:
     NavmeshGenerationSettings navGenSettings{};
     GtaHandler gtaHandler;
     GtaHandlerMenu gtaHandlerMenu;
+    MemoryHandler memoryHandler;
 
     enum class NavmeshRenderMode
     {
