@@ -75,6 +75,8 @@ add_executable(GtaNavViewer
     NavMeshBuild.h
     GtaHandler.cpp
     GtaHandler.h
+    MemoryHandler.cpp
+    MemoryHandler.h
     GtaHandlerMenu.cpp
     GtaHandlerMenu.h
     json.hpp

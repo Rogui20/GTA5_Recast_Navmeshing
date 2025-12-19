@@ -49,6 +49,7 @@ ViewerApp::ViewerApp()
 
 ViewerApp::~ViewerApp()
 {
+    memoryHandler.SetMonitoringEnabled(false);
     for (auto& query : navQuerySlots)
     {
         if (query)
@@ -992,6 +993,8 @@ void ViewerApp::RenderFrame()
 
     RunProceduralTestStep();
 
+    memoryHandler.Tick();
+
     // --- Iniciar nova frame ImGui ---
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
@@ -1122,6 +1125,25 @@ void ViewerApp::RenderFrame()
                     SwitchNavmeshSlot(slot);
                 }
             }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("GTA Tracker"))
+        {
+            bool monitorGta = memoryHandler.IsMonitoringRequested();
+            if (ImGui::MenuItem("Monitorar GTA", nullptr, &monitorGta))
+            {
+                memoryHandler.SetMonitoringEnabled(monitorGta);
+            }
+
+            ImGui::Separator();
+            ImGui::TextWrapped("%s", memoryHandler.GetStatus().c_str());
+            const auto layoutPath = memoryHandler.GetLayoutFilePath();
+            if (!layoutPath.empty())
+            {
+                ImGui::TextDisabled("Layout JSON: %s", layoutPath.string().c_str());
+            }
+
             ImGui::EndMenu();
         }
 
