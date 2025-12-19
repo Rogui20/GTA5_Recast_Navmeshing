@@ -226,6 +226,13 @@ glm::vec3 ViewerApp::FromGtaCoords(const glm::vec3& gta) const
     return glm::vec3(gta.x, gta.z, -gta.y);
 }
 
+glm::vec3 ViewerApp::FromGtaRotation(const glm::vec3& gtaRot) const
+{
+    // Converte e normaliza euler (graus) do eixo GTA para o eixo interno.
+    glm::vec3 internal(gtaRot.x, gtaRot.z, -gtaRot.y);
+    return NormalizeEuler(internal);
+}
+
 glm::mat3 ViewerApp::GetRotationMatrix(const glm::vec3& eulerDegrees) const
 {
     glm::vec3 normalized = NormalizeEuler(eulerDegrees);
@@ -421,6 +428,17 @@ const ViewerApp::MeshInstance* ViewerApp::FindMeshById(uint64_t id) const
             return &inst;
     }
     return nullptr;
+}
+
+int ViewerApp::FindMeshIndexById(uint64_t id) const
+{
+    const auto& meshes = CurrentMeshes();
+    for (size_t i = 0; i < meshes.size(); ++i)
+    {
+        if (meshes[i].id == id)
+            return static_cast<int>(i);
+    }
+    return -1;
 }
 
 void ViewerApp::UpdateChildTransforms(uint64_t parentId)

@@ -23,6 +23,7 @@
 #include <fstream>
 #include <algorithm>
 #include <cctype>
+#include <cstring>
 #include <unordered_set>
 #include <array>
 #include <cmath>
@@ -31,10 +32,15 @@
 
 ViewerApp::ViewerApp()
     : directoryBrowser(ImGuiFileBrowserFlags_SelectDirectory | ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_NoTitleBar)
+    , propHashBrowser(ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_NoTitleBar)
+    , objDirectoryBrowser(ImGuiFileBrowserFlags_SelectDirectory | ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_NoTitleBar)
 {
     currentDirectory = std::filesystem::current_path().string();
     directoryBrowser.SetTitle("Selecionar pasta");
     directoryBrowser.SetDirectory(currentDirectory);
+    propHashBrowser.SetTitle("Selecionar PropHashToName.json");
+    propHashBrowser.SetTypeFilters({".json"});
+    objDirectoryBrowser.SetTitle("Selecionar pasta OBJ (Memory Handler)");
     for (auto& idCounter : nextMeshIdSlots)
         idCounter = 1;
     for (int i = 0; i < kMaxNavmeshSlots; ++i)
@@ -45,10 +51,20 @@ ViewerApp::ViewerApp()
         picked = -1;
     for (auto& pickedTri : pickedTriSlots)
         pickedTri = -1;
+
+    if (!memoryHandler.GetPropHashFile().empty())
+    {
+        propHashBrowser.SetPwd(memoryHandler.GetPropHashFile().parent_path());
+    }
+    if (!memoryHandler.GetObjDirectory().empty())
+    {
+        objDirectoryBrowser.SetPwd(memoryHandler.GetObjDirectory());
+    }
 }
 
 ViewerApp::~ViewerApp()
 {
+    memoryHandler.SetMonitoringEnabled(false);
     for (auto& query : navQuerySlots)
     {
         if (query)
@@ -782,6 +798,26 @@ std::filesystem::path ViewerApp::GetConfigFilePath() const
     return "last_directory.txt";
 }
 
+std::filesystem::path ViewerApp::ResolveMemoryHandlerObjPath(const std::string& propName) const
+{
+    if (memoryHandler.GetObjDirectory().empty())
+        return {};
+
+    std::filesystem::path base = memoryHandler.GetObjDirectory();
+    std::filesystem::path direct = base / propName;
+    if (std::filesystem::exists(direct))
+        return direct;
+
+    std::filesystem::path withExt = direct;
+    if (!withExt.has_extension())
+        withExt.replace_extension(".obj");
+
+    if (std::filesystem::exists(withExt))
+        return withExt;
+
+    return {};
+}
+
 void ViewerApp::LoadLastDirectory()
 {
     std::filesystem::path configPath = GetConfigFilePath();
@@ -982,6 +1018,124 @@ void ViewerApp::ProcessNavmeshJob()
     }
 }
 
+void ViewerApp::ProcessMemoryGeometryRequests()
+{
+    if (!memoryHandler.IsMonitoringActive() || IsNavmeshJobRunning())
+        return;
+
+    std::vector<MemoryHandler::GeometrySlot> slots;
+    if (!memoryHandler.FetchGeometrySlots(slots))
+        return;
+
+    for (int i = 0; i < static_cast<int>(slots.size()); ++i)
+    {
+        auto& slot = slots[static_cast<size_t>(i)];
+
+        if (slot.remove)
+        {
+            auto mapIt = memorySlotToMeshId.find(i);
+            if (mapIt != memorySlotToMeshId.end())
+            {
+                int meshIdx = FindMeshIndexById(mapIt->second);
+                if (meshIdx >= 0)
+                {
+                    RemoveMesh(static_cast<size_t>(meshIdx));
+                }
+                memorySlotToMeshId.erase(mapIt);
+            }
+            memoryHandler.ClearGeometrySlot(i);
+            continue;
+        }
+
+        if (!slot.update)
+            continue;
+
+        auto safeStrnlen = [](const char* str, size_t maxLen)
+        {
+            size_t len = 0;
+            while (len < maxLen && str[len] != '\0')
+            {
+                ++len;
+            }
+            return len;
+        };
+
+        std::string hashStr(slot.modelHash, safeStrnlen(slot.modelHash, MemoryHandler::kModelHashStringSize));
+        if (hashStr.empty())
+            continue;
+
+        std::string propName;
+        if (!memoryHandler.TryResolvePropName(hashStr, propName))
+            continue;
+
+        std::filesystem::path objPath = ResolveMemoryHandlerObjPath(propName);
+        if (objPath.empty())
+            continue;
+
+        uint64_t meshId = 0;
+        MeshInstance* targetInstance = nullptr;
+
+        auto existingMap = memorySlotToMeshId.find(i);
+        if (existingMap != memorySlotToMeshId.end())
+        {
+            meshId = existingMap->second;
+            targetInstance = FindMeshById(meshId);
+        }
+
+        if (!targetInstance)
+        {
+            for (size_t meshIdx = 0; meshIdx < CurrentMeshes().size(); ++meshIdx)
+            {
+                if (CurrentMeshes()[meshIdx].sourcePath == objPath)
+                {
+                    targetInstance = &CurrentMeshes()[meshIdx];
+                    memorySlotToMeshId[i] = targetInstance->id;
+                    meshId = targetInstance->id;
+                    break;
+                }
+            }
+        }
+
+        if (!targetInstance)
+        {
+
+            if (!LoadMeshFromPathWithOptions(objPath.string(), centerMesh, preferBin))
+                continue;
+
+            targetInstance = &CurrentMeshes().back();
+            memorySlotToMeshId[i] = targetInstance->id;
+            meshId = targetInstance->id;
+        }
+
+        int targetIndex = FindMeshIndexById(meshId);
+        if (targetIndex < 0 || !targetInstance)
+            continue;
+
+        glm::vec3 newPos = FromGtaCoords(glm::vec3(slot.position.x, slot.position.y, slot.position.z));
+        glm::vec3 newRot = FromGtaRotation(glm::vec3(slot.rotation.x, slot.rotation.y, slot.rotation.z));
+
+        bool posChanged = targetInstance->position != newPos;
+        bool rotChanged = targetInstance->rotation != newRot;
+
+        targetInstance->position = newPos;
+        targetInstance->rotation = newRot;
+
+        if (slot.parentId != 0)
+        {
+            auto parentIt = memorySlotToMeshId.find(static_cast<int>(slot.parentId));
+            if (parentIt != memorySlotToMeshId.end())
+            {
+                SetMeshParent(static_cast<size_t>(targetIndex), parentIt->second);
+            }
+        }
+
+        OnInstanceTransformUpdated(static_cast<size_t>(targetIndex), posChanged, rotChanged);
+
+        slot.update = 0;
+        memoryHandler.WriteGeometrySlot(i, slot);
+    }
+}
+
 
 
 
@@ -991,6 +1145,9 @@ void ViewerApp::RenderFrame()
     ProcessNavmeshJob();
 
     RunProceduralTestStep();
+
+    memoryHandler.Tick();
+    ProcessMemoryGeometryRequests();
 
     // --- Iniciar nova frame ImGui ---
     ImGui_ImplOpenGL3_NewFrame();
@@ -1122,6 +1279,25 @@ void ViewerApp::RenderFrame()
                     SwitchNavmeshSlot(slot);
                 }
             }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("GTA Tracker"))
+        {
+            bool monitorGta = memoryHandler.IsMonitoringRequested();
+            if (ImGui::MenuItem("Monitorar GTA", nullptr, &monitorGta))
+            {
+                memoryHandler.SetMonitoringEnabled(monitorGta);
+            }
+
+            ImGui::Separator();
+            ImGui::TextWrapped("%s", memoryHandler.GetStatus().c_str());
+            const auto layoutPath = memoryHandler.GetLayoutFilePath();
+            if (!layoutPath.empty())
+            {
+                ImGui::TextDisabled("Layout JSON: %s", layoutPath.string().c_str());
+            }
+
             ImGui::EndMenu();
         }
 
@@ -1382,6 +1558,49 @@ void ViewerApp::RenderFrame()
                 if (ImGui::CollapsingHeader("GTA Handler", ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     gtaHandlerMenu.Draw(gtaHandler, *this);
+                }
+
+                if (ImGui::CollapsingHeader("Memory Handler", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    bool monitorGta = memoryHandler.IsMonitoringRequested();
+                    if (ImGui::Checkbox("Monitorar GTA", &monitorGta))
+                    {
+                        memoryHandler.SetMonitoringEnabled(monitorGta);
+                    }
+
+                    ImGui::TextWrapped("%s", memoryHandler.GetStatus().c_str());
+                    const auto layoutPath = memoryHandler.GetLayoutFilePath();
+                    if (!layoutPath.empty())
+                    {
+                        ImGui::TextDisabled("Layout JSON: %s", layoutPath.string().c_str());
+                    }
+
+                    if (ImGui::Button("Selecionar PropHashToName.json"))
+                    {
+                        propHashBrowser.SetPwd(memoryHandler.GetPropHashFile().empty() ?
+                            std::filesystem::current_path() : memoryHandler.GetPropHashFile().parent_path());
+                        propHashBrowser.Open();
+                    }
+                    ImGui::SameLine();
+                    ImGui::TextUnformatted(memoryHandler.GetPropHashFile().empty() ? "(nenhum arquivo selecionado)" : memoryHandler.GetPropHashFile().string().c_str());
+
+                    if (ImGui::Button("Selecionar pasta OBJ (Memory Handler)"))
+                    {
+                        objDirectoryBrowser.SetPwd(memoryHandler.GetObjDirectory().empty() ?
+                            std::filesystem::current_path() : memoryHandler.GetObjDirectory());
+                        objDirectoryBrowser.Open();
+                    }
+                    ImGui::SameLine();
+                    ImGui::TextUnformatted(memoryHandler.GetObjDirectory().empty() ? "(nenhuma pasta selecionada)" : memoryHandler.GetObjDirectory().string().c_str());
+
+                    ImGui::BeginDisabled(memoryHandler.GetPropHashFile().empty());
+                    if (ImGui::Button("Carregar PropHashToName"))
+                    {
+                        memoryHandler.LoadPropHashMapping();
+                    }
+                    ImGui::EndDisabled();
+
+                    ImGui::TextDisabled("Usa arquivo de hash para nome + pasta OBJ para carregar meshes automaticamente.");
                 }
 
                 if (ImGui::CollapsingHeader("Navmesh Tests"))
@@ -1817,6 +2036,22 @@ void ViewerApp::RenderFrame()
             }
 
             ImGui::EndTabBar();
+        }
+
+        propHashBrowser.Display();
+        if (propHashBrowser.HasSelected())
+        {
+            auto selected = propHashBrowser.GetSelected();
+            propHashBrowser.ClearSelected();
+            memoryHandler.SetPropHashFile(selected);
+        }
+
+        objDirectoryBrowser.Display();
+        if (objDirectoryBrowser.HasSelected())
+        {
+            auto selected = objDirectoryBrowser.GetSelected();
+            objDirectoryBrowser.ClearSelected();
+            memoryHandler.SetObjDirectory(selected);
         }
 
         ImGui::End();
