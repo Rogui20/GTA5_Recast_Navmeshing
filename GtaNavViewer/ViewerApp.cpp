@@ -26,6 +26,7 @@
 #include <unordered_set>
 #include <array>
 #include <cmath>
+#include <cstdio>
 
 
 ViewerApp::ViewerApp()
@@ -34,35 +35,99 @@ ViewerApp::ViewerApp()
     currentDirectory = std::filesystem::current_path().string();
     directoryBrowser.SetTitle("Selecionar pasta");
     directoryBrowser.SetDirectory(currentDirectory);
+    for (auto& idCounter : nextMeshIdSlots)
+        idCounter = 1;
+    for (auto& picked : pickedMeshIndexSlots)
+        picked = -1;
+    for (auto& pickedTri : pickedTriSlots)
+        pickedTri = -1;
 }
 
 ViewerApp::~ViewerApp()
 {
-    if (navQuery)
+    for (auto& query : navQuerySlots)
     {
-        dtFreeNavMeshQuery(navQuery);
-        navQuery = nullptr;
+        if (query)
+        {
+            dtFreeNavMeshQuery(query);
+            query = nullptr;
+        }
     }
 }
 
-bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
+void ViewerApp::ClearNavmeshSlotData(int slotIndex)
+{
+    if (!IsValidSlot(slotIndex))
+        return;
+
+    if (navQuerySlots[slotIndex])
+    {
+        dtFreeNavMeshQuery(navQuerySlots[slotIndex]);
+        navQuerySlots[slotIndex] = nullptr;
+    }
+
+    navmeshDataSlots[slotIndex] = {};
+    navMeshTrisSlots[slotIndex].clear();
+    navMeshLinesSlots[slotIndex].clear();
+    navmeshLineBufferSlots[slotIndex].clear();
+    offmeshLinkLinesSlots[slotIndex].clear();
+    pathLinesSlots[slotIndex].clear();
+    navQueryReadySlots[slotIndex] = false;
+    hasPathStartSlots[slotIndex] = false;
+    hasPathTargetSlots[slotIndex] = false;
+    hasOffmeshStartSlots[slotIndex] = false;
+    hasOffmeshTargetSlots[slotIndex] = false;
+    offmeshStartSlots[slotIndex] = {};
+    offmeshTargetSlots[slotIndex] = {};
+    meshInstancesSlots[slotIndex].clear();
+    meshStateCacheSlots[slotIndex].clear();
+    nextMeshIdSlots[slotIndex] = 1;
+    pickedMeshIndexSlots[slotIndex] = -1;
+    pickedTriSlots[slotIndex] = -1;
+}
+
+void ViewerApp::ResetAllNavmeshSlots()
+{
+    for (int slot = 0; slot < kMaxNavmeshSlots; ++slot)
+    {
+        ClearNavmeshSlotData(slot);
+    }
+    currentNavmeshSlot = 0;
+    ResetPathState(currentNavmeshSlot);
+}
+
+void ViewerApp::SwitchNavmeshSlot(int slotIndex)
+{
+    if (!IsValidSlot(slotIndex) || slotIndex == currentNavmeshSlot)
+        return;
+
+    const int previousNavSlot = currentNavmeshSlot;
+    currentNavmeshSlot = slotIndex;
+    if (currentGeometrySlot == previousNavSlot)
+        currentGeometrySlot = slotIndex;
+}
+
+bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow, int slotIndex)
 {
     if (IsNavmeshJobRunning())
     {
         navmeshJobQueued = true;
         navmeshJobQueuedBuildTilesNow = navmeshJobQueuedBuildTilesNow || buildTilesNow;
+        navmeshJobQueuedSlot = slotIndex >= 0 && IsValidSlot(slotIndex) ? slotIndex : currentNavmeshSlot;
         printf("[ViewerApp] buildNavmeshFromMeshes: já existe um build em andamento. Marcando rebuild pendente...\n");
         return false;
     }
 
-    if (meshInstances.empty())
+    const int targetSlot = slotIndex >= 0 && IsValidSlot(slotIndex) ? slotIndex : currentNavmeshSlot;
+
+    if (CurrentMeshes().empty())
     {
         printf("[ViewerApp] buildNavmeshFromMeshes: sem meshes carregadas.\n");
-        navMeshTris.clear();
-        navMeshLines.clear();
-        m_navmeshLines.clear();
-        ResetPathState();
-        navQueryReady = false;
+        navMeshTrisSlots[targetSlot].clear();
+        navMeshLinesSlots[targetSlot].clear();
+        navmeshLineBufferSlots[targetSlot].clear();
+        ResetPathState(targetSlot);
+        navQueryReadySlots[targetSlot] = false;
         return false;
     }
 
@@ -70,7 +135,7 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
     std::vector<unsigned int> combinedIdx;
     unsigned int baseIndex = 0;
 
-    for (const auto& instance : meshInstances)
+    for (const auto& instance : CurrentMeshes())
     {
         if (!instance.mesh)
             continue;
@@ -99,9 +164,10 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
     navmeshCancelRequested.store(false);
     navmeshJobQueued = false;
     navmeshJobQueuedBuildTilesNow = buildTilesNow;
+    navmeshJobQueuedSlot = -1;
 
     const auto settingsCopy = navGenSettings;
-    const auto offmeshLinksCopy = navData.GetOffmeshLinks();
+    const auto offmeshLinksCopy = navmeshDataSlots[targetSlot].GetOffmeshLinks();
 
     navmeshWorker = std::thread([
         this,
@@ -109,10 +175,12 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
         idx = std::move(combinedIdx),
         settingsCopy,
         buildTilesNow,
-        offmeshLinksCopy
+        offmeshLinksCopy,
+        targetSlot
     ]() mutable
     {
         auto result = std::make_unique<NavmeshJobResult>();
+        result->slotIndex = targetSlot;
         result->navData.SetOffmeshLinks(offmeshLinksCopy);
         if (!verts.empty() && !idx.empty())
         {
@@ -141,43 +209,53 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow)
     return true;
 }
 
-void ViewerApp::buildNavmeshDebugLines()
+void ViewerApp::buildNavmeshDebugLines(int slotIndex)
 {
-    navMeshTris.clear();
-    navMeshLines.clear();
-    m_navmeshLines.clear();
+    const int slot = IsValidSlot(slotIndex) ? slotIndex : currentNavmeshSlot;
+    auto& tris = navMeshTrisSlots[slot];
+    auto& lines = navMeshLinesSlots[slot];
+    auto& buffer = navmeshLineBufferSlots[slot];
 
-    navData.ExtractDebugMesh(navMeshTris, navMeshLines);
-    RebuildDebugLineBuffer();
+    tris.clear();
+    lines.clear();
+    buffer.clear();
+
+    navmeshDataSlots[slot].ExtractDebugMesh(tris, lines);
+    RebuildDebugLineBuffer(slot);
 }
 
-void ViewerApp::RebuildDebugLineBuffer()
+void ViewerApp::RebuildDebugLineBuffer(int slotIndex)
 {
-    m_navmeshLines.clear();
+    const int slot = IsValidSlot(slotIndex) ? slotIndex : currentNavmeshSlot;
+    auto& lines = navMeshLinesSlots[slot];
+    auto& buffer = navmeshLineBufferSlots[slot];
+    buffer.clear();
 
-    for (size_t i = 0; i + 1 < navMeshLines.size(); i += 2)
+    for (size_t i = 0; i + 1 < lines.size(); i += 2)
     {
         DebugLine dl;
-        dl.x0 = navMeshLines[i].x;
-        dl.y0 = navMeshLines[i].y;
-        dl.z0 = navMeshLines[i].z;
-        dl.x1 = navMeshLines[i+1].x;
-        dl.y1 = navMeshLines[i+1].y;
-        dl.z1 = navMeshLines[i+1].z;
-        m_navmeshLines.push_back(dl);
+        dl.x0 = lines[i].x;
+        dl.y0 = lines[i].y;
+        dl.z0 = lines[i].z;
+        dl.x1 = lines[i+1].x;
+        dl.y1 = lines[i+1].y;
+        dl.z1 = lines[i+1].z;
+        buffer.push_back(dl);
     }
 
-    RebuildOffmeshLinkLines();
+    RebuildOffmeshLinkLines(slot);
 
     printf("[ViewerApp] Linhas de navmesh: %zu segmentos. Offmesh links: %zu.\n",
-           m_navmeshLines.size(), offmeshLinkLines.size());
+           buffer.size(), offmeshLinkLinesSlots[slot].size());
 }
 
-void ViewerApp::RebuildOffmeshLinkLines()
+void ViewerApp::RebuildOffmeshLinkLines(int slotIndex)
 {
-    offmeshLinkLines.clear();
+    const int slot = IsValidSlot(slotIndex) ? slotIndex : currentNavmeshSlot;
+    auto& offmeshLines = offmeshLinkLinesSlots[slot];
+    offmeshLines.clear();
 
-    const auto& offmeshLinks = navData.GetOffmeshLinks();
+    const auto& offmeshLinks = navmeshDataSlots[slot].GetOffmeshLinks();
     for (const auto& link : offmeshLinks)
     {
         DebugLine dl{};
@@ -187,7 +265,7 @@ void ViewerApp::RebuildOffmeshLinkLines()
         dl.x1 = link.end.x;
         dl.y1 = link.end.y;
         dl.z1 = link.end.z;
-        offmeshLinkLines.push_back(dl);
+        offmeshLines.push_back(dl);
     }
 }
 
@@ -255,7 +333,7 @@ bool ViewerApp::PrepareProceduralNavmeshIfNeeded()
 
     if (proceduralNavmeshPending)
     {
-        if (navData.IsLoaded() && navData.HasTiledCache())
+        if (CurrentNavData().IsLoaded() && CurrentNavData().HasTiledCache())
         {
             proceduralNavmeshPending = false;
             return true;
@@ -266,7 +344,7 @@ bool ViewerApp::PrepareProceduralNavmeshIfNeeded()
     }
 
     if (!proceduralNavmeshNeedsRebuild)
-        return navData.IsLoaded() && navData.HasTiledCache();
+        return CurrentNavData().IsLoaded() && CurrentNavData().HasTiledCache();
 
     if (navGenSettings.mode != NavmeshBuildMode::Tiled)
     {
@@ -274,7 +352,7 @@ bool ViewerApp::PrepareProceduralNavmeshIfNeeded()
         navGenSettings.mode = NavmeshBuildMode::Tiled;
     }
 
-    if (meshInstances.empty())
+    if (CurrentMeshes().empty())
         return false;
 
     if (buildNavmeshFromMeshes(false))
@@ -325,7 +403,7 @@ void ViewerApp::RunProceduralTestStep()
 
 void ViewerApp::BuildProceduralTilesAroundCamera()
 {
-    if (!navData.IsLoaded() || !navData.HasTiledCache())
+    if (!CurrentNavData().IsLoaded() || !CurrentNavData().HasTiledCache())
         return;
 
     if (IsNavmeshJobRunning())
@@ -345,7 +423,7 @@ void ViewerApp::BuildProceduralTilesAroundCamera()
     glm::vec3 bmax = center + halfExtents;
 
     std::vector<std::pair<int, int>> tiles;
-    if (!navData.CollectTilesInBounds(bmin, bmax, false, tiles))
+    if (!CurrentNavData().CollectTilesInBounds(bmin, bmax, false, tiles))
         return;
 
     const auto tileKey = [](int tx, int ty) -> uint64_t
@@ -376,7 +454,7 @@ void ViewerApp::BuildProceduralTilesAroundCamera()
     }
 
     std::vector<std::pair<int, int>> touchedTiles;
-    if (!navData.RebuildSpecificTiles(tilesToBuild, navGenSettings, false, &touchedTiles))
+    if (!CurrentNavData().RebuildSpecificTiles(tilesToBuild, navGenSettings, false, &touchedTiles))
         return;
 
     for (const auto& tile : tilesToBuild)
@@ -387,8 +465,8 @@ void ViewerApp::BuildProceduralTilesAroundCamera()
     if (!touchedTiles.empty())
     {
         buildNavmeshDebugLines();
-        navQueryReady = false;
-        if (hasPathStart && hasPathTarget)
+        CurrentNavQueryReady() = false;
+        if (CurrentHasPathStart() && CurrentHasPathTarget())
             TryRunPathfind();
     }
 }
@@ -401,10 +479,10 @@ void ViewerApp::DrawSelectedMeshHighlight()
     if (!drawMeshOutlines)
         return;
 
-    if (pickedMeshIndex < 0 || pickedMeshIndex >= static_cast<int>(meshInstances.size()))
+    if (CurrentPickedMeshIndex() < 0 || CurrentPickedMeshIndex() >= static_cast<int>(CurrentMeshes().size()))
         return;
 
-    const auto& instance = meshInstances[pickedMeshIndex];
+    const auto& instance = CurrentMeshes()[CurrentPickedMeshIndex()];
     if (!instance.mesh)
         return;
 
@@ -457,10 +535,10 @@ void ViewerApp::DrawEditGizmo()
     if (viewportClickMode != ViewportClickMode::EditMesh)
         return;
 
-    if (pickedMeshIndex < 0 || pickedMeshIndex >= static_cast<int>(meshInstances.size()))
+    if (CurrentPickedMeshIndex() < 0 || CurrentPickedMeshIndex() >= static_cast<int>(CurrentMeshes().size()))
         return;
 
-    const auto& instance = meshInstances[pickedMeshIndex];
+    const auto& instance = CurrentMeshes()[CurrentPickedMeshIndex()];
     glm::vec3 origin = instance.position;
     float camDist = glm::length(camera->pos - origin);
     float axisLength = 4.0f + camDist * 0.05f;
@@ -664,15 +742,15 @@ bool ViewerApp::LoadMeshFromPathWithOptions(const std::string& path, bool center
     MeshInstance instance;
     instance.name = std::filesystem::path(path).stem().string();
     instance.sourcePath = path;
-    instance.id = nextMeshId++;
+    instance.id = CurrentNextMeshId()++;
     instance.mesh = std::move(newMesh);
-    meshInstances.push_back(std::move(instance));
-    pickedTri = -1;
-    pickedMeshIndex = -1;
+    CurrentMeshes().push_back(std::move(instance));
+    CurrentPickedTri() = -1;
+    CurrentPickedMeshIndex() = -1;
 
     printf("OBJ carregado: %zu verts, %zu indices\n",
-           meshInstances.back().mesh->renderVertices.size(),
-           meshInstances.back().mesh->indices.size());
+           CurrentMeshes().back().mesh->renderVertices.size(),
+           CurrentMeshes().back().mesh->indices.size());
 
     HandleAutoBuild(NavmeshAutoBuildFlag::OnAdd);
 
@@ -735,7 +813,8 @@ void ViewerApp::HandleAutoBuild(NavmeshAutoBuildFlag flag)
 
 bool ViewerApp::IsMeshAlreadyLoaded(const std::filesystem::path& path) const
 {
-    for (const auto& instance : meshInstances)
+    const auto& meshes = CurrentMeshes();
+    for (const auto& instance : meshes)
     {
         if (instance.sourcePath == path)
             return true;
@@ -746,47 +825,39 @@ bool ViewerApp::IsMeshAlreadyLoaded(const std::filesystem::path& path) const
 
 void ViewerApp::RemoveMesh(size_t index)
 {
-    if (index >= meshInstances.size())
+    auto& meshes = CurrentMeshes();
+    if (index >= meshes.size())
         return;
 
-    uint64_t removedId = meshInstances[index].id;
+    uint64_t removedId = meshes[index].id;
     DetachChildren(removedId);
-    meshStateCache.erase(removedId);
-    meshInstances.erase(meshInstances.begin() + index);
-    if (pickedMeshIndex == static_cast<int>(index))
+    CurrentMeshStateCache().erase(removedId);
+    meshes.erase(meshes.begin() + index);
+    if (CurrentPickedMeshIndex() == static_cast<int>(index))
     {
-        pickedMeshIndex = -1;
-        pickedTri = -1;
+        CurrentPickedMeshIndex() = -1;
+        CurrentPickedTri() = -1;
     }
-    else if (pickedMeshIndex > static_cast<int>(index))
+    else if (CurrentPickedMeshIndex() > static_cast<int>(index))
     {
-        pickedMeshIndex--;
+        CurrentPickedMeshIndex()--;
     }
 
     HandleAutoBuild(NavmeshAutoBuildFlag::OnRemove);
 
-    if (meshInstances.empty())
+    if (meshes.empty())
     {
-        navMeshTris.clear();
-        navMeshLines.clear();
-        m_navmeshLines.clear();
-        ResetPathState();
-        navQueryReady = false;
+        ClearNavmeshSlotData(currentGeometrySlot);
     }
 }
 
 void ViewerApp::ClearMeshes()
 {
-    if (meshInstances.empty())
+    auto& meshes = CurrentMeshes();
+    if (meshes.empty())
         return;
 
-    ClearNavmesh();
-
-    meshInstances.clear();
-    meshStateCache.clear();
-    pickedMeshIndex = -1;
-    pickedTri = -1;
-
+    ClearNavmeshSlotData(currentGeometrySlot);
     HandleAutoBuild(NavmeshAutoBuildFlag::OnRemove);
 }
 
@@ -825,21 +896,21 @@ void ViewerApp::ClearNavmesh()
 
     JoinNavmeshWorker();
 
-    if (navQuery)
+    if (CurrentNavQuery())
     {
-        dtFreeNavMeshQuery(navQuery);
-        navQuery = nullptr;
+        dtFreeNavMeshQuery(CurrentNavQuery());
+        CurrentNavQuery() = nullptr;
     }
 
-    navData = {};
-    navMeshTris.clear();
-    navMeshLines.clear();
-    m_navmeshLines.clear();
-    offmeshLinkLines.clear();
-    navQueryReady = false;
-    ResetPathState();
+    CurrentNavData() = {};
+    CurrentNavMeshTris().clear();
+    CurrentNavMeshLines().clear();
+    CurrentNavmeshLineBuffer().clear();
+    CurrentOffmeshLinkLines().clear();
+    CurrentNavQueryReady() = false;
+    ResetPathState(currentNavmeshSlot);
 
-    printf("[ViewerApp] Navmesh limpo.\n");
+    printf("[ViewerApp] Navmesh do slot %d limpo.\n", currentNavmeshSlot);
 }
 
 void ViewerApp::ProcessNavmeshJob()
@@ -858,23 +929,34 @@ void ViewerApp::ProcessNavmeshJob()
 
     if (result && result->success)
     {
-        navData = std::move(result->navData);
-        navMeshTris = std::move(result->tris);
-        navMeshLines = std::move(result->lines);
-        RebuildDebugLineBuffer();
-        navQueryReady = false;
-
-        const bool queryOk = InitNavQueryForCurrentNavmesh();
-        if (queryOk && hasPathStart && hasPathTarget)
+        if (!IsValidSlot(result->slotIndex))
         {
-            TryRunPathfind();
+            printf("[ViewerApp] Navmesh worker retornou slot inválido %d.\n", result->slotIndex);
         }
-        else if (!queryOk)
+        else
         {
-            ResetPathState();
-        }
+            const int previousSlot = currentNavmeshSlot;
+            currentNavmeshSlot = result->slotIndex;
+            CurrentNavData() = std::move(result->navData);
+            CurrentNavMeshTris() = std::move(result->tris);
+            CurrentNavMeshLines() = std::move(result->lines);
+            RebuildDebugLineBuffer(result->slotIndex);
+            CurrentNavQueryReady() = false;
 
-        printf("[ViewerApp] Navmesh worker aplicado na thread principal.\n");
+            const bool queryOk = InitNavQueryForCurrentNavmesh();
+            if (queryOk && CurrentHasPathStart() && CurrentHasPathTarget())
+            {
+                TryRunPathfind();
+            }
+            else if (!queryOk)
+            {
+                ResetPathState();
+            }
+
+            currentNavmeshSlot = previousSlot;
+
+            printf("[ViewerApp] Navmesh worker aplicado na thread principal.\n");
+        }
     }
     else if (result)
     {
@@ -884,8 +966,10 @@ void ViewerApp::ProcessNavmeshJob()
     if (navmeshJobQueued)
     {
         bool buildTilesNow = navmeshJobQueuedBuildTilesNow;
+        int queuedSlot = navmeshJobQueuedSlot >= 0 ? navmeshJobQueuedSlot : currentNavmeshSlot;
         navmeshJobQueued = false;
-        buildNavmeshFromMeshes(buildTilesNow);
+        navmeshJobQueuedSlot = -1;
+        buildNavmeshFromMeshes(buildTilesNow, queuedSlot);
     }
 }
 
@@ -954,12 +1038,12 @@ void ViewerApp::RenderFrame()
 
         if (ImGui::BeginMenu("Navmesh"))
         {
-            bool hasMesh = !meshInstances.empty();
-            bool hasNavmesh = navData.IsLoaded();
+            bool hasMesh = !CurrentMeshes().empty();
+            bool hasNavmesh = CurrentNavData().IsLoaded();
             ImGui::BeginDisabled(!hasMesh || navmeshBusy);
             if (ImGui::MenuItem("Build Navmesh"))
             {
-                buildNavmeshFromMeshes();
+                buildNavmeshFromMeshes(true, currentNavmeshSlot);
             }
             ImGui::EndDisabled();
 
@@ -1017,6 +1101,21 @@ void ViewerApp::RenderFrame()
             ImGui::EndMenu();
         }
 
+        if (ImGui::BeginMenu("Slot"))
+        {
+            for (int slot = 0; slot < kMaxNavmeshSlots; ++slot)
+            {
+                char label[8];
+                snprintf(label, sizeof(label), "%d", slot);
+                const bool selected = currentNavmeshSlot == slot;
+                if (ImGui::MenuItem(label, nullptr, selected))
+                {
+                    SwitchNavmeshSlot(slot);
+                }
+            }
+            ImGui::EndMenu();
+        }
+
         if (ImGui::BeginMenu("Ajuda"))
         {
             ImGui::MenuItem("Debug/Diagnóstico", nullptr, &showDebugInfo);
@@ -1025,6 +1124,12 @@ void ViewerApp::RenderFrame()
         }
         ImGui::EndMainMenuBar();
     }
+
+    const bool hasNavmeshLoaded = CurrentNavData().IsLoaded();
+    auto& navmeshTris = CurrentNavMeshTris();
+    auto& navmeshLineBuffer = CurrentNavmeshLineBuffer();
+    auto& offmeshLines = CurrentOffmeshLinkLines();
+    auto& pathLines = CurrentPathLines();
 
     // --- OBJ Browser ---
     if (showMeshBrowserWindow)
@@ -1193,15 +1298,15 @@ void ViewerApp::RenderFrame()
                         activeGizmoAxis = GizmoAxis::None;
                         if (previousMode == ViewportClickMode::EditMesh)
                         {
-                            pickedMeshIndex = -1;
-                            pickedTri = -1;
+                            CurrentPickedMeshIndex() = -1;
+                            CurrentPickedTri() = -1;
                         }
                     }
 
                     if (previousMode == ViewportClickMode::AddOffmeshLink && viewportClickMode != ViewportClickMode::AddOffmeshLink)
                     {
-                        hasOffmeshStart = false;
-                        hasOffmeshTarget = false;
+                        CurrentHasOffmeshStart() = false;
+                        CurrentHasOffmeshTarget() = false;
                     }
 
                     if (viewportClickMode == ViewportClickMode::EditMesh)
@@ -1242,24 +1347,24 @@ void ViewerApp::RenderFrame()
                     }
 
                     ImGui::Text("Modo ativo: %s", activeMode);
-                    ImGui::Text("Start: %s | Target: %s", hasPathStart ? "definido" : "pendente", hasPathTarget ? "definido" : "pendente");
+                    ImGui::Text("Start: %s | Target: %s", CurrentHasPathStart() ? "definido" : "pendente", CurrentHasPathTarget() ? "definido" : "pendente");
                     ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::AddOffmeshLink);
                     ImGui::Checkbox("BiDir", &offmeshBidirectional);
-                    ImGui::Text("Offmesh Start: %s | Offmesh Target: %s", hasOffmeshStart ? "definido" : "pendente", hasOffmeshTarget ? "definido" : "pendente");
+                    ImGui::Text("Offmesh Start: %s | Offmesh Target: %s", CurrentHasOffmeshStart() ? "definido" : "pendente", CurrentHasOffmeshTarget() ? "definido" : "pendente");
                     ImGui::EndDisabled();
 
-                    ImGui::BeginDisabled(navData.GetOffmeshLinks().empty());
+                    ImGui::BeginDisabled(CurrentNavData().GetOffmeshLinks().empty());
                     if (ImGui::Button("Limpar Offmesh Links"))
                     {
-                        navData.ClearOffmeshLinks();
+                        CurrentNavData().ClearOffmeshLinks();
                         RebuildOffmeshLinkLines();
-                        hasOffmeshStart = false;
-                        hasOffmeshTarget = false;
+                        CurrentHasOffmeshStart() = false;
+                        CurrentHasOffmeshTarget() = false;
                         printf("[ViewerApp] Offmesh links limpos.\n");
 
-                        if (navData.IsLoaded())
+                        if (CurrentNavData().IsLoaded())
                         {
-                            buildNavmeshFromMeshes();
+                            buildNavmeshFromMeshes(true, currentNavmeshSlot);
                         }
                     }
                     ImGui::EndDisabled();
@@ -1277,15 +1382,15 @@ void ViewerApp::RenderFrame()
                     if (ImGui::Checkbox("Update Tiles", &updateTiles))
                     {
                         navmeshUpdateTiles = updateTiles;
-                        meshStateCache.clear();
+                        CurrentMeshStateCache().clear();
                         if (navmeshUpdateTiles)
                         {
-                            for (const auto& instance : meshInstances)
+                            for (const auto& instance : CurrentMeshes())
                             {
                                 MeshBoundsState state = ComputeMeshBounds(instance);
                                 if (state.valid)
                                 {
-                                    meshStateCache[instance.id] = state;
+                                    CurrentMeshStateCache()[instance.id] = state;
                                 }
                             }
                         }
@@ -1320,9 +1425,24 @@ void ViewerApp::RenderFrame()
 
                 if (ImGui::CollapsingHeader("Meshes", ImGuiTreeNodeFlags_DefaultOpen))
                 {
+                    if (ImGui::BeginCombo("Geometria do Slot", std::to_string(currentGeometrySlot).c_str()))
+                    {
+                        for (int slot = 0; slot < kMaxNavmeshSlots; ++slot)
+                        {
+                            bool selected = currentGeometrySlot == slot;
+                            char label[16];
+                            snprintf(label, sizeof(label), "%d", slot);
+                            if (ImGui::Selectable(label, selected))
+                            {
+                                currentGeometrySlot = slot;
+                            }
+                        }
+                        ImGui::EndCombo();
+                    }
+
                     ImGui::BeginDisabled(navmeshBusy);
                     ImGui::InputTextWithHint("##meshFilter", "Filtrar por nome", meshFilter, IM_ARRAYSIZE(meshFilter));
-                    ImGui::BeginDisabled(meshInstances.empty());
+                    ImGui::BeginDisabled(CurrentMeshes().empty());
                     if (ImGui::Button("Limpar Meshes"))
                     {
                         ClearMeshes();
@@ -1335,9 +1455,9 @@ void ViewerApp::RenderFrame()
                         ImGui::TableSetupColumn("Ações", ImGuiTableColumnFlags_WidthFixed, 180.0f);
                         ImGui::TableHeadersRow();
 
-                        for (size_t i = 0; i < meshInstances.size(); )
+                        for (size_t i = 0; i < CurrentMeshes().size(); )
                         {
-                            auto& instance = meshInstances[i];
+                            auto& instance = CurrentMeshes()[i];
                             std::string lowerName = instance.name;
                             std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), [](unsigned char c){ return (char)std::tolower(c); });
                             std::string lowerFilter = meshFilter;
@@ -1355,12 +1475,12 @@ void ViewerApp::RenderFrame()
                             ImGui::TableNextRow();
 
                             ImGui::TableNextColumn();
-                            bool isSelected = allowMeshSelection && static_cast<int>(i) == pickedMeshIndex;
+                            bool isSelected = allowMeshSelection && static_cast<int>(i) == CurrentPickedMeshIndex();
                             ImGui::BeginDisabled(!allowMeshSelection);
                             if (ImGui::Selectable(instance.name.c_str(), isSelected))
                             {
-                                pickedMeshIndex = static_cast<int>(i);
-                                pickedTri = -1;
+                                CurrentPickedMeshIndex() = static_cast<int>(i);
+                                CurrentPickedTri() = -1;
                             }
                             ImGui::EndDisabled();
 
@@ -1404,12 +1524,12 @@ void ViewerApp::RenderFrame()
                                     SetMeshParent(i, 0);
                                 }
 
-                                for (size_t parentIdx = 0; parentIdx < meshInstances.size(); ++parentIdx)
+                                for (size_t parentIdx = 0; parentIdx < CurrentMeshes().size(); ++parentIdx)
                                 {
                                     if (parentIdx == i)
                                         continue;
 
-                                    const auto& candidate = meshInstances[parentIdx];
+                                    const auto& candidate = CurrentMeshes()[parentIdx];
                                     if (WouldCreateCycle(instance.id, candidate.id))
                                         continue;
 
@@ -1427,8 +1547,8 @@ void ViewerApp::RenderFrame()
                             ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::EditMesh);
                             if (ImGui::Button("Selecionar"))
                             {
-                                pickedMeshIndex = static_cast<int>(i);
-                                pickedTri = -1;
+                                CurrentPickedMeshIndex() = static_cast<int>(i);
+                                CurrentPickedTri() = -1;
                             }
                             ImGui::EndDisabled();
                             ImGui::SameLine();
@@ -1450,7 +1570,7 @@ void ViewerApp::RenderFrame()
                             {
                                 uint64_t rootId = instance.id;
                                 RemoveMeshSubtree(rootId);
-                                if (meshInstances.size() <= i)
+                                if (CurrentMeshes().size() <= i)
                                     break;
                                 continue;
                             }
@@ -1458,7 +1578,7 @@ void ViewerApp::RenderFrame()
                             if (removeSingle)
                             {
                                 RemoveMesh(i);
-                                if (meshInstances.size() <= i)
+                                if (CurrentMeshes().size() <= i)
                                     break;
                                 continue;
                             }
@@ -1468,7 +1588,7 @@ void ViewerApp::RenderFrame()
                         ImGui::EndTable();
                     }
 
-                    if (meshInstances.empty())
+                    if (CurrentMeshes().empty())
                     {
                         ImGui::TextDisabled("Nenhuma mesh carregada.");
                     }
@@ -1520,9 +1640,9 @@ void ViewerApp::RenderFrame()
 
                 if (ImGui::CollapsingHeader("Navmesh", ImGuiTreeNodeFlags_DefaultOpen))
                 {
-                    bool hasMesh = !meshInstances.empty();
-                    bool hasNavmesh = navData.IsLoaded();
-                    ImGui::Text("Meshes carregadas: %zu", meshInstances.size());
+                    bool hasMesh = !CurrentMeshes().empty();
+                    bool hasNavmesh = hasNavmeshLoaded;
+                    ImGui::Text("Meshes carregadas: %zu", CurrentMeshes().size());
 
                     if (navmeshBusy)
                     {
@@ -1536,7 +1656,7 @@ void ViewerApp::RenderFrame()
                     ImGui::BeginDisabled(!hasMesh || navmeshBusy);
                     if (ImGui::Button("Build Navmesh"))
                     {
-                        buildNavmeshFromMeshes();
+                        buildNavmeshFromMeshes(true, currentNavmeshSlot);
                     }
                     ImGui::EndDisabled();
 
@@ -1609,9 +1729,9 @@ void ViewerApp::RenderFrame()
                     ImGui::EndDisabled();
 
                     ImGui::Separator();
-                    ImGui::Text("Tris: %zu", navMeshTris.size() / 3);
-                    ImGui::Text("Linhas: %zu", m_navmeshLines.size());
-                    ImGui::Text("Offmesh Links: %zu", navData.GetOffmeshLinks().size());
+                    ImGui::Text("Tris: %zu", navmeshTris.size() / 3);
+                    ImGui::Text("Linhas: %zu", navmeshLineBuffer.size());
+                    ImGui::Text("Offmesh Links: %zu", CurrentNavData().GetOffmeshLinks().size());
                 }
 
                 ImGui::EndTabItem();
@@ -1620,12 +1740,12 @@ void ViewerApp::RenderFrame()
             if (showDebugInfo && ImGui::BeginTabItem("Diagnóstico"))
             {
                 const MeshInstance* infoInstance = nullptr;
-                if (!meshInstances.empty())
+                if (!CurrentMeshes().empty())
                 {
-                    if (pickedMeshIndex >= 0 && pickedMeshIndex < static_cast<int>(meshInstances.size()))
-                        infoInstance = &meshInstances[pickedMeshIndex];
+                    if (CurrentPickedMeshIndex() >= 0 && CurrentPickedMeshIndex() < static_cast<int>(CurrentMeshes().size()))
+                        infoInstance = &CurrentMeshes()[CurrentPickedMeshIndex()];
                     else
-                        infoInstance = &meshInstances.front();
+                        infoInstance = &CurrentMeshes().front();
                 }
 
                 if (ImGui::CollapsingHeader("Mesh Info", ImGuiTreeNodeFlags_DefaultOpen))
@@ -1680,7 +1800,7 @@ void ViewerApp::RenderFrame()
                 {
                     ImGui::Text("Camera: %.2f %.2f %.2f",
                         camera->pos.x, camera->pos.y, camera->pos.z);
-                    ImGui::Text("Meshes carregadas: %zu", meshInstances.size());
+                    ImGui::Text("Meshes carregadas: %zu", CurrentMeshes().size());
                 }
 
                 ImGui::EndTabItem();
@@ -1704,14 +1824,14 @@ void ViewerApp::RenderFrame()
     glm::vec3 defaultBaseColor = renderMode == RenderMode::Lit ?
         glm::vec3(0.8f, 0.8f, 0.9f) : glm::vec3(0.72f, 0.76f, 0.82f);
 
-    for (size_t meshIdx = 0; meshIdx < meshInstances.size(); ++meshIdx)
+    for (size_t meshIdx = 0; meshIdx < CurrentMeshes().size(); ++meshIdx)
     {
-        const auto& instance = meshInstances[meshIdx];
+        const auto& instance = CurrentMeshes()[meshIdx];
         if (!instance.mesh)
             continue;
 
         bool isSelected = viewportClickMode == ViewportClickMode::EditMesh &&
-            static_cast<int>(meshIdx) == pickedMeshIndex;
+            static_cast<int>(meshIdx) == CurrentPickedMeshIndex();
 
         glm::mat4 model = GetModelMatrix(instance);
 
@@ -1725,17 +1845,17 @@ void ViewerApp::RenderFrame()
 
         instance.mesh->Draw();
 
-        if (pickedTri >= 0 && pickedMeshIndex == static_cast<int>(meshIdx))
+        if (CurrentPickedTri() >= 0 && CurrentPickedMeshIndex() == static_cast<int>(meshIdx))
         {
-            if (pickedTri + 2 >= (int)instance.mesh->indices.size())
+            if (CurrentPickedTri() + 2 >= (int)instance.mesh->indices.size())
             {
-                pickedTri = -1;
+                CurrentPickedTri() = -1;
             }
             else
             {
-                int i0 = instance.mesh->indices[pickedTri+0];
-                int i1 = instance.mesh->indices[pickedTri+1];
-                int i2 = instance.mesh->indices[pickedTri+2];
+                int i0 = instance.mesh->indices[CurrentPickedTri()+0];
+                int i1 = instance.mesh->indices[CurrentPickedTri()+1];
+                int i2 = instance.mesh->indices[CurrentPickedTri()+2];
 
                 glm::vec3 v0 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i0], 1.0f));
                 glm::vec3 v1 = glm::vec3(model * glm::vec4(instance.mesh->renderVertices[i1], 1.0f));
@@ -1748,28 +1868,28 @@ void ViewerApp::RenderFrame()
 
     bool drawFaces = navmeshVisible && navmeshShowFaces &&
         navmeshRenderMode != NavmeshRenderMode::LinesOnly &&
-        !navMeshTris.empty();
+        !navmeshTris.empty();
     bool drawLines = navmeshVisible && navmeshShowLines &&
         navmeshRenderMode != NavmeshRenderMode::FacesOnly &&
-        !m_navmeshLines.empty();
+        !navmeshLineBuffer.empty();
     bool drawPath = !pathLines.empty();
-    bool drawOffmeshLinks = !offmeshLinkLines.empty() &&
+    bool drawOffmeshLinks = !offmeshLines.empty() &&
         (navmeshVisible || viewportClickMode == ViewportClickMode::AddOffmeshLink);
 
     if (drawFaces)
     {
         float clampedAlpha = std::clamp(navmeshFaceAlpha, 0.0f, 1.0f);
-        renderer->drawNavmeshTriangles(navMeshTris, glm::vec3(0.5f, 0.7f, 1.0f), clampedAlpha);
+        renderer->drawNavmeshTriangles(navmeshTris, glm::vec3(0.5f, 0.7f, 1.0f), clampedAlpha);
     }
 
     if (drawLines)
     {
-        renderer->drawNavmeshLines(m_navmeshLines);
+        renderer->drawNavmeshLines(navmeshLineBuffer);
     }
 
     if (drawOffmeshLinks)
     {
-        renderer->drawNavmeshLines(offmeshLinkLines, glm::vec3(0.6f, 0.0f, 0.8f), 2.0f);
+        renderer->drawNavmeshLines(offmeshLines, glm::vec3(0.6f, 0.0f, 0.8f), 2.0f);
     }
 
     if (drawPath)
