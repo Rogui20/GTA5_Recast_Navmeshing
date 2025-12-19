@@ -1050,7 +1050,17 @@ void ViewerApp::ProcessMemoryGeometryRequests()
         if (!slot.update)
             continue;
 
-        std::string hashStr(slot.modelHash, std::strnlen(slot.modelHash, MemoryHandler::kModelHashStringSize));
+        auto safeStrnlen = [](const char* str, size_t maxLen)
+        {
+            size_t len = 0;
+            while (len < maxLen && str[len] != '\0')
+            {
+                ++len;
+            }
+            return len;
+        };
+
+        std::string hashStr(slot.modelHash, safeStrnlen(slot.modelHash, MemoryHandler::kModelHashStringSize));
         if (hashStr.empty())
             continue;
 
