@@ -1078,19 +1078,19 @@ void ViewerApp::ProcessMemoryGeometryRequests()
             targetInstance = FindMeshById(meshId);
         }
 
-        if (!targetInstance)
-        {
-            for (size_t meshIdx = 0; meshIdx < CurrentMeshes().size(); ++meshIdx)
-            {
-                if (CurrentMeshes()[meshIdx].sourcePath == objPath)
-                {
-                    targetInstance = &CurrentMeshes()[meshIdx];
-                    memorySlotToMeshId[i] = targetInstance->id;
-                    meshId = targetInstance->id;
-                    break;
-                }
-            }
-        }
+        //if (!targetInstance)
+        //{
+        //    for (size_t meshIdx = 0; meshIdx < CurrentMeshes().size(); ++meshIdx)
+        //    {
+        //        if (CurrentMeshes()[meshIdx].sourcePath == objPath)
+        //        {
+        //            targetInstance = &CurrentMeshes()[meshIdx];
+        //            memorySlotToMeshId[i] = targetInstance->id;
+        //            meshId = targetInstance->id;
+        //            break;
+        //        }
+        //    }
+        //}
 
         if (!targetInstance)
         {
@@ -1107,8 +1107,11 @@ void ViewerApp::ProcessMemoryGeometryRequests()
         if (targetIndex < 0 || !targetInstance)
             continue;
 
-        glm::vec3 newPos = FromGtaCoords(glm::vec3(slot.position.x, slot.position.y, slot.position.z));
-        glm::vec3 newRot = FromGtaRotation(glm::vec3(slot.rotation.x, slot.rotation.y, slot.rotation.z));
+        //glm::vec3 newPos = FromGtaCoords(glm::vec3(slot.position.x, slot.position.y, slot.position.z));
+        //glm::vec3 newRot = FromGtaRotation(glm::vec3(slot.rotation.x, slot.rotation.y, slot.rotation.z));
+
+        glm::vec3 newPos = glm::vec3(slot.position.x, slot.position.y, slot.position.z);
+        glm::vec3 newRot = glm::vec3(slot.rotation.x, slot.rotation.y, slot.rotation.z);
 
         bool posChanged = targetInstance->position != newPos;
         bool rotChanged = targetInstance->rotation != newRot;
@@ -1154,8 +1157,10 @@ void ViewerApp::ProcessMemoryRouteRequests()
             continue;
 
         MemoryHandler::RouteRequestSlot writable = slot;
-        glm::vec3 startInternal = FromGtaCoords(glm::vec3(slot.start.x, slot.start.y, slot.start.z));
-        glm::vec3 targetInternal = FromGtaCoords(glm::vec3(slot.target.x, slot.target.y, slot.target.z));
+        //glm::vec3 startInternal = FromGtaCoords(glm::vec3(slot.start.x, slot.start.y, slot.start.z));
+        //glm::vec3 targetInternal = FromGtaCoords(glm::vec3(slot.target.x, slot.target.y, slot.target.z));
+        glm::vec3 startInternal = glm::vec3(slot.start.x, slot.start.y, slot.start.z);
+        glm::vec3 targetInternal = glm::vec3(slot.target.x, slot.target.y, slot.target.z);
         const float extents[3]  = { navGenSettings.agentRadius * 4.0f + 0.1f, navGenSettings.agentHeight * 0.5f + 0.1f, navGenSettings.agentRadius * 4.0f + 0.1f };
 
         // Immediately reset request and payload to keep protocol functional.
@@ -1244,6 +1249,7 @@ void ViewerApp::ProcessMemoryRouteRequests()
         memoryHandler.WriteRouteResultPoints(i, gtaPoints);
 
         writable.state = 2; // finished
+        writable.pointsCount = straightCount; 
         memoryHandler.WriteRouteRequestSlot(i, writable);
     }
 }
@@ -2133,13 +2139,7 @@ void ViewerApp::RenderFrame()
                             camera->pos = renderCenter + glm::vec3(0,50,150);
 
                         if (ImGui::Button("Teleport Camera to Selected Mesh"))
-                        {
-                            const auto& instance = CurrentMeshes()[CurrentPickedMeshIndex()];
-                            if (instance.mesh)
-                            {
-                                camera->pos = glm::vec3(instance.position.x,instance.position.y,instance.position.z);
-                            }
-                        }
+                            camera->pos = glm::vec3(infoInstance->position.x,infoInstance->position.y,infoInstance->position.z);
                     }
                     else
                     {
