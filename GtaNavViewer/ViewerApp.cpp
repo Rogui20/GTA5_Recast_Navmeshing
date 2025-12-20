@@ -664,7 +664,6 @@ void ViewerApp::Shutdown()
     SDL_GL_DeleteContext(glContext);
     SDL_DestroyWindow(window);
     SDL_Quit();
-    memoryHandler.ReleaseResources(false);
 
     delete camera;
     delete renderer;
@@ -1078,20 +1077,6 @@ void ViewerApp::ProcessMemoryGeometryRequests()
             targetInstance = FindMeshById(meshId);
         }
 
-        //if (!targetInstance)
-        //{
-        //    for (size_t meshIdx = 0; meshIdx < CurrentMeshes().size(); ++meshIdx)
-        //    {
-        //        if (CurrentMeshes()[meshIdx].sourcePath == objPath)
-        //        {
-        //            targetInstance = &CurrentMeshes()[meshIdx];
-        //            memorySlotToMeshId[i] = targetInstance->id;
-        //            meshId = targetInstance->id;
-        //            break;
-        //        }
-        //    }
-        //}
-
         if (!targetInstance)
         {
 
@@ -1106,9 +1091,6 @@ void ViewerApp::ProcessMemoryGeometryRequests()
         int targetIndex = FindMeshIndexById(meshId);
         if (targetIndex < 0 || !targetInstance)
             continue;
-
-        //glm::vec3 newPos = FromGtaCoords(glm::vec3(slot.position.x, slot.position.y, slot.position.z));
-        //glm::vec3 newRot = FromGtaRotation(glm::vec3(slot.rotation.x, slot.rotation.y, slot.rotation.z));
 
         glm::vec3 newPos = glm::vec3(slot.position.x, slot.position.y, slot.position.z);
         glm::vec3 newRot = glm::vec3(slot.rotation.x, slot.rotation.y, slot.rotation.z);
@@ -1157,8 +1139,6 @@ void ViewerApp::ProcessMemoryRouteRequests()
             continue;
 
         MemoryHandler::RouteRequestSlot writable = slot;
-        //glm::vec3 startInternal = FromGtaCoords(glm::vec3(slot.start.x, slot.start.y, slot.start.z));
-        //glm::vec3 targetInternal = FromGtaCoords(glm::vec3(slot.target.x, slot.target.y, slot.target.z));
         glm::vec3 startInternal = glm::vec3(slot.start.x, slot.start.y, slot.start.z);
         glm::vec3 targetInternal = glm::vec3(slot.target.x, slot.target.y, slot.target.z);
         const float extents[3]  = { navGenSettings.agentRadius * 4.0f + 0.1f, navGenSettings.agentHeight * 0.5f + 0.1f, navGenSettings.agentRadius * 4.0f + 0.1f };
