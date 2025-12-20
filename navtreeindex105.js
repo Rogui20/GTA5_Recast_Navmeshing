@@ -1,5 +1,6 @@
 var NAVTREEINDEX105 =
 {
+"structSDL__HapticConstant.html#ab1f7f0df856f4cf1fdf937cb886226b4":[44,0,393,7],
 "structSDL__HapticConstant.html#aeb994c356b1d236b060f277d157e98ec":[44,0,393,8],
 "structSDL__HapticCustom.html":[44,0,394],
 "structSDL__HapticCustom.html#a018b35d89398c26e10d1fb4315d1dda1":[44,0,394,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__SensorEvent.html#ab08c166baa755f66b13df0d66ed6d29b":[44,0,425,0],
 "structSDL__SensorEvent.html#abbe1f3b481092e73a4df4e9e9be4ad0a":[44,0,425,2],
 "structSDL__Surface.html":[44,0,426],
-"structSDL__Surface.html#a03d10628a359c0674f5ceffd574f1641":[44,0,426,9],
-"structSDL__Surface.html#a0a90721f947c10c3b79e02ccb419ca62":[44,0,426,2]
+"structSDL__Surface.html#a03d10628a359c0674f5ceffd574f1641":[44,0,426,9]
 };
