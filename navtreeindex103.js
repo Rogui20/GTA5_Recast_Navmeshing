@@ -1,6 +1,5 @@
 var NAVTREEINDEX103 =
 {
-"structImTriangulator.html#adf26cdf6f488de52f187d383cfbe87ec":[44,0,294,6],
 "structImTriangulatorNode.html":[44,0,295],
 "structImTriangulatorNode.html#a1d8eacc98ab67c7077b4c050d4dd7144":[44,0,295,2],
 "structImTriangulatorNode.html#a21904babeb1d2b0d89ffacd601f17cd6":[44,0,295,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX103 =
 "structRay.html#a666e66ac32a5462ae95161a361e91951":[44,0,326,0],
 "structRay.html#af86f612d19416f116ad658c8f1a11e43":[44,0,326,1],
 "structRenderResources.html":[44,0,360],
-"structRenderResources.html#a022d689ce72006f56225836c1d56931b":[44,0,360,2]
+"structRenderResources.html#a022d689ce72006f56225836c1d56931b":[44,0,360,2],
+"structRenderResources.html#a4d79ab9a299fa9cf584e9741d810ea1e":[44,0,360,3]
 };

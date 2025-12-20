@@ -1,6 +1,5 @@
 var NAVTREEINDEX89 =
 {
-"imstb__truetype_8h.html#a344fc3b0ff7829d993ca8db3eadd321f":[45,0,7,0,11,72],
 "imstb__truetype_8h.html#a37d613643adacbed24c22718faf6afc7":[45,0,7,0,11,22],
 "imstb__truetype_8h.html#a3856cc4fbab4c126c2c438c6f567525d":[45,0,7,0,11,12],
 "imstb__truetype_8h.html#a404d8b8c23a01c8cdf71f02d6d47d185":[45,0,7,0,11,43],
@@ -249,5 +248,6 @@ var NAVTREEINDEX89 =
 "md_external_2SDL2_2docs_2README-macos.html#you-have-a-cocoa-app":[21,4,1],
 "md_external_2SDL2_2docs_2README-n3ds.html":[22],
 "md_external_2SDL2_2docs_2README-n3ds.html#building":[22,0],
-"md_external_2SDL2_2docs_2README-n3ds.html#notes-1":[22,1]
+"md_external_2SDL2_2docs_2README-n3ds.html#notes-1":[22,1],
+"md_external_2SDL2_2docs_2README-versions.html":[34]
 };

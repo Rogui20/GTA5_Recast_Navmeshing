@@ -2,7 +2,7 @@ var searchData=
 [
   ['c_0',['c',['../structSDLTest__RandomContext.html#a17a6a7e7b68a33c67d9b74c8c7c33198',1,'SDLTest_RandomContext']]],
   ['cacheparams_1',['cacheParams',['../structTileCacheSetHeader.html#abc363573908ea46bed77e3b0f94e0325',1,'TileCacheSetHeader']]],
-  ['callback_2',['callback',['../structImGuiContextHook.html#ac95bc416ed24b5ad3cfa7c2199adcaf9',1,'ImGuiContextHook::Callback'],['../structSDL__AudioSpec.html#a1f8d05139f1679dcf359f49251233eac',1,'SDL_AudioSpec::callback']]],
+  ['callback_2',['callback',['../structSDL__AudioSpec.html#a1f8d05139f1679dcf359f49251233eac',1,'SDL_AudioSpec::callback'],['../structImGuiContextHook.html#ac95bc416ed24b5ad3cfa7c2199adcaf9',1,'ImGuiContextHook::Callback']]],
   ['callbackschainforallwindows_3',['CallbacksChainForAllWindows',['../structImGui__ImplGlfw__Data.html#a2a8575611eb554c3acb0e8c8228cdc44',1,'ImGui_ImplGlfw_Data']]],
   ['callbacktextbackup_4',['CallbackTextBackup',['../structImGuiInputTextState.html#a3a61e87aee08d440eae6ebacadfc019b',1,'ImGuiInputTextState']]],
   ['cannotskipitemsqueue_5',['CannotSkipItemsQueue',['../structImGuiTableColumn.html#abaa9d8ca04ae6e3fa8ee18724ef134ee',1,'ImGuiTableColumn']]],
