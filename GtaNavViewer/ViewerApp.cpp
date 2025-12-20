@@ -27,6 +27,7 @@
 #include <algorithm>
 #include <cctype>
 #include <cstring>
+#include <unordered_map>
 #include <unordered_set>
 #include <array>
 #include <cmath>
@@ -159,27 +160,111 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow, int slotIndex)
         return false;
     }
 
+    const bool useBoundingBox = boundingBoxVisible;
+    const glm::vec3 bboxMin = glm::min(boundingBoxMin, boundingBoxMax);
+    const glm::vec3 bboxMax = glm::max(boundingBoxMin, boundingBoxMax);
+
+    auto triOverlapsBBox = [&](const glm::vec3& triMin, const glm::vec3& triMax)
+    {
+        if (!useBoundingBox)
+            return true;
+        if (triMin.x > bboxMax.x || triMax.x < bboxMin.x) return false;
+        if (triMin.y > bboxMax.y || triMax.y < bboxMin.y) return false;
+        if (triMin.z > bboxMax.z || triMax.z < bboxMin.z) return false;
+        return true;
+    };
+
     std::vector<glm::vec3> combinedVerts;
     std::vector<unsigned int> combinedIdx;
-    unsigned int baseIndex = 0;
+    combinedVerts.reserve(CurrentMeshes().size() * 128);
+    combinedIdx.reserve(CurrentMeshes().size() * 256);
 
-    for (const auto& instance : CurrentMeshes())
+    if (!useBoundingBox)
     {
-        if (!instance.mesh)
-            continue;
-
-        glm::mat4 model = GetModelMatrix(instance);
-        for (const auto& v : instance.mesh->renderVertices)
+        unsigned int baseIndex = 0;
+        for (const auto& instance : CurrentMeshes())
         {
-            combinedVerts.push_back(glm::vec3(model * glm::vec4(v, 1.0f)));
-        }
+            if (!instance.mesh)
+                continue;
 
-        for (auto idx : instance.mesh->indices)
+            glm::mat4 model = GetModelMatrix(instance);
+            for (const auto& v : instance.mesh->renderVertices)
+            {
+                combinedVerts.push_back(glm::vec3(model * glm::vec4(v, 1.0f)));
+            }
+
+            for (auto idx : instance.mesh->indices)
+            {
+                combinedIdx.push_back(baseIndex + idx);
+            }
+
+            baseIndex += static_cast<unsigned int>(instance.mesh->renderVertices.size());
+        }
+    }
+    else
+    {
+        for (const auto& instance : CurrentMeshes())
         {
-            combinedIdx.push_back(baseIndex + idx);
-        }
+            if (!instance.mesh)
+                continue;
 
-        baseIndex += static_cast<unsigned int>(instance.mesh->renderVertices.size());
+            glm::mat4 model = GetModelMatrix(instance);
+            std::vector<glm::vec3> transformedVerts;
+            transformedVerts.reserve(instance.mesh->renderVertices.size());
+            for (const auto& v : instance.mesh->renderVertices)
+            {
+                transformedVerts.push_back(glm::vec3(model * glm::vec4(v, 1.0f)));
+            }
+
+            std::unordered_map<int, unsigned int> remap;
+            remap.reserve(instance.mesh->renderVertices.size());
+
+            auto mapVertex = [&](int localIdx) -> unsigned int
+            {
+                auto it = remap.find(localIdx);
+                if (it != remap.end())
+                    return it->second;
+                combinedVerts.push_back(transformedVerts[static_cast<size_t>(localIdx)]);
+                unsigned int newIdx = static_cast<unsigned int>(combinedVerts.size() - 1);
+                remap[localIdx] = newIdx;
+                return newIdx;
+            };
+
+            for (size_t i = 0; i + 2 < instance.mesh->indices.size(); i += 3)
+            {
+                int i0 = instance.mesh->indices[i + 0];
+                int i1 = instance.mesh->indices[i + 1];
+                int i2 = instance.mesh->indices[i + 2];
+
+                const glm::vec3& v0 = transformedVerts[static_cast<size_t>(i0)];
+                const glm::vec3& v1 = transformedVerts[static_cast<size_t>(i1)];
+                const glm::vec3& v2 = transformedVerts[static_cast<size_t>(i2)];
+
+                glm::vec3 triMin = glm::min(glm::min(v0, v1), v2);
+                glm::vec3 triMax = glm::max(glm::max(v0, v1), v2);
+                if (!triOverlapsBBox(triMin, triMax))
+                    continue;
+
+                unsigned int ni0 = mapVertex(i0);
+                unsigned int ni1 = mapVertex(i1);
+                unsigned int ni2 = mapVertex(i2);
+
+                combinedIdx.push_back(ni0);
+                combinedIdx.push_back(ni1);
+                combinedIdx.push_back(ni2);
+            }
+        }
+    }
+
+    if (combinedVerts.empty() || combinedIdx.empty())
+    {
+        printf("[ViewerApp] buildNavmeshFromMeshes: sem geometria após aplicar bounding box.\n");
+        navMeshTrisSlots[targetSlot].clear();
+        navMeshLinesSlots[targetSlot].clear();
+        navmeshLineBufferSlots[targetSlot].clear();
+        ResetPathState(targetSlot);
+        navQueryReadySlots[targetSlot] = false;
+        return false;
     }
 
     editDragActive = false;
@@ -708,25 +793,26 @@ void ViewerApp::RebuildBoundingBoxDebug()
 }
 
 bool ViewerApp::BeginBoundingBoxDrag(const Ray& ray)
-{
-    if (!boundingBoxVisible)
-        return false;
-
-    glm::vec3 center = (boundingBoxMin + boundingBoxMax) * 0.5f;
-    glm::vec3 extents = (boundingBoxMax - boundingBoxMin) * 0.5f;
-    const float minExtent = std::max(0.1f, glm::compMax(extents));
-
-    struct Candidate
     {
-        float distance = std::numeric_limits<float>::max();
-        GizmoAxis axis = GizmoAxis::None;
+        if (!boundingBoxVisible)
+            return false;
+
+        glm::vec3 center = (boundingBoxMin + boundingBoxMax) * 0.5f;
+        glm::vec3 extents = (boundingBoxMax - boundingBoxMin) * 0.5f;
+        const float minExtent = std::max(0.1f, glm::compMax(extents));
+        const float handleLength = std::max(0.5f, minExtent * 0.5f);
+
+        struct Candidate
+        {
+            float distance = std::numeric_limits<float>::max();
+            GizmoAxis axis = GizmoAxis::None;
         int sign = 1;
         float axisParam = 0.0f;
     } best;
 
     auto testAxis = [&](GizmoAxis axis, int sign, const glm::vec3& dir, float extent)
     {
-        glm::vec3 origin = center;
+        glm::vec3 origin = center + dir * extent * static_cast<float>(sign);
         float axisParam = 0.0f;
         float rayParam = 0.0f;
 
@@ -745,13 +831,13 @@ bool ViewerApp::BeginBoundingBoxDrag(const Ray& ray)
         rayParam  = (a * e - b * d) / denom;
         if (rayParam < 0.0f)
             return;
-        if (axisParam < -extent || axisParam > extent)
+        if (axisParam < -handleLength || axisParam > handleLength)
             return;
 
         glm::vec3 pAxis = origin + dir * axisParam;
         glm::vec3 pRay  = ray.origin + ray.dir * rayParam;
         float dist = glm::length(pAxis - pRay);
-        float tolerance = 0.5f + minExtent * 0.1f;
+        float tolerance = std::max(0.5f, minExtent * 0.3f);
         if (dist > tolerance)
             return;
 
@@ -799,10 +885,12 @@ void ViewerApp::UpdateBoundingBoxDrag(int mouseX, int mouseY)
 
     glm::vec3 center = (boundingBoxStartMin + boundingBoxStartMax) * 0.5f;
     glm::vec3 dir = boundingBoxGizmoDir;
+    float extent = glm::compMax((boundingBoxStartMax - boundingBoxStartMin) * 0.5f);
+    glm::vec3 origin = center + dir * extent;
     float a = glm::dot(dir, dir);
     float b = glm::dot(dir, ray.dir);
     float c = glm::dot(ray.dir, ray.dir);
-    glm::vec3 w0 = center - ray.origin;
+    glm::vec3 w0 = origin - ray.origin;
     float d = glm::dot(dir, w0);
     float e = glm::dot(ray.dir, w0);
     float denom = a * c - b * b;
