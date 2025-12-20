@@ -79,7 +79,6 @@ public:
     bool WriteRouteRequestSlot(int index, const RouteRequestSlot& slot) const;
     bool WriteRouteResultPoints(int routeIndex, const std::vector<Vector3>& points) const;
     bool HasValidRouteBuffers() const;
-    void ReleaseResources(bool resetStatus);
 
 private:
     bool EnsureAttached();
@@ -95,6 +94,7 @@ private:
     void ClearMappings();
     bool ReadRemote(void* dest, uintptr_t address, size_t size) const;
     bool WriteRemote(uintptr_t address, const void* data, size_t size) const;
+    void ReleaseResources(bool resetStatus);
 
     bool monitoringRequested = false;
     bool monitoringActive = false;
