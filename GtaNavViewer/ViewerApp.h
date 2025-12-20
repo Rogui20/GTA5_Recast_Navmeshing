@@ -148,7 +148,9 @@ private:
         Pathfind_MinEdge = 4,
         EditMesh = 5,
         AddOffmeshLink = 6,
-        RemoveOffmeshLink = 7
+        RemoveOffmeshLink = 7,
+        SetBoundingBox = 8,
+        EditBoundingBoxSize = 9
     };
 
     enum class MeshEditMode
@@ -188,6 +190,30 @@ private:
     glm::vec3 meshStartPosition{};
     glm::vec3 rotationStartVec{};
     glm::vec3 rotationStartAngles{};
+
+    // Bounding box editing
+    bool boundingBoxVisible = false;
+    bool boundingBoxAwaitingSecondClick = false;
+    glm::vec3 boundingBoxP0{};
+    glm::vec3 boundingBoxP1{};
+    glm::vec3 boundingBoxMin{};
+    glm::vec3 boundingBoxMax{};
+    float boundingBoxAlpha = 0.2f;
+    std::vector<DebugLine> boundingBoxLines;
+    std::vector<glm::vec3> boundingBoxFill;
+    bool boundingBoxDragActive = false;
+    GizmoAxis boundingBoxActiveAxis = GizmoAxis::None;
+    glm::vec3 boundingBoxGizmoDir{1.0f, 0.0f, 0.0f};
+    glm::vec3 boundingBoxStartMin{};
+    glm::vec3 boundingBoxStartMax{};
+    float boundingBoxStartParam = 0.0f;
+    int boundingBoxDragSign = 1;
+
+    void ClearBoundingBox();
+    void RebuildBoundingBoxDebug();
+    void DrawBoundingBoxGizmo();
+    bool BeginBoundingBoxDrag(const Ray& ray);
+    void UpdateBoundingBoxDrag(int mouseX, int mouseY);
 
 private:
     bool InitSDL();

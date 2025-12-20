@@ -99,6 +99,19 @@ void ViewerApp::ProcessEvents()
                 continue;
             }
 
+            if (viewportClickMode == ViewportClickMode::EditBoundingBoxSize)
+            {
+                if (!boundingBoxVisible)
+                    continue;
+
+                int screenW = 1600;
+                int screenH = 900;
+                SDL_GetWindowSize(window, &screenW, &screenH);
+                Ray ray = camera->GetRayFromScreen(mx, my, screenW, screenH);
+                if (BeginBoundingBoxDrag(ray))
+                    continue;
+            }
+
             glm::vec3 hitPoint(0.0f);
             bool hasHit = ComputeRayMeshHit(mx, my, hitPoint,
                                             viewportClickMode == ViewportClickMode::PickTriangle ? &CurrentPickedTri() : nullptr,
@@ -192,6 +205,28 @@ void ViewerApp::ProcessEvents()
                 }
                 break;
             }
+            case ViewportClickMode::SetBoundingBox:
+            {
+                if (!boundingBoxAwaitingSecondClick)
+                {
+                    boundingBoxP0 = hitPoint;
+                    boundingBoxAwaitingSecondClick = true;
+                    boundingBoxVisible = true;
+                    boundingBoxP1 = hitPoint;
+                    RebuildBoundingBoxDebug();
+                    printf("[ViewerApp] Bounding Box primeiro ponto: (%.2f, %.2f, %.2f)\n", hitPoint.x, hitPoint.y, hitPoint.z);
+                }
+                else
+                {
+                    boundingBoxP1 = hitPoint;
+                    boundingBoxAwaitingSecondClick = false;
+                    RebuildBoundingBoxDebug();
+                    printf("[ViewerApp] Bounding Box segundo ponto: (%.2f, %.2f, %.2f)\n", hitPoint.x, hitPoint.y, hitPoint.z);
+                }
+                break;
+            }
+            case ViewportClickMode::EditBoundingBoxSize:
+                break;
             }
         }
 
@@ -200,6 +235,8 @@ void ViewerApp::ProcessEvents()
             leftMouseDown = false;
             editDragActive = false;
             activeGizmoAxis = GizmoAxis::None;
+            boundingBoxDragActive = false;
+            boundingBoxActiveAxis = GizmoAxis::None;
         }
 
 
