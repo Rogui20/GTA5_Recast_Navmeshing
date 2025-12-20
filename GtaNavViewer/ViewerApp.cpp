@@ -18,6 +18,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtx/component_wise.hpp>
+#include <limits>
 #include <glm/geometric.hpp>
 #include <filesystem>
 #include <fstream>
@@ -634,6 +636,243 @@ void ViewerApp::DrawEditGizmo()
         drawCircle(GizmoAxis::X, up, fwd, glm::vec3(1,0,0));
         drawCircle(GizmoAxis::Y, right, fwd, glm::vec3(0,1,0));
         drawCircle(GizmoAxis::Z, glm::vec3(1,0,0), glm::vec3(0,0,1), glm::vec3(0,0,1));
+    }
+}
+
+void ViewerApp::ClearBoundingBox()
+{
+    boundingBoxVisible = false;
+    boundingBoxAwaitingSecondClick = false;
+    boundingBoxLines.clear();
+    boundingBoxFill.clear();
+    boundingBoxActiveAxis = GizmoAxis::None;
+    boundingBoxDragActive = false;
+}
+
+void ViewerApp::RebuildBoundingBoxDebug()
+{
+    if (!boundingBoxVisible)
+        return;
+
+    boundingBoxMin = glm::min(boundingBoxP0, boundingBoxP1);
+    boundingBoxMax = glm::max(boundingBoxP0, boundingBoxP1);
+
+    const float eps = 0.01f;
+    if (glm::all(glm::lessThan(glm::abs(boundingBoxMax - boundingBoxMin), glm::vec3(eps))))
+    {
+        boundingBoxMax = boundingBoxMin + glm::vec3(eps);
+    }
+
+    boundingBoxLines.clear();
+    boundingBoxFill.clear();
+
+    glm::vec3 corners[8] = {
+        {boundingBoxMin.x, boundingBoxMin.y, boundingBoxMin.z},
+        {boundingBoxMax.x, boundingBoxMin.y, boundingBoxMin.z},
+        {boundingBoxMax.x, boundingBoxMax.y, boundingBoxMin.z},
+        {boundingBoxMin.x, boundingBoxMax.y, boundingBoxMin.z},
+        {boundingBoxMin.x, boundingBoxMin.y, boundingBoxMax.z},
+        {boundingBoxMax.x, boundingBoxMin.y, boundingBoxMax.z},
+        {boundingBoxMax.x, boundingBoxMax.y, boundingBoxMax.z},
+        {boundingBoxMin.x, boundingBoxMax.y, boundingBoxMax.z}
+    };
+
+    auto addLine = [&](int a, int b)
+    {
+        boundingBoxLines.push_back({corners[a].x, corners[a].y, corners[a].z,
+                                    corners[b].x, corners[b].y, corners[b].z});
+    };
+
+    addLine(0,1); addLine(1,2); addLine(2,3); addLine(3,0);
+    addLine(4,5); addLine(5,6); addLine(6,7); addLine(7,4);
+    addLine(0,4); addLine(1,5); addLine(2,6); addLine(3,7);
+
+    auto addFace = [&](int a, int b, int c, int d)
+    {
+        boundingBoxFill.push_back(corners[a]);
+        boundingBoxFill.push_back(corners[b]);
+        boundingBoxFill.push_back(corners[c]);
+
+        boundingBoxFill.push_back(corners[a]);
+        boundingBoxFill.push_back(corners[c]);
+        boundingBoxFill.push_back(corners[d]);
+    };
+
+    addFace(0,1,2,3); // bottom
+    addFace(4,5,6,7); // top
+    addFace(0,1,5,4); // front
+    addFace(1,2,6,5); // right
+    addFace(2,3,7,6); // back
+    addFace(3,0,4,7); // left
+}
+
+bool ViewerApp::BeginBoundingBoxDrag(const Ray& ray)
+{
+    if (!boundingBoxVisible)
+        return false;
+
+    glm::vec3 center = (boundingBoxMin + boundingBoxMax) * 0.5f;
+    glm::vec3 extents = (boundingBoxMax - boundingBoxMin) * 0.5f;
+    const float minExtent = std::max(0.1f, glm::compMax(extents));
+
+    struct Candidate
+    {
+        float distance = std::numeric_limits<float>::max();
+        GizmoAxis axis = GizmoAxis::None;
+        int sign = 1;
+        float axisParam = 0.0f;
+    } best;
+
+    auto testAxis = [&](GizmoAxis axis, int sign, const glm::vec3& dir, float extent)
+    {
+        glm::vec3 origin = center;
+        float axisParam = 0.0f;
+        float rayParam = 0.0f;
+
+        const float EPS = 1e-5f;
+        float a = glm::dot(dir, dir);
+        float b = glm::dot(dir, ray.dir);
+        float c = glm::dot(ray.dir, ray.dir);
+        glm::vec3 w0 = origin - ray.origin;
+        float d = glm::dot(dir, w0);
+        float e = glm::dot(ray.dir, w0);
+        float denom = a * c - b * b;
+        if (std::fabs(denom) < EPS)
+            return;
+
+        axisParam = (b * e - c * d) / denom;
+        rayParam  = (a * e - b * d) / denom;
+        if (rayParam < 0.0f)
+            return;
+        if (axisParam < -extent || axisParam > extent)
+            return;
+
+        glm::vec3 pAxis = origin + dir * axisParam;
+        glm::vec3 pRay  = ray.origin + ray.dir * rayParam;
+        float dist = glm::length(pAxis - pRay);
+        float tolerance = 0.5f + minExtent * 0.1f;
+        if (dist > tolerance)
+            return;
+
+        if (dist < best.distance)
+        {
+            best.distance = dist;
+            best.axis = axis;
+            best.sign = sign;
+            best.axisParam = axisParam;
+        }
+    };
+
+    testAxis(GizmoAxis::X, +1, glm::vec3(1,0,0), extents.x);
+    testAxis(GizmoAxis::X, -1, glm::vec3(-1,0,0), extents.x);
+    testAxis(GizmoAxis::Y, +1, glm::vec3(0,1,0), extents.y);
+    testAxis(GizmoAxis::Y, -1, glm::vec3(0,-1,0), extents.y);
+    testAxis(GizmoAxis::Z, +1, glm::vec3(0,0,1), extents.z);
+    testAxis(GizmoAxis::Z, -1, glm::vec3(0,0,-1), extents.z);
+
+    if (best.axis == GizmoAxis::None)
+        return false;
+
+    boundingBoxActiveAxis = best.axis;
+    boundingBoxDragSign = best.sign;
+    boundingBoxGizmoDir = glm::normalize(glm::vec3(
+        best.axis == GizmoAxis::X ? 1.0f * best.sign : 0.0f,
+        best.axis == GizmoAxis::Y ? 1.0f * best.sign : 0.0f,
+        best.axis == GizmoAxis::Z ? 1.0f * best.sign : 0.0f));
+    boundingBoxStartMin = boundingBoxMin;
+    boundingBoxStartMax = boundingBoxMax;
+    boundingBoxStartParam = best.axisParam;
+    boundingBoxDragActive = true;
+    return true;
+}
+
+void ViewerApp::UpdateBoundingBoxDrag(int mouseX, int mouseY)
+{
+    if (!boundingBoxDragActive || boundingBoxActiveAxis == GizmoAxis::None)
+        return;
+
+    int screenW = 1600;
+    int screenH = 900;
+    SDL_GetWindowSize(window, &screenW, &screenH);
+    Ray ray = camera->GetRayFromScreen(mouseX, mouseY, screenW, screenH);
+
+    glm::vec3 center = (boundingBoxStartMin + boundingBoxStartMax) * 0.5f;
+    glm::vec3 dir = boundingBoxGizmoDir;
+    float a = glm::dot(dir, dir);
+    float b = glm::dot(dir, ray.dir);
+    float c = glm::dot(ray.dir, ray.dir);
+    glm::vec3 w0 = center - ray.origin;
+    float d = glm::dot(dir, w0);
+    float e = glm::dot(ray.dir, w0);
+    float denom = a * c - b * b;
+    if (std::fabs(denom) < 1e-6f)
+        return;
+
+    float axisParam = (b * e - c * d) / denom;
+    float rayParam  = (a * e - b * d) / denom;
+    if (rayParam < 0.0f)
+        return;
+
+    float delta = axisParam - boundingBoxStartParam;
+    glm::vec3 offset = dir * delta;
+
+    boundingBoxMin = boundingBoxStartMin;
+    boundingBoxMax = boundingBoxStartMax;
+    if (boundingBoxDragSign > 0)
+        boundingBoxMax += offset;
+    else
+        boundingBoxMin += offset;
+
+    boundingBoxP0 = boundingBoxMin;
+    boundingBoxP1 = boundingBoxMax;
+    RebuildBoundingBoxDebug();
+}
+
+void ViewerApp::DrawBoundingBoxGizmo()
+{
+    if (!boundingBoxVisible)
+        return;
+
+    glm::vec3 center = (boundingBoxMin + boundingBoxMax) * 0.5f;
+    glm::vec3 extents = (boundingBoxMax - boundingBoxMin) * 0.5f;
+    std::vector<DebugLine> gizmoLines;
+    gizmoLines.reserve(6);
+
+    auto addHandle = [&](GizmoAxis axis, const glm::vec3& dir, float extent)
+    {
+        glm::vec3 endPos = center + dir * extent;
+        gizmoLines.push_back({center.x, center.y, center.z,
+                              endPos.x, endPos.y, endPos.z});
+    };
+
+    addHandle(GizmoAxis::X, glm::vec3(1,0,0), extents.x);
+    addHandle(GizmoAxis::X, glm::vec3(-1,0,0), extents.x);
+    addHandle(GizmoAxis::Y, glm::vec3(0,1,0), extents.y);
+    addHandle(GizmoAxis::Y, glm::vec3(0,-1,0), extents.y);
+    addHandle(GizmoAxis::Z, glm::vec3(0,0,1), extents.z);
+    addHandle(GizmoAxis::Z, glm::vec3(0,0,-1), extents.z);
+
+    auto colorFor = [&](const glm::vec3& base, GizmoAxis axis, int sign)
+    {
+        if (boundingBoxActiveAxis == axis && boundingBoxDragSign == sign)
+            return base * 1.3f;
+        return base;
+    };
+
+    for (size_t i = 0; i < gizmoLines.size(); ++i)
+    {
+        GizmoAxis axis = GizmoAxis::X;
+        int sign = 1;
+        if (i == 0 || i == 1) { axis = GizmoAxis::X; sign = i == 0 ? 1 : -1; }
+        else if (i == 2 || i == 3) { axis = GizmoAxis::Y; sign = i == 2 ? 1 : -1; }
+        else { axis = GizmoAxis::Z; sign = i == 4 ? 1 : -1; }
+
+        glm::vec3 base = axis == GizmoAxis::X ? glm::vec3(1,0,0) :
+                         axis == GizmoAxis::Y ? glm::vec3(0,1,0) :
+                         glm::vec3(0,0,1);
+
+        glm::vec3 col = colorFor(base, axis, sign);
+        renderer->drawNavmeshLines({gizmoLines[i]}, col, 4.0f);
     }
 }
 
@@ -1266,10 +1505,22 @@ void ViewerApp::RenderFrame()
         SDL_GetMouseState(&mx, &my);
         UpdateEditDrag(mx, my);
     }
+    else if (viewportClickMode == ViewportClickMode::EditBoundingBoxSize && boundingBoxDragActive && leftMouseDown)
+    {
+        int mx = 0;
+        int my = 0;
+        SDL_GetMouseState(&mx, &my);
+        UpdateBoundingBoxDrag(mx, my);
+    }
     else if (!leftMouseDown && editDragActive)
     {
         editDragActive = false;
         activeGizmoAxis = GizmoAxis::None;
+    }
+    else if (!leftMouseDown && boundingBoxDragActive)
+    {
+        boundingBoxDragActive = false;
+        boundingBoxActiveAxis = GizmoAxis::None;
     }
 
     // --- Barra de menus principal ---
@@ -1570,6 +1821,8 @@ void ViewerApp::RenderFrame()
                     ImGui::RadioButton("Edit Mesh", &viewportModeValue, static_cast<int>(ViewportClickMode::EditMesh));
                     ImGui::RadioButton("Add Offmesh Link", &viewportModeValue, static_cast<int>(ViewportClickMode::AddOffmeshLink));
                     ImGui::RadioButton("Remove Offmesh Link", &viewportModeValue, static_cast<int>(ViewportClickMode::RemoveOffmeshLink));
+                    ImGui::RadioButton("Set Bounding Box", &viewportModeValue, static_cast<int>(ViewportClickMode::SetBoundingBox));
+                    ImGui::RadioButton("Edit Bounding Box Size", &viewportModeValue, static_cast<int>(ViewportClickMode::EditBoundingBoxSize));
 
                     viewportClickMode = static_cast<ViewportClickMode>(viewportModeValue);
                     ImGui::BeginDisabled(viewportClickMode != ViewportClickMode::Pathfind_MinEdge);
@@ -1580,6 +1833,8 @@ void ViewerApp::RenderFrame()
                     {
                         editDragActive = false;
                         activeGizmoAxis = GizmoAxis::None;
+                        boundingBoxDragActive = false;
+                        boundingBoxActiveAxis = GizmoAxis::None;
                         if (previousMode == ViewportClickMode::EditMesh)
                         {
                             CurrentPickedMeshIndex() = -1;
@@ -1628,6 +1883,8 @@ void ViewerApp::RenderFrame()
                     case ViewportClickMode::EditMesh: activeMode = "Edit Mesh"; break;
                     case ViewportClickMode::AddOffmeshLink: activeMode = "Add Offmesh Link"; break;
                     case ViewportClickMode::RemoveOffmeshLink: activeMode = "Remove Offmesh Link"; break;
+                    case ViewportClickMode::SetBoundingBox: activeMode = "Set Bounding Box"; break;
+                    case ViewportClickMode::EditBoundingBoxSize: activeMode = "Edit Bounding Box Size"; break;
                     }
 
                     ImGui::Text("Modo ativo: %s", activeMode);
@@ -1652,6 +1909,33 @@ void ViewerApp::RenderFrame()
                         }
                     }
                     ImGui::EndDisabled();
+
+                    if (ImGui::BeginTable("BBoxControls", 1, ImGuiTableFlags_SizingFixedFit))
+                    {
+                        ImGui::TableNextRow();
+                        ImGui::TableNextColumn();
+                        ImGui::SeparatorText("Bounding Box");
+                        ImGui::TextWrapped("Use \"Set Bounding Box\" para dois cliques no viewport.");
+                        if (ImGui::Button("Remover Bounding Box"))
+                        {
+                            ClearBoundingBox();
+                        }
+                        ImGui::SliderFloat("Bounding Box Alpha", &boundingBoxAlpha, 0.0f, 1.0f, "%.2f");
+                        ImGui::BeginDisabled(!boundingBoxVisible);
+                        float p0[3] = { boundingBoxMin.x, boundingBoxMin.y, boundingBoxMin.z };
+                        float p1[3] = { boundingBoxMax.x, boundingBoxMax.y, boundingBoxMax.z };
+                        if (ImGui::InputFloat3("Bounding Box Min", p0) |
+                            ImGui::InputFloat3("Bounding Box Max", p1))
+                        {
+                            boundingBoxMin = glm::vec3(p0[0], p0[1], p0[2]);
+                            boundingBoxMax = glm::vec3(p1[0], p1[1], p1[2]);
+                            boundingBoxP0 = boundingBoxMin;
+                            boundingBoxP1 = boundingBoxMax;
+                            RebuildBoundingBoxDebug();
+                        }
+                        ImGui::EndDisabled();
+                        ImGui::EndTable();
+                    }
                 }
 
                 if (ImGui::CollapsingHeader("GTA Handler", ImGuiTreeNodeFlags_DefaultOpen))
@@ -2239,6 +2523,18 @@ void ViewerApp::RenderFrame()
         renderer->drawNavmeshLines(offmeshLines, glm::vec3(0.6f, 0.0f, 0.8f), 2.0f);
     }
 
+    if (boundingBoxVisible)
+    {
+        if (!boundingBoxFill.empty())
+        {
+            renderer->drawNavmeshTriangles(boundingBoxFill, glm::vec3(1.0f, 0.0f, 0.0f), std::clamp(boundingBoxAlpha, 0.0f, 1.0f));
+        }
+        if (!boundingBoxLines.empty())
+        {
+            renderer->drawNavmeshLines(boundingBoxLines, glm::vec3(1.0f, 0.0f, 0.0f), 3.0f);
+        }
+    }
+
     if (drawPath)
     {
         renderer->drawNavmeshLines(pathLines, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -2251,6 +2547,8 @@ void ViewerApp::RenderFrame()
 
     renderer->Begin(camera, RenderMode::None); // vai setar modo=99
     DrawEditGizmo();
+    if (boundingBoxVisible)
+        DrawBoundingBoxGizmo();
     renderer->DrawGrid();
     renderer->DrawAxisGizmoScreen(camera, 1600, 900);
     renderer->End();
