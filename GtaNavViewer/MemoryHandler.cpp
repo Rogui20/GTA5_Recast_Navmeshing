@@ -29,6 +29,8 @@ MemoryHandler::MemoryHandler()
     static_assert(std::is_standard_layout<GeometrySlot>::value, "GeometrySlot precisa ser standard layout");
     static_assert(std::is_standard_layout<RouteRequestSlot>::value, "RouteRequestSlot precisa ser standard layout");
     static_assert(std::is_standard_layout<RouteResultPoint>::value, "RouteResultPoint precisa ser standard layout");
+    static_assert(std::is_standard_layout<OffmeshLinkSlot>::value, "OffmeshLinkSlot precisa ser standard layout");
+    static_assert(std::is_standard_layout<BoundingBoxSlot>::value, "BoundingBoxSlot precisa ser standard layout");
     layoutFilePath = ResolveLayoutFilePath();
     configFilePath = ResolveConfigFilePath();
     LoadSavedConfig();
@@ -139,6 +141,14 @@ void MemoryHandler::ReleaseResources(bool resetStatus)
         {
             VirtualFreeEx(handle, reinterpret_cast<void*>(routeResultBufferAddress), 0, MEM_RELEASE);
         }
+        if (offmeshLinkBufferAddress)
+        {
+            VirtualFreeEx(handle, reinterpret_cast<void*>(offmeshLinkBufferAddress), 0, MEM_RELEASE);
+        }
+        if (boundingBoxBufferAddress)
+        {
+            VirtualFreeEx(handle, reinterpret_cast<void*>(boundingBoxBufferAddress), 0, MEM_RELEASE);
+        }
         CloseHandle(handle);
     }
 #endif
@@ -149,6 +159,8 @@ void MemoryHandler::ReleaseResources(bool resetStatus)
     geometryBufferAddress = 0;
     routeRequestBufferAddress = 0;
     routeResultBufferAddress = 0;
+    offmeshLinkBufferAddress = 0;
+    boundingBoxBufferAddress = 0;
     monitoringActive = false;
     if (resetStatus)
     {
@@ -237,12 +249,16 @@ bool MemoryHandler::AllocateBuffers()
     const size_t geometryBytes = sizeof(GeometrySlot) * static_cast<size_t>(kGeometrySlotCount);
     const size_t requestBytes = sizeof(RouteRequestSlot) * static_cast<size_t>(kRouteRequestCount);
     const size_t resultBytes = sizeof(RouteResultPoint) * static_cast<size_t>(kRouteRequestCount) * static_cast<size_t>(kRouteResultPoints);
+    const size_t offmeshBytes = sizeof(OffmeshLinkSlot) * static_cast<size_t>(kOffmeshLinkCount);
+    const size_t bboxBytes = sizeof(BoundingBoxSlot) * static_cast<size_t>(kBoundingBoxSlotCount);
 
     geometryBufferAddress = reinterpret_cast<uintptr_t>(VirtualAllocEx(handle, nullptr, geometryBytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
     routeRequestBufferAddress = reinterpret_cast<uintptr_t>(VirtualAllocEx(handle, nullptr, requestBytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
     routeResultBufferAddress = reinterpret_cast<uintptr_t>(VirtualAllocEx(handle, nullptr, resultBytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
+    offmeshLinkBufferAddress = reinterpret_cast<uintptr_t>(VirtualAllocEx(handle, nullptr, offmeshBytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
+    boundingBoxBufferAddress = reinterpret_cast<uintptr_t>(VirtualAllocEx(handle, nullptr, bboxBytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
 
-    if (!geometryBufferAddress || !routeRequestBufferAddress || !routeResultBufferAddress)
+    if (!geometryBufferAddress || !routeRequestBufferAddress || !routeResultBufferAddress || !offmeshLinkBufferAddress || !boundingBoxBufferAddress)
     {
         statusMessage = "Falha ao alocar buffers no processo GTA.";
         return false;
@@ -250,7 +266,9 @@ bool MemoryHandler::AllocateBuffers()
 
     if (!ZeroRemoteBuffer(geometryBufferAddress, geometryBytes) ||
         !ZeroRemoteBuffer(routeRequestBufferAddress, requestBytes) ||
-        !ZeroRemoteBuffer(routeResultBufferAddress, resultBytes))
+        !ZeroRemoteBuffer(routeResultBufferAddress, resultBytes) ||
+        !ZeroRemoteBuffer(offmeshLinkBufferAddress, offmeshBytes) ||
+        !ZeroRemoteBuffer(boundingBoxBufferAddress, bboxBytes))
     {
         statusMessage = "Falha ao inicializar buffers remotos.";
         return false;
@@ -298,6 +316,7 @@ bool MemoryHandler::WriteLayoutFile() const
         {"offsets", {
             {"start", offsetof(RouteRequestSlot, start)},
             {"target", offsetof(RouteRequestSlot, target)},
+            {"navmeshSlot", offsetof(RouteRequestSlot, navmeshSlot)},
             {"flags", offsetof(RouteRequestSlot, flags)},
             {"minEdgeDistance", offsetof(RouteRequestSlot, minEdgeDistance)},
             {"state", offsetof(RouteRequestSlot, state)},
@@ -311,6 +330,31 @@ bool MemoryHandler::WriteLayoutFile() const
         {"pointsPerRoute", kRouteResultPoints},
         {"stride", sizeof(RouteResultPoint)},
         {"vectorStride", sizeof(Vector3)}
+    };
+
+    layout["offmeshLinks"] = {
+        {"address", AddressToHex(offmeshLinkBufferAddress)},
+        {"count", kOffmeshLinkCount},
+        {"stride", sizeof(OffmeshLinkSlot)},
+        {"offsets", {
+            {"start", offsetof(OffmeshLinkSlot, start)},
+            {"end", offsetof(OffmeshLinkSlot, end)},
+            {"biDir", offsetof(OffmeshLinkSlot, biDir)},
+            {"enabled", offsetof(OffmeshLinkSlot, enabled)},
+            {"update", offsetof(OffmeshLinkSlot, update)}
+        }}
+    };
+
+    layout["boundingBox"] = {
+        {"address", AddressToHex(boundingBoxBufferAddress)},
+        {"count", kBoundingBoxSlotCount},
+        {"stride", sizeof(BoundingBoxSlot)},
+        {"offsets", {
+            {"bmin", offsetof(BoundingBoxSlot, bmin)},
+            {"bmax", offsetof(BoundingBoxSlot, bmax)},
+            {"remove", offsetof(BoundingBoxSlot, remove)},
+            {"update", offsetof(BoundingBoxSlot, update)}
+        }}
     };
 
     std::ofstream file(layoutFilePath, std::ios::trunc);
@@ -530,6 +574,62 @@ bool MemoryHandler::WriteRouteResultPoints(int routeIndex, const std::vector<Vec
 bool MemoryHandler::HasValidRouteBuffers() const
 {
     return monitoringActive && routeRequestBufferAddress != 0 && routeResultBufferAddress != 0;
+}
+
+bool MemoryHandler::FetchOffmeshLinks(std::vector<OffmeshLinkSlot>& outSlots) const
+{
+#if defined(_WIN32)
+    if (!monitoringActive || offmeshLinkBufferAddress == 0)
+        return false;
+
+    outSlots.resize(static_cast<size_t>(kOffmeshLinkCount));
+    const size_t bytes = sizeof(OffmeshLinkSlot) * static_cast<size_t>(kOffmeshLinkCount);
+    return ReadRemote(outSlots.data(), offmeshLinkBufferAddress, bytes);
+#else
+    (void)outSlots;
+    return false;
+#endif
+}
+
+bool MemoryHandler::WriteOffmeshLinkSlot(int index, const OffmeshLinkSlot& slot) const
+{
+#if defined(_WIN32)
+    if (!monitoringActive || offmeshLinkBufferAddress == 0 || index < 0 || index >= kOffmeshLinkCount)
+        return false;
+
+    const uintptr_t address = offmeshLinkBufferAddress + static_cast<uintptr_t>(index) * sizeof(OffmeshLinkSlot);
+    return WriteRemote(address, &slot, sizeof(OffmeshLinkSlot));
+#else
+    (void)index;
+    (void)slot;
+    return false;
+#endif
+}
+
+bool MemoryHandler::FetchBoundingBox(BoundingBoxSlot& outSlot) const
+{
+#if defined(_WIN32)
+    if (!monitoringActive || boundingBoxBufferAddress == 0)
+        return false;
+
+    return ReadRemote(&outSlot, boundingBoxBufferAddress, sizeof(BoundingBoxSlot));
+#else
+    (void)outSlot;
+    return false;
+#endif
+}
+
+bool MemoryHandler::WriteBoundingBox(const BoundingBoxSlot& slot) const
+{
+#if defined(_WIN32)
+    if (!monitoringActive || boundingBoxBufferAddress == 0)
+        return false;
+
+    return WriteRemote(boundingBoxBufferAddress, &slot, sizeof(BoundingBoxSlot));
+#else
+    (void)slot;
+    return false;
+#endif
 }
 
 bool MemoryHandler::ZeroRemoteBuffer(uintptr_t address, size_t size) const
