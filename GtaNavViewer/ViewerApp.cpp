@@ -95,6 +95,7 @@ void ViewerApp::ClearNavmeshSlotData(int slotIndex)
     navMeshLinesSlots[slotIndex].clear();
     navmeshLineBufferSlots[slotIndex].clear();
     offmeshLinkLinesSlots[slotIndex].clear();
+    memoryOffmeshLinkSlots[slotIndex].clear();
     pathLinesSlots[slotIndex].clear();
     navQueryReadySlots[slotIndex] = false;
     hasPathStartSlots[slotIndex] = false;
@@ -378,6 +379,22 @@ void ViewerApp::RebuildOffmeshLinkLines(int slotIndex)
         dl.x1 = link.end.x;
         dl.y1 = link.end.y;
         dl.z1 = link.end.z;
+        offmeshLines.push_back(dl);
+    }
+
+    const auto& remoteSlots = memoryOffmeshLinkSlots[slot];
+    for (const auto& remote : remoteSlots)
+    {
+        if (!remote.enabled)
+            continue;
+
+        DebugLine dl{};
+        dl.x0 = remote.start.x;
+        dl.y0 = remote.start.y;
+        dl.z0 = remote.start.z;
+        dl.x1 = remote.end.x;
+        dl.y1 = remote.end.y;
+        dl.z1 = remote.end.z;
         offmeshLines.push_back(dl);
     }
 }

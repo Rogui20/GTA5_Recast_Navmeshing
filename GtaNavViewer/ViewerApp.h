@@ -97,6 +97,7 @@ private:
     std::array<std::vector<glm::vec3>, kMaxNavmeshSlots> navMeshLinesSlots{};
     std::array<std::vector<DebugLine>, kMaxNavmeshSlots> navmeshLineBufferSlots{};
     std::array<std::vector<DebugLine>, kMaxNavmeshSlots> offmeshLinkLinesSlots{};
+    std::array<std::vector<MemoryHandler::OffmeshLinkSlot>, kMaxNavmeshSlots> memoryOffmeshLinkSlots{};
     std::array<std::vector<DebugLine>, kMaxNavmeshSlots> pathLinesSlots{};
     std::array<dtNavMeshQuery*, kMaxNavmeshSlots> navQuerySlots{};
     std::array<bool, kMaxNavmeshSlots> navQueryReadySlots{};
