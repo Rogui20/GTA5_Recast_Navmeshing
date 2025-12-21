@@ -420,6 +420,7 @@ var hierarchy =
     [ "NavMeshTileBuildContext", "structNavMeshTileBuildContext.html", null ],
     [ "NavMeshTileHeader", "structNavMeshTileHeader.html", null ],
     [ "ObjLoader", "classObjLoader.html", null ],
+    [ "MemoryHandler::OffmeshControlSlot", "structMemoryHandler_1_1OffmeshControlSlot.html", null ],
     [ "OffmeshLink", "structOffmeshLink.html", null ],
     [ "MemoryHandler::OffmeshLinkSlot", "structMemoryHandler_1_1OffmeshLinkSlot.html", null ],
     [ "PropInstance", "structPropInstance.html", null ],

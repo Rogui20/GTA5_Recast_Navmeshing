@@ -98,7 +98,7 @@ var searchData=
   ['hoveritemunlockedstationaryid_95',['HoverItemUnlockedStationaryId',['../structImGuiContext.html#a47e8a4a544d940b22238aaf45a79072b',1,'ImGuiContext']]],
   ['hoverstationarydelay_96',['HoverStationaryDelay',['../structImGuiStyle.html#acc9238d7c4075d17f609ce6330a5cbe6',1,'ImGuiStyle']]],
   ['hoverwindowunlockedstationaryid_97',['HoverWindowUnlockedStationaryId',['../structImGuiContext.html#a955abe10fd2747c00a2b0de10529ce4d',1,'ImGuiContext']]],
-  ['hwnd_98',['hwnd',['../structImGui__ImplWin32__Data.html#a73c8b66f6315225a32f5143165d61df4',1,'ImGui_ImplWin32_Data::hWnd'],['../structImGui__ImplWin32__ViewportData.html#a9aee71e39e654a81a6bfa395570a26e2',1,'ImGui_ImplWin32_ViewportData::Hwnd']]],
+  ['hwnd_98',['hwnd',['../structImGui__ImplWin32__ViewportData.html#a9aee71e39e654a81a6bfa395570a26e2',1,'ImGui_ImplWin32_ViewportData::Hwnd'],['../structImGui__ImplWin32__Data.html#a73c8b66f6315225a32f5143165d61df4',1,'ImGui_ImplWin32_Data::hWnd']]],
   ['hwndowned_99',['HwndOwned',['../structImGui__ImplWin32__ViewportData.html#a95fd97a8c3df832fd0f207fb43be39b5',1,'ImGui_ImplWin32_ViewportData']]],
   ['hwndparent_100',['HwndParent',['../structImGui__ImplWin32__ViewportData.html#a8efd6bfe614c3593dbb832f4d4566a69',1,'ImGui_ImplWin32_ViewportData']]]
 ];

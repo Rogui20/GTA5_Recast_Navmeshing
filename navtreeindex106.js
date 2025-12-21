@@ -1,5 +1,10 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__RWops.html#ab89d27b4312c0b9d664c81bc92917fc8":[44,0,424,6],
+"structSDL__RWops.html#aca073130e2e262eb11e86e1be993e215":[44,0,424,7],
+"structSDL__RWops.html#acd9a3c6e840d285c1e30cadaf99097b2":[44,0,424,3],
+"structSDL__RWops.html#af3c7cb1f8890ce2ccf3ff29ad6341085":[44,0,424,20],
+"structSDL__RWops.html#af9b489d7342296ce197b911cfa93b2ab":[44,0,424,5],
 "structSDL__Rect.html":[44,0,422],
 "structSDL__Rect.html#a0a17d46b320af8063b746153348edd72":[44,0,422,0],
 "structSDL__Rect.html#a56b7be5738fb6fab86881534a814c45e":[44,0,422,1],
@@ -244,10 +249,5 @@ var NAVTREEINDEX106 =
 "structdtCompressedTile.html#a6bd5d2ea63921ee6fbacece1da31d656":[44,0,17,3],
 "structdtCompressedTile.html#a9df1de3328c707f4fb75d15522ec8ec3":[44,0,17,7],
 "structdtCrowdAgentAnimation.html":[44,0,20],
-"structdtCrowdAgentAnimation.html#a063331d0a657ca1e138dde68ad6375f4":[44,0,20,0],
-"structdtCrowdAgentAnimation.html#a607dc9fc1c1d88d93f5140217a298f45":[44,0,20,2],
-"structdtCrowdAgentAnimation.html#a6895f4df2e560189e66fac03ca02e2ba":[44,0,20,6],
-"structdtCrowdAgentAnimation.html#a738a08a7b93b678252680f453e4df851":[44,0,20,4],
-"structdtCrowdAgentAnimation.html#a84a98c95db9bc9db2f334311430669ac":[44,0,20,3],
-"structdtCrowdAgentAnimation.html#a96b279c54ccfe7d77cc576edbff7298e":[44,0,20,5]
+"structdtCrowdAgentAnimation.html#a063331d0a657ca1e138dde68ad6375f4":[44,0,20,0]
 };

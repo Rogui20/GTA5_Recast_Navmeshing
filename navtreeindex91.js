@@ -1,5 +1,8 @@
 var NAVTREEINDEX91 =
 {
+"structFastLZCompressor.html":[44,0,84],
+"structFastLZCompressor.html#a61828cd2e21041b21b8e545efbe1da57":[44,0,84,2],
+"structFastLZCompressor.html#a884d23606adb0674c0b0b124b4ffe28f":[44,0,84,0],
 "structFastLZCompressor.html#a8fb3236d4cb66a253fd98036536b51a4":[44,0,84,3],
 "structFastLZCompressor.html#ade3bcdfdf37fed48284a4a4d89e2d804":[44,0,84,1],
 "structFrameResources.html":[44,0,86],
@@ -246,8 +249,5 @@ var NAVTREEINDEX91 =
 "structImDrawListSplitter.html#ad3797b0755caa07f3d69a9e3566eb0e5":[44,0,107,5],
 "structImDrawListSplitter.html#ae3a1593ee05bc52e6284943eab3c97a2":[44,0,107,8],
 "structImDrawListSplitter.html#af3fc4bad2abca9e481d476d1877ba5be":[44,0,107,4],
-"structImDrawVert.html":[44,0,108],
-"structImDrawVert.html#ab98ba53ce2690b56f5ba94682ed83940":[44,0,108,0],
-"structImDrawVert.html#abdf3183529055a6c3f709b23a4bf06b1":[44,0,108,2],
-"structImDrawVert.html#aedc578bbf364ddea71be12b4f177a5b4":[44,0,108,1]
+"structImDrawVert.html":[44,0,108]
 };

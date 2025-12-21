@@ -1,5 +1,10 @@
 var NAVTREEINDEX105 =
 {
+"structSDL__GameControllerButtonBind.html#a9f1197eb0a12d824946d59ee6c4a2999":[44,0,390,5],
+"structSDL__GameControllerButtonBind.html#aa71f0e94721b28ee35aec0d1ac1c200e":[44,0,390,3],
+"structSDL__HapticCondition.html":[44,0,392],
+"structSDL__HapticCondition.html#a2adf52c32f60f0b6826b1e3add2eae7a":[44,0,392,6],
+"structSDL__HapticCondition.html#a3de7f164ef88841255535387d0f100b6":[44,0,392,9],
 "structSDL__HapticCondition.html#a728507d30d18998949313de3a25e5581":[44,0,392,4],
 "structSDL__HapticCondition.html#a7be55a9a86c05dd1a54a3006781cfa6f":[44,0,392,11],
 "structSDL__HapticCondition.html#a8a71ec28ff5ab85246cbc59736aa2c53":[44,0,392,1],
@@ -244,10 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__RWops.html#aa2f5b6d7a5009c7bb6ae6bb664261df0":[44,0,424,11],
 "structSDL__RWops.html#ab078bcf43a916d469ff550c60ab4b3f2":[44,0,424,16],
 "structSDL__RWops.html#ab1ee9d9e4f61b3b30f26160c282ae416":[44,0,424,13],
-"structSDL__RWops.html#ab303bcbb0f6742a141ba8b2998923f47":[44,0,424,0],
-"structSDL__RWops.html#ab89d27b4312c0b9d664c81bc92917fc8":[44,0,424,6],
-"structSDL__RWops.html#aca073130e2e262eb11e86e1be993e215":[44,0,424,7],
-"structSDL__RWops.html#acd9a3c6e840d285c1e30cadaf99097b2":[44,0,424,3],
-"structSDL__RWops.html#af3c7cb1f8890ce2ccf3ff29ad6341085":[44,0,424,20],
-"structSDL__RWops.html#af9b489d7342296ce197b911cfa93b2ab":[44,0,424,5]
+"structSDL__RWops.html#ab303bcbb0f6742a141ba8b2998923f47":[44,0,424,0]
 };
