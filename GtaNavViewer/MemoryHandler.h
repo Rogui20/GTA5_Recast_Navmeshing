@@ -32,6 +32,9 @@ public:
     static constexpr int kGeometrySlotCount = 400;
     static constexpr int kRouteRequestCount = 80;
     static constexpr int kRouteResultPoints = 255;
+    static constexpr int kOffmeshLinkCount = 255;
+    static constexpr int kOffmeshControlCount = 1;
+    static constexpr int kBoundingBoxSlotCount = 1;
     static constexpr size_t kModelHashStringSize = 64;
 
     struct Vector3
@@ -56,6 +59,7 @@ public:
     {
         Vector3 start{};
         Vector3 target{};
+        int32_t navmeshSlot = 0;
         uint32_t flags = 0;
         float minEdgeDistance = 0.0f;
         int32_t state = 0; // 0 ready, 1 busy, 2 finished
@@ -69,6 +73,30 @@ public:
         Vector3 point{};
     };
 
+    struct OffmeshLinkSlot
+    {
+        Vector3 start{};
+        Vector3 end{};
+        uint8_t biDir = 0;
+        uint8_t padding[3]{};
+    };
+
+    struct OffmeshControlSlot
+    {
+        uint8_t addAll = 0;
+        uint8_t removeAll = 0;
+        uint8_t padding[2]{};
+    };
+
+    struct BoundingBoxSlot
+    {
+        Vector3 bmin{};
+        Vector3 bmax{};
+        uint8_t remove = 0;
+        uint8_t update = 0;
+        uint8_t padding[2]{};
+    };
+
     bool FetchGeometrySlots(std::vector<GeometrySlot>& outSlots) const;
     bool WriteGeometrySlot(int index, const GeometrySlot& slot) const;
     bool ClearGeometrySlot(int index) const;
@@ -78,6 +106,12 @@ public:
     bool WriteRouteRequestSlot(int index, const RouteRequestSlot& slot) const;
     bool WriteRouteResultPoints(int routeIndex, const std::vector<Vector3>& points) const;
     bool HasValidRouteBuffers() const;
+    bool FetchOffmeshLinks(std::vector<OffmeshLinkSlot>& outSlots) const;
+    bool WriteOffmeshLinkSlot(int index, const OffmeshLinkSlot& slot) const;
+    bool FetchOffmeshControl(OffmeshControlSlot& outSlot) const;
+    bool WriteOffmeshControl(const OffmeshControlSlot& slot) const;
+    bool FetchBoundingBox(BoundingBoxSlot& outSlot) const;
+    bool WriteBoundingBox(const BoundingBoxSlot& slot) const;
 
 private:
     bool EnsureAttached();
@@ -109,4 +143,7 @@ private:
     std::filesystem::path objDirectory;
     std::string statusMessage;
     std::unordered_map<std::string, std::string> propHashToName;
+    uintptr_t offmeshLinkBufferAddress = 0;
+    uintptr_t offmeshControlBufferAddress = 0;
+    uintptr_t boundingBoxBufferAddress = 0;
 };

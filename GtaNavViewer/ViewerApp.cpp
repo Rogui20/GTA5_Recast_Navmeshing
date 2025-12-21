@@ -1454,11 +1454,29 @@ void ViewerApp::ProcessMemoryRouteRequests()
     if (!memoryHandler.FetchRouteRequests(requests))
         return;
 
-    const bool hasNavmesh = CurrentNavData().IsLoaded();
-    if (hasNavmesh && !CurrentNavQueryReady())
+    auto ensureNavQueryForSlot = [&](int slotIndex) -> dtNavMeshQuery*
     {
-        InitNavQueryForCurrentNavmesh();
-    }
+        if (!IsValidSlot(slotIndex) || !navmeshDataSlots[slotIndex].IsLoaded())
+            return nullptr;
+
+        if (!navQuerySlots[slotIndex])
+        {
+            navQuerySlots[slotIndex] = dtAllocNavMeshQuery();
+            if (!navQuerySlots[slotIndex])
+                return nullptr;
+        }
+
+        if (!navQueryReadySlots[slotIndex])
+        {
+            const dtStatus status = navQuerySlots[slotIndex]->init(navmeshDataSlots[slotIndex].GetNavMesh(), 2048);
+            if (dtStatusFailed(status))
+                return nullptr;
+
+            navQueryReadySlots[slotIndex] = true;
+        }
+
+        return navQuerySlots[slotIndex];
+    };
 
     for (int i = 0; i < static_cast<int>(requests.size()); ++i)
     {
@@ -1467,6 +1485,7 @@ void ViewerApp::ProcessMemoryRouteRequests()
             continue;
 
         MemoryHandler::RouteRequestSlot writable = slot;
+        const int navSlot = IsValidSlot(slot.navmeshSlot) ? slot.navmeshSlot : 0;
         glm::vec3 startInternal = glm::vec3(slot.start.x, slot.start.y, slot.start.z);
         glm::vec3 targetInternal = glm::vec3(slot.target.x, slot.target.y, slot.target.z);
         const float extents[3]  = { navGenSettings.agentRadius * 4.0f + 0.1f, navGenSettings.agentHeight * 0.5f + 0.1f, navGenSettings.agentRadius * 4.0f + 0.1f };
@@ -1486,7 +1505,8 @@ void ViewerApp::ProcessMemoryRouteRequests()
             memoryHandler.WriteRouteRequestSlot(i, writable);
         };
 
-        if (!hasNavmesh || !CurrentNavQuery())
+        dtNavMeshQuery* navQuery = ensureNavQueryForSlot(navSlot);
+        if (!navQuery)
         {
             finishWithEmpty(2);
             continue;
@@ -1499,13 +1519,13 @@ void ViewerApp::ProcessMemoryRouteRequests()
         const float startPos[3] = { startInternal.x, startInternal.y, startInternal.z };
         const float endPos[3]   = { targetInternal.x, targetInternal.y, targetInternal.z };
 
-        if (dtStatusFailed(CurrentNavQuery()->findNearestPoly(startPos, extents, &pathQueryFilter, &startRef, startNearest)) || startRef == 0)
+        if (dtStatusFailed(navQuery->findNearestPoly(startPos, extents, &pathQueryFilter, &startRef, startNearest)) || startRef == 0)
         {
             finishWithEmpty(2);
             continue;
         }
 
-        if (dtStatusFailed(CurrentNavQuery()->findNearestPoly(endPos, extents, &pathQueryFilter, &endRef, endNearest)) || endRef == 0)
+        if (dtStatusFailed(navQuery->findNearestPoly(endPos, extents, &pathQueryFilter, &endRef, endNearest)) || endRef == 0)
         {
             finishWithEmpty(2);
             continue;
@@ -1513,7 +1533,7 @@ void ViewerApp::ProcessMemoryRouteRequests()
 
         dtPolyRef polys[256];
         int polyCount = 0;
-        const dtStatus pathStatus = CurrentNavQuery()->findPath(startRef, endRef, startNearest, endNearest, &pathQueryFilter, polys, &polyCount, 256);
+        const dtStatus pathStatus = navQuery->findPath(startRef, endRef, startNearest, endNearest, &pathQueryFilter, polys, &polyCount, 256);
         if (dtStatusFailed(pathStatus) || polyCount == 0)
         {
             finishWithEmpty(2);
@@ -1528,11 +1548,11 @@ void ViewerApp::ProcessMemoryRouteRequests()
         dtStatus straightStatus = DT_FAILURE;
         if (slot.minEdgeDistance > 0.0f)
         {
-            straightStatus = CurrentNavQuery()->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, slot.flags, slot.minEdgeDistance);
+            straightStatus = navQuery->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, slot.flags, slot.minEdgeDistance);
         }
         else
         {
-            straightStatus = CurrentNavQuery()->findStraightPath(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, slot.flags);
+            straightStatus = navQuery->findStraightPath(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, slot.flags);
         }
 
         if (dtStatusFailed(straightStatus) || straightCount == 0)
@@ -1562,6 +1582,96 @@ void ViewerApp::ProcessMemoryRouteRequests()
     }
 }
 
+void ViewerApp::ProcessMemoryOffmeshLinks()
+{
+    if (!memoryHandler.IsMonitoringActive() || IsNavmeshJobRunning())
+        return;
+
+    MemoryHandler::OffmeshControlSlot control{};
+    if (!memoryHandler.FetchOffmeshControl(control))
+        return;
+
+    bool changed = false;
+
+    if (control.removeAll)
+    {
+        CurrentNavData().ClearOffmeshLinks();
+        RebuildOffmeshLinkLines();
+        control.removeAll = 0;
+        changed = true;
+    }
+
+    if (control.addAll)
+    {
+        std::vector<MemoryHandler::OffmeshLinkSlot> slots;
+        if (memoryHandler.FetchOffmeshLinks(slots))
+        {
+            std::vector<OffmeshLink> converted;
+            converted.reserve(slots.size());
+
+            for (const auto& slot : slots)
+            {
+                const bool hasStart = slot.start.x != 0.0f || slot.start.y != 0.0f || slot.start.z != 0.0f;
+                const bool hasEnd = slot.end.x != 0.0f || slot.end.y != 0.0f || slot.end.z != 0.0f;
+                if (!hasStart && !hasEnd)
+                    continue;
+
+                OffmeshLink link{};
+                link.start = glm::vec3(slot.start.x, slot.start.y, slot.start.z);
+                link.end = glm::vec3(slot.end.x, slot.end.y, slot.end.z);
+                link.radius = 1.0f;
+                link.bidirectional = slot.biDir != 0;
+                converted.push_back(link);
+            }
+
+            CurrentNavData().SetOffmeshLinks(std::move(converted));
+            RebuildOffmeshLinkLines();
+        }
+
+        control.addAll = 0;
+        changed = true;
+    }
+
+    if (changed)
+    {
+        memoryHandler.WriteOffmeshControl(control);
+    }
+}
+
+void ViewerApp::ProcessMemoryBoundingBox()
+{
+    if (!memoryHandler.IsMonitoringActive() || IsNavmeshJobRunning())
+        return;
+
+    MemoryHandler::BoundingBoxSlot slot{};
+    if (!memoryHandler.FetchBoundingBox(slot))
+        return;
+
+    bool changed = false;
+
+    if (slot.remove)
+    {
+        ClearBoundingBox();
+        slot.remove = 0;
+        changed = true;
+    }
+
+    if (slot.update)
+    {
+        boundingBoxVisible = true;
+        boundingBoxP0 = glm::vec3(slot.bmin.x, slot.bmin.y, slot.bmin.z);
+        boundingBoxP1 = glm::vec3(slot.bmax.x, slot.bmax.y, slot.bmax.z);
+        RebuildBoundingBoxDebug();
+        slot.update = 0;
+        changed = true;
+    }
+
+    if (changed)
+    {
+        memoryHandler.WriteBoundingBox(slot);
+    }
+}
+
 
 
 
@@ -1575,6 +1685,8 @@ void ViewerApp::RenderFrame()
     memoryHandler.Tick();
     ProcessMemoryGeometryRequests();
     ProcessMemoryRouteRequests();
+    ProcessMemoryOffmeshLinks();
+    ProcessMemoryBoundingBox();
 
     // --- Iniciar nova frame ImGui ---
     ImGui_ImplOpenGL3_NewFrame();
