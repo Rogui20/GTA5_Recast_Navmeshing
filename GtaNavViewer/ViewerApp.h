@@ -97,6 +97,7 @@ private:
     std::array<std::vector<glm::vec3>, kMaxNavmeshSlots> navMeshLinesSlots{};
     std::array<std::vector<DebugLine>, kMaxNavmeshSlots> navmeshLineBufferSlots{};
     std::array<std::vector<DebugLine>, kMaxNavmeshSlots> offmeshLinkLinesSlots{};
+    std::array<std::vector<MemoryHandler::OffmeshLinkSlot>, kMaxNavmeshSlots> memoryOffmeshLinkSlots{};
     std::array<std::vector<DebugLine>, kMaxNavmeshSlots> pathLinesSlots{};
     std::array<dtNavMeshQuery*, kMaxNavmeshSlots> navQuerySlots{};
     std::array<bool, kMaxNavmeshSlots> navQueryReadySlots{};
@@ -263,6 +264,8 @@ private:
     bool IsMeshAlreadyLoaded(const std::filesystem::path& path) const;
     void ProcessMemoryGeometryRequests();
     void ProcessMemoryRouteRequests();
+    void ProcessMemoryOffmeshLinks();
+    void ProcessMemoryBoundingBox();
     glm::vec3 FromGtaRotation(const glm::vec3& gtaRot) const;
     int FindMeshIndexById(uint64_t id) const;
 
