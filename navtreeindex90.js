@@ -1,5 +1,11 @@
 var NAVTREEINDEX90 =
 {
+"md_external_2SDL2_2docs_2README-macos.html#using-the-simple-directmedia-layer-with-xcode":[21,3],
+"md_external_2SDL2_2docs_2README-macos.html#working-directory":[21,4,0],
+"md_external_2SDL2_2docs_2README-macos.html#you-have-a-cocoa-app":[21,4,1],
+"md_external_2SDL2_2docs_2README-n3ds.html":[22],
+"md_external_2SDL2_2docs_2README-n3ds.html#building":[22,0],
+"md_external_2SDL2_2docs_2README-n3ds.html#notes-1":[22,1],
 "md_external_2SDL2_2docs_2README-versions.html":[34],
 "md_external_2SDL2_2docs_2README-versions.html#before-2230":[34,1],
 "md_external_2SDL2_2docs_2README-versions.html#since-2230":[34,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX90 =
 "structExampleTreeNode.html#ae8c6d9955d3b2449ea2de4adb44a4de6":[44,0,83,2],
 "structFastLZCompressor.html":[44,0,84],
 "structFastLZCompressor.html#a61828cd2e21041b21b8e545efbe1da57":[44,0,84,2],
-"structFastLZCompressor.html#a884d23606adb0674c0b0b124b4ffe28f":[44,0,84,0],
-"structFastLZCompressor.html#a8fb3236d4cb66a253fd98036536b51a4":[44,0,84,3],
-"structFastLZCompressor.html#ade3bcdfdf37fed48284a4a4d89e2d804":[44,0,84,1],
-"structFrameResources.html":[44,0,86],
-"structFrameResources.html#a2e11d2b6738b5641d3a3041be1a213a6":[44,0,86,4],
-"structFrameResources.html#a40399cf0ff9d5b63ec4b5a0ee57a9689":[44,0,86,2],
-"structFrameResources.html#a8d47cfe492e18a15f10722b9203f5b6c":[44,0,86,5]
+"structFastLZCompressor.html#a884d23606adb0674c0b0b124b4ffe28f":[44,0,84,0]
 };

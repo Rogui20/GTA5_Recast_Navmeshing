@@ -1,5 +1,6 @@
 var hierarchy =
 [
+    [ "MemoryHandler::BoundingBoxSlot", "structMemoryHandler_1_1BoundingBoxSlot.html", null ],
     [ "BoundsItem", "structBoundsItem.html", null ],
     [ "BuildSettings", "structBuildSettings.html", null ],
     [ "BVItem", "structBVItem.html", null ],
@@ -420,6 +421,7 @@ var hierarchy =
     [ "NavMeshTileHeader", "structNavMeshTileHeader.html", null ],
     [ "ObjLoader", "classObjLoader.html", null ],
     [ "OffmeshLink", "structOffmeshLink.html", null ],
+    [ "MemoryHandler::OffmeshLinkSlot", "structMemoryHandler_1_1OffmeshLinkSlot.html", null ],
     [ "PropInstance", "structPropInstance.html", null ],
     [ "RasterizationContext", "structRasterizationContext.html", null ],
     [ "Ray", "structRay.html", null ],

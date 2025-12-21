@@ -1,13 +1,17 @@
 var classMemoryHandler =
 [
+    [ "BoundingBoxSlot", "structMemoryHandler_1_1BoundingBoxSlot.html", "structMemoryHandler_1_1BoundingBoxSlot" ],
     [ "GeometrySlot", "structMemoryHandler_1_1GeometrySlot.html", "structMemoryHandler_1_1GeometrySlot" ],
+    [ "OffmeshLinkSlot", "structMemoryHandler_1_1OffmeshLinkSlot.html", "structMemoryHandler_1_1OffmeshLinkSlot" ],
     [ "RouteRequestSlot", "structMemoryHandler_1_1RouteRequestSlot.html", "structMemoryHandler_1_1RouteRequestSlot" ],
     [ "RouteResultPoint", "structMemoryHandler_1_1RouteResultPoint.html", "structMemoryHandler_1_1RouteResultPoint" ],
     [ "Vector3", "structMemoryHandler_1_1Vector3.html", "structMemoryHandler_1_1Vector3" ],
     [ "MemoryHandler", "classMemoryHandler.html#a024f5282cf22850f2dd7d5c919ab8f44", null ],
     [ "~MemoryHandler", "classMemoryHandler.html#affc227cd47af65c6cbdfdf2c0f6155d5", null ],
     [ "ClearGeometrySlot", "classMemoryHandler.html#a349af8866eed41f8c3374d4d364c8892", null ],
+    [ "FetchBoundingBox", "classMemoryHandler.html#a27bb53b294d577bccd4f9ee15800819b", null ],
     [ "FetchGeometrySlots", "classMemoryHandler.html#a8e8d6df563adfa92898dc8ff53828531", null ],
+    [ "FetchOffmeshLinks", "classMemoryHandler.html#afc2df8f62692dfb30b0e42eb82bf3c93", null ],
     [ "FetchRouteRequests", "classMemoryHandler.html#a347740e97e0109ae5a0873b43068e6d8", null ],
     [ "GeometryBufferSize", "classMemoryHandler.html#a35777c24b61bee374fa75fc7391a6140", null ],
     [ "GetLayoutFilePath", "classMemoryHandler.html#a335f90b375e8a038b7809aed92eff544", null ],
@@ -26,11 +30,15 @@ var classMemoryHandler =
     [ "SetPropHashFile", "classMemoryHandler.html#a5f3c50129b4a5d0c81b4f6cbbed0fe16", null ],
     [ "Tick", "classMemoryHandler.html#a61525a31e2a91e39243dcc30c23249f7", null ],
     [ "TryResolvePropName", "classMemoryHandler.html#a275ec74a454558871a52f6131b864390", null ],
+    [ "WriteBoundingBox", "classMemoryHandler.html#a6d68f6a53a96a8f27af71b411d966e69", null ],
     [ "WriteGeometrySlot", "classMemoryHandler.html#a34787edbb4b1601604aaee255e7a56f0", null ],
+    [ "WriteOffmeshLinkSlot", "classMemoryHandler.html#a841e0c776c3ecd5653ec536ca59e85d3", null ],
     [ "WriteRouteRequestSlot", "classMemoryHandler.html#a57e1d0fccb693b1badf8f0b1cb3b285d", null ],
     [ "WriteRouteResultPoints", "classMemoryHandler.html#a5d4c4c56b7a25d01b85de9289ce51fa8", null ],
+    [ "kBoundingBoxSlotCount", "classMemoryHandler.html#ac8ecfa27bf58ba0817a36f6723ee24e3", null ],
     [ "kGeometrySlotCount", "classMemoryHandler.html#ad79a774bd0865466e75bec35c2af572e", null ],
     [ "kModelHashStringSize", "classMemoryHandler.html#a63c0f30332fcf3ce010e13386030c890", null ],
+    [ "kOffmeshLinkCount", "classMemoryHandler.html#a8ddb15663ba5d491e8a96533b33435fb", null ],
     [ "kRouteRequestCount", "classMemoryHandler.html#a29eba59ceb6fd7d22a98b4d7536b9167", null ],
     [ "kRouteResultPoints", "classMemoryHandler.html#af7c8c98ba41373e88290102871e4ee95", null ]
 ];

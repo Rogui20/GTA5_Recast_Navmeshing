@@ -106,7 +106,11 @@ $(document).ready(function(){initNavTree('classMemoryHandler.html',''); initResi
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMemoryHandler_1_1BoundingBoxSlot.html">BoundingBoxSlot</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMemoryHandler_1_1GeometrySlot.html">GeometrySlot</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMemoryHandler_1_1OffmeshLinkSlot.html">OffmeshLinkSlot</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMemoryHandler_1_1RouteRequestSlot.html">RouteRequestSlot</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,6 +171,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5d4c4c56b7a25d01b85de9289ce51fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a631ab90cf90083f8208055eeb9889700" id="r_a631ab90cf90083f8208055eeb9889700"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#a631ab90cf90083f8208055eeb9889700">HasValidRouteBuffers</a> () const</td></tr>
 <tr class="separator:a631ab90cf90083f8208055eeb9889700"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc2df8f62692dfb30b0e42eb82bf3c93" id="r_afc2df8f62692dfb30b0e42eb82bf3c93"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#afc2df8f62692dfb30b0e42eb82bf3c93">FetchOffmeshLinks</a> (std::vector&lt; <a class="el" href="structMemoryHandler_1_1OffmeshLinkSlot.html">OffmeshLinkSlot</a> &gt; &amp;outSlots) const</td></tr>
+<tr class="separator:afc2df8f62692dfb30b0e42eb82bf3c93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a841e0c776c3ecd5653ec536ca59e85d3" id="r_a841e0c776c3ecd5653ec536ca59e85d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#a841e0c776c3ecd5653ec536ca59e85d3">WriteOffmeshLinkSlot</a> (int <a class="el" href="glad_8h.html#a57f14e05b1900f16a2da82ade47d0c6d">index</a>, const <a class="el" href="structMemoryHandler_1_1OffmeshLinkSlot.html">OffmeshLinkSlot</a> &amp;slot) const</td></tr>
+<tr class="separator:a841e0c776c3ecd5653ec536ca59e85d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27bb53b294d577bccd4f9ee15800819b" id="r_a27bb53b294d577bccd4f9ee15800819b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#a27bb53b294d577bccd4f9ee15800819b">FetchBoundingBox</a> (<a class="el" href="structMemoryHandler_1_1BoundingBoxSlot.html">BoundingBoxSlot</a> &amp;outSlot) const</td></tr>
+<tr class="separator:a27bb53b294d577bccd4f9ee15800819b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d68f6a53a96a8f27af71b411d966e69" id="r_a6d68f6a53a96a8f27af71b411d966e69"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#a6d68f6a53a96a8f27af71b411d966e69">WriteBoundingBox</a> (const <a class="el" href="structMemoryHandler_1_1BoundingBoxSlot.html">BoundingBoxSlot</a> &amp;slot) const</td></tr>
+<tr class="separator:a6d68f6a53a96a8f27af71b411d966e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -176,6 +188,10 @@ Static Public Attributes</h2></td></tr>
 <tr class="separator:a29eba59ceb6fd7d22a98b4d7536b9167"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7c8c98ba41373e88290102871e4ee95" id="r_af7c8c98ba41373e88290102871e4ee95"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#af7c8c98ba41373e88290102871e4ee95">kRouteResultPoints</a> = 255</td></tr>
 <tr class="separator:af7c8c98ba41373e88290102871e4ee95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ddb15663ba5d491e8a96533b33435fb" id="r_a8ddb15663ba5d491e8a96533b33435fb"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#a8ddb15663ba5d491e8a96533b33435fb">kOffmeshLinkCount</a> = 255</td></tr>
+<tr class="separator:a8ddb15663ba5d491e8a96533b33435fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8ecfa27bf58ba0817a36f6723ee24e3" id="r_ac8ecfa27bf58ba0817a36f6723ee24e3"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#ac8ecfa27bf58ba0817a36f6723ee24e3">kBoundingBoxSlotCount</a> = 1</td></tr>
+<tr class="separator:ac8ecfa27bf58ba0817a36f6723ee24e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63c0f30332fcf3ce010e13386030c890" id="r_a63c0f30332fcf3ce010e13386030c890"><td class="memItemLeft" align="right" valign="top">static constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemoryHandler.html#a63c0f30332fcf3ce010e13386030c890">kModelHashStringSize</a> = 64</td></tr>
 <tr class="separator:a63c0f30332fcf3ce010e13386030c890"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -233,6 +249,24 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a27bb53b294d577bccd4f9ee15800819b" name="a27bb53b294d577bccd4f9ee15800819b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27bb53b294d577bccd4f9ee15800819b">&#9670;&#160;</a></span>FetchBoundingBox()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MemoryHandler::FetchBoundingBox </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structMemoryHandler_1_1BoundingBoxSlot.html">BoundingBoxSlot</a> &amp;&#160;</td>
+          <td class="paramname"><em>outSlot</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a8e8d6df563adfa92898dc8ff53828531" name="a8e8d6df563adfa92898dc8ff53828531"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8e8d6df563adfa92898dc8ff53828531">&#9670;&#160;</a></span>FetchGeometrySlots()</h2>
 
@@ -243,6 +277,24 @@ Static Public Attributes</h2></td></tr>
           <td class="memname">bool MemoryHandler::FetchGeometrySlots </td>
           <td>(</td>
           <td class="paramtype">std::vector&lt; <a class="el" href="structMemoryHandler_1_1GeometrySlot.html">GeometrySlot</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>outSlots</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afc2df8f62692dfb30b0e42eb82bf3c93" name="afc2df8f62692dfb30b0e42eb82bf3c93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc2df8f62692dfb30b0e42eb82bf3c93">&#9670;&#160;</a></span>FetchOffmeshLinks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MemoryHandler::FetchOffmeshLinks </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structMemoryHandler_1_1OffmeshLinkSlot.html">OffmeshLinkSlot</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>outSlots</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -628,6 +680,24 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6d68f6a53a96a8f27af71b411d966e69" name="a6d68f6a53a96a8f27af71b411d966e69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d68f6a53a96a8f27af71b411d966e69">&#9670;&#160;</a></span>WriteBoundingBox()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MemoryHandler::WriteBoundingBox </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structMemoryHandler_1_1BoundingBoxSlot.html">BoundingBoxSlot</a> &amp;&#160;</td>
+          <td class="paramname"><em>slot</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a34787edbb4b1601604aaee255e7a56f0" name="a34787edbb4b1601604aaee255e7a56f0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a34787edbb4b1601604aaee255e7a56f0">&#9670;&#160;</a></span>WriteGeometrySlot()</h2>
 
@@ -644,6 +714,34 @@ Static Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="structMemoryHandler_1_1GeometrySlot.html">GeometrySlot</a> &amp;&#160;</td>
+          <td class="paramname"><em>slot</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a841e0c776c3ecd5653ec536ca59e85d3" name="a841e0c776c3ecd5653ec536ca59e85d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a841e0c776c3ecd5653ec536ca59e85d3">&#9670;&#160;</a></span>WriteOffmeshLinkSlot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MemoryHandler::WriteOffmeshLinkSlot </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structMemoryHandler_1_1OffmeshLinkSlot.html">OffmeshLinkSlot</a> &amp;&#160;</td>
           <td class="paramname"><em>slot</em>&#160;</td>
         </tr>
         <tr>
@@ -713,6 +811,28 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="ac8ecfa27bf58ba0817a36f6723ee24e3" name="ac8ecfa27bf58ba0817a36f6723ee24e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8ecfa27bf58ba0817a36f6723ee24e3">&#9670;&#160;</a></span>kBoundingBoxSlotCount</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int MemoryHandler::kBoundingBoxSlotCount = 1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad79a774bd0865466e75bec35c2af572e" name="ad79a774bd0865466e75bec35c2af572e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad79a774bd0865466e75bec35c2af572e">&#9670;&#160;</a></span>kGeometrySlotCount</h2>
 
@@ -746,6 +866,28 @@ Static Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">constexpr size_t MemoryHandler::kModelHashStringSize = 64</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8ddb15663ba5d491e8a96533b33435fb" name="a8ddb15663ba5d491e8a96533b33435fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ddb15663ba5d491e8a96533b33435fb">&#9670;&#160;</a></span>kOffmeshLinkCount</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int MemoryHandler::kOffmeshLinkCount = 255</td>
         </tr>
       </table>
   </td>

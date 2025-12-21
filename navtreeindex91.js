@@ -1,5 +1,11 @@
 var NAVTREEINDEX91 =
 {
+"structFastLZCompressor.html#a8fb3236d4cb66a253fd98036536b51a4":[44,0,84,3],
+"structFastLZCompressor.html#ade3bcdfdf37fed48284a4a4d89e2d804":[44,0,84,1],
+"structFrameResources.html":[44,0,86],
+"structFrameResources.html#a2e11d2b6738b5641d3a3041be1a213a6":[44,0,86,4],
+"structFrameResources.html#a40399cf0ff9d5b63ec4b5a0ee57a9689":[44,0,86,2],
+"structFrameResources.html#a8d47cfe492e18a15f10722b9203f5b6c":[44,0,86,5],
 "structFrameResources.html#adb51b091a1d65761a46efdb28a57460d":[44,0,86,0],
 "structFrameResources.html#aedd033e75b03dce1e79fdb5856c29a02":[44,0,86,3],
 "structFrameResources.html#afc67af1e5b7695064cfc88fa4800a65f":[44,0,86,1],
@@ -243,11 +249,5 @@ var NAVTREEINDEX91 =
 "structImDrawVert.html":[44,0,108],
 "structImDrawVert.html#ab98ba53ce2690b56f5ba94682ed83940":[44,0,108,0],
 "structImDrawVert.html#abdf3183529055a6c3f709b23a4bf06b1":[44,0,108,2],
-"structImDrawVert.html#aedc578bbf364ddea71be12b4f177a5b4":[44,0,108,1],
-"structImDrawVertAllegro.html":[44,0,109],
-"structImDrawVertAllegro.html#a132358e0610fd1691a55101e6bb470eb":[44,0,109,1],
-"structImDrawVertAllegro.html#a99adeb37caaa0be78aa790522f3f0bfd":[44,0,109,2],
-"structImDrawVertAllegro.html#ac19aa852b9e406d90bc97ab41243a7db":[44,0,109,0],
-"structImFont.html":[44,0,110],
-"structImFont.html#a1c2a7ed2d08e08465b884e1092798077":[44,0,110,15]
+"structImDrawVert.html#aedc578bbf364ddea71be12b4f177a5b4":[44,0,108,1]
 };

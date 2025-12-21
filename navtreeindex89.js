@@ -1,5 +1,11 @@
 var NAVTREEINDEX89 =
 {
+"imstb__truetype_8h.html#a18fae014dd2261e554248ca737d05578":[45,0,7,0,11,34],
+"imstb__truetype_8h.html#a190bffe156cdb32ac891e835248c90e3":[45,0,7,0,11,57],
+"imstb__truetype_8h.html#a213d5628c6b2e5c107b99378eefc6e3a":[45,0,7,0,11,25],
+"imstb__truetype_8h.html#a2784e0e55678a5980e950b1c9fbc75f0":[45,0,7,0,11,45],
+"imstb__truetype_8h.html#a2e607ba774cee7f2425917105dabd16f":[45,0,7,0,11,33],
+"imstb__truetype_8h.html#a3378c5794e9ab2a16492ab7e3c3c9485":[45,0,7,0,11,63],
 "imstb__truetype_8h.html#a344fc3b0ff7829d993ca8db3eadd321f":[45,0,7,0,11,72],
 "imstb__truetype_8h.html#a37d613643adacbed24c22718faf6afc7":[45,0,7,0,11,22],
 "imstb__truetype_8h.html#a3856cc4fbab4c126c2c438c6f567525d":[45,0,7,0,11,12],
@@ -243,11 +249,5 @@ var NAVTREEINDEX89 =
 "md_external_2SDL2_2docs_2README-macos.html#running-your-app":[21,3,7],
 "md_external_2SDL2_2docs_2README-macos.html#setting-up-a-new-project-by-hand":[21,3,5],
 "md_external_2SDL2_2docs_2README-macos.html#using-the-project-stationary":[21,3,4],
-"md_external_2SDL2_2docs_2README-macos.html#using-the-simple-directmedia-layer-with-a-traditional-makefile":[21,2],
-"md_external_2SDL2_2docs_2README-macos.html#using-the-simple-directmedia-layer-with-xcode":[21,3],
-"md_external_2SDL2_2docs_2README-macos.html#working-directory":[21,4,0],
-"md_external_2SDL2_2docs_2README-macos.html#you-have-a-cocoa-app":[21,4,1],
-"md_external_2SDL2_2docs_2README-n3ds.html":[22],
-"md_external_2SDL2_2docs_2README-n3ds.html#building":[22,0],
-"md_external_2SDL2_2docs_2README-n3ds.html#notes-1":[22,1]
+"md_external_2SDL2_2docs_2README-macos.html#using-the-simple-directmedia-layer-with-a-traditional-makefile":[21,2]
 };

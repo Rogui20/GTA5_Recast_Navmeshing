@@ -1,5 +1,11 @@
 var NAVTREEINDEX101 =
 {
+"structImGui__ImplDX12__InitInfo.html#ae010edaef902b3865896902e1a111d40":[44,0,134,2],
+"structImGui__ImplDX12__InitInfo.html#ae1991453617a4a9fa735a075eaa008ac":[44,0,134,1],
+"structImGui__ImplDX12__InitInfo.html#af1c551016119264ec072ad329e956495":[44,0,134,0],
+"structImGui__ImplDX12__RenderBuffers.html":[44,0,135],
+"structImGui__ImplDX12__RenderBuffers.html#a29214b15eceea549928373591e877640":[44,0,135,1],
+"structImGui__ImplDX12__RenderBuffers.html#a5ffee1b7a7d728d15dfd33739819101c":[44,0,135,2],
 "structImGui__ImplDX12__RenderBuffers.html#a6643010c24e4046769271a36d596398a":[44,0,135,3],
 "structImGui__ImplDX12__RenderBuffers.html#adea8d9622af0a5c6376f4b98840b0812":[44,0,135,0],
 "structImGui__ImplDX12__RenderState.html":[44,0,136],
@@ -243,11 +249,5 @@ var NAVTREEINDEX101 =
 "structImGui__ImplVulkan__FrameRenderBuffers.html":[44,0,160],
 "structImGui__ImplVulkan__FrameRenderBuffers.html#a1dd3cedfa723c352b0b06061049803bc":[44,0,160,3],
 "structImGui__ImplVulkan__FrameRenderBuffers.html#a278783f96b729fcb2d7800c69001aa1e":[44,0,160,0],
-"structImGui__ImplVulkan__FrameRenderBuffers.html#a3266595c241593732efea9f3acde90c9":[44,0,160,5],
-"structImGui__ImplVulkan__FrameRenderBuffers.html#a49625bdab88e1dd12f5c699ed5f0b6bb":[44,0,160,4],
-"structImGui__ImplVulkan__FrameRenderBuffers.html#ae4a8742879545acadf2123203152b4d8":[44,0,160,2],
-"structImGui__ImplVulkan__FrameRenderBuffers.html#af89d68d85a89683a7a17308365a745cf":[44,0,160,1],
-"structImGui__ImplVulkan__InitInfo.html":[44,0,161],
-"structImGui__ImplVulkan__InitInfo.html#a0a9a0a08571e832b4cdf800be51f9ee7":[44,0,161,18],
-"structImGui__ImplVulkan__InitInfo.html#a0b188b31d5dd36b3e5e5fb038f816915":[44,0,161,6]
+"structImGui__ImplVulkan__FrameRenderBuffers.html#a3266595c241593732efea9f3acde90c9":[44,0,160,5]
 };

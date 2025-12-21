@@ -38,7 +38,7 @@ var searchData=
   ['acessibilidade_35',['Visibilidade e acessibilidade',['../md_Docs_2ImGuiMenuOrganization.html#visibilidade-e-acessibilidade',1,'']]],
   ['acknowledgements_36',['Acknowledgements',['../nokia-n-gage.html#acknowledgements',1,'']]],
   ['activateitembyid_37',['ActivateItemByID',['../namespaceImGui.html#a155c653da8d562c00e7b4a9b7335c558',1,'ImGui']]],
-  ['active_38',['active',['../structdtCrowdAgentAnimation.html#a063331d0a657ca1e138dde68ad6375f4',1,'dtCrowdAgentAnimation::active'],['../structImGuiWindow.html#a42f141fa0eed059176cb4360df1b1eb2',1,'ImGuiWindow::Active'],['../structImGuiDebugItemPathQuery.html#aca722f19c820cf6bcbd76920ad0c33ae',1,'ImGuiDebugItemPathQuery::Active'],['../structdtCrowdAgent.html#a6473f48354abf6f46f5b4d7ead9bca20',1,'dtCrowdAgent::active'],['../structGuiState.html#a8182ed7ea717727bd7ae4b6bd906f89d',1,'GuiState::active']]],
+  ['active_38',['active',['../structImGuiDebugItemPathQuery.html#aca722f19c820cf6bcbd76920ad0c33ae',1,'ImGuiDebugItemPathQuery::Active'],['../structdtCrowdAgentAnimation.html#a063331d0a657ca1e138dde68ad6375f4',1,'dtCrowdAgentAnimation::active'],['../structdtCrowdAgent.html#a6473f48354abf6f46f5b4d7ead9bca20',1,'dtCrowdAgent::active'],['../structGuiState.html#a8182ed7ea717727bd7ae4b6bd906f89d',1,'GuiState::active'],['../structImGuiWindow.html#a42f141fa0eed059176cb4360df1b1eb2',1,'ImGuiWindow::Active']]],
   ['active_5fhead_39',['active_head',['../structstbrp__context.html#a13277239636803aff28f00b0a0376120',1,'stbrp_context']]],
   ['activeid_40',['ActiveId',['../structImGuiContext.html#a11c874eb6cf74ba9162bd1d01c4ccbcc',1,'ImGuiContext']]],
   ['activeidallowoverlap_41',['ActiveIdAllowOverlap',['../structImGuiContext.html#ab3234556023eabcfed157b79ba4c5869',1,'ImGuiContext']]],

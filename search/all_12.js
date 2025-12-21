@@ -227,7 +227,7 @@ var searchData=
   ['hfontsrvgpudeschandle_224',['hFontSrvGpuDescHandle',['../structImGui__ImplDX12__Texture.html#a291af746010d7674fc52fa5c2e63162d',1,'ImGui_ImplDX12_Texture']]],
   ['hg_225',['README-hg',['../readme-hg.html',1,'']]],
   ['hhea_226',['hhea',['../structstbtt__fontinfo.html#a91b82ae03d68892eb7f3fbd3a8b990e5',1,'stbtt_fontinfo']]],
-  ['hidden_227',['hidden',['../structImGuiWindow.html#a49e0f1e5eff5af0df7da7f4d14aedcce',1,'ImGuiWindow::Hidden'],['../structSDL__RWops.html#a354b4677b722f11060fb7c4a0125ed37',1,'SDL_RWops::hidden']]],
+  ['hidden_227',['hidden',['../structSDL__RWops.html#a354b4677b722f11060fb7c4a0125ed37',1,'SDL_RWops::hidden'],['../structImGuiWindow.html#a49e0f1e5eff5af0df7da7f4d14aedcce',1,'ImGuiWindow::Hidden']]],
   ['hiddenframescannotskipitems_228',['HiddenFramesCannotSkipItems',['../structImGuiWindow.html#a7756e042598a3fd79830288ef04c3e4c',1,'ImGuiWindow']]],
   ['hiddenframescanskipitems_229',['HiddenFramesCanSkipItems',['../structImGuiWindow.html#af1d2d851f229310e1c9bfdaaa792500e',1,'ImGuiWindow']]],
   ['hiddenframesforrenderonly_230',['HiddenFramesForRenderOnly',['../structImGuiWindow.html#a6439e813f1f2b40b81cba70e86b46d41',1,'ImGuiWindow']]],
