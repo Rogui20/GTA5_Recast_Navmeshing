@@ -43,7 +43,6 @@ public:
 
     struct GeometrySlot
     {
-        //char modelHash[kModelHashStringSize]{};
         uint64_t modelHash = 0;
         Vector3 position{};
         Vector3 rotation{};
