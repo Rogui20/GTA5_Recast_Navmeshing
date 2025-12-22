@@ -122,7 +122,7 @@ endif()
 # ---------------------------------------
 # Link runtime que já existe
 # ---------------------------------------
-target_link_libraries(GtaNavViewer
+target_link_libraries(GtaNavViewer PRIVATE
     GtaNavRuntime   # vindo do /GtaNavRuntime/CMakeLists.txt
     ${SDL2_LIB}/SDL2.lib
     ${SDL2_LIB}/SDL2main.lib
