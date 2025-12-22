@@ -482,5 +482,6 @@ var annotated_dup =
     [ "VERTEX_CONSTANT_BUFFER_DX11", "structVERTEX__CONSTANT__BUFFER__DX11.html", "structVERTEX__CONSTANT__BUFFER__DX11" ],
     [ "VERTEX_CONSTANT_BUFFER_DX12", "structVERTEX__CONSTANT__BUFFER__DX12.html", "structVERTEX__CONSTANT__BUFFER__DX12" ],
     [ "ViewerApp", "classViewerApp.html", "classViewerApp" ],
-    [ "ViewerCamera", "classViewerCamera.html", "classViewerCamera" ]
+    [ "ViewerCamera", "classViewerCamera.html", "classViewerCamera" ],
+    [ "WebSockets", "classWebSockets.html", "classWebSockets" ]
 ];

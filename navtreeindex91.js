@@ -1,5 +1,15 @@
 var NAVTREEINDEX91 =
 {
+"structExampleTreeNode.html#aaa3013178423eab20b0ebd10716735cc":[43,0,83,3],
+"structExampleTreeNode.html#ae8c6d9955d3b2449ea2de4adb44a4de6":[43,0,83,2],
+"structFastLZCompressor.html":[43,0,84],
+"structFastLZCompressor.html#a61828cd2e21041b21b8e545efbe1da57":[43,0,84,2],
+"structFastLZCompressor.html#a884d23606adb0674c0b0b124b4ffe28f":[43,0,84,0],
+"structFastLZCompressor.html#a8fb3236d4cb66a253fd98036536b51a4":[43,0,84,3],
+"structFastLZCompressor.html#ade3bcdfdf37fed48284a4a4d89e2d804":[43,0,84,1],
+"structFrameResources.html":[43,0,86],
+"structFrameResources.html#a2e11d2b6738b5641d3a3041be1a213a6":[43,0,86,4],
+"structFrameResources.html#a40399cf0ff9d5b63ec4b5a0ee57a9689":[43,0,86,2],
 "structFrameResources.html#a8d47cfe492e18a15f10722b9203f5b6c":[43,0,86,5],
 "structFrameResources.html#adb51b091a1d65761a46efdb28a57460d":[43,0,86,0],
 "structFrameResources.html#aedd033e75b03dce1e79fdb5856c29a02":[43,0,86,3],
@@ -239,15 +249,5 @@ var NAVTREEINDEX91 =
 "structImDrawListSplitter.html#ab3b0bdddacaa7b347c41735c2d9952dc":[43,0,107,7],
 "structImDrawListSplitter.html#ac6865e5a2f180419fa282b681bf08c9c":[43,0,107,2],
 "structImDrawListSplitter.html#ad3797b0755caa07f3d69a9e3566eb0e5":[43,0,107,5],
-"structImDrawListSplitter.html#ae3a1593ee05bc52e6284943eab3c97a2":[43,0,107,8],
-"structImDrawListSplitter.html#af3fc4bad2abca9e481d476d1877ba5be":[43,0,107,4],
-"structImDrawVert.html":[43,0,108],
-"structImDrawVert.html#ab98ba53ce2690b56f5ba94682ed83940":[43,0,108,0],
-"structImDrawVert.html#abdf3183529055a6c3f709b23a4bf06b1":[43,0,108,2],
-"structImDrawVert.html#aedc578bbf364ddea71be12b4f177a5b4":[43,0,108,1],
-"structImDrawVertAllegro.html":[43,0,109],
-"structImDrawVertAllegro.html#a132358e0610fd1691a55101e6bb470eb":[43,0,109,1],
-"structImDrawVertAllegro.html#a99adeb37caaa0be78aa790522f3f0bfd":[43,0,109,2],
-"structImDrawVertAllegro.html#ac19aa852b9e406d90bc97ab41243a7db":[43,0,109,0],
-"structImFont.html":[43,0,110]
+"structImDrawListSplitter.html#ae3a1593ee05bc52e6284943eab3c97a2":[43,0,107,8]
 };

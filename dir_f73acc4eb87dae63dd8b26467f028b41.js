@@ -30,5 +30,7 @@ var dir_f73acc4eb87dae63dd8b26467f028b41 =
     [ "ViewerAppInput.cpp", "ViewerAppInput_8cpp.html", null ],
     [ "ViewerAppUtils.cpp", "ViewerAppUtils_8cpp.html", "ViewerAppUtils_8cpp" ],
     [ "ViewerCamera.cpp", "ViewerCamera_8cpp.html", null ],
-    [ "ViewerCamera.h", "ViewerCamera_8h.html", "ViewerCamera_8h" ]
+    [ "ViewerCamera.h", "ViewerCamera_8h.html", "ViewerCamera_8h" ],
+    [ "WebSockets.cpp", "WebSockets_8cpp.html", null ],
+    [ "WebSockets.h", "WebSockets_8h.html", "WebSockets_8h" ]
 ];

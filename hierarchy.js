@@ -600,5 +600,6 @@ var hierarchy =
     [ "VERTEX_CONSTANT_BUFFER_DX11", "structVERTEX__CONSTANT__BUFFER__DX11.html", null ],
     [ "VERTEX_CONSTANT_BUFFER_DX12", "structVERTEX__CONSTANT__BUFFER__DX12.html", null ],
     [ "ViewerApp", "classViewerApp.html", null ],
-    [ "ViewerCamera", "classViewerCamera.html", null ]
+    [ "ViewerCamera", "classViewerCamera.html", null ],
+    [ "WebSockets", "classWebSockets.html", null ]
 ];

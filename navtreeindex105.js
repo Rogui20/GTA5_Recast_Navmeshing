@@ -1,5 +1,15 @@
 var NAVTREEINDEX105 =
 {
+"structSDL__GameControllerButtonBind.html#a422b1748d71e357c8ce9eb63c3fe77f6":[43,0,390,4],
+"structSDL__GameControllerButtonBind.html#a9b19c60fb8478b981f84ce6c5cda98b9":[43,0,390,6],
+"structSDL__GameControllerButtonBind.html#a9f1197eb0a12d824946d59ee6c4a2999":[43,0,390,5],
+"structSDL__GameControllerButtonBind.html#aa71f0e94721b28ee35aec0d1ac1c200e":[43,0,390,3],
+"structSDL__HapticCondition.html":[43,0,392],
+"structSDL__HapticCondition.html#a2adf52c32f60f0b6826b1e3add2eae7a":[43,0,392,6],
+"structSDL__HapticCondition.html#a3de7f164ef88841255535387d0f100b6":[43,0,392,9],
+"structSDL__HapticCondition.html#a728507d30d18998949313de3a25e5581":[43,0,392,4],
+"structSDL__HapticCondition.html#a7be55a9a86c05dd1a54a3006781cfa6f":[43,0,392,11],
+"structSDL__HapticCondition.html#a8a71ec28ff5ab85246cbc59736aa2c53":[43,0,392,1],
 "structSDL__HapticCondition.html#a90427a1e0d464b4b53abc1d419c97b2e":[43,0,392,10],
 "structSDL__HapticCondition.html#a953448774c40818a4f47c6efea21124d":[43,0,392,7],
 "structSDL__HapticCondition.html#aad40417980530ca8d80c62ba864a090b":[43,0,392,3],
@@ -239,15 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__RWops.html#a7786282ec28451085908f70048ee32c8":[43,0,424,10],
 "structSDL__RWops.html#a95b96dcc6690897bfaf2d059f4378ed2":[43,0,424,21],
 "structSDL__RWops.html#aa2f5b6d7a5009c7bb6ae6bb664261df0":[43,0,424,11],
-"structSDL__RWops.html#ab078bcf43a916d469ff550c60ab4b3f2":[43,0,424,16],
-"structSDL__RWops.html#ab1ee9d9e4f61b3b30f26160c282ae416":[43,0,424,13],
-"structSDL__RWops.html#ab303bcbb0f6742a141ba8b2998923f47":[43,0,424,0],
-"structSDL__RWops.html#ab89d27b4312c0b9d664c81bc92917fc8":[43,0,424,6],
-"structSDL__RWops.html#aca073130e2e262eb11e86e1be993e215":[43,0,424,7],
-"structSDL__RWops.html#acd9a3c6e840d285c1e30cadaf99097b2":[43,0,424,3],
-"structSDL__RWops.html#af3c7cb1f8890ce2ccf3ff29ad6341085":[43,0,424,20],
-"structSDL__RWops.html#af9b489d7342296ce197b911cfa93b2ab":[43,0,424,5],
-"structSDL__Rect.html":[43,0,422],
-"structSDL__Rect.html#a0a17d46b320af8063b746153348edd72":[43,0,422,0],
-"structSDL__Rect.html#a56b7be5738fb6fab86881534a814c45e":[43,0,422,1]
+"structSDL__RWops.html#ab078bcf43a916d469ff550c60ab4b3f2":[43,0,424,16]
 };

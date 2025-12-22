@@ -1,5 +1,15 @@
 var NAVTREEINDEX93 =
 {
+"structImGuiBoxSelectState.html#a48fddd48ccff165c70c5f7fe553c943d":[43,0,177,2],
+"structImGuiBoxSelectState.html#a527a2f22d5d0de1b67693bd8ce484907":[43,0,177,9],
+"structImGuiBoxSelectState.html#a573c9e3ba48a0907bfb5e47d87d4df32":[43,0,177,6],
+"structImGuiBoxSelectState.html#a5872789f05e4d985b6e983a37da34c48":[43,0,177,14],
+"structImGuiBoxSelectState.html#a71b22394455018ac98b5aff4186f034c":[43,0,177,1],
+"structImGuiBoxSelectState.html#a797eb88254952a9d30c36996bfa92c1e":[43,0,177,11],
+"structImGuiBoxSelectState.html#a891d144d7129f111e9e0a2b5bfd40a29":[43,0,177,13],
+"structImGuiBoxSelectState.html#a9b9f96a2176602f72551270e3874fb3c":[43,0,177,3],
+"structImGuiBoxSelectState.html#a9eb71f0d6f2774714c260fc50218c7a5":[43,0,177,8],
+"structImGuiBoxSelectState.html#aa56a1f1ae26cb4d1c483c891de5715ec":[43,0,177,0],
 "structImGuiBoxSelectState.html#ab1cb436af8253dfa4f22bc86c777e355":[43,0,177,5],
 "structImGuiBoxSelectState.html#ad6287c003942dfcf05196cc2e1026ece":[43,0,177,10],
 "structImGuiBoxSelectState.html#ad97366cfdd288e950c98f873078da1f6":[43,0,177,12],
@@ -239,15 +249,5 @@ var NAVTREEINDEX93 =
 "structImGuiContext.html#aab052b64f1776d3cf5980b4de0bc4e83":[43,0,180,77],
 "structImGuiContext.html#aabd1e23f5be55f6331281f2c2ea9e411":[43,0,180,215],
 "structImGuiContext.html#aad0534754076c6f8d877bd19c5760a6a":[43,0,180,243],
-"structImGuiContext.html#aad225e155364262380ea2e6ea306381a":[43,0,180,324],
-"structImGuiContext.html#aadb3afd1087e680a082e59282dfa62c4":[43,0,180,207],
-"structImGuiContext.html#aadf9cd99ab2805e433e09214742fcbc5":[43,0,180,25],
-"structImGuiContext.html#aaed094785231d1e7a223d173da4ea8b1":[43,0,180,170],
-"structImGuiContext.html#aaf438bcb822841e3fc19a36d05219634":[43,0,180,290],
-"structImGuiContext.html#ab011a2f260e200403d6177bdccc3b20b":[43,0,180,187],
-"structImGuiContext.html#ab233698c1b45dce428f40fcb128f99cf":[43,0,180,54],
-"structImGuiContext.html#ab3234556023eabcfed157b79ba4c5869":[43,0,180,3],
-"structImGuiContext.html#ab32a59726ba9f1aa2ba04455a4ef9f34":[43,0,180,65],
-"structImGuiContext.html#ab33e53b053e0d466d9a7fb35bea0cdd4":[43,0,180,1],
-"structImGuiContext.html#ab60730c7f9f601fd0b22dac060a822e3":[43,0,180,193]
+"structImGuiContext.html#aad225e155364262380ea2e6ea306381a":[43,0,180,324]
 };

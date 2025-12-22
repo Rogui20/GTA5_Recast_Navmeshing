@@ -1,5 +1,8 @@
 var NAVTREEINDEX68 =
 {
+"classSample__SoloMesh.html#a0b9495bb7c375195b704b91cdf9fd66dafce43a32523d6c5035eefbce35a73826":[43,0,363,0,14],
+"classSample__SoloMesh.html#a12b020d2ae29630abe24090452d89d58":[43,0,363,17],
+"classSample__SoloMesh.html#a1e7120d697077a25672a5e6edceb2044":[43,0,363,5],
 "classSample__SoloMesh.html#a32d99e347eb1580cd1b018393af1020a":[43,0,363,15],
 "classSample__SoloMesh.html#a383b397074ebd6e8781928019a4b2e06":[43,0,363,11],
 "classSample__SoloMesh.html#a53f7d384f99517ace66e6d4738d622e3":[43,0,363,20],
@@ -184,6 +187,13 @@ var NAVTREEINDEX68 =
 "classViewerCamera.html#abc26c92959529adb50a3ceb76b3950c9":[43,0,480,9],
 "classViewerCamera.html#ad00321fbc59ab841a078a440a0dd2a7d":[43,0,480,7],
 "classViewerCamera.html#adfaa8081859d356592e6dee73bbe1305":[43,0,480,0],
+"classWebSockets.html":[43,0,481],
+"classWebSockets.html#a2508e08c419e8a862cbe910a6a23b978":[43,0,481,3],
+"classWebSockets.html#a32ec75600868d66c4a3f52f3de8a8f84":[43,0,481,2],
+"classWebSockets.html#a85be34e19dd7983d3abca7e8e40677dd":[43,0,481,5],
+"classWebSockets.html#ad4eb4a974523518575f771cd284c213e":[43,0,481,1],
+"classWebSockets.html#af0b9881a687430d0d7282878cafc08d0":[43,0,481,0],
+"classWebSockets.html#af7c26d2a259b70ce028cffb5e20799d6":[43,0,481,4],
 "classdtCollectPolysQuery.html":[43,0,16],
 "classdtCollectPolysQuery.html#a30a6baa977d507b2c6f0148a770655b8":[43,0,16,1],
 "classdtCollectPolysQuery.html#a5ebb596db273cdcc454c6ae6f981bf3a":[43,0,16,3],
@@ -239,15 +249,5 @@ var NAVTREEINDEX68 =
 "classdtNodeQueue.html#ad5b359ea0f59143fbc4687d6de38dd09":[43,0,38,7],
 "classdtNodeQueue.html#ae2d92990e88f6a99daed25a0399382ed":[43,0,38,9],
 "classdtObstacleAvoidanceDebugData.html":[43,0,39],
-"classdtObstacleAvoidanceDebugData.html#a2e7d802ea941ad37d5244af91c47f0c9":[43,0,39,13],
-"classdtObstacleAvoidanceDebugData.html#a3bde3898f9ed1ada5e487010e502e4fd":[43,0,39,7],
-"classdtObstacleAvoidanceDebugData.html#a48f21bd0b2d2f591290e127b00953ec2":[43,0,39,4],
-"classdtObstacleAvoidanceDebugData.html#a49f4c177709ecccc77331e1b43ae893c":[43,0,39,11],
-"classdtObstacleAvoidanceDebugData.html#a54805fdf39b6fb3d294c0610f051b1a0":[43,0,39,8],
-"classdtObstacleAvoidanceDebugData.html#a54b01ec0a47c6efd95ebde459791b788":[43,0,39,2],
-"classdtObstacleAvoidanceDebugData.html#a57737b7b4d07179326e69c70032a9f71":[43,0,39,3],
-"classdtObstacleAvoidanceDebugData.html#a87816c09e68ea4d93a01b54b2b5025b1":[43,0,39,9],
-"classdtObstacleAvoidanceDebugData.html#aa18a04d3c916740d7ddbd8d747de4e0f":[43,0,39,6],
-"classdtObstacleAvoidanceDebugData.html#aa7f836ec9b4caf26aeeecc352a7f4fb2":[43,0,39,10],
-"classdtObstacleAvoidanceDebugData.html#aae878af7168a5683cf05cd6f3f9b4cfe":[43,0,39,12]
+"classdtObstacleAvoidanceDebugData.html#a2e7d802ea941ad37d5244af91c47f0c9":[43,0,39,13]
 };

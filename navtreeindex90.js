@@ -1,5 +1,15 @@
 var NAVTREEINDEX90 =
 {
+"md_external_2SDL2_2docs_2README-macos.html#implementation-notes":[20,4],
+"md_external_2SDL2_2docs_2README-macos.html#running-your-app":[20,3,7],
+"md_external_2SDL2_2docs_2README-macos.html#setting-up-a-new-project-by-hand":[20,3,5],
+"md_external_2SDL2_2docs_2README-macos.html#using-the-project-stationary":[20,3,4],
+"md_external_2SDL2_2docs_2README-macos.html#using-the-simple-directmedia-layer-with-a-traditional-makefile":[20,2],
+"md_external_2SDL2_2docs_2README-macos.html#using-the-simple-directmedia-layer-with-xcode":[20,3],
+"md_external_2SDL2_2docs_2README-macos.html#working-directory":[20,4,0],
+"md_external_2SDL2_2docs_2README-macos.html#you-have-a-cocoa-app":[20,4,1],
+"md_external_2SDL2_2docs_2README-n3ds.html":[21],
+"md_external_2SDL2_2docs_2README-n3ds.html#building":[21,0],
 "md_external_2SDL2_2docs_2README-n3ds.html#notes-1":[21,1],
 "md_external_2SDL2_2docs_2README-versions.html":[33],
 "md_external_2SDL2_2docs_2README-versions.html#before-2230":[33,1],
@@ -239,15 +249,5 @@ var NAVTREEINDEX90 =
 "structExampleTreeNode.html#a49b1eea89bac79cae4c3413307442a10":[43,0,83,8],
 "structExampleTreeNode.html#a6b33514362507e7478dd829a41965d52":[43,0,83,1],
 "structExampleTreeNode.html#a8e6a5c6f89097f96ebc67299ba698775":[43,0,83,5],
-"structExampleTreeNode.html#a9fe834adbec0892f50cd71d73755e53e":[43,0,83,0],
-"structExampleTreeNode.html#aaa3013178423eab20b0ebd10716735cc":[43,0,83,3],
-"structExampleTreeNode.html#ae8c6d9955d3b2449ea2de4adb44a4de6":[43,0,83,2],
-"structFastLZCompressor.html":[43,0,84],
-"structFastLZCompressor.html#a61828cd2e21041b21b8e545efbe1da57":[43,0,84,2],
-"structFastLZCompressor.html#a884d23606adb0674c0b0b124b4ffe28f":[43,0,84,0],
-"structFastLZCompressor.html#a8fb3236d4cb66a253fd98036536b51a4":[43,0,84,3],
-"structFastLZCompressor.html#ade3bcdfdf37fed48284a4a4d89e2d804":[43,0,84,1],
-"structFrameResources.html":[43,0,86],
-"structFrameResources.html#a2e11d2b6738b5641d3a3041be1a213a6":[43,0,86,4],
-"structFrameResources.html#a40399cf0ff9d5b63ec4b5a0ee57a9689":[43,0,86,2]
+"structExampleTreeNode.html#a9fe834adbec0892f50cd71d73755e53e":[43,0,83,0]
 };

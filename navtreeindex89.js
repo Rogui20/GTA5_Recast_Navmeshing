@@ -1,5 +1,15 @@
 var NAVTREEINDEX89 =
 {
+"imstb__truetype_8h.html#a006159e27c5c733ea11c688211e47c25":[44,0,7,0,11,69],
+"imstb__truetype_8h.html#a015fbd6e96df8ee58bd41bb4211b64e7":[44,0,7,0,11,37],
+"imstb__truetype_8h.html#a051bbf0eddd73f253c1b1050a9e47157":[44,0,7,0,11,73],
+"imstb__truetype_8h.html#a0549774d30f6c64b85b88acc2329e89e":[44,0,7,0,11,78],
+"imstb__truetype_8h.html#a073c07bd3c08775d2528a0a602be1795":[44,0,7,0,11,40],
+"imstb__truetype_8h.html#a12154e222685026a3cf315a1b5720f24":[44,0,7,0,11,46],
+"imstb__truetype_8h.html#a1254dc807df81931ab070c6e80370489":[44,0,7,0,11,29],
+"imstb__truetype_8h.html#a18fae014dd2261e554248ca737d05578":[44,0,7,0,11,34],
+"imstb__truetype_8h.html#a190bffe156cdb32ac891e835248c90e3":[44,0,7,0,11,57],
+"imstb__truetype_8h.html#a213d5628c6b2e5c107b99378eefc6e3a":[44,0,7,0,11,25],
 "imstb__truetype_8h.html#a2784e0e55678a5980e950b1c9fbc75f0":[44,0,7,0,11,45],
 "imstb__truetype_8h.html#a2e607ba774cee7f2425917105dabd16f":[44,0,7,0,11,33],
 "imstb__truetype_8h.html#a3378c5794e9ab2a16492ab7e3c3c9485":[44,0,7,0,11,63],
@@ -239,15 +249,5 @@ var NAVTREEINDEX89 =
 "md_external_2SDL2_2docs_2README-macos.html#building-the-testers":[20,3,3],
 "md_external_2SDL2_2docs_2README-macos.html#caveats-for-using-sdl-with-mac-os-x":[20,1],
 "md_external_2SDL2_2docs_2README-macos.html#command-line-build":[20,0],
-"md_external_2SDL2_2docs_2README-macos.html#first-steps":[20,3,0],
-"md_external_2SDL2_2docs_2README-macos.html#implementation-notes":[20,4],
-"md_external_2SDL2_2docs_2README-macos.html#running-your-app":[20,3,7],
-"md_external_2SDL2_2docs_2README-macos.html#setting-up-a-new-project-by-hand":[20,3,5],
-"md_external_2SDL2_2docs_2README-macos.html#using-the-project-stationary":[20,3,4],
-"md_external_2SDL2_2docs_2README-macos.html#using-the-simple-directmedia-layer-with-a-traditional-makefile":[20,2],
-"md_external_2SDL2_2docs_2README-macos.html#using-the-simple-directmedia-layer-with-xcode":[20,3],
-"md_external_2SDL2_2docs_2README-macos.html#working-directory":[20,4,0],
-"md_external_2SDL2_2docs_2README-macos.html#you-have-a-cocoa-app":[20,4,1],
-"md_external_2SDL2_2docs_2README-n3ds.html":[21],
-"md_external_2SDL2_2docs_2README-n3ds.html#building":[21,0]
+"md_external_2SDL2_2docs_2README-macos.html#first-steps":[20,3,0]
 };

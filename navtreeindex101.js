@@ -1,5 +1,15 @@
 var NAVTREEINDEX101 =
 {
+"structImGui__ImplDX12__InitInfo.html#a32f45f1af55326124cf70ee632c44ded":[43,0,134,9],
+"structImGui__ImplDX12__InitInfo.html#a60bf5e4049af126f2317350484fc8065":[43,0,134,3],
+"structImGui__ImplDX12__InitInfo.html#a681f1af11f689aafbb57f21192a09e03":[43,0,134,8],
+"structImGui__ImplDX12__InitInfo.html#aa07383dc41544c8e9a79c769407ed497":[43,0,134,5],
+"structImGui__ImplDX12__InitInfo.html#ac449d760864a151eace90244ce941af7":[43,0,134,11],
+"structImGui__ImplDX12__InitInfo.html#ae010edaef902b3865896902e1a111d40":[43,0,134,2],
+"structImGui__ImplDX12__InitInfo.html#ae1991453617a4a9fa735a075eaa008ac":[43,0,134,1],
+"structImGui__ImplDX12__InitInfo.html#af1c551016119264ec072ad329e956495":[43,0,134,0],
+"structImGui__ImplDX12__RenderBuffers.html":[43,0,135],
+"structImGui__ImplDX12__RenderBuffers.html#a29214b15eceea549928373591e877640":[43,0,135,1],
 "structImGui__ImplDX12__RenderBuffers.html#a5ffee1b7a7d728d15dfd33739819101c":[43,0,135,2],
 "structImGui__ImplDX12__RenderBuffers.html#a6643010c24e4046769271a36d596398a":[43,0,135,3],
 "structImGui__ImplDX12__RenderBuffers.html#adea8d9622af0a5c6376f4b98840b0812":[43,0,135,0],
@@ -239,15 +249,5 @@ var NAVTREEINDEX101 =
 "structImGui__ImplVulkan__Data.html#abcebf5dff85e7fce19b890b0282f8b8b":[43,0,159,10],
 "structImGui__ImplVulkan__Data.html#adac2b4aabd37341e2546c01744947e85":[43,0,159,3],
 "structImGui__ImplVulkan__Data.html#ae2e212c9558ce20170033c6089fb9951":[43,0,159,9],
-"structImGui__ImplVulkan__Data.html#aef9c19539dafd0e8905da5a13e7a8a2f":[43,0,159,6],
-"structImGui__ImplVulkan__Data.html#af05639adc0eca26cee2eece52a656bf6":[43,0,159,11],
-"structImGui__ImplVulkan__FrameRenderBuffers.html":[43,0,160],
-"structImGui__ImplVulkan__FrameRenderBuffers.html#a1dd3cedfa723c352b0b06061049803bc":[43,0,160,3],
-"structImGui__ImplVulkan__FrameRenderBuffers.html#a278783f96b729fcb2d7800c69001aa1e":[43,0,160,0],
-"structImGui__ImplVulkan__FrameRenderBuffers.html#a3266595c241593732efea9f3acde90c9":[43,0,160,5],
-"structImGui__ImplVulkan__FrameRenderBuffers.html#a49625bdab88e1dd12f5c699ed5f0b6bb":[43,0,160,4],
-"structImGui__ImplVulkan__FrameRenderBuffers.html#ae4a8742879545acadf2123203152b4d8":[43,0,160,2],
-"structImGui__ImplVulkan__FrameRenderBuffers.html#af89d68d85a89683a7a17308365a745cf":[43,0,160,1],
-"structImGui__ImplVulkan__InitInfo.html":[43,0,161],
-"structImGui__ImplVulkan__InitInfo.html#a0a9a0a08571e832b4cdf800be51f9ee7":[43,0,161,18]
+"structImGui__ImplVulkan__Data.html#aef9c19539dafd0e8905da5a13e7a8a2f":[43,0,159,6]
 };

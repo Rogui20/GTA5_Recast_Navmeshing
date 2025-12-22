@@ -1,5 +1,15 @@
 var NAVTREEINDEX95 =
 {
+"structImGuiDockPreviewData.html#a2878a10b4b918884f69d0e4e221cbafb":[43,0,194,9],
+"structImGuiDockPreviewData.html#a30d7af1b65aa3623f32e305599d46f65":[43,0,194,6],
+"structImGuiDockPreviewData.html#a31539f44b43dca273fbf41b904f3450c":[43,0,194,0],
+"structImGuiDockPreviewData.html#a743db548032982f7cd5d86b0d2e1e764":[43,0,194,5],
+"structImGuiDockPreviewData.html#a80b2825d6f899214221359afc6c50fd6":[43,0,194,3],
+"structImGuiDockPreviewData.html#a86a8fb0cf7ba6807f8ff6d3ba2ad8512":[43,0,194,1],
+"structImGuiDockPreviewData.html#a909747ad6934e0f8892874bbac32151a":[43,0,194,2],
+"structImGuiDockPreviewData.html#ac378b303ec0fe460a7ba12dcf90f5137":[43,0,194,4],
+"structImGuiDockPreviewData.html#ae16cfdf6c7760390e8b62424236b2213":[43,0,194,7],
+"structImGuiDockRequest.html":[43,0,195],
 "structImGuiDockRequest.html#a0a620345f20f19ece2ab5a55cd97dc86":[43,0,195,3],
 "structImGuiDockRequest.html#a3068f21a801d803620ddf6b216c13ace":[43,0,195,0],
 "structImGuiDockRequest.html#a4036b3dfaef9d30e21c218fb6d059ddf":[43,0,195,8],
@@ -239,15 +249,5 @@ var NAVTREEINDEX95 =
 "structImGuiInputTextCallbackData.html#ac8cd46c3473851c2822aae8240289069":[43,0,213,6],
 "structImGuiInputTextCallbackData.html#ae19641bad15c1a163928d121075ca09c":[43,0,213,0],
 "structImGuiInputTextCallbackData.html#ae8358ea4135032204fcba6c9ada7c49f":[43,0,213,18],
-"structImGuiInputTextDeactivatedState.html":[43,0,214],
-"structImGuiInputTextDeactivatedState.html#a19db36bc26be137f8b9c7a55f09dd1a3":[43,0,214,3],
-"structImGuiInputTextDeactivatedState.html#a43332a0e530aff3f308605119fb36b5b":[43,0,214,2],
-"structImGuiInputTextDeactivatedState.html#ab25f0ed83856bf370fa78e9a6aaaa895":[43,0,214,1],
-"structImGuiInputTextDeactivatedState.html#abefa99fe24b6becb8a463e66120219a1":[43,0,214,0],
-"structImGuiInputTextState.html":[43,0,215],
-"structImGuiInputTextState.html#a061d099bd9dad94fe86a435f48c7fe1e":[43,0,215,7],
-"structImGuiInputTextState.html#a0924f1eead76c7d58090aa603cea4301":[43,0,215,6],
-"structImGuiInputTextState.html#a2841e4128e05556069bba2b76c651adc":[43,0,215,20],
-"structImGuiInputTextState.html#a2cd5083f820d0012479bb706a45b04b0":[43,0,215,13],
-"structImGuiInputTextState.html#a31cb14a20925421139e06e52bfea00b6":[43,0,215,12]
+"structImGuiInputTextDeactivatedState.html":[43,0,214]
 };

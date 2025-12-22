@@ -89,5 +89,6 @@ var searchData=
   ['_7etempobstaclecreatetool_86',['~TempObstacleCreateTool',['../classTempObstacleCreateTool.html#a8c2fa24e7c9d71e6cb90f32b61d9ae77',1,'TempObstacleCreateTool']]],
   ['_7etempobstaclehilighttool_87',['~TempObstacleHilightTool',['../classTempObstacleHilightTool.html#af0475ec4f0d02355ea68a78edd39b10b',1,'TempObstacleHilightTool']]],
   ['_7etestcase_88',['~TestCase',['../classTestCase.html#ae4684f6b106fa323a61dd13be03d7919',1,'TestCase']]],
-  ['_7eviewerapp_89',['~ViewerApp',['../classViewerApp.html#a46f2542925089dbd0d8dc3742b458df6',1,'ViewerApp']]]
+  ['_7eviewerapp_89',['~ViewerApp',['../classViewerApp.html#a46f2542925089dbd0d8dc3742b458df6',1,'ViewerApp']]],
+  ['_7ewebsockets_90',['~WebSockets',['../classWebSockets.html#ad4eb4a974523518575f771cd284c213e',1,'WebSockets']]]
 ];
