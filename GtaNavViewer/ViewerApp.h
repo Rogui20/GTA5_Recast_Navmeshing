@@ -12,6 +12,7 @@
 #include "GtaHandler.h"
 #include "GtaHandlerMenu.h"
 #include "MemoryHandler.h"
+#include "WebSockets.h"
 #include "imfilebrowser.h"
 #include <DetourNavMeshQuery.h>
 #include <memory>
@@ -113,6 +114,8 @@ private:
     GtaHandler gtaHandler;
     GtaHandlerMenu gtaHandlerMenu;
     MemoryHandler memoryHandler;
+    WebSockets webSockets;
+    bool webSocketsEnabled = false;
     std::unordered_map<int, uint64_t> memorySlotToMeshId;
 
     enum class NavmeshRenderMode
