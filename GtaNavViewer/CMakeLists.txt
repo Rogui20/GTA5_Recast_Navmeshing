@@ -16,6 +16,7 @@ set(GLAD_INCLUDE "${EXTERNAL_DIR}/glad/include")
 set(GLAD_SRC     "${EXTERNAL_DIR}/glad/src/glad.c")
 set(GLM_INCLUDE  "${EXTERNAL_DIR}/glm")
 set(RUNTIME_DIR  "${ROOT_DIR}/GtaNavRuntime")
+set(UWEBSOCKETS_DIR "${EXTERNAL_DIR}/uWebSockets")
 
 # Detour/Recast includes
 set(DETOUR_INCLUDE "${ROOT_DIR}/Detour/Include")
@@ -77,6 +78,8 @@ add_executable(GtaNavViewer
     GtaHandler.h
     MemoryHandler.cpp
     MemoryHandler.h
+    WebSockets.cpp
+    WebSockets.h
     GtaHandlerMenu.cpp
     GtaHandlerMenu.h
     json.hpp
@@ -85,15 +88,51 @@ add_executable(GtaNavViewer
     ${IMGUI_SOURCES}
 )
 
+set(UWEBSOCKETS_AVAILABLE OFF)
+if (EXISTS "${UWEBSOCKETS_DIR}/src/App.h")
+    file(GLOB_RECURSE UWEBSOCKETS_SOURCES
+        "${UWEBSOCKETS_DIR}/src/*.c"
+        "${UWEBSOCKETS_DIR}/src/*.cpp"
+        "${UWEBSOCKETS_DIR}/uSockets/src/*.c"
+        "${UWEBSOCKETS_DIR}/uSockets/src/*.cpp"
+    )
+
+    if (UWEBSOCKETS_SOURCES)
+        add_library(uwebsockets STATIC ${UWEBSOCKETS_SOURCES})
+        target_include_directories(uwebsockets PUBLIC
+            ${UWEBSOCKETS_DIR}/src
+            ${UWEBSOCKETS_DIR}/uSockets/src
+        )
+        target_compile_definitions(uwebsockets PUBLIC LIBUS_NO_SSL)
+
+        if (WIN32)
+            target_link_libraries(uwebsockets PUBLIC ws2_32 userenv advapi32)
+        elseif (UNIX)
+            target_link_libraries(uwebsockets PUBLIC pthread)
+        endif()
+
+        set(UWEBSOCKETS_AVAILABLE ON)
+    else()
+        message(WARNING "uWebSockets encontrado, mas sem fontes C/C++; suporte desabilitado.")
+    endif()
+else()
+    message(WARNING "uWebSockets não encontrado em ${UWEBSOCKETS_DIR}; suporte a WebSockets ficará desabilitado.")
+endif()
+
 # ---------------------------------------
 # Link runtime que já existe
 # ---------------------------------------
-target_link_libraries(GtaNavViewer
+target_link_libraries(GtaNavViewer PRIVATE
     GtaNavRuntime   # vindo do /GtaNavRuntime/CMakeLists.txt
     ${SDL2_LIB}/SDL2.lib
     ${SDL2_LIB}/SDL2main.lib
     opengl32
 )
+
+if (UWEBSOCKETS_AVAILABLE)
+    target_link_libraries(GtaNavViewer PRIVATE uwebsockets)
+    target_compile_definitions(GtaNavViewer PRIVATE HAVE_UWEBSOCKETS)
+endif()
 
 # Copiar SDL2.dll automaticamente
 add_custom_command(TARGET GtaNavViewer POST_BUILD

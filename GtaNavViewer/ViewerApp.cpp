@@ -69,6 +69,7 @@ ViewerApp::ViewerApp()
 ViewerApp::~ViewerApp()
 {
     memoryHandler.SetMonitoringEnabled(false);
+    webSockets.Stop();
     for (auto& query : navQuerySlots)
     {
         if (query)
@@ -2158,7 +2159,7 @@ void ViewerApp::RenderFrame()
                     gtaHandlerMenu.Draw(gtaHandler, *this);
                 }
 
-                if (ImGui::CollapsingHeader("Memory Handler", ImGuiTreeNodeFlags_DefaultOpen))
+                if (ImGui::CollapsingHeader("GTA Tracker", ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     bool monitorGta = memoryHandler.IsMonitoringRequested();
                     if (ImGui::Checkbox("Monitorar GTA", &monitorGta))
@@ -2199,6 +2200,31 @@ void ViewerApp::RenderFrame()
                     ImGui::EndDisabled();
 
                     ImGui::TextDisabled("Usa arquivo de hash para nome + pasta OBJ para carregar meshes automaticamente.");
+
+                    if (webSockets.IsSupported())
+                    {
+                        if (ImGui::Checkbox("WebSockets", &webSocketsEnabled))
+                        {
+                            if (webSocketsEnabled)
+                            {
+                                if (!webSockets.Start(8081))
+                                {
+                                    webSocketsEnabled = false;
+                                }
+                            }
+                            else
+                            {
+                                webSockets.Stop();
+                            }
+                        }
+
+                        ImGui::SameLine();
+                        ImGui::TextDisabled(webSockets.IsRunning() ? "(servidor ativo em 0.0.0.0:8081)" : "(servidor parado)");
+                    }
+                    else
+                    {
+                        ImGui::TextDisabled("WebSockets indisponível (uWebSockets não encontrado no build).");
+                    }
                 }
 
                 if (ImGui::CollapsingHeader("Navmesh Tests"))
