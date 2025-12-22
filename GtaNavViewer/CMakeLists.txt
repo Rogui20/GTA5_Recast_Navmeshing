@@ -90,6 +90,17 @@ add_executable(GtaNavViewer
 
 set(UWEBSOCKETS_AVAILABLE OFF)
 if (EXISTS "${UWEBSOCKETS_DIR}/src/App.h")
+    # uWebSockets usa libuv por padrão; só habilitamos se uv.h for encontrado.
+    find_path(LIBUV_INCLUDE_DIR uv.h
+        HINTS
+            "${UWEBSOCKETS_DIR}/libuv/include"
+            "${EXTERNAL_DIR}/libuv/include"
+    )
+
+    if (NOT LIBUV_INCLUDE_DIR)
+        message(WARNING "uWebSockets encontrado, mas libuv (uv.h) não foi localizado; suporte desabilitado.")
+    endif()
+
     file(GLOB_RECURSE UWEBSOCKETS_SOURCES
         "${UWEBSOCKETS_DIR}/src/*.c"
         "${UWEBSOCKETS_DIR}/src/*.cpp"
@@ -97,11 +108,12 @@ if (EXISTS "${UWEBSOCKETS_DIR}/src/App.h")
         "${UWEBSOCKETS_DIR}/uSockets/src/*.cpp"
     )
 
-    if (UWEBSOCKETS_SOURCES)
+    if (UWEBSOCKETS_SOURCES AND LIBUV_INCLUDE_DIR)
         add_library(uwebsockets STATIC ${UWEBSOCKETS_SOURCES})
         target_include_directories(uwebsockets PUBLIC
             ${UWEBSOCKETS_DIR}/src
             ${UWEBSOCKETS_DIR}/uSockets/src
+            ${LIBUV_INCLUDE_DIR}
         )
         target_compile_definitions(uwebsockets PUBLIC LIBUS_NO_SSL)
 
@@ -113,7 +125,7 @@ if (EXISTS "${UWEBSOCKETS_DIR}/src/App.h")
 
         set(UWEBSOCKETS_AVAILABLE ON)
     else()
-        message(WARNING "uWebSockets encontrado, mas sem fontes C/C++; suporte desabilitado.")
+        message(WARNING "uWebSockets encontrado, mas sem fontes C/C++ ou libuv; suporte desabilitado.")
     endif()
 else()
     message(WARNING "uWebSockets não encontrado em ${UWEBSOCKETS_DIR}; suporte a WebSockets ficará desabilitado.")
