@@ -124,10 +124,6 @@ Functions</h2></td></tr>
 <tr class="separator:a02f04c1206d1e976a87580ceb348b58b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a71ad857fedd395ce543b790ddfc1b9" id="r_a6a71ad857fedd395ce543b790ddfc1b9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="GtaNavAPI_8h.html#a43d7141a461cf8a4570f7535f656eef7">GTANAV_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GtaNavAPI_8h.html#a6a71ad857fedd395ce543b790ddfc1b9">GtaNav_BuildTilesAroundPositionAPI</a> (<a class="el" href="structNavMeshContext.html">NavMeshContext</a> *ctx, const float *pos, int numTilesX, int numTilesZ)</td></tr>
 <tr class="separator:a6a71ad857fedd395ce543b790ddfc1b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58f24db03a7257bf71440edb0b637091" id="r_a58f24db03a7257bf71440edb0b637091"><td class="memItemLeft" align="right" valign="top"><a class="el" href="GtaNavAPI_8h.html#a43d7141a461cf8a4570f7535f656eef7">GTANAV_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GtaNavAPI_8h.html#a58f24db03a7257bf71440edb0b637091">GtaNav_SaveTileCache</a> (<a class="el" href="structNavMeshContext.html">NavMeshContext</a> *ctx, const char *cachePath)</td></tr>
-<tr class="separator:a58f24db03a7257bf71440edb0b637091"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba69a190b3cda4a1972325ffda9eaf3d" id="r_aba69a190b3cda4a1972325ffda9eaf3d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="GtaNavAPI_8h.html#a43d7141a461cf8a4570f7535f656eef7">GTANAV_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GtaNavAPI_8h.html#aba69a190b3cda4a1972325ffda9eaf3d">GtaNav_LoadTileCache</a> (<a class="el" href="structNavMeshContext.html">NavMeshContext</a> *ctx, const char *cachePath, bool validateGeometry, bool rewriteOutdatedCache)</td></tr>
-<tr class="separator:aba69a190b3cda4a1972325ffda9eaf3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a43d7141a461cf8a4570f7535f656eef7" name="a43d7141a461cf8a4570f7535f656eef7"></a>
@@ -306,74 +302,6 @@ Functions</h2></td></tr>
           <td class="paramtype"><a class="el" href="structNavMeshContext.html">NavMeshContext</a> *&#160;</td>
           <td class="paramname"><em>ctx</em></td><td>)</td>
           <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aba69a190b3cda4a1972325ffda9eaf3d" name="aba69a190b3cda4a1972325ffda9eaf3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba69a190b3cda4a1972325ffda9eaf3d">&#9670;&#160;</a></span>GtaNav_LoadTileCache()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="GtaNavAPI_8h.html#a43d7141a461cf8a4570f7535f656eef7">GTANAV_API</a> bool GtaNav_LoadTileCache </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structNavMeshContext.html">NavMeshContext</a> *&#160;</td>
-          <td class="paramname"><em>ctx</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>cachePath</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>validateGeometry</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>rewriteOutdatedCache</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a58f24db03a7257bf71440edb0b637091" name="a58f24db03a7257bf71440edb0b637091"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58f24db03a7257bf71440edb0b637091">&#9670;&#160;</a></span>GtaNav_SaveTileCache()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="GtaNavAPI_8h.html#a43d7141a461cf8a4570f7535f656eef7">GTANAV_API</a> bool GtaNav_SaveTileCache </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structNavMeshContext.html">NavMeshContext</a> *&#160;</td>
-          <td class="paramname"><em>ctx</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>cachePath</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
