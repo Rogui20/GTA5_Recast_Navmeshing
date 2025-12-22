@@ -5,5 +5,7 @@
 class ObjLoader
 {
 public:
-    static Mesh* LoadObj(const std::string& path);
+    static Mesh* LoadMesh(const std::string& path, bool centerMesh = true, bool tryLoadBin = true);
+    static Mesh* LoadMeshFromBin(const std::string& path, bool centerMesh = true);
+    static Mesh* LoadObj(const std::string& path, bool centerMesh = true, bool tryLoadBin = false);
 };

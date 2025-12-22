@@ -35,6 +35,8 @@ in vec3 vWorldPos;
 
 uniform int uRenderMode;
 uniform vec3 uSolidColor;
+uniform float uSolidAlpha;
+uniform vec3 uBaseColor;
 
 out vec4 FragColor;
 
@@ -44,7 +46,23 @@ void main()
     vec3 N = normalize(cross(dFdx(vWorldPos), dFdy(vWorldPos)));
 
     if (uRenderMode == 0) {
-        FragColor = vec4(1,1,0,1);
+        // Blender-like SOLID shading (lambert + subtle fill light)
+        vec3 baseColor = uBaseColor;
+
+        // Key light similar to Blender's default solid lighting
+        vec3 L1 = normalize(vec3(0.45, 0.80, 0.35));
+        // Fill light to avoid overly dark backsides
+        vec3 L2 = normalize(vec3(-0.30, -0.60, -0.25));
+
+        float diff1 = max(dot(N, L1), 0.0);
+        float diff2 = max(dot(N, L2), 0.0) * 0.35;
+
+        float ambient = 0.25;
+        float shading = ambient + diff1 * 0.9 + diff2;
+        shading = clamp(shading, 0.0, 1.0);
+
+        vec3 col = baseColor * shading;
+        FragColor = vec4(col,1);
     }
     else if (uRenderMode == 1) {
         FragColor = vec4(0,0,0,1);
@@ -60,12 +78,12 @@ void main()
         // ---- LIT estilo Blender SOLID ----
         vec3 L = normalize(vec3(0.4,1.0,0.2));
         float diff = max(dot(N,L), 0.0);
-        vec3 base = vec3(0.8, 0.8, 0.9);
+        vec3 base = uBaseColor;
         vec3 col  = base*(0.15 + diff*0.85);
         FragColor = vec4(col,1);
     }
     else if (uRenderMode == 99) {
-        FragColor = vec4(uSolidColor,1);
+        FragColor = vec4(uSolidColor,uSolidAlpha);
     }
 }
 )";
@@ -174,6 +192,12 @@ RendererGL::~RendererGL()
     glDeleteProgram(shader);
     glDeleteVertexArrays(1, &vaoCube);
     glDeleteBuffers(1, &vboCube);
+    glDeleteVertexArrays(1, &vaoAxis);
+    glDeleteBuffers(1, &vboAxis);
+    glDeleteVertexArrays(1, &vaoGrid);
+    glDeleteBuffers(1, &vboGrid);
+    glDeleteVertexArrays(1, &navVao);
+    glDeleteBuffers(1, &navVbo);
 }
 
 GLuint RendererGL::LoadShader(const char* vs, const char* fs)
@@ -226,6 +250,12 @@ void RendererGL::Begin(ViewerCamera* cam, RenderMode mode)
 {
     glUseProgram(shader);
     glUniform1i(glGetUniformLocation(shader, "uRenderMode"), (int)mode);
+    glUniform1f(glGetUniformLocation(shader, "uSolidAlpha"), 1.0f);
+
+    glm::vec3 baseColor = glm::vec3(0.72f, 0.76f, 0.82f);
+    if (mode == RenderMode::Lit)
+        baseColor = glm::vec3(0.8f, 0.8f, 0.9f);
+    glUniform3f(glGetUniformLocation(shader, "uBaseColor"), baseColor.x, baseColor.y, baseColor.z);
 
 
     // Matriz de projeção e view sempre iguais
@@ -388,8 +418,19 @@ void RendererGL::DrawAxisGizmoScreen(const ViewerCamera* cam, int screenW, int s
     glUniformMatrix4fv(glGetUniformLocation(shader,"uProj"),1,GL_FALSE,&proj[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(shader,"uView"),1,GL_FALSE,&view[0][0]);
 
-    glm::mat4 model(1.0f);
-    glUniformMatrix4fv(glGetUniformLocation(shader,"uModel"),1,GL_FALSE,&model[0][0]);
+    // Transform axes to match GTA coordinates used by ViewerApp::ToGtaCoords
+    // GTA axes expressed in the internal (viewer) basis:
+    // X -> X
+    // Y -> -Z
+    // Z -> Y
+    glm::mat4 gtaAxisToInternal(
+        glm::vec4(1,  0,  0, 0),  // GTA +X = internal +X
+        glm::vec4(0,  0, -1, 0),  // GTA +Y = internal -Z
+        glm::vec4(0,  1,  0, 0),  // GTA +Z = internal +Y
+        glm::vec4(0,  0,  0, 1)
+    );
+
+    glUniformMatrix4fv(glGetUniformLocation(shader,"uModel"),1,GL_FALSE,&gtaAxisToInternal[0][0]);
 
     // --- 4. Renderizar eixos ---
     glBindVertexArray(vaoAxis);
@@ -408,7 +449,52 @@ void RendererGL::DrawAxisGizmoScreen(const ViewerCamera* cam, int screenW, int s
     glViewport(0, 0, screenW, screenH);
 }
 
-void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines)
+void RendererGL::drawNavmeshTriangles(const std::vector<glm::vec3>& tris, const glm::vec3& color, float alpha)
+{
+    if (tris.empty())
+        return;
+
+    std::vector<float> verts;
+    verts.reserve(tris.size() * 3);
+
+    for (const auto& v : tris)
+    {
+        verts.push_back(v.x);
+        verts.push_back(v.y);
+        verts.push_back(v.z);
+    }
+
+    glUseProgram(shader);
+    glUniform1i(glGetUniformLocation(shader, "uRenderMode"), 99);
+    glUniform3f(glGetUniformLocation(shader, "uSolidColor"), color.x, color.y, color.z);
+    glUniform1f(glGetUniformLocation(shader, "uSolidAlpha"), alpha);
+
+    glm::mat4 model(1.0f);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "uModel"),
+                       1, GL_FALSE, &model[0][0]);
+
+    glBindVertexArray(navVao);
+    glBindBuffer(GL_ARRAY_BUFFER, navVbo);
+    glBufferData(GL_ARRAY_BUFFER,
+                 verts.size() * sizeof(float),
+                 verts.data(),
+                 GL_DYNAMIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDepthMask(GL_FALSE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(verts.size() / 3));
+    glDepthMask(GL_TRUE);
+    glDisable(GL_BLEND);
+
+    glBindVertexArray(0);
+}
+
+void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines, const glm::vec3& color, float lineWidth)
 {
     if (lines.empty())
         return;
@@ -427,7 +513,8 @@ void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines)
 
     // Queremos um "modo linha colorida fixa"
     glUniform1i(glGetUniformLocation(shader, "uRenderMode"), 99);
-    glUniform3f(glGetUniformLocation(shader, "uSolidColor"), 0.0f, 0.0f, 0.0f); // preto (muda se quiser)
+    glUniform3f(glGetUniformLocation(shader, "uSolidColor"), color.x, color.y, color.z);
+    glUniform1f(glGetUniformLocation(shader, "uSolidAlpha"), 1.0f);
 
     glm::mat4 model(1.0f);
     glUniformMatrix4fv(glGetUniformLocation(shader, "uModel"),
@@ -444,7 +531,7 @@ void RendererGL::drawNavmeshLines(const std::vector<DebugLine>& lines)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glLineWidth(1.5f);
+    glLineWidth(lineWidth);
     glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(verts.size() / 3));
 
     glBindVertexArray(0);

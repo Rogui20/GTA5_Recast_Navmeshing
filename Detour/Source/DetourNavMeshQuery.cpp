@@ -2021,6 +2021,246 @@ dtStatus dtNavMeshQuery::findStraightPath(const float* startPos, const float* en
 	return DT_SUCCESS | ((*straightPathCount >= maxStraightPath) ? DT_BUFFER_TOO_SMALL : 0);
 }
 
+dtStatus dtNavMeshQuery::findStraightPathMinEdgePrecise(
+    const float* startPos, const float* endPos,
+    const dtPolyRef* path, const int pathSize,
+    float* straightPath, unsigned char* straightPathFlags, dtPolyRef* straightPathRefs,
+    int* straightPathCount, const int maxStraightPath, const int options,
+    const float minEdgeDist) const
+{
+    dtAssert(m_nav);
+
+    if (!straightPathCount)
+        return DT_FAILURE | DT_INVALID_PARAM;
+
+    *straightPathCount = 0;
+
+    if (!startPos || !dtVisfinite(startPos) ||
+        !endPos || !dtVisfinite(endPos) ||
+        !path || pathSize <= 0 || !path[0] ||
+        maxStraightPath <= 0)
+    {
+        return DT_FAILURE | DT_INVALID_PARAM;
+    }
+
+    dtStatus stat = 0;
+
+    // Igual ao original: clampa início/fim à borda do primeiro/último poly
+    float closestStartPos[3];
+    if (dtStatusFailed(closestPointOnPolyBoundary(path[0], startPos, closestStartPos)))
+        return DT_FAILURE | DT_INVALID_PARAM;
+
+    float closestEndPos[3];
+    if (dtStatusFailed(closestPointOnPolyBoundary(path[pathSize-1], endPos, closestEndPos)))
+        return DT_FAILURE | DT_INVALID_PARAM;
+
+    // (1) Adiciona start
+    stat = appendVertex(closestStartPos, DT_STRAIGHTPATH_START, path[0],
+                        straightPath, straightPathFlags, straightPathRefs,
+                        straightPathCount, maxStraightPath);
+    if (stat != DT_IN_PROGRESS)
+        return stat;
+
+    if (pathSize > 1)
+    {
+        float portalApex[3], portalLeft[3], portalRight[3];
+        dtVcopy(portalApex, closestStartPos);
+        dtVcopy(portalLeft, portalApex);
+        dtVcopy(portalRight, portalApex);
+        int apexIndex = 0;
+        int leftIndex = 0;
+        int rightIndex = 0;
+
+        unsigned char leftPolyType = 0;
+        unsigned char rightPolyType = 0;
+
+        dtPolyRef leftPolyRef = path[0];
+        dtPolyRef rightPolyRef = path[0];
+
+        for (int i = 0; i < pathSize; ++i)
+        {
+            float left[3], right[3];
+            unsigned char toType;
+
+            if (i+1 < pathSize)
+            {
+                unsigned char fromType; // ignorado
+
+                // --- Next portal (mesma chamada do seu código) ---
+                if (dtStatusFailed(getPortalPoints(path[i], path[i+1], left, right, fromType, toType)))
+                {
+                    // Igual ao original: fecha parcial no poly i
+                    if (dtStatusFailed(closestPointOnPolyBoundary(path[i], endPos, closestEndPos)))
+                        return DT_FAILURE | DT_INVALID_PARAM;
+
+                    if (options & (DT_STRAIGHTPATH_AREA_CROSSINGS | DT_STRAIGHTPATH_ALL_CROSSINGS))
+                    {
+                        appendPortals(apexIndex, i, closestEndPos, path,
+                                      straightPath, straightPathFlags, straightPathRefs,
+                                      straightPathCount, maxStraightPath, options);
+                    }
+
+                    appendVertex(closestEndPos, 0, path[i],
+                                 straightPath, straightPathFlags, straightPathRefs,
+                                 straightPathCount, maxStraightPath);
+
+                    return DT_SUCCESS | DT_PARTIAL_RESULT |
+                           ((*straightPathCount >= maxStraightPath) ? DT_BUFFER_TOO_SMALL : 0);
+                }
+
+                // --- (NOVIDADE) Encolhe o portal com minEdgeDist, em XZ, sem colapsar ---
+                if (minEdgeDist > 0.0f)
+                {
+                    const float dx = right[0] - left[0];
+                    const float dz = right[2] - left[2];
+                    const float w2 = dx*dx + dz*dz;
+                    if (w2 > 1e-10f)
+                    {
+                        const float w = sqrtf(w2);
+                        const float ux = dx / w, uz = dz / w;
+                        // Só aplica shrink se sobrar largura suficiente
+                        if (w > 2.0f * minEdgeDist + 1e-4f)
+                        {
+                            left[0]  += ux * minEdgeDist;
+                            left[2]  += uz * minEdgeDist;
+                            right[0] -= ux * minEdgeDist;
+                            right[2] -= uz * minEdgeDist;
+                            // Mantém Y original dos pontos do portal para não “puxar” de andar.
+                        }
+                        // Caso contrário: mantém portal como veio (sem colapsar pro meio)
+                    }
+                }
+
+                // Se começa muito perto do portal, avança (igual ao original)
+                if (i == 0)
+                {
+                    float t;
+                    if (dtDistancePtSegSqr2D(portalApex, left, right, t) < dtSqr(0.001f))
+                        continue;
+                }
+            }
+            else
+            {
+                // Fim do caminho: portal degenerado = end
+                dtVcopy(left, closestEndPos);
+                dtVcopy(right, closestEndPos);
+                toType = DT_POLYTYPE_GROUND;
+            }
+
+            // --- Mesma lógica do funil 2D do original ---
+
+            // Right vertex
+            if (dtTriArea2D(portalApex, portalRight, right) <= 0.0f)
+            {
+                if (dtVequal(portalApex, portalRight) || dtTriArea2D(portalApex, portalLeft, right) > 0.0f)
+                {
+                    dtVcopy(portalRight, right);
+                    rightPolyRef = (i+1 < pathSize) ? path[i+1] : 0;
+                    rightPolyType = toType;
+                    rightIndex = i;
+                }
+                else
+                {
+                    if (options & (DT_STRAIGHTPATH_AREA_CROSSINGS | DT_STRAIGHTPATH_ALL_CROSSINGS))
+                    {
+                        stat = appendPortals(apexIndex, leftIndex, portalLeft, path,
+                                             straightPath, straightPathFlags, straightPathRefs,
+                                             straightPathCount, maxStraightPath, options);
+                        if (stat != DT_IN_PROGRESS)
+                            return stat;
+                    }
+
+                    dtVcopy(portalApex, portalLeft);
+                    apexIndex = leftIndex;
+
+                    unsigned char flags = 0;
+                    if (!leftPolyRef)
+                        flags = DT_STRAIGHTPATH_END;
+                    else if (leftPolyType == DT_POLYTYPE_OFFMESH_CONNECTION)
+                        flags = DT_STRAIGHTPATH_OFFMESH_CONNECTION;
+                    dtPolyRef ref = leftPolyRef;
+
+                    stat = appendVertex(portalApex, flags, ref,
+                                        straightPath, straightPathFlags, straightPathRefs,
+                                        straightPathCount, maxStraightPath);
+                    if (stat != DT_IN_PROGRESS)
+                        return stat;
+
+                    dtVcopy(portalLeft, portalApex);
+                    dtVcopy(portalRight, portalApex);
+                    leftIndex = apexIndex;
+                    rightIndex = apexIndex;
+
+                    i = apexIndex;
+                    continue;
+                }
+            }
+
+            // Left vertex
+            if (dtTriArea2D(portalApex, portalLeft, left) >= 0.0f)
+            {
+                if (dtVequal(portalApex, portalLeft) || dtTriArea2D(portalApex, portalRight, left) < 0.0f)
+                {
+                    dtVcopy(portalLeft, left);
+                    leftPolyRef = (i+1 < pathSize) ? path[i+1] : 0;
+                    leftPolyType = toType;
+                    leftIndex = i;
+                }
+                else
+                {
+                    if (options & (DT_STRAIGHTPATH_AREA_CROSSINGS | DT_STRAIGHTPATH_ALL_CROSSINGS))
+                    {
+                        stat = appendPortals(apexIndex, rightIndex, portalRight, path,
+                                             straightPath, straightPathFlags, straightPathRefs,
+                                             straightPathCount, maxStraightPath, options);
+                        if (stat != DT_IN_PROGRESS)
+                            return stat;
+                    }
+
+                    dtVcopy(portalApex, portalRight);
+                    apexIndex = rightIndex;
+
+                    unsigned char flags = 0;
+                    if (!rightPolyRef)
+                        flags = DT_STRAIGHTPATH_END;
+                    else if (rightPolyType == DT_POLYTYPE_OFFMESH_CONNECTION)
+                        flags = DT_STRAIGHTPATH_OFFMESH_CONNECTION;
+                    dtPolyRef ref = rightPolyRef;
+
+                    stat = appendVertex(portalApex, flags, ref,
+                                        straightPath, straightPathFlags, straightPathRefs,
+                                        straightPathCount, maxStraightPath);
+                    if (stat != DT_IN_PROGRESS)
+                        return stat;
+
+                    dtVcopy(portalLeft, portalApex);
+                    dtVcopy(portalRight, portalApex);
+                    leftIndex = apexIndex;
+                    rightIndex = apexIndex;
+
+                    i = apexIndex;
+                    continue;
+                }
+            }
+        }
+
+        if (options & (DT_STRAIGHTPATH_AREA_CROSSINGS | DT_STRAIGHTPATH_ALL_CROSSINGS))
+        {
+            stat = appendPortals(apexIndex, pathSize-1, closestEndPos, path,
+                                 straightPath, straightPathFlags, straightPathRefs,
+                                 straightPathCount, maxStraightPath, options);
+            if (stat != DT_IN_PROGRESS)
+                return stat;
+        }
+    }
+
+    appendVertex(closestEndPos, DT_STRAIGHTPATH_END, 0,
+                 straightPath, straightPathFlags, straightPathRefs,
+                 straightPathCount, maxStraightPath);
+
+    return DT_SUCCESS | ((*straightPathCount >= maxStraightPath) ? DT_BUFFER_TOO_SMALL : 0);
+}
+
 /// @par
 ///
 /// This method is optimized for small delta movement and a small number of 

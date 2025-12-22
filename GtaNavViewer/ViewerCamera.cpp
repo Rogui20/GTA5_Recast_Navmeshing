@@ -6,7 +6,7 @@
 ViewerCamera::ViewerCamera()
 {
     pos = { 0.0f, 5.0f, 10.0f };
-    yaw = 180.0f;
+    yaw = -90.0f;
     pitch = -10.0f;
     speed = 0.12f;
 }

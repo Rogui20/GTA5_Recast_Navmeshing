@@ -54,6 +54,12 @@ add_executable(GtaNavViewer
     main.cpp
     ViewerApp.cpp
     ViewerApp.h
+    ViewerAppInput.cpp
+    ViewerAppUtils.cpp
+    NavmeshUpdate.cpp
+    Pathfind.cpp
+    MathUtils.cpp
+    MathUtils.h
     ViewerCamera.cpp
     ViewerCamera.h
     RendererGL.cpp
@@ -62,8 +68,19 @@ add_executable(GtaNavViewer
     ObjLoader.h
     Mesh.cpp
     Mesh.h
+    NavMesh_Single.cpp
+    NavMesh_Tiled.cpp
     NavMeshData.cpp
     NavMeshData.h
+    NavMeshBuild.h
+    GtaHandler.cpp
+    GtaHandler.h
+    MemoryHandler.cpp
+    MemoryHandler.h
+    GtaHandlerMenu.cpp
+    GtaHandlerMenu.h
+    json.hpp
+    imfilebrowser.h
     ${GLAD_SRC}
     ${IMGUI_SOURCES}
 )

@@ -30,7 +30,8 @@ public:
     void DrawAxisGizmoScreen(const ViewerCamera* cam, int screenW, int screenH);
 
     void DrawTriangleHighlight(glm::vec3 a, glm::vec3 b, glm::vec3 c);
-    void drawNavmeshLines(const std::vector<DebugLine>& lines);
+    void drawNavmeshLines(const std::vector<DebugLine>& lines, const glm::vec3& color = glm::vec3(0.0f), float lineWidth = 1.5f);
+    void drawNavmeshTriangles(const std::vector<glm::vec3>& tris, const glm::vec3& color, float alpha);
 
     bool Load(const char* path);
 
@@ -41,7 +42,6 @@ public:
     void ExtractDebugMesh(std::vector<glm::vec3>& outVerts,
                           std::vector<glm::vec3>& outLines);
 
-    dtNavMesh* GetNavMesh() const { return m_nav; }
 private:
     GLuint LoadShader(const char* vs, const char* fs);
 
@@ -53,6 +53,4 @@ private:
     int gridVertexCount = 0;
     GLuint navVao = 0;
     GLuint navVbo = 0;
-
-
 };
