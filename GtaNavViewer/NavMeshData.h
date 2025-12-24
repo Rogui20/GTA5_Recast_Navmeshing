@@ -46,14 +46,17 @@ struct OffmeshLink
 struct AutoOffmeshGenerationParams
 {
     float jumpHeight = 2.0f;
-    float agentVelocity = 6.0f;
     float maxDropHeight = 3.0f;
-    float gravity = 9.81f;
     float maxSlopeDegrees = 60.0f;
     float agentRadius = 0.6f;
     float agentHeight = 2.0f;
     unsigned int userIdBase = 0xAFAF0000u;
-    float sampleOffset = 0.05f;
+    float edgeOutset = 0.15f;
+    float upOffset = 0.10f;
+    float raycastExtraHeight = 0.5f;
+    float minDropThreshold = 0.20f;
+    float minNeighborHeightDelta = 0.30f;
+    unsigned char dropArea = 5; // segue convenção do RecastDemo (jump area)
 };
 
 class NavMeshData
