@@ -432,12 +432,6 @@ bool ViewerApp::ApplyAutomaticOffmeshLinks(const AutoOffmeshGenerationParams& pa
     CurrentNavData().SetOffmeshLinks(std::move(merged));
     RebuildOffmeshLinkLines();
 
-    // Reconstroi somente para injetar os off-mesh links no dtNavMesh existente.
-    if (CurrentNavData().IsLoaded())
-    {
-        buildNavmeshFromMeshes(true, currentNavmeshSlot);
-    }
-
     printf("[ViewerApp] ApplyAutomaticOffmeshLinks: %zu links aplicados.\n", CurrentNavData().GetOffmeshLinks().size());
     return true;
 }
@@ -2322,26 +2316,23 @@ void ViewerApp::RenderFrame()
 
                     ImGui::SeparatorText("Off-Mesh Links Automaticos");
                     static float autoJumpHeight = 2.0f;
-                    static float autoAgentVelocity = 6.0f;
                     static float autoMaxDrop = 3.0f;
-                    ImGui::SliderFloat("Jump Height", &autoJumpHeight, 0.5f, 6.0f, "%.2f");
-                    ImGui::SliderFloat("Agent Velocity", &autoAgentVelocity, 1.0f, 15.0f, "%.2f");
                     ImGui::SliderFloat("Max Drop Height", &autoMaxDrop, 0.0f, 10.0f, "%.2f");
+                    ImGui::SliderFloat("Jump Height", &autoJumpHeight, 0.0f, 6.0f, "%.2f");
 
                     ImGui::BeginDisabled(navmeshBusy || !hasNavmeshLoaded || navGenSettings.mode != NavmeshBuildMode::Tiled);
-                    if (ImGui::Button("Generate Automatic Off-Mesh Links"))
+                    if (ImGui::Button("Generate Edge-Based Off-Mesh Links"))
                     {
                         AutoOffmeshGenerationParams autoParams{};
                         autoParams.jumpHeight = autoJumpHeight;
-                        autoParams.agentVelocity = autoAgentVelocity;
                         autoParams.maxDropHeight = autoMaxDrop;
                         autoParams.agentRadius = navGenSettings.agentRadius;
                         autoParams.agentHeight = navGenSettings.agentHeight;
                         autoParams.maxSlopeDegrees = navGenSettings.agentMaxSlope;
                         if (ApplyAutomaticOffmeshLinks(autoParams))
                         {
-                            printf("[ViewerApp] Offmesh automaticos gerados com jumpHeight=%.2f velocity=%.2f drop=%.2f.\n",
-                                   autoJumpHeight, autoAgentVelocity, autoMaxDrop);
+                            printf("[ViewerApp] Offmesh automaticos gerados com jumpHeight=%.2f drop=%.2f.\n",
+                                   autoJumpHeight, autoMaxDrop);
                         }
                         else
                         {
