@@ -10,6 +10,7 @@ var classNavMeshData =
     [ "ClearOffmeshLinks", "classNavMeshData.html#ac03e109d7eb10ab8828d329ec17075a4", null ],
     [ "CollectTilesInBounds", "classNavMeshData.html#a56451182e4858ddea0ec98fef3b2a626", null ],
     [ "ExtractDebugMesh", "classNavMeshData.html#a1e3a68693ca1bb2655cc9db37a6f111f", null ],
+    [ "GenerateAutomaticOffmeshLinks", "classNavMeshData.html#a49c39740dd9a92dc1ddad39d864a0626", null ],
     [ "GetNavMesh", "classNavMeshData.html#a48c4d354d62d406decab6d32cecd7acb", null ],
     [ "GetOffmeshLinks", "classNavMeshData.html#a787c10580f7e4def333d8f271ef95da4", null ],
     [ "HasTiledCache", "classNavMeshData.html#a5a45cea84241aa5c00016b16ffee26d1", null ],

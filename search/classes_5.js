@@ -1,13 +1,7 @@
 var searchData=
 [
-  ['geometryslot_0',['GeometrySlot',['../structMemoryHandler_1_1GeometrySlot.html',1,'MemoryHandler']]],
-  ['gladglversionstruct_1',['gladGLversionStruct',['../structgladGLversionStruct.html',1,'']]],
-  ['glcheckertexture_2',['GLCheckerTexture',['../classGLCheckerTexture.html',1,'']]],
-  ['graphparams_3',['GraphParams',['../structGraphParams.html',1,'']]],
-  ['gtahandler_4',['GtaHandler',['../classGtaHandler.html',1,'']]],
-  ['gtahandlermenu_5',['GtaHandlerMenu',['../classGtaHandlerMenu.html',1,'']]],
-  ['gtanavgeometry_6',['GtaNavGeometry',['../classGtaNavGeometry.html',1,'']]],
-  ['gtanavprops_7',['GtaNavProps',['../classGtaNavProps.html',1,'']]],
-  ['gtanavtiles_8',['GtaNavTiles',['../classGtaNavTiles.html',1,'']]],
-  ['guistate_9',['GuiState',['../structGuiState.html',1,'']]]
+  ['fastlzcompressor_0',['FastLZCompressor',['../structFastLZCompressor.html',1,'']]],
+  ['filebrowser_1',['FileBrowser',['../classImGui_1_1FileBrowser.html',1,'ImGui']]],
+  ['fileio_2',['FileIO',['../classFileIO.html',1,'']]],
+  ['frameresources_3',['FrameResources',['../structFrameResources.html',1,'']]]
 ];

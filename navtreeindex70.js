@@ -1,5 +1,6 @@
 var NAVTREEINDEX70 =
 {
+"dir_fe7f4084ac0458032f1df717ceae8313.html":[44,0,8,1],
 "directfb.html":[10],
 "directfb.html#opengl-support":[10,1],
 "directfb.html#simple-window-manager":[10,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX70 =
 "gdk.html#xbox-gdkx-setup":[13,4],
 "git.html":[15],
 "glad_8h.html":[44,0,5,0,0,0,0],
-"glad_8h.html#a0009b9a26c78d29e6ed13cc056edc720":[44,0,5,0,0,0,0,583],
-"glad_8h.html#a000ea5d0091e287efd51a66dcc9e99c6":[44,0,5,0,0,0,0,991]
+"glad_8h.html#a0009b9a26c78d29e6ed13cc056edc720":[44,0,5,0,0,0,0,583]
 };

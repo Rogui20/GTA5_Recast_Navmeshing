@@ -1,5 +1,6 @@
 var hierarchy =
 [
+    [ "AutoOffmeshGenerationParams", "structAutoOffmeshGenerationParams.html", null ],
     [ "MemoryHandler::BoundingBoxSlot", "structMemoryHandler_1_1BoundingBoxSlot.html", null ],
     [ "BoundsItem", "structBoundsItem.html", null ],
     [ "BuildSettings", "structBuildSettings.html", null ],
