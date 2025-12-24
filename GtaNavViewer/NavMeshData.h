@@ -38,6 +38,22 @@ struct OffmeshLink
     glm::vec3 end{0.0f};
     float radius = 1.0f;
     bool bidirectional = true;
+    unsigned char area = RC_WALKABLE_AREA;
+    unsigned short flags = 1;
+    unsigned int userId = 0;
+};
+
+struct AutoOffmeshGenerationParams
+{
+    float jumpHeight = 2.0f;
+    float agentVelocity = 6.0f;
+    float maxDropHeight = 3.0f;
+    float gravity = 9.81f;
+    float maxSlopeDegrees = 60.0f;
+    float agentRadius = 0.6f;
+    float agentHeight = 2.0f;
+    unsigned int userIdBase = 0xAFAF0000u;
+    float sampleOffset = 0.05f;
 };
 
 class NavMeshData
@@ -99,6 +115,8 @@ public:
     void SetOffmeshLinks(std::vector<OffmeshLink> links);
     const std::vector<OffmeshLink>& GetOffmeshLinks() const { return m_offmeshLinks; }
     void ClearOffmeshLinks();
+    bool GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParams& params,
+                                       std::vector<OffmeshLink>& outLinks) const;
 
 
     // Conversão para desenhar no viewer

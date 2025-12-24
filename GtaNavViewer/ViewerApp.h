@@ -238,6 +238,7 @@ private:
     MeshBoundsState ComputeMeshBounds(const MeshInstance& instance) const;
     bool HasMeshChanged(const MeshBoundsState& previous, const MeshBoundsState& current) const;
     void UpdateNavmeshTiles();
+    bool ApplyAutomaticOffmeshLinks(const AutoOffmeshGenerationParams& params);
     bool ComputeRayMeshHit(int mx, int my, glm::vec3& outPoint, int* outTri, int* outMeshIndex);
     void ResetPathState(int slotIndex = -1);
     bool InitNavQueryForCurrentNavmesh();

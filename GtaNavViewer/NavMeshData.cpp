@@ -4,6 +4,8 @@
 #include <DetourNavMesh.h>
 #include <DetourNavMeshBuilder.h>
 #include <DetourMath.h>
+#include <DetourNavMeshQuery.h>
+#include <DetourCommon.h>
 
 #include "NavMeshBuild.h"
 
@@ -33,6 +35,27 @@ namespace
             printf("%s %s\n", prefix, msg);
         }
     };
+
+    glm::vec3 GetPolyVertex(const dtMeshTile* tile, const dtPoly* poly, int index)
+    {
+        const int vertIndex = poly->verts[index];
+        const float* v = &tile->verts[vertIndex * 3];
+        return glm::vec3(v[0], v[1], v[2]);
+    }
+
+    glm::vec3 ComputePolyNormal(const dtMeshTile* tile, const dtPoly* poly)
+    {
+        if (!tile || !poly || poly->vertCount < 3)
+            return glm::vec3(0.0f, 1.0f, 0.0f);
+
+        const glm::vec3 a = GetPolyVertex(tile, poly, 0);
+        const glm::vec3 b = GetPolyVertex(tile, poly, 1);
+        const glm::vec3 c = GetPolyVertex(tile, poly, 2);
+        glm::vec3 normal = glm::normalize(glm::cross(b - a, c - a));
+        if (!std::isfinite(normal.x) || !std::isfinite(normal.y) || !std::isfinite(normal.z))
+            normal = glm::vec3(0.0f, 1.0f, 0.0f);
+        return normal;
+    }
 }
 
 NavMeshData::~NavMeshData()
@@ -54,6 +77,8 @@ void NavMeshData::AddOffmeshLink(const glm::vec3& start,
     link.end = end;
     link.radius = radius;
     link.bidirectional = bidirectional;
+    link.area = RC_WALKABLE_AREA;
+    link.flags = 1;
     m_offmeshLinks.push_back(link);
 }
 
@@ -103,6 +128,212 @@ void NavMeshData::ClearOffmeshLinks()
     m_offmeshLinks.clear();
 }
 
+bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParams& params,
+                                                std::vector<OffmeshLink>& outLinks) const
+{
+    outLinks.clear();
+
+    if (!m_nav || !m_hasTiledCache)
+    {
+        printf("[NavMeshData] GenerateAutomaticOffmeshLinks: navmesh tiled nao inicializado.\n");
+        return false;
+    }
+
+    if (params.agentVelocity <= 0.0f || params.jumpHeight <= 0.0f)
+    {
+        printf("[NavMeshData] GenerateAutomaticOffmeshLinks: parametros invalidos (jumpHeight=%.2f, velocity=%.2f).\n",
+               params.jumpHeight, params.agentVelocity);
+        return false;
+    }
+
+    dtNavMeshQuery* query = dtAllocNavMeshQuery();
+    if (!query)
+    {
+        printf("[NavMeshData] GenerateAutomaticOffmeshLinks: dtAllocNavMeshQuery falhou.\n");
+        return false;
+    }
+
+    const dtStatus initStatus = query->init(m_nav, 4096);
+    if (dtStatusFailed(initStatus))
+    {
+        printf("[NavMeshData] GenerateAutomaticOffmeshLinks: navQuery->init falhou.\n");
+        dtFreeNavMeshQuery(query);
+        return false;
+    }
+
+    const float vy = sqrtf(2.0f * params.gravity * params.jumpHeight);
+    const float maxDrop = std::max(0.0f, params.maxDropHeight);
+    const float maxTime = (vy + sqrtf(vy * vy + 2.0f * params.gravity * maxDrop)) / params.gravity;
+    const float searchRadius = params.agentVelocity * maxTime;
+    const float slopeCos = cosf(glm::radians(params.maxSlopeDegrees));
+    const float arcClearance = std::max(0.0f, params.agentHeight * 0.5f);
+    const float extents[3] = { params.agentRadius + 0.1f, params.agentHeight * 0.5f + 0.1f, params.agentRadius + 0.1f };
+    const unsigned char kJumpArea = 5; // segue convenção do RecastDemo
+
+    struct Candidate
+    {
+        glm::vec3 point;
+        glm::vec3 normal;
+        dtPolyRef polyRef = 0;
+    };
+
+    std::vector<Candidate> candidates;
+
+    const int maxTiles = m_nav->getMaxTiles();
+    candidates.reserve(static_cast<size_t>(maxTiles) * 4);
+
+    for (int tileIndex = 0; tileIndex < maxTiles; ++tileIndex)
+    {
+        const dtMeshTile* tile = m_nav->getTile(tileIndex);
+        if (!tile || !tile->header)
+            continue;
+
+        const dtPolyRef baseRef = m_nav->getPolyRefBase(tile);
+        for (int polyIndex = 0; polyIndex < tile->header->polyCount; ++polyIndex)
+        {
+            const dtPoly* poly = &tile->polys[polyIndex];
+            if (poly->getType() != DT_POLYTYPE_GROUND)
+                continue;
+
+            const glm::vec3 polyNormal = ComputePolyNormal(tile, poly);
+            if (polyNormal.y < slopeCos)
+                continue;
+
+            const int vertCount = poly->vertCount;
+            for (int edge = 0; edge < vertCount; ++edge)
+            {
+                const unsigned short nei = poly->neis[edge];
+                if (nei != 0)
+                    continue; // apenas bordas sem vizinho imediato
+
+                const int vaIndex = edge;
+                const int vbIndex = (edge + 1) % vertCount;
+                const glm::vec3 va = GetPolyVertex(tile, poly, vaIndex);
+                const glm::vec3 vb = GetPolyVertex(tile, poly, vbIndex);
+                glm::vec3 mid = (va + vb) * 0.5f + polyNormal * params.sampleOffset;
+
+                Candidate cand{};
+                cand.point = mid;
+                cand.normal = polyNormal;
+                cand.polyRef = baseRef | static_cast<dtPolyRef>(polyIndex);
+                candidates.push_back(cand);
+            }
+        }
+    }
+
+    if (candidates.empty())
+    {
+        printf("[NavMeshData] GenerateAutomaticOffmeshLinks: nenhum candidato de borda encontrado.\n");
+        dtFreeNavMeshQuery(query);
+        return true;
+    }
+
+    dtQueryFilter filter;
+
+    std::vector<dtPolyRef> stackPolys(512);
+    std::vector<dtPolyRef> parent(512);
+    std::vector<float> costs(512);
+
+    for (size_t i = 0; i < candidates.size(); ++i)
+    {
+        const Candidate& cand = candidates[i];
+        if (cand.polyRef == 0)
+            continue;
+
+        const float center[3] = { cand.point.x, cand.point.y, cand.point.z };
+        int polyCount = 0;
+        dtStatus searchStatus = query->findPolysAroundCircle(
+            cand.polyRef, center, searchRadius, &filter,
+            stackPolys.data(), parent.data(), costs.data(), &polyCount,
+            static_cast<int>(stackPolys.size()));
+
+        if (dtStatusFailed(searchStatus) || polyCount == 0)
+            continue;
+
+        for (int p = 0; p < polyCount; ++p)
+        {
+            dtPolyRef ref = stackPolys[static_cast<size_t>(p)];
+            if (ref == cand.polyRef || ref == 0)
+                continue;
+
+            const dtMeshTile* destTile = nullptr;
+            const dtPoly* destPoly = nullptr;
+            m_nav->getTileAndPolyByRefUnsafe(ref, &destTile, &destPoly);
+            if (!destTile || !destPoly || destPoly->getType() != DT_POLYTYPE_GROUND)
+                continue;
+
+            const glm::vec3 destNormal = ComputePolyNormal(destTile, destPoly);
+            if (destNormal.y < slopeCos)
+                continue;
+
+            float closest[3];
+            bool overPoly = false;
+            if (dtStatusFailed(query->closestPointOnPoly(ref, center, closest, &overPoly)))
+                continue;
+
+            const glm::vec3 landing(closest[0], closest[1], closest[2]);
+            const glm::vec3 delta = landing - cand.point;
+            const float distXZ = glm::length(glm::vec2(delta.x, delta.z));
+            if (distXZ < 0.25f)
+                continue;
+
+            const float dy = delta.y;
+            const float t = distXZ / params.agentVelocity;
+            const float allowableHeight = vy * t - 0.5f * params.gravity * t * t;
+            if (dy > allowableHeight + 0.05f || dy < -maxDrop - 0.05f)
+                continue;
+
+            glm::vec2 dirXZ(delta.x, delta.z);
+            dirXZ = glm::normalize(dirXZ);
+            glm::vec3 dir3(dirXZ.x, 0.0f, dirXZ.y);
+
+            const int sampleCount = 8;
+            bool blocked = false;
+            for (int s = 1; s < sampleCount; ++s)
+            {
+                const float tFrac = static_cast<float>(s) / static_cast<float>(sampleCount);
+                const float ts = t * tFrac;
+                glm::vec3 sample = cand.point + dir3 * (params.agentVelocity * ts);
+                sample.y = cand.point.y + vy * ts - 0.5f * params.gravity * ts * ts;
+
+                dtPolyRef sampleRef = 0;
+                float nearest[3];
+                if (dtStatusFailed(query->findNearestPoly(&sample.x, extents, &filter, &sampleRef, nearest)) || sampleRef == 0)
+                {
+                    blocked = true;
+                    break;
+                }
+
+                float groundHeight = 0.0f;
+                if (dtStatusSucceed(query->getPolyHeight(sampleRef, nearest, &groundHeight)))
+                {
+                    if (sample.y - groundHeight < arcClearance)
+                    {
+                        blocked = true;
+                        break;
+                    }
+                }
+            }
+
+            if (blocked)
+                continue;
+
+            OffmeshLink link{};
+            link.start = cand.point;
+            link.end = landing;
+            link.radius = params.agentRadius;
+            link.bidirectional = false;
+            link.area = kJumpArea;
+            link.flags = 1;
+            link.userId = params.userIdBase + static_cast<unsigned int>(outLinks.size());
+            outLinks.push_back(link);
+        }
+    }
+
+    dtFreeNavMeshQuery(query);
+    printf("[NavMeshData] GenerateAutomaticOffmeshLinks: gerados %zu links automaticos.\n", outLinks.size());
+    return true;
+}
 NavMeshData::NavMeshData(NavMeshData&& other) noexcept
 {
     *this = std::move(other);
