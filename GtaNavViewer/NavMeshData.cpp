@@ -17,6 +17,7 @@
 #include <limits>
 #include <tuple>
 #include <unordered_set>
+#include <functional>
 
 namespace
 {
@@ -198,6 +199,19 @@ namespace
         return 0;
     }
 
+    struct Tuple3Hash
+    {
+        size_t operator()(const std::tuple<int, int, int>& v) const noexcept
+        {
+            const auto [x, y, z] = v;
+            size_t seed = 0;
+            seed ^= std::hash<int>{}(x) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= std::hash<int>{}(y) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= std::hash<int>{}(z) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            return seed;
+        }
+    };
+
     std::tuple<int, int, int> QuantizePosition(const glm::vec3& p, float scale)
     {
         return {
@@ -310,7 +324,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
     size_t reserved = static_cast<size_t>(maxTiles) * 4;
     outLinks.reserve(reserved);
 
-    std::unordered_set<std::tuple<int, int, int>> usedStartHashes;
+    std::unordered_set<std::tuple<int, int, int>, Tuple3Hash> usedStartHashes;
     usedStartHashes.reserve(reserved);
 
     for (int tileIndex = 0; tileIndex < maxTiles; ++tileIndex)
