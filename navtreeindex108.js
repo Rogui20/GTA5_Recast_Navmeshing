@@ -1,5 +1,8 @@
 var NAVTREEINDEX108 =
 {
+"structduFileIO.html#afab2836e1a3b9909bebe00e9ab81aae8":[43,0,74,0],
+"structgladGLversionStruct.html":[43,0,88],
+"structgladGLversionStruct.html#ac7f9db11d2679df12ef0313b728554db":[43,0,88,0],
 "structgladGLversionStruct.html#acc2bff1c8966c6866f2ad6f5a4e475b2":[43,0,88,1],
 "structimguiGfxCmd.html":[43,0,200],
 "structimguiGfxCmd.html#a3508ea30366854eae1909484cc179338":[43,0,200,6],
@@ -27,8 +30,8 @@ var NAVTREEINDEX108 =
 "structimguiGfxText.html#ad7bf3cc0e24e63d997c335b7a5e15d25":[43,0,203,2],
 "structimguiGfxText.html#aeed4f7559be7abbfa0b5a49adaedbd0f":[43,0,203,0],
 "structrcChunkyTriMesh.html":[43,0,328],
-"structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,328,2],
 "structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,328,0],
+"structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,328,2],
 "structrcChunkyTriMesh.html#a3a942f046287998abef40650d3b590f4":[43,0,328,6],
 "structrcChunkyTriMesh.html#a6ae1d3f004dd90ddf9a60e55095592a0":[43,0,328,8],
 "structrcChunkyTriMesh.html#a72fed74ea56cac960cd9eb282e312d87":[43,0,328,7],
@@ -246,8 +249,5 @@ var NAVTREEINDEX108 =
 "structstbtt__vertex.html#a5610d6335aa6962d970fc7fd2225545e":[43,0,465,2],
 "structstbtt__vertex.html#a68227d28643f5667064fa3c385f4ea7d":[43,0,465,3],
 "structstbtt__vertex.html#a81773edbe760d0e090561a3c1e86c919":[43,0,465,6],
-"structstbtt__vertex.html#a8bd328747e8ea018612960a52e3e3ede":[43,0,465,4],
-"structstbtt__vertex.html#a9052065ca544b63d537325b246928cfc":[43,0,465,7],
-"structstbtt__vertex.html#aa325b3707b88e7e104c0de46bb2bf395":[43,0,465,5],
-"touch.html":[32]
+"structstbtt__vertex.html#a8bd328747e8ea018612960a52e3e3ede":[43,0,465,4]
 };

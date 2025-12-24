@@ -1,5 +1,8 @@
 var NAVTREEINDEX104 =
 {
+"structNavMeshDefinition.html#a6369a2e7b5a3008edfe21e04ecf49251":[43,0,313,4],
+"structNavMeshDefinition.html#a7bcffbcc4b7ce4dae540fffb7cf0333d":[43,0,313,14],
+"structNavMeshDefinition.html#a8d0c65bfc454c84cfb871adacb9e3e45":[43,0,313,11],
 "structNavMeshDefinition.html#ac4a5a0ddf6c19a72dff5fde21eeea2b6":[43,0,313,10],
 "structNavMeshDefinition.html#ac54fca5c0b3bad449ca134752e4c87be":[43,0,313,9],
 "structNavMeshDefinition.html#ace4801ba29d7fa0e80593d523e9b857a":[43,0,313,5],
@@ -246,8 +249,5 @@ var NAVTREEINDEX104 =
 "structSDL__ControllerTouchpadEvent.html#a0e88fa90ee264c841170cf199a4e57c9":[43,0,382,0],
 "structSDL__ControllerTouchpadEvent.html#a0eccc1247f8924b2e495a2afd4f2daf4":[43,0,382,5],
 "structSDL__ControllerTouchpadEvent.html#a2b80663393965edfc666f364f07631da":[43,0,382,2],
-"structSDL__ControllerTouchpadEvent.html#a47ebc5c7897b57bda7fe7c2fa553eb7f":[43,0,382,3],
-"structSDL__ControllerTouchpadEvent.html#a63f7ea4e43a032d8a64c2022761ba5e1":[43,0,382,1],
-"structSDL__ControllerTouchpadEvent.html#a7d7bb07fbb017e8d832f04a0bb80c333":[43,0,382,7],
-"structSDL__ControllerTouchpadEvent.html#ac33536046a3481953246b22a0371c109":[43,0,382,4]
+"structSDL__ControllerTouchpadEvent.html#a47ebc5c7897b57bda7fe7c2fa553eb7f":[43,0,382,3]
 };

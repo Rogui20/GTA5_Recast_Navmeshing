@@ -1,5 +1,8 @@
 var NAVTREEINDEX105 =
 {
+"structSDL__ControllerTouchpadEvent.html#a63f7ea4e43a032d8a64c2022761ba5e1":[43,0,382,1],
+"structSDL__ControllerTouchpadEvent.html#a7d7bb07fbb017e8d832f04a0bb80c333":[43,0,382,7],
+"structSDL__ControllerTouchpadEvent.html#ac33536046a3481953246b22a0371c109":[43,0,382,4],
 "structSDL__ControllerTouchpadEvent.html#adb5d612ba132f5dc0278a27da9f2e310":[43,0,382,6],
 "structSDL__DisplayEvent.html":[43,0,383],
 "structSDL__DisplayEvent.html#a4850a90c06e18146d6a2ac235cdd7336":[43,0,383,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__MultiGestureEvent.html#a1708fc3c788fd12cc0beb5dc05cf31ca":[43,0,418,7],
 "structSDL__MultiGestureEvent.html#a264602b9c5cc027eb6a283adda428454":[43,0,418,8],
 "structSDL__MultiGestureEvent.html#a351c29785c5ce3f68c4591a427265f14":[43,0,418,0],
-"structSDL__MultiGestureEvent.html#a4804ec87789e697aba138c4888bb304b":[43,0,418,3],
-"structSDL__MultiGestureEvent.html#a4f4a920dcf5205baa24a140df56f3153":[43,0,418,1],
-"structSDL__MultiGestureEvent.html#a6b06cf80372ce3cad40110fdb6ef0353":[43,0,418,2],
-"structSDL__MultiGestureEvent.html#a7e99a98debf3ce11f6d2a2fbb3637175":[43,0,418,4]
+"structSDL__MultiGestureEvent.html#a4804ec87789e697aba138c4888bb304b":[43,0,418,3]
 };
