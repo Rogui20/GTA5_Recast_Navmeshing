@@ -5,6 +5,8 @@ project(GtaNavViewer)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(GTANAVVIEWER_BUILD_SHARED "Build GtaNavViewer as a shared library (DLL)" OFF)
+
 # ---------------------------------------
 # Diretórios base
 # ---------------------------------------
@@ -48,11 +50,7 @@ file(GLOB IMGUI_SOURCES
     imgui/backends/imgui_impl_opengl3.cpp
 )
 
-# ---------------------------------------
-# Viewer executable
-# ---------------------------------------
-add_executable(GtaNavViewer
-    main.cpp
+set(GTANAVVIEWER_CORE_SOURCES
     ViewerApp.cpp
     ViewerApp.h
     ViewerAppInput.cpp
@@ -82,11 +80,20 @@ add_executable(GtaNavViewer
     WebSockets.h
     GtaHandlerMenu.cpp
     GtaHandlerMenu.h
+    ExternC.cpp
+    ExternC.h
     json.hpp
     imfilebrowser.h
     ${GLAD_SRC}
     ${IMGUI_SOURCES}
 )
+
+if (GTANAVVIEWER_BUILD_SHARED)
+    add_library(GtaNavViewer SHARED ${GTANAVVIEWER_CORE_SOURCES})
+    target_compile_definitions(GtaNavViewer PRIVATE GTANAVVIEWER_BUILD_DLL)
+else()
+    add_executable(GtaNavViewer main.cpp ${GTANAVVIEWER_CORE_SOURCES})
+endif()
 
 set(UWEBSOCKETS_AVAILABLE OFF)
 if (EXISTS "${UWEBSOCKETS_DIR}/src/App.h")
@@ -137,9 +144,11 @@ endif()
 target_link_libraries(GtaNavViewer PRIVATE
     GtaNavRuntime   # vindo do /GtaNavRuntime/CMakeLists.txt
     ${SDL2_LIB}/SDL2.lib
-    ${SDL2_LIB}/SDL2main.lib
     opengl32
 )
+if (NOT GTANAVVIEWER_BUILD_SHARED)
+    target_link_libraries(GtaNavViewer PRIVATE ${SDL2_LIB}/SDL2main.lib)
+endif()
 
 if (UWEBSOCKETS_AVAILABLE)
     target_link_libraries(GtaNavViewer PRIVATE uwebsockets)
@@ -147,8 +156,10 @@ if (UWEBSOCKETS_AVAILABLE)
 endif()
 
 # Copiar SDL2.dll automaticamente
-add_custom_command(TARGET GtaNavViewer POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${SDL2_LIB}/SDL2.dll"
-        $<TARGET_FILE_DIR:GtaNavViewer>
-)
+if (NOT GTANAVVIEWER_BUILD_SHARED)
+    add_custom_command(TARGET GtaNavViewer POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${SDL2_LIB}/SDL2.dll"
+            $<TARGET_FILE_DIR:GtaNavViewer>
+    )
+endif()
