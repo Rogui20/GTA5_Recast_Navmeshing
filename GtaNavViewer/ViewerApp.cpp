@@ -397,6 +397,51 @@ void ViewerApp::RebuildOffmeshLinkLines(int slotIndex)
     }
 }
 
+bool ViewerApp::ApplyAutomaticOffmeshLinks(const AutoOffmeshGenerationParams& params)
+{
+    if (IsNavmeshJobRunning())
+    {
+        printf("[ViewerApp] Aplicacao de offmesh automatico ignorada: navmesh em construcao.\n");
+        return false;
+    }
+
+    if (!CurrentNavData().IsLoaded())
+    {
+        printf("[ViewerApp] ApplyAutomaticOffmeshLinks: navmesh nao carregado.\n");
+        return false;
+    }
+
+    std::vector<OffmeshLink> generated;
+    if (!CurrentNavData().GenerateAutomaticOffmeshLinks(params, generated))
+    {
+        printf("[ViewerApp] ApplyAutomaticOffmeshLinks: geracao de links automaticos falhou.\n");
+        return false;
+    }
+
+    const unsigned int autoMask = 0xffff0000u;
+    std::vector<OffmeshLink> merged;
+    const auto& existing = CurrentNavData().GetOffmeshLinks();
+    merged.reserve(existing.size() + generated.size());
+    for (const auto& link : existing)
+    {
+        if ( (link.userId & autoMask) != (params.userIdBase & autoMask) )
+            merged.push_back(link);
+    }
+    merged.insert(merged.end(), generated.begin(), generated.end());
+
+    CurrentNavData().SetOffmeshLinks(std::move(merged));
+    RebuildOffmeshLinkLines();
+
+    // Reconstroi somente para injetar os off-mesh links no dtNavMesh existente.
+    if (CurrentNavData().IsLoaded())
+    {
+        buildNavmeshFromMeshes(true, currentNavmeshSlot);
+    }
+
+    printf("[ViewerApp] ApplyAutomaticOffmeshLinks: %zu links aplicados.\n", CurrentNavData().GetOffmeshLinks().size());
+    return true;
+}
+
 bool ViewerApp::BuildStaticMap(GtaHandler& handler, const std::filesystem::path& meshDirectory, float scanRange)
 {
     if (!camera)
@@ -1636,6 +1681,8 @@ void ViewerApp::ProcessMemoryOffmeshLinks()
                 link.end = glm::vec3(slot.end.x, slot.end.y, slot.end.z);
                 link.radius = 1.0f;
                 link.bidirectional = slot.biDir != 0;
+                link.area = RC_WALKABLE_AREA;
+                link.flags = 1;
                 converted.push_back(link);
             }
 
@@ -2272,6 +2319,38 @@ void ViewerApp::RenderFrame()
                     }
                     ImGui::SameLine();
                     ImGui::TextDisabled("(prepara grid/caches e gera tiles no clique)");
+
+                    ImGui::SeparatorText("Off-Mesh Links Automaticos");
+                    static float autoJumpHeight = 2.0f;
+                    static float autoAgentVelocity = 6.0f;
+                    static float autoMaxDrop = 3.0f;
+                    ImGui::SliderFloat("Jump Height", &autoJumpHeight, 0.5f, 6.0f, "%.2f");
+                    ImGui::SliderFloat("Agent Velocity", &autoAgentVelocity, 1.0f, 15.0f, "%.2f");
+                    ImGui::SliderFloat("Max Drop Height", &autoMaxDrop, 0.0f, 10.0f, "%.2f");
+
+                    ImGui::BeginDisabled(navmeshBusy || !hasNavmeshLoaded || navGenSettings.mode != NavmeshBuildMode::Tiled);
+                    if (ImGui::Button("Generate Automatic Off-Mesh Links"))
+                    {
+                        AutoOffmeshGenerationParams autoParams{};
+                        autoParams.jumpHeight = autoJumpHeight;
+                        autoParams.agentVelocity = autoAgentVelocity;
+                        autoParams.maxDropHeight = autoMaxDrop;
+                        autoParams.agentRadius = navGenSettings.agentRadius;
+                        autoParams.agentHeight = navGenSettings.agentHeight;
+                        autoParams.maxSlopeDegrees = navGenSettings.agentMaxSlope;
+                        if (ApplyAutomaticOffmeshLinks(autoParams))
+                        {
+                            printf("[ViewerApp] Offmesh automaticos gerados com jumpHeight=%.2f velocity=%.2f drop=%.2f.\n",
+                                   autoJumpHeight, autoAgentVelocity, autoMaxDrop);
+                        }
+                        else
+                        {
+                            printf("[ViewerApp] Geracao de offmesh automaticos falhou.\n");
+                        }
+                    }
+                    ImGui::SameLine();
+                    ImGui::TextDisabled("(analisa navmesh ja construida)");
+                    ImGui::EndDisabled();
                     ImGui::EndDisabled();
                 }
 

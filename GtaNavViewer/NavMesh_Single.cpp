@@ -204,9 +204,9 @@ namespace
 
                 offmeshRads.push_back(link.radius);
                 offmeshDirs.push_back(link.bidirectional ? 1 : 0);
-                offmeshAreas.push_back(RC_WALKABLE_AREA);
-                offmeshFlags.push_back(1);
-                offmeshIds.push_back(baseId++);
+                offmeshAreas.push_back(link.area);
+                offmeshFlags.push_back(link.flags);
+                offmeshIds.push_back(link.userId != 0 ? link.userId : baseId++);
             }
 
             params.offMeshConVerts = offmeshVerts.data();
