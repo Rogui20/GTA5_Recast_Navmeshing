@@ -425,6 +425,21 @@ GTANAVVIEWER_API void* InitNavMesh()
     return ctx;
 }
 
+GTANAVVIEWER_API void DestroyNavMeshResources(void* navMesh)
+{
+    if (!navMesh)
+        return;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    if (ctx->navQuery)
+    {
+        dtFreeNavMeshQuery(ctx->navQuery);
+        ctx->navQuery = nullptr;
+    }
+
+    delete ctx;
+}
+
 GTANAVVIEWER_API void SetNavMeshGenSettings(void* navMesh, const NavmeshGenerationSettings* settings)
 {
     if (!navMesh || !settings)
