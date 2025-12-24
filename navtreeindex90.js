@@ -1,5 +1,7 @@
 var NAVTREEINDEX90 =
 {
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#forking-the-project":[7,1,0],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#opening-a-pull-request":[7,1,3],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#reporting-a-bug":[7,0,0],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#running-the-tests":[7,1,2],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#suggesting-enhancements":[7,0,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX90 =
 "structExampleAssetsBrowser.html#a85229b3bc84648fc7df5defb380c0c0e":[43,0,79,12],
 "structExampleAssetsBrowser.html#a8b569f2534ae0781f548c70498f2e58c":[43,0,79,20],
 "structExampleAssetsBrowser.html#a9912a8ca82ed1a8e2cddc277b0e46217":[43,0,79,9],
-"structExampleAssetsBrowser.html#a9a20d664c5e923e41f088b916bb0706c":[43,0,79,7],
-"structExampleAssetsBrowser.html#aa01e4382d22d421953d108cb35ea1c6b":[43,0,79,15],
-"structExampleAssetsBrowser.html#aa9edf321cf93321b4dd8ee0581fd5a7f":[43,0,79,0]
+"structExampleAssetsBrowser.html#a9a20d664c5e923e41f088b916bb0706c":[43,0,79,7]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__PixelFormat.html#a4212574b67529628d8822ed4eb109754":[43,0,419,6],
+"structSDL__PixelFormat.html#a44045e1da843f3d1fad3a608e16af712":[43,0,419,8],
 "structSDL__PixelFormat.html#a6045012f994c02a86bdc4a91b28d2a3c":[43,0,419,11],
 "structSDL__PixelFormat.html#a660e95097874088292f1289a458efaa2":[43,0,419,0],
 "structSDL__PixelFormat.html#a6cdaf31f6cb153fefda47fa6b8368c0e":[43,0,419,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX106 =
 "structStbUndoState.html#ad8f3e6ad062589d2b560e6d0d20cc897":[43,0,466,5],
 "structTempVertex.html":[43,0,469],
 "structTempVertex.html#a12fe6facc7be07741de73a5f4e850c0b":[43,0,469,0],
-"structTempVertex.html#a4f6d0709b5055122552035ef2052c2cd":[43,0,469,2],
-"structTempVertex.html#a6c3d031b740494b4fbaf4d187bf85cd2":[43,0,469,1],
-"structTileCacheData.html":[43,0,471]
+"structTempVertex.html#a4f6d0709b5055122552035ef2052c2cd":[43,0,469,2]
 };

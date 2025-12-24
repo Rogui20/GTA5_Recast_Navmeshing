@@ -1,5 +1,7 @@
 var NAVTREEINDEX107 =
 {
+"structTempVertex.html#a6c3d031b740494b4fbaf4d187bf85cd2":[43,0,469,1],
+"structTileCacheData.html":[43,0,471],
 "structTileCacheData.html#a101ecb69fccd2046a256900f8c4e6847":[43,0,471,0],
 "structTileCacheData.html#a9c98971270a3a7fe024343b6358dc334":[43,0,471,1],
 "structTileCacheSetHeader.html":[43,0,472],
@@ -247,7 +249,5 @@ var NAVTREEINDEX107 =
 "structimguiGfxLine.html#a1d5c294bc5a64a07ee855c4be3487f7a":[43,0,200,3],
 "structimguiGfxLine.html#a6e6579cb0bbe0b6adc256326c5580e9e":[43,0,200,0],
 "structimguiGfxLine.html#a77dee23b2e6f3582591b197b157276b4":[43,0,200,1],
-"structimguiGfxLine.html#aa7f7bd3941ff8fd8014f119b0a123193":[43,0,200,4],
-"structimguiGfxLine.html#ae3ced14f8ccc697421abfbb8c45a8b9b":[43,0,200,2],
-"structimguiGfxRect.html":[43,0,201]
+"structimguiGfxLine.html#aa7f7bd3941ff8fd8014f119b0a123193":[43,0,200,4]
 };

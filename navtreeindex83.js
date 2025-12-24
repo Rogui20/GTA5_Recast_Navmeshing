@@ -1,5 +1,7 @@
 var NAVTREEINDEX83 =
 {
+"imgui__impl__sdlgpu3__shaders_8h.html#a18fb5ead0d15cc531af59bc096caed83":[44,0,7,0,0,31,3],
+"imgui__impl__sdlgpu3__shaders_8h.html#aba4078bbc7cd4b523032a481133651f2":[44,0,7,0,0,31,2],
 "imgui__impl__sdlgpu3__shaders_8h.html#adf96ece4d1229ed35009fb75ca79034d":[44,0,7,0,0,31,0],
 "imgui__impl__sdlgpu3__shaders_8h.html#ae9c9237da6931bc0b638f4d9a1ceb112":[44,0,7,0,0,31,1],
 "imgui__impl__sdlgpu3__shaders_8h_source.html":[44,0,7,0,0,31],
@@ -247,7 +249,5 @@ var NAVTREEINDEX83 =
 "imgui__impl__win32_8h.html#a1dd8952480dd70d48de16334e5686dfc":[44,0,7,0,0,41,1],
 "imgui__impl__win32_8h.html#a4a64d684eab1b6aed8c2f23aaa427d49":[44,0,7,0,0,41,7],
 "imgui__impl__win32_8h.html#a62c65c5f453046a14119bc62234ac5b7":[44,0,7,0,0,41,5],
-"imgui__impl__win32_8h.html#a8cf9e14edd8ff4e36fa6331c5c0de0c2":[44,0,7,0,0,41,3],
-"imgui__impl__win32_8h.html#a9f752412a1f6dfdf6fc00dbbd90a8428":[44,0,7,0,0,41,4],
-"imgui__impl__win32_8h.html#aac16bf93a00e545ac237b661b4824b23":[44,0,7,0,0,41,2]
+"imgui__impl__win32_8h.html#a8cf9e14edd8ff4e36fa6331c5c0de0c2":[44,0,7,0,0,41,3]
 };

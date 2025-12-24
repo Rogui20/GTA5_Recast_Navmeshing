@@ -1,5 +1,7 @@
 var NAVTREEINDEX70 =
 {
+"directfb.html":[10],
+"directfb.html#opengl-support":[10,1],
 "directfb.html#simple-window-manager":[10,0],
 "dollar-gestures.html":[14],
 "dollar-gestures.html#loading":[14,3],
@@ -142,8 +144,8 @@ var NAVTREEINDEX70 =
 "external_2glm_2simd_2vector__relational_8h.html":[44,0,5,1,1,9],
 "external_2glm_2simd_2vector__relational_8h_source.html":[44,0,5,1,1,9],
 "files.html":[44,0],
-"functions.html":[43,3,0],
 "functions.html":[43,3,0,0],
+"functions.html":[43,3,0],
 "functions_a.html":[43,3,0,1],
 "functions_b.html":[43,3,0,2],
 "functions_c.html":[43,3,0,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX70 =
 "git.html":[15],
 "glad_8h.html":[44,0,5,0,0,0,0],
 "glad_8h.html#a0009b9a26c78d29e6ed13cc056edc720":[44,0,5,0,0,0,0,583],
-"glad_8h.html#a000ea5d0091e287efd51a66dcc9e99c6":[44,0,5,0,0,0,0,991],
-"glad_8h.html#a0020a1cdc41fd90c0253586098a6e181":[44,0,5,0,0,0,0,233],
-"glad_8h.html#a0058cf020ea54103d5533abcb2d6899c":[44,0,5,0,0,0,0,634]
+"glad_8h.html#a000ea5d0091e287efd51a66dcc9e99c6":[44,0,5,0,0,0,0,991]
 };

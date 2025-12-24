@@ -4,6 +4,7 @@ var ExternC_8cpp =
     [ "AddOffMeshLink", "ExternC_8cpp.html#a3f47892fd35980c12612beae6bf9128a", null ],
     [ "BuildNavMesh", "ExternC_8cpp.html#acdcdde7a6aa314427c97c0a2e0743321", null ],
     [ "ClearOffMeshLinks", "ExternC_8cpp.html#a6b32e777a9f5e87992d4cc3bf2fd947c", null ],
+    [ "DestroyNavMeshResources", "ExternC_8cpp.html#a84b79a2a59ce0e2005902f0ec88cc178", null ],
     [ "FindPath", "ExternC_8cpp.html#a45c9ac863a26de7d6f0640498e104856", null ],
     [ "FindPathWithMinEdge", "ExternC_8cpp.html#aae030f85b6ec207100d88fd39a1b915e", null ],
     [ "InitNavMesh", "ExternC_8cpp.html#a243a7a0e45dc62290d8bcd691c8b8744", null ],

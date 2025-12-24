@@ -1,5 +1,7 @@
 var NAVTREEINDEX23 =
 {
+"SDL__opengl_8h.html#a48898b4f27c2e100bd856fd4ea66d774":[44,0,5,2,1,48,722],
+"SDL__opengl_8h.html#a48a8940dccea5b6219320face7198075":[44,0,5,2,1,48,0],
 "SDL__opengl_8h.html#a4908c9eb24dfe46d85bf377a63175ef5":[44,0,5,2,1,48,372],
 "SDL__opengl_8h.html#a493a344af6533267a8be2b58a23130fa":[44,0,5,2,1,48,550],
 "SDL__opengl_8h.html#a4a290871d9e2f9022dd8e964d78bdbdb":[44,0,5,2,1,48,113],
@@ -247,7 +249,5 @@ var NAVTREEINDEX23 =
 "SDL__opengl_8h.html#a7b7b672679ddc99dc5eefe950800dd6d":[44,0,5,2,1,48,294],
 "SDL__opengl_8h.html#a7b9443c0601745f5e36dd667ebe5a851":[44,0,5,2,1,48,897],
 "SDL__opengl_8h.html#a7bb97bb6797e2ce543d0314bcc6f7530":[44,0,5,2,1,48,114],
-"SDL__opengl_8h.html#a7c0754befe292425beb63f25fa5c065f":[44,0,5,2,1,48,863],
-"SDL__opengl_8h.html#a7c93daeeb5df73c848ded9bd15d5c31f":[44,0,5,2,1,48,445],
-"SDL__opengl_8h.html#a7cd373813480cddfcf54e1ddcd8416f3":[44,0,5,2,1,48,285]
+"SDL__opengl_8h.html#a7c0754befe292425beb63f25fa5c065f":[44,0,5,2,1,48,863]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX89 =
 {
+"imgui__widgets_8cpp.html#ae213820295d04561f8ea295c96ac57c8":[44,0,7,0,8,58],
+"imgui__widgets_8cpp.html#ae245ee4392b26d481ee10f0fa37fb525":[44,0,7,0,8,84],
 "imgui__widgets_8cpp.html#ae2a1dbde6be4172620d31e321d2e459f":[44,0,7,0,8,111],
 "imgui__widgets_8cpp.html#ae3cff0e3d91c185dcdb6956cfc64aeaa":[44,0,7,0,8,50],
 "imgui__widgets_8cpp.html#ae4285c8fb2c94efe37ded02e9732f619":[44,0,7,0,8,55],
@@ -247,7 +249,5 @@ var NAVTREEINDEX89 =
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-a-function-documentation":[7,2,0],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-the-wiki":[7,2,1],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#filing-a-github-issue":[7,0],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#following-the-style-guide":[7,1,1],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#forking-the-project":[7,1,0],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#opening-a-pull-request":[7,1,3]
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#following-the-style-guide":[7,1,1]
 };

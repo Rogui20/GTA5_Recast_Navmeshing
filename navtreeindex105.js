@@ -1,5 +1,7 @@
 var NAVTREEINDEX105 =
 {
+"structSDL__DisplayMode.html#ad1b5783c9b292ebf24ad4e0e7a98e540":[43,0,383,3],
+"structSDL__DisplayMode.html#ae8120e0a18a99992f039756e1b503680":[43,0,383,1],
 "structSDL__DollarGestureEvent.html":[43,0,384],
 "structSDL__DollarGestureEvent.html#a14160d8bad8569f53dd18ed8f64d253f":[43,0,384,2],
 "structSDL__DollarGestureEvent.html#a293b2303acc1cfc63c167c5525e6eab5":[43,0,384,7],
@@ -247,7 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__PixelFormat.html#a23be8060443d58064a720a4e2ef31729":[43,0,419,15],
 "structSDL__PixelFormat.html#a337072c1bc8b41efdd2da4e95b8c2ff7":[43,0,419,4],
 "structSDL__PixelFormat.html#a35e5793f6e9c356aec2d130167174946":[43,0,419,17],
-"structSDL__PixelFormat.html#a3d07a81b430202c6ea0089d8df8f4e15":[43,0,419,10],
-"structSDL__PixelFormat.html#a4212574b67529628d8822ed4eb109754":[43,0,419,6],
-"structSDL__PixelFormat.html#a44045e1da843f3d1fad3a608e16af712":[43,0,419,8]
+"structSDL__PixelFormat.html#a3d07a81b430202c6ea0089d8df8f4e15":[43,0,419,10]
 };
