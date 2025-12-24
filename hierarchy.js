@@ -596,6 +596,7 @@ var hierarchy =
     [ "Uniforms", "structUniforms.html", null ],
     [ "ValueHistory", "classValueHistory.html", null ],
     [ "MemoryHandler::Vector3", "structMemoryHandler_1_1Vector3.html", null ],
+    [ "Vector3", "structVector3.html", null ],
     [ "VERTEX_CONSTANT_BUFFER_DX10", "structVERTEX__CONSTANT__BUFFER__DX10.html", null ],
     [ "VERTEX_CONSTANT_BUFFER_DX11", "structVERTEX__CONSTANT__BUFFER__DX11.html", null ],
     [ "VERTEX_CONSTANT_BUFFER_DX12", "structVERTEX__CONSTANT__BUFFER__DX12.html", null ],

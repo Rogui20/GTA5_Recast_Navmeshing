@@ -13,5 +13,7 @@ var searchData=
   ['external_2fglm_2fsimd_2fvector_5frelational_2eh_10',['vector_relational.h',['../external_2glm_2simd_2vector__relational_8h.html',1,'']]],
   ['external_2fsdl2_2fdocs_2fcontributing_2emd_11',['CONTRIBUTING.md',['../external_2SDL2_2docs_2CONTRIBUTING_8md.html',1,'']]],
   ['external_2fsdl2_2fdocs_2freadme_2emd_12',['README.md',['../external_2SDL2_2docs_2README_8md.html',1,'']]],
-  ['external_2fsdl2_2freadme_2emd_13',['README.md',['../external_2SDL2_2README_8md.html',1,'']]]
+  ['external_2fsdl2_2freadme_2emd_13',['README.md',['../external_2SDL2_2README_8md.html',1,'']]],
+  ['externc_2ecpp_14',['ExternC.cpp',['../ExternC_8cpp.html',1,'']]],
+  ['externc_2eh_15',['ExternC.h',['../ExternC_8h.html',1,'']]]
 ];

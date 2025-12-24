@@ -478,6 +478,7 @@ var annotated_dup =
     [ "TileCacheTileHeader", "structTileCacheTileHeader.html", "structTileCacheTileHeader" ],
     [ "Uniforms", "structUniforms.html", "structUniforms" ],
     [ "ValueHistory", "classValueHistory.html", "classValueHistory" ],
+    [ "Vector3", "structVector3.html", "structVector3" ],
     [ "VERTEX_CONSTANT_BUFFER_DX10", "structVERTEX__CONSTANT__BUFFER__DX10.html", "structVERTEX__CONSTANT__BUFFER__DX10" ],
     [ "VERTEX_CONSTANT_BUFFER_DX11", "structVERTEX__CONSTANT__BUFFER__DX11.html", "structVERTEX__CONSTANT__BUFFER__DX11" ],
     [ "VERTEX_CONSTANT_BUFFER_DX12", "structVERTEX__CONSTANT__BUFFER__DX12.html", "structVERTEX__CONSTANT__BUFFER__DX12" ],
