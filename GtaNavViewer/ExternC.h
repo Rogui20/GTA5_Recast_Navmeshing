@@ -26,6 +26,7 @@ struct Vector3
 GTANAVVIEWER_API void* InitNavMesh();
 GTANAVVIEWER_API void  DestroyNavMeshResources(void* navMesh);
 GTANAVVIEWER_API void  SetNavMeshGenSettings(void* navMesh, const NavmeshGenerationSettings* settings);
+GTANAVVIEWER_API void  SetAutoOffMeshGenerationParams(void* navMesh, const AutoOffmeshGenerationParams* params);
 
 // Geometria dinâmica
 GTANAVVIEWER_API bool AddGeometry(void* navMesh,
@@ -68,6 +69,7 @@ GTANAVVIEWER_API bool AddOffMeshLink(void* navMesh,
                                      bool biDir,
                                      bool updateNavMesh);
 GTANAVVIEWER_API void ClearOffMeshLinks(void* navMesh, bool updateNavMesh);
+GTANAVVIEWER_API bool GenerateAutomaticOffmeshLinks(void* navMesh);
 
 // Bounding box de build
 GTANAVVIEWER_API void SetNavMeshBoundingBox(void* navMesh, Vector3 bmin, Vector3 bmax);
