@@ -2537,7 +2537,7 @@ void ViewerApp::RenderFrame()
 
                     ImGui::SeparatorText("Agente");
                     ImGui::DragFloat("Altura", &navGenSettings.agentHeight, 0.05f, 0.1f, 20.0f, "%.2f");
-                    ImGui::DragFloat("Raio", &navGenSettings.agentRadius, 0.05f, 0.05f, 10.0f, "%.2f");
+                    ImGui::DragFloat("Raio", &navGenSettings.agentRadius, 0.05f, 0.0f, 10.0f, "%.2f");
                     ImGui::DragFloat("Climb", &navGenSettings.agentMaxClimb, 0.05f, 0.0f, 10.0f, "%.2f");
                     ImGui::DragFloat("Slope", &navGenSettings.agentMaxSlope, 1.0f, 0.0f, 89.0f, "%.1f");
 
