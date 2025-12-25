@@ -174,6 +174,60 @@ namespace
         return hit;
     }
 
+    bool RaycastTo(const std::vector<float>& verts,
+                     const std::vector<int>& tris,
+                     const glm::vec3& start,
+                     const glm::vec3& end,
+                     glm::vec3& outHit,
+                     glm::vec3& outNormal)
+    {
+        if (verts.empty() || tris.empty())
+            return false;
+
+        float closestT = 1.0f;
+        bool hit = false;
+
+        for (size_t i = 0; i + 2 < tris.size(); i += 3)
+        {
+            const int ia = tris[i];
+            const int ib = tris[i + 1];
+            const int ic = tris[i + 2];
+            if ((ia < 0 || ib < 0 || ic < 0) ||
+                (static_cast<size_t>(ia * 3 + 2) >= verts.size()) ||
+                (static_cast<size_t>(ib * 3 + 2) >= verts.size()) ||
+                (static_cast<size_t>(ic * 3 + 2) >= verts.size()))
+                continue;
+
+            const glm::vec3 a(verts[ia * 3 + 0], verts[ia * 3 + 1], verts[ia * 3 + 2]);
+            const glm::vec3 b(verts[ib * 3 + 0], verts[ib * 3 + 1], verts[ib * 3 + 2]);
+            const glm::vec3 c(verts[ic * 3 + 0], verts[ic * 3 + 1], verts[ic * 3 + 2]);
+
+            float t = 1.0f;
+            glm::vec3 triNormal;
+            if (IntersectSegmentTriangle(start, end, a, b, c, t, triNormal))
+            {
+                if (t < closestT)
+                {
+                    closestT = t;
+                    hit = true;
+                    outHit = start + (end - start) * t;
+                    outNormal = triNormal;
+                }
+            }
+        }
+
+        if (hit)
+        {
+            const float nlen = glm::length(outNormal);
+            if (nlen > 1e-4f)
+                outNormal /= nlen;
+            else
+                outNormal = glm::vec3(0.0f, 1.0f, 0.0f);
+        }
+
+        return hit;
+    }
+
     dtPolyRef GetNeighbourRef(const dtMeshTile* tile,
                               const dtPoly* poly,
                               int edge,
@@ -376,6 +430,11 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
                 glm::vec3 hitPoint;
                 glm::vec3 hitNormal;
                 if (!RaycastDown(m_cachedVerts, m_cachedTris, testPoint, maxRayDistance, hitPoint, hitNormal))
+                    continue;
+
+                glm::vec3 hitPoint2;
+                glm::vec3 hitNormal2;
+                if (RaycastTo(m_cachedVerts, m_cachedTris, hitPoint, testPoint, hitPoint2, hitNormal2))
                     continue;
 
                 const float drop = testPoint.y - hitPoint.y;
