@@ -1,5 +1,9 @@
 var NAVTREEINDEX71 =
 {
+"gdk.html#xbox-gdkx-setup":[13,4],
+"git.html":[15],
+"glad_8h.html":[44,0,5,0,0,0,0],
+"glad_8h.html#a0009b9a26c78d29e6ed13cc056edc720":[44,0,5,0,0,0,0,583],
 "glad_8h.html#a000ea5d0091e287efd51a66dcc9e99c6":[44,0,5,0,0,0,0,991],
 "glad_8h.html#a0020a1cdc41fd90c0253586098a6e181":[44,0,5,0,0,0,0,233],
 "glad_8h.html#a0058cf020ea54103d5533abcb2d6899c":[44,0,5,0,0,0,0,634],
@@ -245,9 +249,5 @@ var NAVTREEINDEX71 =
 "glad_8h.html#a2398c902b63dd997a0373c036d75ee3f":[44,0,5,0,0,0,0,152],
 "glad_8h.html#a239f4edbbd9748d15b888a990fb732f6":[44,0,5,0,0,0,0,1020],
 "glad_8h.html#a23a0bc2909cc2f79fe7287aaa044e880":[44,0,5,0,0,0,0,719],
-"glad_8h.html#a23a74c1c352ce0d74700bfed06a636e5":[44,0,5,0,0,0,0,1397],
-"glad_8h.html#a23a9e9e68af6b13075642a1353fd115f":[44,0,5,0,0,0,0,824],
-"glad_8h.html#a23f4924d457936e5aae89ae78b0c887f":[44,0,5,0,0,0,0,1281],
-"glad_8h.html#a241ccb34c87933f5df602ab8129319cb":[44,0,5,0,0,0,0,1037],
-"glad_8h.html#a246306f96b8254e04efb2b5ddfb96557":[44,0,5,0,0,0,0,1081]
+"glad_8h.html#a23a74c1c352ce0d74700bfed06a636e5":[44,0,5,0,0,0,0,1397]
 };

@@ -1,5 +1,9 @@
 var NAVTREEINDEX90 =
 {
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#contributing-to-the-documentation":[7,2],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-a-function-documentation":[7,2,0],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-the-wiki":[7,2,1],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#filing-a-github-issue":[7,0],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#following-the-style-guide":[7,1,1],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#forking-the-project":[7,1,0],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#opening-a-pull-request":[7,1,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX90 =
 "structExampleAsset.html#a5b15e79d4f1346206d8a66b997e829d0":[43,0,79,3],
 "structExampleAsset.html#a9a9265590fc4573fec10ff27e02b7bf0":[43,0,79,5],
 "structExampleAsset.html#ab685444c68821f58fb7cfb1551dceb53":[43,0,79,1],
-"structExampleAsset.html#ae66d2579ea859b29309c57e56960c5b2":[43,0,79,4],
-"structExampleAssetsBrowser.html":[43,0,80],
-"structExampleAssetsBrowser.html#a0d086443d4134995b272351b85e1c721":[43,0,80,5],
-"structExampleAssetsBrowser.html#a0da737c053f5db2ee8ee8f73773554bc":[43,0,80,6],
-"structExampleAssetsBrowser.html#a10620ceff20798eca9e740d1d6353c7b":[43,0,80,18]
+"structExampleAsset.html#ae66d2579ea859b29309c57e56960c5b2":[43,0,79,4]
 };

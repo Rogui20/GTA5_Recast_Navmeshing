@@ -2,7 +2,7 @@ var searchData=
 [
   ['c_0',['c',['../structSDLTest__RandomContext.html#a17a6a7e7b68a33c67d9b74c8c7c33198',1,'SDLTest_RandomContext']]],
   ['cacheparams_1',['cacheParams',['../structTileCacheSetHeader.html#abc363573908ea46bed77e3b0f94e0325',1,'TileCacheSetHeader']]],
-  ['callback_2',['callback',['../structImGuiContextHook.html#ac95bc416ed24b5ad3cfa7c2199adcaf9',1,'ImGuiContextHook::Callback'],['../structSDL__AudioSpec.html#a1f8d05139f1679dcf359f49251233eac',1,'SDL_AudioSpec::callback']]],
+  ['callback_2',['callback',['../structSDL__AudioSpec.html#a1f8d05139f1679dcf359f49251233eac',1,'SDL_AudioSpec::callback'],['../structImGuiContextHook.html#ac95bc416ed24b5ad3cfa7c2199adcaf9',1,'ImGuiContextHook::Callback']]],
   ['callbackschainforallwindows_3',['CallbacksChainForAllWindows',['../structImGui__ImplGlfw__Data.html#a2a8575611eb554c3acb0e8c8228cdc44',1,'ImGui_ImplGlfw_Data']]],
   ['callbacktextbackup_4',['CallbackTextBackup',['../structImGuiInputTextState.html#a3a61e87aee08d440eae6ebacadfc019b',1,'ImGuiInputTextState']]],
   ['cannotskipitemsqueue_5',['CannotSkipItemsQueue',['../structImGuiTableColumn.html#abaa9d8ca04ae6e3fa8ee18724ef134ee',1,'ImGuiTableColumn']]],
@@ -70,7 +70,7 @@ var searchData=
   ['collapsedcond_67',['CollapsedCond',['../structImGuiNextWindowData.html#a864d3d1bf0dbf81ba4cf9cefd75fe06b',1,'ImGuiNextWindowData']]],
   ['collapsedval_68',['CollapsedVal',['../structImGuiNextWindowData.html#a0c4c81bf78a6ac094f794d2cf318037a',1,'ImGuiNextWindowData']]],
   ['collisionqueryrange_69',['collisionQueryRange',['../structdtCrowdAgentParams.html#a5e1c7373b02e2f926360e3d3130be068',1,'dtCrowdAgentParams']]],
-  ['color_70',['color',['../structSDL__Vertex.html#ace543def50f0b3f3f87a86c47caab53f',1,'SDL_Vertex::color'],['../structMyDocument.html#a38d0b4dc1d4cd036ab39031fbd6d57cc',1,'MyDocument::Color']]],
+  ['color_70',['color',['../structMyDocument.html#a38d0b4dc1d4cd036ab39031fbd6d57cc',1,'MyDocument::Color'],['../structSDL__Vertex.html#ace543def50f0b3f3f87a86c47caab53f',1,'SDL_Vertex::color']]],
   ['colorbuffer_71',['ColorBuffer',['../structImGui__ImplSDLRenderer3__Data.html#aa40eb7ee6d0c2ffa4478f16112c41fbc',1,'ImGui_ImplSDLRenderer3_Data']]],
   ['colorbuttonposition_72',['ColorButtonPosition',['../structImGuiStyle.html#a64b5fdd495573fa07a80dc0071e99802',1,'ImGuiStyle']]],
   ['colored_73',['Colored',['../structImFontGlyph.html#a6dca72bfeb40ba1cf6ceae007894f665',1,'ImFontGlyph']]],

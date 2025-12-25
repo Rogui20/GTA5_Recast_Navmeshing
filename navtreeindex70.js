@@ -1,5 +1,9 @@
 var NAVTREEINDEX70 =
 {
+"dir_f67adae8f6e31608bcf53cdf13e52b2c.html":[44,0,4,0],
+"dir_f73acc4eb87dae63dd8b26467f028b41.html":[44,0,7],
+"dir_f989b3d3473f3227bb3c0f171476a0db.html":[44,0,5,0,0,1],
+"dir_fc5ead6dadc041a993e0b7f2ef9bc4fa.html":[44,0,0],
 "dir_fe7f4084ac0458032f1df717ceae8313.html":[44,0,8,1],
 "directfb.html":[10],
 "directfb.html#opengl-support":[10,1],
@@ -145,8 +149,8 @@ var NAVTREEINDEX70 =
 "external_2glm_2simd_2vector__relational_8h.html":[44,0,5,1,1,9],
 "external_2glm_2simd_2vector__relational_8h_source.html":[44,0,5,1,1,9],
 "files.html":[44,0],
-"functions.html":[43,3,0],
 "functions.html":[43,3,0,0],
+"functions.html":[43,3,0],
 "functions_a.html":[43,3,0,1],
 "functions_b.html":[43,3,0,2],
 "functions_c.html":[43,3,0,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX70 =
 "gdk.html#troubleshooting-1":[13,5],
 "gdk.html#visualc-gdk-solution":[13,2],
 "gdk.html#windows-gdk-setup-detailed-steps":[13,3],
-"gdk.html#windows-gdk-status":[13,1],
-"gdk.html#xbox-gdkx-setup":[13,4],
-"git.html":[15],
-"glad_8h.html":[44,0,5,0,0,0,0],
-"glad_8h.html#a0009b9a26c78d29e6ed13cc056edc720":[44,0,5,0,0,0,0,583]
+"gdk.html#windows-gdk-status":[13,1]
 };

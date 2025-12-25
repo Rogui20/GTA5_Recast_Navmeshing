@@ -1,5 +1,9 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__MultiGestureEvent.html#a1708fc3c788fd12cc0beb5dc05cf31ca":[43,0,418,7],
+"structSDL__MultiGestureEvent.html#a264602b9c5cc027eb6a283adda428454":[43,0,418,8],
+"structSDL__MultiGestureEvent.html#a351c29785c5ce3f68c4591a427265f14":[43,0,418,0],
+"structSDL__MultiGestureEvent.html#a4804ec87789e697aba138c4888bb304b":[43,0,418,3],
 "structSDL__MultiGestureEvent.html#a4f4a920dcf5205baa24a140df56f3153":[43,0,418,1],
 "structSDL__MultiGestureEvent.html#a6b06cf80372ce3cad40110fdb6ef0353":[43,0,418,2],
 "structSDL__MultiGestureEvent.html#a7e99a98debf3ce11f6d2a2fbb3637175":[43,0,418,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX106 =
 "structSampleToolState.html#ab3c7ab10984d2ca744f28a068d882750":[43,0,370,2],
 "structSampleToolState.html#ab9dda86ad5ef7d23b6da69dbbc5ded1e":[43,0,370,4],
 "structSampleToolState.html#aba928b81e7813277bfcc6a0854f93658":[43,0,370,1],
-"structStbTexteditRow.html":[43,0,455],
-"structStbTexteditRow.html#a1a19bebadb3f82b4f86ea29698d77084":[43,0,455,1],
-"structStbTexteditRow.html#a3a3e1a506030c871a1b3d09bf26e341f":[43,0,455,3],
-"structStbTexteditRow.html#a707d331bd9dc99d64c81f71106b75eed":[43,0,455,5],
-"structStbTexteditRow.html#aab290e15f6a3b4a96ab2c2472cc8a7a5":[43,0,455,4]
+"structStbTexteditRow.html":[43,0,455]
 };

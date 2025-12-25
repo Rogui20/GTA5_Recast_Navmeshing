@@ -1,5 +1,9 @@
 var NAVTREEINDEX89 =
 {
+"imgui__widgets_8cpp.html#ad8f314afb60770d322bd454ec21e6c15":[44,0,7,0,8,67],
+"imgui__widgets_8cpp.html#adb02051ad064ff8f14557c7483f2fd7e":[44,0,7,0,8,37],
+"imgui__widgets_8cpp.html#adb6231fb52ce1b5fe340d158db4fa113":[44,0,7,0,8,20],
+"imgui__widgets_8cpp.html#addba66b893ab83d395d0a64a8fddc52c":[44,0,7,0,8,25],
 "imgui__widgets_8cpp.html#adf4d73301961430d50d7edd96f92ce38":[44,0,7,0,8,3],
 "imgui__widgets_8cpp.html#ae213820295d04561f8ea295c96ac57c8":[44,0,7,0,8,58],
 "imgui__widgets_8cpp.html#ae245ee4392b26d481ee10f0fa37fb525":[44,0,7,0,8,84],
@@ -245,9 +249,5 @@ var NAVTREEINDEX89 =
 "md_Docs_2__99__Roadmap.html#vehicle-navigation--movement":[3,3,6],
 "md_external_2SDL2_2README.html":[41],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html":[7],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#contributing-code":[7,1],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#contributing-to-the-documentation":[7,2],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-a-function-documentation":[7,2,0],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-the-wiki":[7,2,1],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#filing-a-github-issue":[7,0]
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#contributing-code":[7,1]
 };
