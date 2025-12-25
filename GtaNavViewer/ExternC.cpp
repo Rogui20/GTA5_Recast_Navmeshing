@@ -43,6 +43,7 @@ namespace
         NavmeshGenerationSettings genSettings{};
         std::vector<GeometryInstance> geometries;
         std::vector<OffmeshLink> offmeshLinks;
+        AutoOffmeshGenerationParams autoOffmeshParams{};
         NavMeshData navData;
         dtNavMeshQuery* navQuery = nullptr;
         bool hasBoundingBox = false;
@@ -446,7 +447,21 @@ GTANAVVIEWER_API void SetNavMeshGenSettings(void* navMesh, const NavmeshGenerati
         return;
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->genSettings = *settings;
+    ctx->autoOffmeshParams.agentRadius = settings->agentRadius;
+    ctx->autoOffmeshParams.agentHeight = settings->agentHeight;
+    ctx->autoOffmeshParams.maxSlopeDegrees = settings->agentMaxSlope;
     ctx->rebuildAll = true;
+}
+
+GTANAVVIEWER_API void SetAutoOffMeshGenerationParams(void* navMesh, const AutoOffmeshGenerationParams* params)
+{
+    if (!navMesh || !params)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->autoOffmeshParams = *params;
+    ctx->autoOffmeshParams.agentRadius = ctx->genSettings.agentRadius;
+    ctx->autoOffmeshParams.agentHeight = ctx->genSettings.agentHeight;
+    ctx->autoOffmeshParams.maxSlopeDegrees = ctx->genSettings.agentMaxSlope;
 }
 
 GTANAVVIEWER_API bool AddGeometry(void* navMesh,
@@ -697,6 +712,38 @@ GTANAVVIEWER_API void ClearOffMeshLinks(void* navMesh, bool updateNavMesh)
     ctx->rebuildAll = true;
     if (updateNavMesh)
         UpdateNavmeshState(*ctx, false);
+}
+
+GTANAVVIEWER_API bool GenerateAutomaticOffmeshLinks(void* navMesh)
+{
+    if (!navMesh)
+        return false;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    AutoOffmeshGenerationParams params = ctx->autoOffmeshParams;
+    params.agentRadius = ctx->genSettings.agentRadius;
+    params.agentHeight = ctx->genSettings.agentHeight;
+    params.maxSlopeDegrees = ctx->genSettings.agentMaxSlope;
+
+    std::vector<OffmeshLink> generated;
+    if (!ctx->navData.GenerateAutomaticOffmeshLinks(params, generated))
+        return false;
+
+    const unsigned int autoMask = 0xffff0000u;
+    std::vector<OffmeshLink> merged;
+    const auto& existing = ctx->navData.GetOffmeshLinks();
+    merged.reserve(existing.size() + generated.size());
+    for (const auto& link : existing)
+    {
+        if ( (link.userId & autoMask) != (params.userIdBase & autoMask) )
+            merged.push_back(link);
+    }
+    merged.insert(merged.end(), generated.begin(), generated.end());
+
+    ctx->navData.SetOffmeshLinks(std::move(merged));
+    ctx->offmeshLinks = ctx->navData.GetOffmeshLinks();
+    ctx->rebuildAll = true;
+    return true;
 }
 
 GTANAVVIEWER_API void SetNavMeshBoundingBox(void* navMesh, Vector3 bmin, Vector3 bmax)
