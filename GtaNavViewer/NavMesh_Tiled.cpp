@@ -31,6 +31,17 @@ namespace
         return true;
     }
 
+    bool isPointInsideTileXZ(const glm::vec3& pt, const rcConfig& cfg)
+    {
+        const float epsilon = std::max(0.01f, cfg.cs * 0.1f);
+        const float minX = cfg.bmin[0] - epsilon;
+        const float minZ = cfg.bmin[2] - epsilon;
+        const float maxX = cfg.bmax[0] + epsilon;
+        const float maxZ = cfg.bmax[2] + epsilon;
+        return pt.x >= minX && pt.x <= maxX &&
+               pt.z >= minZ && pt.z <= maxZ;
+    }
+
     static constexpr uint32_t TILE_CACHE_MAGIC   = 'G' << 24 | 'T' << 16 | 'A' << 8 | 'V';
     static constexpr uint32_t TILE_CACHE_VERSION = 1;
     static constexpr const char* DEFAULT_CACHE_PATH = "navmesh_tilecache.bin";
@@ -303,6 +314,9 @@ namespace
             unsigned int baseId = 1000;
             for (const auto& link : *input.offmeshLinks)
             {
+                if (!isPointInsideTileXZ(link.start, cfg))
+                    continue;
+
                 offmeshVerts.push_back(link.start.x);
                 offmeshVerts.push_back(link.start.y);
                 offmeshVerts.push_back(link.start.z);
@@ -317,13 +331,16 @@ namespace
                 offmeshIds.push_back(link.userId != 0 ? link.userId : baseId++);
             }
 
-            params.offMeshConVerts = offmeshVerts.data();
-            params.offMeshConRad = offmeshRads.data();
-            params.offMeshConDir = offmeshDirs.data();
-            params.offMeshConAreas = offmeshAreas.data();
-            params.offMeshConFlags = offmeshFlags.data();
-            params.offMeshConUserID = offmeshIds.data();
-            params.offMeshConCount = static_cast<int>(offmeshDirs.size());
+            if (!offmeshDirs.empty())
+            {
+                params.offMeshConVerts = offmeshVerts.data();
+                params.offMeshConRad = offmeshRads.data();
+                params.offMeshConDir = offmeshDirs.data();
+                params.offMeshConAreas = offmeshAreas.data();
+                params.offMeshConFlags = offmeshFlags.data();
+                params.offMeshConUserID = offmeshIds.data();
+                params.offMeshConCount = static_cast<int>(offmeshDirs.size());
+            }
         }
 
         bool ok = dtCreateNavMeshData(&params, &navData, &navDataSize);

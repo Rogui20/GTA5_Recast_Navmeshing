@@ -373,6 +373,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
     const float slopeCos = cosf(glm::radians(params.maxSlopeDegrees));
     const float maxRayDistance = params.maxDropHeight + params.raycastExtraHeight + params.upOffset;
     const glm::vec3 up(0.0f, 1.0f, 0.0f);
+    const float startInset = 0.04f; // Empurra o start para dentro do polígono (~4cm)
 
     const int maxTiles = m_nav->getMaxTiles();
     size_t reserved = static_cast<size_t>(maxTiles) * 4;
@@ -450,7 +451,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
                 usedStartHashes.insert(hash);
 
                 OffmeshLink link{};
-                link.start = mid;
+                link.start = mid - outward * startInset;
                 link.end = hitPoint;
                 link.radius = params.agentRadius;
                 link.bidirectional = drop <= params.jumpHeight;
