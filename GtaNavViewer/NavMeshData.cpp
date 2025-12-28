@@ -351,9 +351,9 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
 {
     outLinks.clear();
 
-    if (!m_nav || !m_hasTiledCache)
+    if (!m_nav)
     {
-        printf("[NavMeshData] GenerateAutomaticOffmeshLinks: navmesh tiled nao inicializado.\n");
+        printf("[NavMeshData] GenerateAutomaticOffmeshLinks: navmesh nao inicializado.\n");
         return false;
     }
 
@@ -1080,22 +1080,22 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     }
 
     m_nav = newNav;
+    m_cachedVerts = verts;
+    m_cachedTris = tris;
+    rcVcopy(m_cachedBMin, meshBMin);
+    rcVcopy(m_cachedBMax, meshBMax);
+    m_cachedBaseCfg = baseCfg;
+    m_cachedSettings = settings;
     if (settings.mode == NavmeshBuildMode::Tiled)
     {
-        m_cachedVerts = verts;
-        m_cachedTris = tris;
-        rcVcopy(m_cachedBMin, meshBMin);
-        rcVcopy(m_cachedBMax, meshBMax);
-        m_cachedBaseCfg = baseCfg;
-        m_cachedSettings = settings;
         m_cachedTileWidthCount = (baseCfg.width + settings.tileSize - 1) / settings.tileSize;
         m_cachedTileHeightCount = (baseCfg.height + settings.tileSize - 1) / settings.tileSize;
         m_hasTiledCache = true;
     }
     else
     {
-        m_cachedVerts.clear();
-        m_cachedTris.clear();
+        m_cachedTileWidthCount = 0;
+        m_cachedTileHeightCount = 0;
         m_hasTiledCache = false;
     }
     return true;
