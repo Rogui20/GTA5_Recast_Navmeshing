@@ -16,6 +16,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <algorithm>
 
 namespace
 {
@@ -1027,6 +1028,25 @@ GTANAVVIEWER_API bool AddOffMeshLink(void* navMesh,
     if (updateNavMesh)
         return UpdateNavmeshState(*ctx, false);
     return true;
+}
+
+GTANAVVIEWER_API int AddOffmeshLinksToNavMeshIsland(void* navMesh,
+                                                    const IslandOffmeshLinkParams* params,
+                                                    OffmeshLink* outLinks,
+                                                    int maxLinks)
+{
+    if (!navMesh || !params || !outLinks || maxLinks <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    std::vector<OffmeshLink> generated;
+    if (!ctx->navData.AddOffmeshLinksToNavMeshIsland(*params, generated))
+        return 0;
+
+    const int copyCount = std::min(maxLinks, static_cast<int>(generated.size()));
+    for (int i = 0; i < copyCount; ++i)
+        outLinks[i] = generated[static_cast<size_t>(i)];
+    return copyCount;
 }
 
 GTANAVVIEWER_API void ClearOffMeshLinks(void* navMesh, bool updateNavMesh)

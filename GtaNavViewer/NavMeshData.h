@@ -69,6 +69,26 @@ struct AutoOffmeshGenerationParams
     float zOffset = 0.05f;
 };
 
+struct IslandOffmeshLinkParams
+{
+    glm::vec3 targetPosition;
+
+    glm::vec3 searchExtents;
+    float searchAngleDegrees;
+
+    int moreLinks;
+
+    bool linkDown;
+    bool linkUp;
+
+    float minDistance;
+    float maxDistance;
+    float maxHeightDiff;
+
+    unsigned char areaDrop;
+    unsigned char areaJump;
+};
+
 enum NavAreas : unsigned char
 {
     AREA_NULL     = 0,
@@ -139,6 +159,8 @@ public:
     void ClearOffmeshLinks();
     bool GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParams& params,
                                        std::vector<OffmeshLink>& outLinks) const;
+    bool AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& params,
+                                        std::vector<OffmeshLink>& outLinks);
 
 
     // Conversão para desenhar no viewer
