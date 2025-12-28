@@ -31,17 +31,6 @@ namespace
         return true;
     }
 
-    bool isPointInsideTileXZ(const glm::vec3& pt, const rcConfig& cfg)
-    {
-        const float epsilon = std::max(0.01f, cfg.cs * 0.1f);
-        const float minX = cfg.bmin[0] - epsilon;
-        const float minZ = cfg.bmin[2] - epsilon;
-        const float maxX = cfg.bmax[0] + epsilon;
-        const float maxZ = cfg.bmax[2] + epsilon;
-        return pt.x >= minX && pt.x <= maxX &&
-               pt.z >= minZ && pt.z <= maxZ;
-    }
-
     static constexpr uint32_t TILE_CACHE_MAGIC   = 'G' << 24 | 'T' << 16 | 'A' << 8 | 'V';
     static constexpr uint32_t TILE_CACHE_VERSION = 1;
     static constexpr const char* DEFAULT_CACHE_PATH = "navmesh_tilecache.bin";
@@ -117,11 +106,71 @@ namespace
         Error,
     };
 
+    bool findHeightForOffmeshStart(const glm::vec3& start,
+                                   const rcPolyMesh* pmesh,
+                                   const rcPolyMeshDetail* dmesh,
+                                   const dtNavMeshCreateParams& params,
+                                   float& outHeight)
+    {
+        if (!pmesh || !dmesh || !pmesh->verts || !pmesh->polys || !dmesh->meshes || !dmesh->tris)
+            return false;
+
+        const int nvp = pmesh->nvp;
+        const float cs = params.cs;
+        const float ch = params.ch;
+        const float* bmin = params.bmin;
+
+        const float pt[3] = { start.x, start.y, start.z };
+
+        for (int i = 0; i < pmesh->npolys; ++i)
+        {
+            const unsigned short* poly = &pmesh->polys[i * 2 * nvp];
+            const rcPolyMeshDetailMesh& pd = dmesh->meshes[i];
+
+            for (int j = 0; j < pd.triCount; ++j)
+            {
+                const unsigned char* t = &dmesh->tris[(pd.triBase + j) * 4];
+                float tri[9];
+                for (int k = 0; k < 3; ++k)
+                {
+                    const int vindex = t[k];
+                    if (vindex < pmesh->nvp)
+                    {
+                        const unsigned short* v = &pmesh->verts[poly[vindex] * 3];
+                        tri[k * 3 + 0] = bmin[0] + v[0] * cs;
+                        tri[k * 3 + 1] = bmin[1] + v[1] * ch;
+                        tri[k * 3 + 2] = bmin[2] + v[2] * cs;
+                    }
+                    else
+                    {
+                        const float* dv = &dmesh->verts[(pd.vertBase + (vindex - pmesh->nvp)) * 3];
+                        tri[k * 3 + 0] = dv[0];
+                        tri[k * 3 + 1] = dv[1];
+                        tri[k * 3 + 2] = dv[2];
+                    }
+                }
+
+                if (dtPointInPolygon(pt, tri, 3))
+                {
+                    float h = start.y;
+                    if (dtClosestHeightPointTriangle(pt, &tri[0], &tri[3], &tri[6], h))
+                    {
+                        outHeight = h;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     NavTileBuildResult createNavDataForConfig(const NavmeshBuildInput& input,
                                               const rcConfig& cfg,
                                               const std::vector<int>& triSource,
                                               int tileX,
                                               int tileY,
+                                              const dtNavMeshParams& navParams,
                                               dtNavMeshCreateParams& outParams,
                                               unsigned char*& navData,
                                               int& navDataSize)
@@ -302,6 +351,9 @@ namespace
         std::vector<unsigned short> offmeshFlags;
         std::vector<unsigned int> offmeshIds;
 
+        const size_t totalOffmeshLinks = input.offmeshLinks ? input.offmeshLinks->size() : 0;
+        int rejectedLinks = 0;
+
         if (input.offmeshLinks && !input.offmeshLinks->empty())
         {
             offmeshVerts.reserve(input.offmeshLinks->size() * 6);
@@ -314,12 +366,24 @@ namespace
             unsigned int baseId = 1000;
             for (const auto& link : *input.offmeshLinks)
             {
-                if (!isPointInsideTileXZ(link.start, cfg))
+                const int ownerTx = (int)floorf((link.start.x - navParams.orig[0]) / navParams.tileWidth);
+                const int ownerTy = (int)floorf((link.start.z - navParams.orig[2]) / navParams.tileHeight);
+                if (ownerTx != tileX || ownerTy != tileY)
+                {
+                    ++rejectedLinks;
                     continue;
+                }
 
-                offmeshVerts.push_back(link.start.x);
-                offmeshVerts.push_back(link.start.y);
-                offmeshVerts.push_back(link.start.z);
+                glm::vec3 startPos = link.start;
+                float startHeight = 0.0f;
+                if (findHeightForOffmeshStart(link.start, pmesh, dmesh, params, startHeight))
+                {
+                    startPos.y = startHeight;
+                }
+
+                offmeshVerts.push_back(startPos.x);
+                offmeshVerts.push_back(startPos.y);
+                offmeshVerts.push_back(startPos.z);
                 offmeshVerts.push_back(link.end.x);
                 offmeshVerts.push_back(link.end.y);
                 offmeshVerts.push_back(link.end.z);
@@ -341,6 +405,13 @@ namespace
                 params.offMeshConUserID = offmeshIds.data();
                 params.offMeshConCount = static_cast<int>(offmeshDirs.size());
             }
+        }
+
+        DEBUG_LOG("Tile %d,%d: offmesh accepted=%d rejected=%d / total=%zu\n",
+                  tileX, tileY, params.offMeshConCount, rejectedLinks, totalOffmeshLinks);
+        if (params.offMeshConCount > 0)
+        {
+            DEBUG_LOG("Tile %d,%d recebeu offmesh links (count=%d)\n", tileX, tileY, params.offMeshConCount);
         }
 
         bool ok = dtCreateNavMeshData(&params, &navData, &navDataSize);
@@ -742,7 +813,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
             dtNavMeshCreateParams params{};
             unsigned char* navMeshData = nullptr;
             int navMeshDataSize = 0;
-            const NavTileBuildResult result = createNavDataForConfig(input, inputTile.cfg, inputTile.tris, inputTile.tx, inputTile.ty, params, navMeshData, navMeshDataSize);
+            const NavTileBuildResult result = createNavDataForConfig(input, inputTile.cfg, inputTile.tris, inputTile.tx, inputTile.ty, navParams, params, navMeshData, navMeshDataSize);
             if (result == NavTileBuildResult::Empty)
             {
                 ++tilesSkipped;
@@ -907,7 +978,7 @@ bool BuildSingleTile(const NavmeshBuildInput& input,
     dtNavMeshCreateParams createParams{};
     unsigned char* navMeshData = nullptr;
     int navMeshDataSize = 0;
-    const NavTileBuildResult result = createNavDataForConfig(input, tileCfg, tileTris, tileX, tileY, createParams, navMeshData, navMeshDataSize);
+    const NavTileBuildResult result = createNavDataForConfig(input, tileCfg, tileTris, tileX, tileY, *nav->getParams(), createParams, navMeshData, navMeshDataSize);
     if (result == NavTileBuildResult::Empty)
     {
         outEmpty = true;
