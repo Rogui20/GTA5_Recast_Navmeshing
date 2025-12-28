@@ -1,5 +1,7 @@
 var NAVTREEINDEX9 =
 {
+"GtaNavViewer_2imgui_2imgui_8h.html#ae319287d87878550ad2440e77b54c4a6":[44,0,7,0,3,462],
+"GtaNavViewer_2imgui_2imgui_8h.html#ae404b6978e9aedec5c16627d8c45f923":[44,0,7,0,3,493],
 "GtaNavViewer_2imgui_2imgui_8h.html#ae51bc07bc518779f58def3c0e2d0045c":[44,0,7,0,3,603],
 "GtaNavViewer_2imgui_2imgui_8h.html#ae53a0c1818d2804e3b1331f0c1777434":[44,0,7,0,3,406],
 "GtaNavViewer_2imgui_2imgui_8h.html#ae560f17cf3262017cee888d1eb77f294":[44,0,7,0,3,317],
@@ -168,15 +170,15 @@ var NAVTREEINDEX9 =
 "NavMeshBuild_8h_source.html":[44,0,7,17],
 "NavMeshData_8cpp.html":[44,0,7,18],
 "NavMeshData_8h.html":[44,0,7,19],
-"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8":[44,0,7,19,4],
-"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8a07dcb403e6bb27412ed575b6b7d27e45":[44,0,7,19,4,0],
-"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8a85bd571ef9bf9b36014aa41f363a7d45":[44,0,7,19,4,4],
-"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8a9d353bb38ccaad5582c23c24949f563c":[44,0,7,19,4,2],
-"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8ac3542aa3f99bab17ba656773ef15b084":[44,0,7,19,4,1],
-"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8afa37e6d775311d8396ddc5d302af4562":[44,0,7,19,4,3],
-"NavMeshData_8h.html#ac88d2d1872f1be7fae70c460fee44a54":[44,0,7,19,5],
-"NavMeshData_8h.html#ac88d2d1872f1be7fae70c460fee44a54a032c0452b21c433ffd526464d6fc86a8":[44,0,7,19,5,0],
-"NavMeshData_8h.html#ac88d2d1872f1be7fae70c460fee44a54a320af35370596a9ea75686c6624a9f07":[44,0,7,19,5,1],
+"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8":[44,0,7,19,5],
+"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8a07dcb403e6bb27412ed575b6b7d27e45":[44,0,7,19,5,0],
+"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8a85bd571ef9bf9b36014aa41f363a7d45":[44,0,7,19,5,4],
+"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8a9d353bb38ccaad5582c23c24949f563c":[44,0,7,19,5,2],
+"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8ac3542aa3f99bab17ba656773ef15b084":[44,0,7,19,5,1],
+"NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8afa37e6d775311d8396ddc5d302af4562":[44,0,7,19,5,3],
+"NavMeshData_8h.html#ac88d2d1872f1be7fae70c460fee44a54":[44,0,7,19,6],
+"NavMeshData_8h.html#ac88d2d1872f1be7fae70c460fee44a54a032c0452b21c433ffd526464d6fc86a8":[44,0,7,19,6,0],
+"NavMeshData_8h.html#ac88d2d1872f1be7fae70c460fee44a54a320af35370596a9ea75686c6624a9f07":[44,0,7,19,6,1],
 "NavMeshData_8h_source.html":[44,0,7,19],
 "NavMeshPruneTool_8cpp.html":[44,0,9,1,9],
 "NavMeshPruneTool_8cpp.html#a99526da170fe64ed5ca767aba6bac662":[44,0,9,1,9,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX9 =
 "RecastArea_8cpp.html#ab84b0a39a5bcd3e4bd1a2d19b015bde9":[44,0,8,1,2,9],
 "RecastArea_8cpp.html#ac4b52279afe6cd37e7e3213e62fb1bab":[44,0,8,1,2,8],
 "RecastAssert_8cpp.html":[44,0,8,1,3],
-"RecastAssert_8cpp.html#a2040287091fff4c9733a932d37f978b7":[44,0,8,1,3,2],
-"RecastAssert_8cpp.html#a6e7fa7885e611b26d57736c33df11771":[44,0,8,1,3,0],
-"RecastAssert_8cpp.html#a9fba2f1f45778f706f4478a73ba69e91":[44,0,8,1,3,1]
+"RecastAssert_8cpp.html#a2040287091fff4c9733a932d37f978b7":[44,0,8,1,3,2]
 };

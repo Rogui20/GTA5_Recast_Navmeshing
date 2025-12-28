@@ -1,5 +1,7 @@
 var NAVTREEINDEX18 =
 {
+"SDL__haptic_8h.html":[44,0,5,2,1,32],
+"SDL__haptic_8h.html#a0b0d63aa4513fc1b12939500cb3f8a76":[44,0,5,2,1,32,59],
 "SDL__haptic_8h.html#a0bb35fea7c4c08c9bcb80e0bcfa1799f":[44,0,5,2,1,32,39],
 "SDL__haptic_8h.html#a0ebf54334ce8dbdd0f8711ca70f141a7":[44,0,5,2,1,32,36],
 "SDL__haptic_8h.html#a14b807471589120395aec28293cf6642":[44,0,5,2,1,32,15],
@@ -247,7 +249,5 @@ var NAVTREEINDEX18 =
 "SDL__hints_8h.html#ab85f3099d9bb0445b0c6b5002cfaa7edaef363821cdc9c74e84d79cfea42e32b9":[44,0,5,2,1,34,200,1],
 "SDL__hints_8h.html#abc592ad47225c77acdec3d778782a37e":[44,0,5,2,1,34,167],
 "SDL__hints_8h.html#abcb7bc98e366325985e96815d6ee8b60":[44,0,5,2,1,34,65],
-"SDL__hints_8h.html#abd14c21ef70948eb382153916e1481b7":[44,0,5,2,1,34,47],
-"SDL__hints_8h.html#abdeb9ded1da2d71324d4a60b048521b3":[44,0,5,2,1,34,68],
-"SDL__hints_8h.html#abe9410e8b6809c9fdcb1f69e6894a2e8":[44,0,5,2,1,34,38]
+"SDL__hints_8h.html#abd14c21ef70948eb382153916e1481b7":[44,0,5,2,1,34,47]
 };

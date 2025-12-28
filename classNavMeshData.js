@@ -5,6 +5,7 @@ var classNavMeshData =
     [ "NavMeshData", "classNavMeshData.html#ad78beb7092a0cad7a0412fb48b5e665f", null ],
     [ "~NavMeshData", "classNavMeshData.html#a5434728b0546753c3f01735e4a13e892", null ],
     [ "AddOffmeshLink", "classNavMeshData.html#a709a5ddbd9a95a6c55c0bf38ddd1015a", null ],
+    [ "AddOffmeshLinksToNavMeshIsland", "classNavMeshData.html#a81815e24295f756e4bc315392d74a6f4", null ],
     [ "BuildFromMesh", "classNavMeshData.html#ac84ae20a294aebff442e62b0eebfc886", null ],
     [ "BuildTileAt", "classNavMeshData.html#a309f93226ce1a4576d932144c9a70363", null ],
     [ "ClearOffmeshLinks", "classNavMeshData.html#ac03e109d7eb10ab8828d329ec17075a4", null ],

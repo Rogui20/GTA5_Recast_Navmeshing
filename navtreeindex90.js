@@ -1,5 +1,8 @@
 var NAVTREEINDEX90 =
 {
+"md_Docs_2__99__Roadmap.html#more-pod-structs-for-clarity-in-internals-wip":[3,1,3],
+"md_Docs_2__99__Roadmap.html#more-spatial-querying-abilities":[3,3,3],
+"md_Docs_2__99__Roadmap.html#more-tests":[3,1,2],
 "md_Docs_2__99__Roadmap.html#nav-volumes--3d-navigation":[3,3,0],
 "md_Docs_2__99__Roadmap.html#new-recastdetour-functionality":[3,3],
 "md_Docs_2__99__Roadmap.html#opt-in-config-value-validation-system":[3,0,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX90 =
 "structExampleAppDocuments.html#a6f8cc955192c924720b0413ae7980c12":[43,0,76,6],
 "structExampleAppDocuments.html#a9a456561c2762bde1778e1dcc11ea786":[43,0,76,8],
 "structExampleAppDocuments.html#ad5764912b760eaae5829a7197b26c911":[43,0,76,0],
-"structExampleAppDocuments.html#ae41eb7580d5a82355e9d57f1bd34f6ca":[43,0,76,3],
-"structExampleAppDocuments.html#af7281834336b28da15c2168fae2d0212":[43,0,76,5],
-"structExampleAppLog.html":[43,0,77],
-"structExampleAppLog.html#a4571947a6000e984ec8da9b7166e1e2b":[43,0,77,6]
+"structExampleAppDocuments.html#ae41eb7580d5a82355e9d57f1bd34f6ca":[43,0,76,3]
 };

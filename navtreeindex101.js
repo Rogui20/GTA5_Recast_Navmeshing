@@ -1,5 +1,8 @@
 var NAVTREEINDEX101 =
 {
+"structImGui__ImplDX10__RenderState.html#a1e22846db10f51fa8ff0a9694d984735":[43,0,126,2],
+"structImGui__ImplDX10__RenderState.html#aa5146a0c75866d332500aad9d8a3dd07":[43,0,126,0],
+"structImGui__ImplDX10__RenderState.html#acdc6859721bdcdeaf84832fbdf29eeb5":[43,0,126,1],
 "structImGui__ImplDX10__Texture.html":[43,0,127],
 "structImGui__ImplDX10__Texture.html#a2a83f759781c3f47b1750cd28278358d":[43,0,127,1],
 "structImGui__ImplDX10__Texture.html#a91369ae2b670322a92e31e6a44ac9b95":[43,0,127,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX101 =
 "structImGui__ImplSDLGPU3__Data.html#aa4b0f3ced7b5662ab9735561f411286a":[43,0,151,4],
 "structImGui__ImplSDLGPU3__Data.html#aa9690c463f8260a3537a0e2f05e1db17":[43,0,151,6],
 "structImGui__ImplSDLGPU3__Data.html#ac02d10ee66c260694575b0d1f8a4a981":[43,0,151,2],
-"structImGui__ImplSDLGPU3__FrameData.html":[43,0,152],
-"structImGui__ImplSDLGPU3__FrameData.html#a428b1136190112c4daecc32d888c800c":[43,0,152,1],
-"structImGui__ImplSDLGPU3__FrameData.html#a47a35dab78c38f6c5c01bfc82a5bada5":[43,0,152,3],
-"structImGui__ImplSDLGPU3__FrameData.html#a7dc31af7b64b918ec01b5008945dbed7":[43,0,152,5]
+"structImGui__ImplSDLGPU3__FrameData.html":[43,0,152]
 };

@@ -307,6 +307,7 @@ var annotated_dup =
     [ "ImVec4", "structImVec4.html", "structImVec4" ],
     [ "ImVector", "structImVector.html", "structImVector" ],
     [ "InputGeom", "classInputGeom.html", "classInputGeom" ],
+    [ "IslandOffmeshLinkParams", "structIslandOffmeshLinkParams.html", "structIslandOffmeshLinkParams" ],
     [ "LinearAllocator", "structLinearAllocator.html", "structLinearAllocator" ],
     [ "MemoryHandler", "classMemoryHandler.html", "classMemoryHandler" ],
     [ "Mesh", "classMesh.html", "classMesh" ],

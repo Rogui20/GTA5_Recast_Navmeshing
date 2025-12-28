@@ -1,5 +1,8 @@
 var NAVTREEINDEX70 =
 {
+"dir_97c6bac6df0065e0578eb2a70aa0bb50.html":[44,0,1,0],
+"dir_aae01254010af4d99e4d89c1995b4a05.html":[44,0,2,1],
+"dir_acb9fed264e69c2defac807f5fdc1432.html":[44,0,5,2,1],
 "dir_b5bdb2e5de11b9ef09b966d2ec0a4963.html":[44,0,9,1],
 "dir_bd8164545b6b3da3c53f0f7457fcb102.html":[44,0,9],
 "dir_d328474a4d9142b17be669c58a1761c1.html":[44,0,8,0],
@@ -211,8 +214,8 @@ var NAVTREEINDEX70 =
 "functions_type.html":[43,3,3],
 "functions_u.html":[43,3,0,21],
 "functions_v.html":[43,3,0,22],
-"functions_vars.html":[43,3,2],
 "functions_vars.html":[43,3,2,0],
+"functions_vars.html":[43,3,2],
 "functions_vars_a.html":[43,3,2,1],
 "functions_vars_b.html":[43,3,2,2],
 "functions_vars_c.html":[43,3,2,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX70 =
 "functions_~.html":[43,3,0,27],
 "gdk.html":[13],
 "gdk.html#autotoc_md1-add-a-gamingdesktopx64-configuration":[13,3,0],
-"gdk.html#autotoc_md10-packaging-and-installing-locally":[13,3,9],
-"gdk.html#autotoc_md2-build-sdl2-and-sdl2main-for-gdk":[13,3,1],
-"gdk.html#autotoc_md3-configuring-project-settings":[13,3,2],
-"gdk.html#autotoc_md4-setting-up-sdl_main":[13,3,3]
+"gdk.html#autotoc_md10-packaging-and-installing-locally":[13,3,9]
 };

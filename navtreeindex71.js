@@ -1,5 +1,8 @@
 var NAVTREEINDEX71 =
 {
+"gdk.html#autotoc_md2-build-sdl2-and-sdl2main-for-gdk":[13,3,1],
+"gdk.html#autotoc_md3-configuring-project-settings":[13,3,2],
+"gdk.html#autotoc_md4-setting-up-sdl_main":[13,3,3],
 "gdk.html#autotoc_md5-required-dlls":[13,3,4],
 "gdk.html#autotoc_md6-setting-up-microsoftgameconfig":[13,3,5],
 "gdk.html#autotoc_md7-adding-required-logos":[13,3,6],
@@ -246,8 +249,5 @@ var NAVTREEINDEX71 =
 "glad_8h.html#a224db3f62a1b3e4f122071a0e9a023e2":[44,0,5,0,0,0,0,750],
 "glad_8h.html#a22557289048c77f6913601e8537ceeea":[44,0,5,0,0,0,0,1318],
 "glad_8h.html#a22808f8ab51eb65eb5d87604cb430b08":[44,0,5,0,0,0,0,809],
-"glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa":[44,0,5,0,0,0,0,1348],
-"glad_8h.html#a22987976ba1df90c5d8b1b8c2e5fb58f":[44,0,5,0,0,0,0,1334],
-"glad_8h.html#a22d48607c1d0eb50b664c29f66d4598d":[44,0,5,0,0,0,0,1434],
-"glad_8h.html#a22db86d70fedc632ba2102d35a428350":[44,0,5,0,0,0,0,1155]
+"glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa":[44,0,5,0,0,0,0,1348]
 };

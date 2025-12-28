@@ -6,6 +6,7 @@ var ExternC_8h =
     [ "GTANAVVIEWER_API", "ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec", null ],
     [ "AddGeometry", "ExternC_8h.html#a33dd625e8066802fa192540a9d95f67f", null ],
     [ "AddOffMeshLink", "ExternC_8h.html#a3f47892fd35980c12612beae6bf9128a", null ],
+    [ "AddOffmeshLinksToNavMeshIsland", "ExternC_8h.html#ac3f7fd9f646d880edc9031c6a383e883", null ],
     [ "BuildNavMesh", "ExternC_8h.html#acdcdde7a6aa314427c97c0a2e0743321", null ],
     [ "ClearOffMeshLinks", "ExternC_8h.html#a6b32e777a9f5e87992d4cc3bf2fd947c", null ],
     [ "DestroyNavMeshResources", "ExternC_8h.html#a84b79a2a59ce0e2005902f0ec88cc178", null ],

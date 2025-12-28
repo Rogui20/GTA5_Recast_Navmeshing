@@ -541,7 +541,7 @@ var searchData=
   ['sdl_5flocksurface_538',['SDL_LockSurface',['../SDL__surface_8h.html#a3d1da1c7ecdaa461fac51a10785f5077',1,'SDL_surface.h']]],
   ['sdl_5flocktexture_539',['SDL_LockTexture',['../SDL__render_8h.html#af64adcd12e4e9d41d48031fd3da7b913',1,'SDL_render.h']]],
   ['sdl_5flocktexturetosurface_540',['SDL_LockTextureToSurface',['../SDL__render_8h.html#af1f12f5baf50ec8c86235dd4528a4e0c',1,'SDL_render.h']]],
-  ['sdl_5flog_541',['sdl_log',['../SDL__log_8h.html#a712dc42164c67b7f9e23dc0e3b15bd92',1,'SDL_Log(SDL_PRINTF_FORMAT_STRING const char *fmt,...) SDL_PRINTF_VARARG_FUNC(1):&#160;SDL_log.h'],['../SDL__stdinc_8h.html#a2b226b584a9922167301231d3c13bee2',1,'SDL_log(double x):&#160;SDL_stdinc.h']]],
+  ['sdl_5flog_541',['sdl_log',['../SDL__stdinc_8h.html#a2b226b584a9922167301231d3c13bee2',1,'SDL_log(double x):&#160;SDL_stdinc.h'],['../SDL__log_8h.html#a712dc42164c67b7f9e23dc0e3b15bd92',1,'SDL_Log(SDL_PRINTF_FORMAT_STRING const char *fmt,...) SDL_PRINTF_VARARG_FUNC(1):&#160;SDL_log.h']]],
   ['sdl_5flog10_542',['SDL_log10',['../SDL__stdinc_8h.html#ae907373550fb1e22242aeb56fb5e86ec',1,'SDL_stdinc.h']]],
   ['sdl_5flog10f_543',['SDL_log10f',['../SDL__stdinc_8h.html#a272cf573bc32004a674bdc78a7ce2104',1,'SDL_stdinc.h']]],
   ['sdl_5flogcritical_544',['SDL_LogCritical',['../SDL__log_8h.html#a3600cf500a030f892d41a61d9d30de19',1,'SDL_log.h']]],
@@ -1173,7 +1173,7 @@ var searchData=
   ['sortitems_1170',['SortItems',['../structExampleDualListBox.html#a62c365982dcd29b71bf6589801b40099',1,'ExampleDualListBox']]],
   ['sortwithsortspecs_1171',['SortWithSortSpecs',['../structExampleAsset.html#a304852db06783ad79fbb0cb6aa66bb89',1,'ExampleAsset']]],
   ['spacing_1172',['Spacing',['../namespaceImGui.html#a2659e2bfe84b4cad0facd65d5c1ac90d',1,'ImGui']]],
-  ['split_1173',['split',['../structImDrawListSplitter.html#aa491c5b1e10b2f5340e7db4949d31255',1,'ImDrawListSplitter::Split()'],['../structImGuiTextFilter_1_1ImGuiTextRange.html#ace58f9b4795033f695344a0e660ee2af',1,'ImGuiTextFilter::ImGuiTextRange::split()']]],
+  ['split_1173',['split',['../structImGuiTextFilter_1_1ImGuiTextRange.html#ace58f9b4795033f695344a0e660ee2af',1,'ImGuiTextFilter::ImGuiTextRange::split()'],['../structImDrawListSplitter.html#aa491c5b1e10b2f5340e7db4949d31255',1,'ImDrawListSplitter::Split()']]],
   ['splitterbehavior_1174',['SplitterBehavior',['../namespaceImGui.html#a285913cd915ee715cd6a804e1b83814c',1,'ImGui']]],
   ['start_1175',['Start',['../classWebSockets.html#af7c26d2a259b70ce028cffb5e20799d6',1,'WebSockets']]],
   ['startmousemovingwindow_1176',['StartMouseMovingWindow',['../namespaceImGui.html#afd03199380411a711c74893434d91258',1,'ImGui']]],
@@ -1275,6 +1275,6 @@ var searchData=
   ['stylecolorsdark_1272',['StyleColorsDark',['../namespaceImGui.html#a26c67fc14081b359566d5e135cd8c767',1,'ImGui']]],
   ['stylecolorslight_1273',['StyleColorsLight',['../namespaceImGui.html#ae1fc558bfbc557b228d63f7facfc86e1',1,'ImGui']]],
   ['subdivide_1274',['subdivide',['../DetourNavMeshBuilder_8cpp.html#a95ba365676cad314741a13f58b6b0eba',1,'subdivide(BVItem *items, int nitems, int imin, int imax, int &amp;curNode, dtBVNode *nodes):&#160;DetourNavMeshBuilder.cpp'],['../GtaNavRuntime_2ChunkyTriMesh_8cpp.html#af34b40e9f943704bcaa0d14f83fe8d8e',1,'subdivide(BoundsItem *items, int nitems, int imin, int imax, int trisPerChunk, int &amp;curNode, rcChunkyTriMeshNode *nodes, const int maxNodes, int &amp;curTri, int *outTris, const int *inTris):&#160;ChunkyTriMesh.cpp'],['../RecastDemo_2Source_2ChunkyTriMesh_8cpp.html#af34b40e9f943704bcaa0d14f83fe8d8e',1,'subdivide(BoundsItem *items, int nitems, int imin, int imax, int trisPerChunk, int &amp;curNode, rcChunkyTriMeshNode *nodes, const int maxNodes, int &amp;curTri, int *outTris, const int *inTris):&#160;ChunkyTriMesh.cpp']]],
-  ['swap_1275',['swap',['../structImChunkStream.html#adbd734ea08939c0bce519e90b26c9d28',1,'ImChunkStream::swap()'],['../structImGuiSelectionBasicStorage.html#a18377dc1f474f77951a5da925c4cbfac',1,'ImGuiSelectionBasicStorage::Swap()'],['../structImVector.html#afcec0d2a1e28aebe412b6efd06f0a77a',1,'ImVector::swap()'],['../classrcVectorBase.html#aea266b993082cb53732f617600378dde',1,'rcVectorBase::swap()']]],
+  ['swap_1275',['swap',['../classrcVectorBase.html#aea266b993082cb53732f617600378dde',1,'rcVectorBase::swap()'],['../structImVector.html#afcec0d2a1e28aebe412b6efd06f0a77a',1,'ImVector::swap()'],['../structImChunkStream.html#adbd734ea08939c0bce519e90b26c9d28',1,'ImChunkStream::swap()'],['../structImGuiSelectionBasicStorage.html#a18377dc1f474f77951a5da925c4cbfac',1,'ImGuiSelectionBasicStorage::Swap()']]],
   ['sweepcirclecircle_1276',['sweepCircleCircle',['../DetourObstacleAvoidance_8cpp.html#a07a96536185de3b5b7e8aae361ac70a9',1,'DetourObstacleAvoidance.cpp']]]
 ];

@@ -3,6 +3,7 @@ var NavMeshData_8h =
     [ "NavmeshGenerationSettings", "structNavmeshGenerationSettings.html", "structNavmeshGenerationSettings" ],
     [ "OffmeshLink", "structOffmeshLink.html", "structOffmeshLink" ],
     [ "AutoOffmeshGenerationParams", "structAutoOffmeshGenerationParams.html", "structAutoOffmeshGenerationParams" ],
+    [ "IslandOffmeshLinkParams", "structIslandOffmeshLinkParams.html", "structIslandOffmeshLinkParams" ],
     [ "NavMeshData", "classNavMeshData.html", "classNavMeshData" ],
     [ "NavAreas", "NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8", [
       [ "AREA_NULL", "NavMeshData_8h.html#a87de8f50b8ffcaca5d5fdb3c64322ad8a07dcb403e6bb27412ed575b6b7d27e45", null ],

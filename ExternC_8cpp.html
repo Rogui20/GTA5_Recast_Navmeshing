@@ -115,6 +115,7 @@ $(document).ready(function(){initNavTree('ExternC_8cpp.html',''); initResizable(
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;algorithm&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -150,6 +151,8 @@ Functions</h2></td></tr>
 <tr class="separator:a0a609079f4645ccec18a5cefc10f79c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f47892fd35980c12612beae6bf9128a" id="r_a3f47892fd35980c12612beae6bf9128a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a3f47892fd35980c12612beae6bf9128a">AddOffMeshLink</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, bool biDir, bool updateNavMesh)</td></tr>
 <tr class="separator:a3f47892fd35980c12612beae6bf9128a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3f7fd9f646d880edc9031c6a383e883" id="r_ac3f7fd9f646d880edc9031c6a383e883"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ac3f7fd9f646d880edc9031c6a383e883">AddOffmeshLinksToNavMeshIsland</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const <a class="el" href="structIslandOffmeshLinkParams.html">IslandOffmeshLinkParams</a> *<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, <a class="el" href="structOffmeshLink.html">OffmeshLink</a> *outLinks, int maxLinks)</td></tr>
+<tr class="separator:ac3f7fd9f646d880edc9031c6a383e883"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b32e777a9f5e87992d4cc3bf2fd947c" id="r_a6b32e777a9f5e87992d4cc3bf2fd947c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a6b32e777a9f5e87992d4cc3bf2fd947c">ClearOffMeshLinks</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, bool updateNavMesh)</td></tr>
 <tr class="separator:a6b32e777a9f5e87992d4cc3bf2fd947c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8de7660c9f47651d86ef386ecbe3f6cf" id="r_a8de7660c9f47651d86ef386ecbe3f6cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a8de7660c9f47651d86ef386ecbe3f6cf">GenerateAutomaticOffmeshLinks</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
@@ -247,6 +250,46 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>updateNavMesh</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac3f7fd9f646d880edc9031c6a383e883" name="ac3f7fd9f646d880edc9031c6a383e883"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3f7fd9f646d880edc9031c6a383e883">&#9670;&#160;</a></span>AddOffmeshLinksToNavMeshIsland()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int AddOffmeshLinksToNavMeshIsland </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structIslandOffmeshLinkParams.html">IslandOffmeshLinkParams</a> *&#160;</td>
+          <td class="paramname"><em>params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structOffmeshLink.html">OffmeshLink</a> *&#160;</td>
+          <td class="paramname"><em>outLinks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxLinks</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
