@@ -62,10 +62,20 @@ struct AutoOffmeshGenerationParams
     unsigned char dropArea = 5; // segue convenção do RecastDemo (jump area)
     float angleTolerance = 30.0f;
     float maxHeightDiff = 1.5f;
+    float minHeightDiff = 1.0f;
     float minDistance = 0.30f;
     float maxDistance = 5.0f;
     float normalOffset = 0.10f;
     float zOffset = 0.05f;
+};
+
+enum NavAreas : unsigned char
+{
+    AREA_NULL     = 0,
+    AREA_GROUND   = RC_WALKABLE_AREA, // 63
+    AREA_OFFMESH  = 2,
+    AREA_JUMP  = 3,
+    AREA_DROP  = 4
 };
 
 class NavMeshData
