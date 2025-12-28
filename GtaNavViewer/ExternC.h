@@ -12,6 +12,26 @@ struct Vector3
     float z = 0.0f;
 };
 
+struct NavMeshEdgeInfo
+{
+    Vector3 vertexA;
+    Vector3 vertexB;
+    Vector3 center;
+    Vector3 normal;
+    std::uint64_t polygonId = 0;
+};
+
+struct NavMeshPolygonInfo
+{
+    std::uint64_t polygonId = 0;
+    Vector3 center;
+    Vector3 normal;
+    int vertexStart = 0;
+    int vertexCount = 0;
+    int edgeStart = 0;
+    int edgeCount = 0;
+};
+
 #ifdef _WIN32
   #ifdef GTANAVVIEWER_BUILD_DLL
     #define GTANAVVIEWER_API extern "C" __declspec(dllexport)
@@ -61,6 +81,21 @@ GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
                                          int maxPoints,
                                          float minEdge,
                                          float* outPath, int options);
+
+// Consulta da malha
+GTANAVVIEWER_API int GetNavMeshPolygons(void* navMesh,
+                                        NavMeshPolygonInfo* polygons,
+                                        int maxPolygons,
+                                        Vector3* vertices,
+                                        int maxVertices,
+                                        NavMeshEdgeInfo* edges,
+                                        int maxEdges,
+                                        int* outVertexCount,
+                                        int* outEdgeCount);
+GTANAVVIEWER_API int GetNavMeshBorderEdges(void* navMesh,
+                                           NavMeshEdgeInfo* edges,
+                                           int maxEdges,
+                                           int* outEdgeCount);
 
 // Offmesh links
 GTANAVVIEWER_API bool AddOffMeshLink(void* navMesh,
