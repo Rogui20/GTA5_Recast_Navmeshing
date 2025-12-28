@@ -1,5 +1,14 @@
 var NAVTREEINDEX109 =
 {
+"structstbtt__packedchar.html#a3a33880f925ca826c908cbf9f0673c9f":[43,0,464,4],
+"structstbtt__packedchar.html#a43429c9545ca8ccf14012cedcf83c1a7":[43,0,464,5],
+"structstbtt__packedchar.html#a6f342ae10df5319f4999ffd256567142":[43,0,464,7],
+"structstbtt__packedchar.html#a9569073ba79fad355210b6ffc35905a7":[43,0,464,6],
+"structstbtt__packedchar.html#a99d371f0261cd13dfd1a179f143175d1":[43,0,464,1],
+"structstbtt__packedchar.html#adb30c50674c79d32116ae6f94bd5893f":[43,0,464,3],
+"structstbtt__vertex.html":[43,0,465],
+"structstbtt__vertex.html#a1c45a8d41727b24b84f97a944f2b800a":[43,0,465,1],
+"structstbtt__vertex.html#a43835489e2a151b31cb100d20f8adeae":[43,0,465,0],
 "structstbtt__vertex.html#a5610d6335aa6962d970fc7fd2225545e":[43,0,465,2],
 "structstbtt__vertex.html#a68227d28643f5667064fa3c385f4ea7d":[43,0,465,3],
 "structstbtt__vertex.html#a81773edbe760d0e090561a3c1e86c919":[43,0,465,6],

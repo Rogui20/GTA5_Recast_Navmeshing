@@ -12,7 +12,7 @@ var searchData=
   ['samples_9',['samples',['../structSDL__HapticCustom.html#a5905ea1b6182da846535ca8c80b4fa33',1,'SDL_HapticCustom::samples'],['../structSDL__AudioSpec.html#a2cdf5e885808c10bfa2810b706e69f95',1,'SDL_AudioSpec::samples']]],
   ['sassertfailfunc_10',['sAssertFailFunc',['../DetourAssert_8cpp.html#a7bbc68bcf03ba893c2d7e78eb46e9dd7',1,'DetourAssert.cpp']]],
   ['saveflags_11',['SaveFlags',['../structImGuiTableSettings.html#a9c936817432e02d76d8f9391aed70d85',1,'ImGuiTableSettings']]],
-  ['scale_12',['scale',['../structSDLTest__CommonState.html#ad2d2821689008f2fd65034eb8040fb3c',1,'SDLTest_CommonState::scale'],['../structImFont.html#ae98fb07fd8862a7243d77b11f38bba19',1,'ImFont::Scale']]],
+  ['scale_12',['scale',['../structImFont.html#ae98fb07fd8862a7243d77b11f38bba19',1,'ImFont::Scale'],['../structSDLTest__CommonState.html#ad2d2821689008f2fd65034eb8040fb3c',1,'SDLTest_CommonState::scale']]],
   ['scalefactor_13',['ScaleFactor',['../structImGui__ImplStbTrueType__FontSrcData.html#af3f3d5bb62feb6802a040061575d617d',1,'ImGui_ImplStbTrueType_FontSrcData']]],
   ['scancode_14',['scancode',['../structSDL__Keysym.html#ad47e9120a511e2efc7ec0c6d8a5ec51e',1,'SDL_Keysym']]],
   ['scanfmt_15',['ScanFmt',['../structImGuiDataTypeInfo.html#aaa2d211e7cc5f03786f82650b69e9cf3',1,'ImGuiDataTypeInfo']]],
