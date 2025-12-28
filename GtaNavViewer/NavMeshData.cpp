@@ -297,7 +297,7 @@ void NavMeshData::AddOffmeshLink(const glm::vec3& start,
     link.end = end;
     link.radius = radius;
     link.bidirectional = bidirectional;
-    link.area = RC_WALKABLE_AREA;
+    link.area = AREA_OFFMESH;
     link.flags = 1;
     m_offmeshLinks.push_back(link);
 }
@@ -520,9 +520,9 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
                     OffmeshLink link{};
                     link.start = mid - outward * startInset;
                     link.end = hitPoint;
-                    link.radius = params.agentRadius;
-                    link.bidirectional = drop <= params.jumpHeight;
-                    link.area = params.dropArea;
+                    link.radius = 1.0;
+                    link.bidirectional = false;
+                    link.area = AREA_DROP;
                     link.flags = 1;
                     link.userId = params.userIdBase + static_cast<unsigned int>(outLinks.size());
                     const auto [tx, ty] = resolveTileCoords(tile, link.start);
@@ -530,6 +530,21 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
                     link.ownerTy = ty;
                     outLinks.push_back(link);
                     ++dropGenerated;
+                    if (drop <= params.jumpHeight) {
+                        OffmeshLink link2{};
+                        link2.start = hitPoint;
+                        link2.end = mid - outward * startInset;
+                        link2.radius = 1.0;
+                        link2.bidirectional = false;
+                        link2.area = AREA_JUMP;
+                        link2.flags = 1;
+                        link2.userId = params.userIdBase + static_cast<unsigned int>(outLinks.size());
+                        const auto [tx2, ty2] = resolveTileCoords(tile, link2.start);
+                        link2.ownerTx = tx2;
+                        link2.ownerTy = ty2;
+                        outLinks.push_back(link2);
+                        ++dropGenerated;
+                    }
                 }
 
                 if (generateFacingNormals && !hasNeighbour && outwardValid)
@@ -583,7 +598,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
                 }
 
                 const float heightDiff = fabsf(edgeA.mid.y - edgeB.mid.y);
-                if (heightDiff > params.maxHeightDiff)
+                if (heightDiff > params.maxHeightDiff || heightDiff < params.minHeightDiff)
                 {
                     ++rejectedHeight;
                     ++counters.second;
@@ -613,9 +628,9 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
                 OffmeshLink link{};
                 link.start = edgeA.mid;
                 link.end = edgeB.mid;
-                link.radius = params.agentRadius;
+                link.radius = 1.0;
                 link.bidirectional = true;
-                link.area = RC_WALKABLE_AREA;
+                link.area = AREA_OFFMESH;
                 link.flags = 1;
                 link.userId = params.userIdBase + static_cast<unsigned int>(outLinks.size());
                 link.ownerTx = edgeA.tileX;
