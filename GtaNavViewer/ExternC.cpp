@@ -601,6 +601,10 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
     filter.setIncludeFlags(static_cast<unsigned short>(flags));
     filter.setExcludeFlags(0);
 
+    filter.setAreaCost(AREA_JUMP, 4.0f);
+    filter.setAreaCost(AREA_DROP, 1.5f);
+    filter.setAreaCost(AREA_OFFMESH, 2.0f);
+
     dtPolyRef startRef = 0, endRef = 0;
     float startNearest[3]{};
     float endNearest[3]{};
@@ -693,6 +697,8 @@ GTANAVVIEWER_API bool AddOffMeshLink(void* navMesh,
     link.start = glm::vec3(start.x, start.y, start.z);
     link.end = glm::vec3(end.x, end.y, end.z);
     link.radius = 1.0f;
+    link.area = AREA_OFFMESH;
+    link.flags = 1;
     link.bidirectional = biDir;
     ctx->offmeshLinks.push_back(link);
     ctx->navData.SetOffmeshLinks(ctx->offmeshLinks);
