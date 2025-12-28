@@ -103,6 +103,10 @@ GTANAVVIEWER_API bool AddOffMeshLink(void* navMesh,
                                      Vector3 end,
                                      bool biDir,
                                      bool updateNavMesh);
+GTANAVVIEWER_API int AddOffmeshLinksToNavMeshIsland(void* navMesh,
+                                                    const IslandOffmeshLinkParams* params,
+                                                    OffmeshLink* outLinks,
+                                                    int maxLinks);
 GTANAVVIEWER_API void ClearOffMeshLinks(void* navMesh, bool updateNavMesh);
 GTANAVVIEWER_API bool GenerateAutomaticOffmeshLinks(void* navMesh);
 

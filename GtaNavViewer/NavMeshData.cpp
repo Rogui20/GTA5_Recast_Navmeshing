@@ -20,6 +20,7 @@
 #include <functional>
 #include <unordered_map>
 #include <cstdint>
+#include <memory>
 
 namespace
 {
@@ -276,6 +277,36 @@ namespace
             static_cast<int>(std::round(p.z * scale))
         };
     }
+
+    struct OrientedRectXZ
+    {
+        glm::vec3 center{0.0f};
+        glm::vec3 extents{0.0f};
+        float sinAngle = 0.0f;
+        float cosAngle = 1.0f;
+
+        bool Contains(const glm::vec3& p) const
+        {
+            const float dx = p.x - center.x;
+            const float dz = p.z - center.z;
+            const float localX = cosAngle * dx + sinAngle * dz;
+            const float localZ = -sinAngle * dx + cosAngle * dz;
+            return std::fabs(localX) <= extents.x && std::fabs(localZ) <= extents.z;
+        }
+
+        void ComputeAabb(float outBMin[3], float outBMax[3]) const
+        {
+            const float halfX = std::fabs(cosAngle) * extents.x + std::fabs(sinAngle) * extents.z;
+            const float halfZ = std::fabs(sinAngle) * extents.x + std::fabs(cosAngle) * extents.z;
+            outBMin[0] = center.x - halfX;
+            outBMin[1] = center.y - extents.y;
+            outBMin[2] = center.z - halfZ;
+
+            outBMax[0] = center.x + halfX;
+            outBMax[1] = center.y + extents.y;
+            outBMax[2] = center.z + halfZ;
+        }
+    };
 }
 
 NavMeshData::~NavMeshData()
@@ -658,6 +689,288 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
     }
 
     printf("[NavMeshData] GenerateAutomaticOffmeshLinks: gerados %zu links automaticos.\n", outLinks.size());
+    return true;
+}
+
+bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& params,
+                                                 std::vector<OffmeshLink>& outLinks)
+{
+    outLinks.clear();
+
+    if (!m_nav)
+    {
+        printf("[NavMeshData] AddOffmeshLinksToNavMeshIsland: navmesh nao inicializado.\n");
+        return false;
+    }
+
+    if (m_cachedVerts.empty() || m_cachedTris.empty())
+    {
+        printf("[NavMeshData] AddOffmeshLinksToNavMeshIsland: sem geometria cacheada para raycast.\n");
+        return false;
+    }
+
+    if (params.maxDistance <= 0.0f || params.minDistance < 0.0f || params.minDistance > params.maxDistance || params.maxHeightDiff < 0.0f)
+    {
+        printf("[NavMeshData] AddOffmeshLinksToNavMeshIsland: parametros invalidos (minDist=%.2f, maxDist=%.2f, maxHeightDiff=%.2f).\n",
+               params.minDistance, params.maxDistance, params.maxHeightDiff);
+        return false;
+    }
+
+    dtNavMeshQuery* query = dtAllocNavMeshQuery();
+    if (!query)
+        return false;
+    const std::unique_ptr<dtNavMeshQuery, void(*)(dtNavMeshQuery*)> queryGuard(query, dtFreeNavMeshQuery);
+
+    if (dtStatusFailed(query->init(m_nav, 2048)))
+        return false;
+
+    dtQueryFilter filter{};
+    filter.setIncludeFlags(0xffff);
+    filter.setExcludeFlags(0);
+
+    const float searchExtents[3] = {
+        std::max(params.searchExtents.x, 0.1f),
+        std::max(params.searchExtents.y, 0.1f),
+        std::max(params.searchExtents.z, 0.1f)
+    };
+
+    const float targetPos[3] = { params.targetPosition.x, params.targetPosition.y, params.targetPosition.z };
+    dtPolyRef targetRef = 0;
+    float targetNearest[3]{};
+    bool targetOver = false;
+    if (dtStatusFailed(query->findNearestPoly(targetPos, searchExtents, &filter, &targetRef, targetNearest, &targetOver)) || targetRef == 0)
+    {
+        printf("[NavMeshData] AddOffmeshLinksToNavMeshIsland: nao encontrou poly pro target.\n");
+        return false;
+    }
+    printf("[IslandOffmesh] Target poly found\n");
+
+    int targetTileX = -1;
+    int targetTileY = -1;
+    const dtMeshTile* targetTile = nullptr;
+    const dtPoly* targetPoly = nullptr;
+    if (dtStatusSucceed(m_nav->getTileAndPolyByRef(targetRef, &targetTile, &targetPoly)))
+    {
+        if (targetTile && targetTile->header)
+        {
+            targetTileX = targetTile->header->x;
+            targetTileY = targetTile->header->y;
+        }
+    }
+
+    std::vector<dtPolyRef> stack;
+    stack.push_back(targetRef);
+    std::unordered_set<dtPolyRef> islandPolys;
+    islandPolys.reserve(256);
+
+    while (!stack.empty())
+    {
+        dtPolyRef ref = stack.back();
+        stack.pop_back();
+        if (islandPolys.find(ref) != islandPolys.end())
+            continue;
+        islandPolys.insert(ref);
+
+        const dtMeshTile* tile = nullptr;
+        const dtPoly* poly = nullptr;
+        if (dtStatusFailed(m_nav->getTileAndPolyByRef(ref, &tile, &poly)))
+            continue;
+        if (!tile || !poly)
+            continue;
+
+        for (int edge = 0; edge < poly->vertCount; ++edge)
+        {
+            const dtPolyRef nei = GetNeighbourRef(tile, poly, edge, m_nav);
+            if (nei != 0 && islandPolys.find(nei) == islandPolys.end())
+                stack.push_back(nei);
+        }
+    }
+    printf("[IslandOffmesh] Island polys = %zu\n", islandPolys.size());
+
+    OrientedRectXZ rect{};
+    rect.center = params.targetPosition;
+    rect.extents = glm::abs(params.searchExtents);
+    const float angleRad = glm::radians(params.searchAngleDegrees);
+    rect.sinAngle = sinf(angleRad);
+    rect.cosAngle = cosf(angleRad);
+
+    float queryBMin[3]{};
+    float queryBMax[3]{};
+    rect.ComputeAabb(queryBMin, queryBMax);
+
+    const float queryCenter[3] = {
+        (queryBMin[0] + queryBMax[0]) * 0.5f,
+        (queryBMin[1] + queryBMax[1]) * 0.5f,
+        (queryBMin[2] + queryBMax[2]) * 0.5f
+    };
+    const float queryHalfExtents[3] = {
+        (queryBMax[0] - queryBMin[0]) * 0.5f,
+        (queryBMax[1] - queryBMin[1]) * 0.5f,
+        (queryBMax[2] - queryBMin[2]) * 0.5f
+    };
+
+    const int maxPolys = 4096;
+    dtPolyRef polys[maxPolys];
+    int polyCount = 0;
+    if (dtStatusFailed(query->queryPolygons(queryCenter, queryHalfExtents, &filter, polys, &polyCount, maxPolys)))
+        return false;
+
+    struct Candidate
+    {
+        glm::vec3 mid{0.0f};
+        glm::vec3 islandPoint{0.0f};
+        float distance = 0.0f;
+        float heightDiff = 0.0f;
+        dtPolyRef ref = 0;
+        int tileX = -1;
+        int tileY = -1;
+    };
+
+    std::vector<Candidate> candidates;
+    candidates.reserve(static_cast<size_t>(polyCount));
+
+    auto resolveTileCoords = [&](const dtMeshTile* tile, const glm::vec3& pos) -> std::pair<int, int>
+    {
+        if (tile && tile->header)
+            return {tile->header->x, tile->header->y};
+
+        const float tileWidth = m_cachedSettings.tileSize * m_cachedBaseCfg.cs;
+        if (m_hasTiledCache && tileWidth > 0.0f)
+        {
+            const int tx = (int)floorf((pos.x - m_cachedBMin[0]) / tileWidth);
+            const int ty = (int)floorf((pos.z - m_cachedBMin[2]) / tileWidth);
+            return {tx, ty};
+        }
+
+        return {-1, -1};
+    };
+
+    if (targetTileX == -1 || targetTileY == -1)
+    {
+        const auto coords = resolveTileCoords(targetTile, params.targetPosition);
+        targetTileX = coords.first;
+        targetTileY = coords.second;
+    }
+
+    for (int i = 0; i < polyCount; ++i)
+    {
+        const dtPolyRef pref = polys[i];
+        if (islandPolys.find(pref) != islandPolys.end())
+            continue;
+
+        const dtMeshTile* tile = nullptr;
+        const dtPoly* poly = nullptr;
+        if (dtStatusFailed(m_nav->getTileAndPolyByRef(pref, &tile, &poly)))
+            continue;
+        if (!tile || !poly || poly->getType() != DT_POLYTYPE_GROUND)
+            continue;
+
+        const int vertCount = poly->vertCount;
+        for (int edge = 0; edge < vertCount; ++edge)
+        {
+            const dtPolyRef nei = GetNeighbourRef(tile, poly, edge, m_nav);
+            if (nei != 0)
+                continue;
+
+            const int vaIndex = edge;
+            const int vbIndex = (edge + 1) % vertCount;
+            const glm::vec3 va = GetPolyVertex(tile, poly, vaIndex);
+            const glm::vec3 vb = GetPolyVertex(tile, poly, vbIndex);
+            const glm::vec3 mid = (va + vb) * 0.5f;
+            if (!rect.Contains(mid))
+                continue;
+
+            float closest[3]{};
+            bool overPoly = false;
+            if (dtStatusFailed(query->closestPointOnPoly(targetRef, &mid.x, closest, &overPoly)))
+                continue;
+
+            const glm::vec3 islandPoint(closest[0], closest[1], closest[2]);
+            const float dist = glm::length(mid - islandPoint);
+            if (dist < params.minDistance || dist > params.maxDistance)
+                continue;
+
+            const float heightDiff = mid.y - islandPoint.y;
+            if (fabsf(heightDiff) > params.maxHeightDiff)
+                continue;
+
+            const auto tileCoords = resolveTileCoords(tile, mid);
+            candidates.push_back({mid, islandPoint, dist, heightDiff, pref, tileCoords.first, tileCoords.second});
+        }
+    }
+    printf("[IslandOffmesh] Candidates found = %zu\n", candidates.size());
+
+    if (candidates.empty())
+        return true;
+
+    std::sort(candidates.begin(), candidates.end(), [](const Candidate& a, const Candidate& b)
+    {
+        return a.distance < b.distance;
+    });
+
+    const int desiredLinks = 1 + std::max(0, params.moreLinks);
+    std::vector<Candidate> selected;
+    for (const auto& cand : candidates)
+    {
+        bool tooClose = false;
+        for (const auto& chosen : selected)
+        {
+            if (glm::length(chosen.mid - cand.mid) < params.minDistance)
+            {
+                tooClose = true;
+                break;
+            }
+        }
+        if (tooClose)
+            continue;
+        selected.push_back(cand);
+        if ((int)selected.size() >= desiredLinks)
+            break;
+    }
+
+    if (selected.empty())
+        return true;
+
+    size_t generated = 0;
+    for (const auto& cand : selected)
+    {
+        glm::vec3 hit;
+        glm::vec3 normal;
+        if (RaycastTo(m_cachedVerts, m_cachedTris, cand.islandPoint, cand.mid, hit, normal))
+            continue;
+
+        if (params.linkDown)
+        {
+            OffmeshLink link{};
+            link.start = cand.islandPoint;
+            link.end = cand.mid;
+            link.radius = 1.0f;
+            link.bidirectional = false;
+            link.area = params.areaDrop;
+            link.flags = 1;
+            link.ownerTx = targetTileX;
+            link.ownerTy = targetTileY;
+            outLinks.push_back(link);
+            ++generated;
+        }
+
+        if (params.linkUp)
+        {
+            OffmeshLink link{};
+            link.start = cand.mid;
+            link.end = cand.islandPoint;
+            link.radius = 1.0f;
+            link.bidirectional = false;
+            link.area = params.areaJump;
+            link.flags = 1;
+            link.ownerTx = cand.tileX;
+            link.ownerTy = cand.tileY;
+            outLinks.push_back(link);
+            ++generated;
+        }
+    }
+
+    printf("[IslandOffmesh] Links generated = %zu\n", generated);
     return true;
 }
 NavMeshData::NavMeshData(NavMeshData&& other) noexcept
