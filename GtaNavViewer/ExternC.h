@@ -53,14 +53,14 @@ GTANAVVIEWER_API int FindPath(void* navMesh,
                               Vector3 target,
                               int flags,
                               int maxPoints,
-                              float* outPath);
+                              float* outPath, int options);
 GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
                                          Vector3 start,
                                          Vector3 target,
                                          int flags,
                                          int maxPoints,
                                          float minEdge,
-                                         float* outPath);
+                                         float* outPath, int options);
 
 // Offmesh links
 GTANAVVIEWER_API bool AddOffMeshLink(void* navMesh,
