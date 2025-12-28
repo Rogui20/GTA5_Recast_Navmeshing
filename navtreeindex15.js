@@ -1,5 +1,9 @@
 var NAVTREEINDEX15 =
 {
+"SDL__config__os2_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,16,49],
+"SDL__config__os2_8h.html#a4e31ef0be24f881a3a13e42723db7095":[44,0,5,2,1,16,28],
+"SDL__config__os2_8h.html#a52de22f2e81bce94222ff968b2b3c8c1":[44,0,5,2,1,16,15],
+"SDL__config__os2_8h.html#a550e5c272cc3cf3814651721167dcd23":[44,0,5,2,1,16,109],
 "SDL__config__os2_8h.html#a561075a6afb23894833fc887a1552928":[44,0,5,2,1,16,52],
 "SDL__config__os2_8h.html#a575cd33d7c103a84b4d54759e71ea78d":[44,0,5,2,1,16,26],
 "SDL__config__os2_8h.html#a57ecbd1638a8fd89373c41c933e973ec":[44,0,5,2,1,16,33],
@@ -50,8 +54,8 @@ var NAVTREEINDEX15 =
 "SDL__config__os2_8h.html#acc0a82e924c3573aabbfdd996ae56bde":[44,0,5,2,1,16,82],
 "SDL__config__os2_8h.html#acc2bed5d68d90c16dff96bcf1bcde0b4":[44,0,5,2,1,16,88],
 "SDL__config__os2_8h.html#acce0cf4223f69a5aa693ac36ebffcbf6":[44,0,5,2,1,16,104],
-"SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[44,0,5,2,1,16,84],
 "SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[44,0,5,2,1,16,85],
+"SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[44,0,5,2,1,16,84],
 "SDL__config__os2_8h.html#ad4c234dd1625255dc626a15886306e7d":[44,0,5,2,1,16,65],
 "SDL__config__os2_8h.html#ad5351e07e3ee3d8d34e1689351c47c75":[44,0,5,2,1,16,95],
 "SDL__config__os2_8h.html#ad7c2edb2365c947f4bff624c7be9f890":[44,0,5,2,1,16,76],
@@ -245,9 +249,5 @@ var NAVTREEINDEX15 =
 "SDL__config__wingdk_8h.html#a792eb7500d8f9deb7e5c7fa6fb7834dc":[44,0,5,2,1,19,6],
 "SDL__config__wingdk_8h.html#a83cefad440f49f68aa7a8d1af68fa855":[44,0,5,2,1,19,37],
 "SDL__config__wingdk_8h.html#a85ebf90b8506421be1533adc82144f98":[44,0,5,2,1,19,23],
-"SDL__config__wingdk_8h.html#a8bcdbb0550d2cf79483efdfb3fe9013f":[44,0,5,2,1,19,50],
-"SDL__config__wingdk_8h.html#a8c93ace115b3d8d8163359820370a780":[44,0,5,2,1,19,43],
-"SDL__config__wingdk_8h.html#a8d7bd872a83eee6dc2a5a6132767efde":[44,0,5,2,1,19,32],
-"SDL__config__wingdk_8h.html#aa00422d97152cd195da32409fac61200":[44,0,5,2,1,19,10],
-"SDL__config__wingdk_8h.html#aaa1d89b554b1ab7b6ee1b563fb13cbdd":[44,0,5,2,1,19,5]
+"SDL__config__wingdk_8h.html#a8bcdbb0550d2cf79483efdfb3fe9013f":[44,0,5,2,1,19,50]
 };

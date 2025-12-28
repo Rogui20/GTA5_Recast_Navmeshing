@@ -8,6 +8,8 @@ var ExternC_8cpp =
     [ "FindPath", "ExternC_8cpp.html#a462e8adf4796b96d81b1563df6e9a8ee", null ],
     [ "FindPathWithMinEdge", "ExternC_8cpp.html#a0a609079f4645ccec18a5cefc10f79c8", null ],
     [ "GenerateAutomaticOffmeshLinks", "ExternC_8cpp.html#a8de7660c9f47651d86ef386ecbe3f6cf", null ],
+    [ "GetNavMeshBorderEdges", "ExternC_8cpp.html#af7789da0cef77d265747015c018eae1f", null ],
+    [ "GetNavMeshPolygons", "ExternC_8cpp.html#ad18438b5de833265f1d5fea2ecd0213e", null ],
     [ "InitNavMesh", "ExternC_8cpp.html#a243a7a0e45dc62290d8bcd691c8b8744", null ],
     [ "RemoveAllGeometries", "ExternC_8cpp.html#abd12c10fe11219e74c416d3df583dfde", null ],
     [ "RemoveGeometry", "ExternC_8cpp.html#a077d4b40564957c7c4d253dea4a48886", null ],

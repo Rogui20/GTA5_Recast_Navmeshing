@@ -1,5 +1,9 @@
 var NAVTREEINDEX89 =
 {
+"imgui__widgets_8cpp.html#abd8e7f1403290d19682ca957f0bded44":[44,0,7,0,8,92],
+"imgui__widgets_8cpp.html#ac22bdf13b13f297ab791ac9306b7371a":[44,0,7,0,8,68],
+"imgui__widgets_8cpp.html#ac4c3f430bf4d3264b9555e8fdf0fdef9":[44,0,7,0,8,15],
+"imgui__widgets_8cpp.html#ac6ee000e9a50cc1cd4981e42343bc9f2":[44,0,7,0,8,107],
 "imgui__widgets_8cpp.html#ac8bb93c44323183c6da702c91ce950f8":[44,0,7,0,8,117],
 "imgui__widgets_8cpp.html#ac9b0e445a514615821a5f2c815a00717":[44,0,7,0,8,34],
 "imgui__widgets_8cpp.html#acbb30e32121ef025272892af98f2ac58":[44,0,7,0,8,23],
@@ -245,9 +249,5 @@ var NAVTREEINDEX89 =
 "md_Docs_2__99__Roadmap.html#more-explicit-variable-names-wip":[3,0,1],
 "md_Docs_2__99__Roadmap.html#more-pod-structs-for-clarity-in-internals-wip":[3,1,3],
 "md_Docs_2__99__Roadmap.html#more-spatial-querying-abilities":[3,3,3],
-"md_Docs_2__99__Roadmap.html#more-tests":[3,1,2],
-"md_Docs_2__99__Roadmap.html#nav-volumes--3d-navigation":[3,3,0],
-"md_Docs_2__99__Roadmap.html#new-recastdetour-functionality":[3,3],
-"md_Docs_2__99__Roadmap.html#opt-in-config-value-validation-system":[3,0,2],
-"md_Docs_2__99__Roadmap.html#revisit-structural-organization":[3,1,4]
+"md_Docs_2__99__Roadmap.html#more-tests":[3,1,2]
 };

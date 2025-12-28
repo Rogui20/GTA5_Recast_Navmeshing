@@ -1,5 +1,9 @@
 var NAVTREEINDEX90 =
 {
+"md_Docs_2__99__Roadmap.html#nav-volumes--3d-navigation":[3,3,0],
+"md_Docs_2__99__Roadmap.html#new-recastdetour-functionality":[3,3],
+"md_Docs_2__99__Roadmap.html#opt-in-config-value-validation-system":[3,0,2],
+"md_Docs_2__99__Roadmap.html#revisit-structural-organization":[3,1,4],
 "md_Docs_2__99__Roadmap.html#short-term":[3,0],
 "md_Docs_2__99__Roadmap.html#stb-style-single-header-release-packaging":[3,1,0],
 "md_Docs_2__99__Roadmap.html#tooling":[3,3,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX90 =
 "structExampleAppDocuments.html#ae41eb7580d5a82355e9d57f1bd34f6ca":[43,0,76,3],
 "structExampleAppDocuments.html#af7281834336b28da15c2168fae2d0212":[43,0,76,5],
 "structExampleAppLog.html":[43,0,77],
-"structExampleAppLog.html#a4571947a6000e984ec8da9b7166e1e2b":[43,0,77,6],
-"structExampleAppLog.html#a5ad3a4bdb89171b84aeaff96948a1f77":[43,0,77,3],
-"structExampleAppLog.html#a6b32bf0242b10d45376a7b43a4bde2f5":[43,0,77,4],
-"structExampleAppLog.html#a74fb7cd7bd8c2507b41331ebb7d0e56d":[43,0,77,5],
-"structExampleAppLog.html#ab9c298defddbb106fdfe4ab16c5eebac":[43,0,77,2]
+"structExampleAppLog.html#a4571947a6000e984ec8da9b7166e1e2b":[43,0,77,6]
 };

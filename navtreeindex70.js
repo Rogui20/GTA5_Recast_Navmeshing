@@ -1,5 +1,9 @@
 var NAVTREEINDEX70 =
 {
+"dir_b5bdb2e5de11b9ef09b966d2ec0a4963.html":[44,0,9,1],
+"dir_bd8164545b6b3da3c53f0f7457fcb102.html":[44,0,9],
+"dir_d328474a4d9142b17be669c58a1761c1.html":[44,0,8,0],
+"dir_d8b7533bea1f5af90996fa478721a9c1.html":[44,0,2],
 "dir_e11a7e58c48007658e5701ecca4dc47e.html":[44,0,6,0,1],
 "dir_e5650ad8b711bedde99f517207c216e4.html":[44,0,7,0,0],
 "dir_e6cf54c9d4d29ff4a28752d861cf44fa.html":[44,0,8],
@@ -245,9 +249,5 @@ var NAVTREEINDEX70 =
 "gdk.html#autotoc_md10-packaging-and-installing-locally":[13,3,9],
 "gdk.html#autotoc_md2-build-sdl2-and-sdl2main-for-gdk":[13,3,1],
 "gdk.html#autotoc_md3-configuring-project-settings":[13,3,2],
-"gdk.html#autotoc_md4-setting-up-sdl_main":[13,3,3],
-"gdk.html#autotoc_md5-required-dlls":[13,3,4],
-"gdk.html#autotoc_md6-setting-up-microsoftgameconfig":[13,3,5],
-"gdk.html#autotoc_md7-adding-required-logos":[13,3,6],
-"gdk.html#autotoc_md8-copying-any-data-files":[13,3,7]
+"gdk.html#autotoc_md4-setting-up-sdl_main":[13,3,3]
 };

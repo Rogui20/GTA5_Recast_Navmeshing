@@ -1,6 +1,8 @@
 var ExternC_8h =
 [
     [ "Vector3", "structVector3.html", "structVector3" ],
+    [ "NavMeshEdgeInfo", "structNavMeshEdgeInfo.html", "structNavMeshEdgeInfo" ],
+    [ "NavMeshPolygonInfo", "structNavMeshPolygonInfo.html", "structNavMeshPolygonInfo" ],
     [ "GTANAVVIEWER_API", "ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec", null ],
     [ "AddGeometry", "ExternC_8h.html#a33dd625e8066802fa192540a9d95f67f", null ],
     [ "AddOffMeshLink", "ExternC_8h.html#a3f47892fd35980c12612beae6bf9128a", null ],
@@ -10,6 +12,8 @@ var ExternC_8h =
     [ "FindPath", "ExternC_8h.html#a462e8adf4796b96d81b1563df6e9a8ee", null ],
     [ "FindPathWithMinEdge", "ExternC_8h.html#a0a609079f4645ccec18a5cefc10f79c8", null ],
     [ "GenerateAutomaticOffmeshLinks", "ExternC_8h.html#a8de7660c9f47651d86ef386ecbe3f6cf", null ],
+    [ "GetNavMeshBorderEdges", "ExternC_8h.html#af7789da0cef77d265747015c018eae1f", null ],
+    [ "GetNavMeshPolygons", "ExternC_8h.html#ad18438b5de833265f1d5fea2ecd0213e", null ],
     [ "InitNavMesh", "ExternC_8h.html#a243a7a0e45dc62290d8bcd691c8b8744", null ],
     [ "RemoveAllGeometries", "ExternC_8h.html#abd12c10fe11219e74c416d3df583dfde", null ],
     [ "RemoveGeometry", "ExternC_8h.html#a077d4b40564957c7c4d253dea4a48886", null ],
