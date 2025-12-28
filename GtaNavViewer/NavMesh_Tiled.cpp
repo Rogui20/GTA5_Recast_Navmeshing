@@ -63,7 +63,46 @@ namespace
         return hash;
     }
 
-    uint64_t computeTileHash(const NavmeshBuildInput& input, const std::vector<int>& tileTris)
+    void hashFloat(uint64_t& hash, float value)
+    {
+        uint32_t bits = 0;
+        static_assert(sizeof(bits) == sizeof(value), "float e uint32 devem ter mesmo tamanho");
+        memcpy(&bits, &value, sizeof(bits));
+        hash ^= bits;
+        hash *= 0x100000001b3ULL;
+    }
+
+    uint64_t hashOffmeshLinks(const std::vector<OffmeshLink>& links)
+    {
+        if (links.empty())
+            return 0;
+
+        uint64_t hash = 0xcbf29ce484222325ULL;
+        for (const auto& link : links)
+        {
+            hashFloat(hash, link.start.x);
+            hashFloat(hash, link.start.y);
+            hashFloat(hash, link.start.z);
+            hashFloat(hash, link.end.x);
+            hashFloat(hash, link.end.y);
+            hashFloat(hash, link.end.z);
+            hashFloat(hash, link.radius);
+            hash ^= static_cast<uint64_t>(link.bidirectional ? 1 : 0);
+            hash *= 0x100000001b3ULL;
+            hash ^= static_cast<uint64_t>(link.area);
+            hash *= 0x100000001b3ULL;
+            hash ^= static_cast<uint64_t>(link.flags);
+            hash *= 0x100000001b3ULL;
+            hash ^= static_cast<uint64_t>(link.userId);
+            hash *= 0x100000001b3ULL;
+        }
+
+        return hash;
+    }
+
+    uint64_t computeTileHash(const NavmeshBuildInput& input,
+                             const std::vector<int>& tileTris,
+                             const std::vector<OffmeshLink>& tileLinks)
     {
         std::vector<int> uniqueIdx = tileTris;
         std::sort(uniqueIdx.begin(), uniqueIdx.end());
@@ -91,12 +130,44 @@ namespace
             hash *= 0x100000001b3ULL;
         }
 
+        const uint64_t offmeshHash = hashOffmeshLinks(tileLinks);
+        if (offmeshHash != 0)
+        {
+            hash ^= offmeshHash;
+            hash *= 0x100000001b3ULL;
+        }
+
         return hash;
     }
 
     uint64_t makeTileKey(int tx, int ty)
     {
         return (static_cast<uint64_t>(static_cast<uint32_t>(tx)) << 32) | static_cast<uint32_t>(ty);
+    }
+
+    bool pointInsideBounds(const glm::vec3& p, const float* bmin, const float* bmax, float radius)
+    {
+        return (p.x + radius >= bmin[0] && p.x - radius <= bmax[0]) &&
+               (p.y + radius >= bmin[1] && p.y - radius <= bmax[1]) &&
+               (p.z + radius >= bmin[2] && p.z - radius <= bmax[2]);
+    }
+
+    void collectOffmeshForTile(const NavmeshBuildInput& input,
+                               const rcConfig& cfg,
+                               std::vector<OffmeshLink>& outLinks)
+    {
+        outLinks.clear();
+        if (!input.offmeshLinks)
+            return;
+
+        for (const auto& link : *input.offmeshLinks)
+        {
+            if (pointInsideBounds(link.start, cfg.bmin, cfg.bmax, link.radius) ||
+                pointInsideBounds(link.end, cfg.bmin, cfg.bmax, link.radius))
+            {
+                outLinks.push_back(link);
+            }
+        }
     }
 
     enum class NavTileBuildResult
@@ -109,6 +180,7 @@ namespace
     NavTileBuildResult createNavDataForConfig(const NavmeshBuildInput& input,
                                               const rcConfig& cfg,
                                               const std::vector<int>& triSource,
+                                              const std::vector<OffmeshLink>& tileOffmesh,
                                               int tileX,
                                               int tileY,
                                               dtNavMeshCreateParams& outParams,
@@ -291,17 +363,17 @@ namespace
         std::vector<unsigned short> offmeshFlags;
         std::vector<unsigned int> offmeshIds;
 
-        if (input.offmeshLinks && !input.offmeshLinks->empty())
+        if (!tileOffmesh.empty())
         {
-            offmeshVerts.reserve(input.offmeshLinks->size() * 6);
-            offmeshRads.reserve(input.offmeshLinks->size());
-            offmeshDirs.reserve(input.offmeshLinks->size());
-            offmeshAreas.reserve(input.offmeshLinks->size());
-            offmeshFlags.reserve(input.offmeshLinks->size());
-            offmeshIds.reserve(input.offmeshLinks->size());
+            offmeshVerts.reserve(tileOffmesh.size() * 6);
+            offmeshRads.reserve(tileOffmesh.size());
+            offmeshDirs.reserve(tileOffmesh.size());
+            offmeshAreas.reserve(tileOffmesh.size());
+            offmeshFlags.reserve(tileOffmesh.size());
+            offmeshIds.reserve(tileOffmesh.size());
 
             unsigned int baseId = 1000;
-            for (const auto& link : *input.offmeshLinks)
+            for (const auto& link : tileOffmesh)
             {
                 offmeshVerts.push_back(link.start.x);
                 offmeshVerts.push_back(link.start.y);
@@ -538,6 +610,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
         int ty = 0;
         rcConfig cfg{};
         std::vector<int> tris;
+        std::vector<OffmeshLink> offmesh;
         uint64_t geomHash = 0;
         bool added = false;
     };
@@ -610,16 +683,20 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                 }
             }
 
-            if (tileTris.empty())
+            std::vector<OffmeshLink> tileOffmesh;
+            collectOffmeshForTile(input, tileCfg, tileOffmesh);
+
+            if (tileTris.empty() && tileOffmesh.empty())
                 continue;
 
-            const uint64_t geomHash = computeTileHash(input, tileTris);
+            const uint64_t geomHash = computeTileHash(input, tileTris, tileOffmesh);
 
             TileInput inputTile;
             inputTile.tx = tx;
             inputTile.ty = ty;
             inputTile.cfg = tileCfg;
             inputTile.tris = std::move(tileTris);
+            inputTile.offmesh = std::move(tileOffmesh);
             inputTile.geomHash = geomHash;
             tilesToBuild.push_back(std::move(inputTile));
         }
@@ -726,7 +803,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
             dtNavMeshCreateParams params{};
             unsigned char* navMeshData = nullptr;
             int navMeshDataSize = 0;
-            const NavTileBuildResult result = createNavDataForConfig(input, inputTile.cfg, inputTile.tris, inputTile.tx, inputTile.ty, params, navMeshData, navMeshDataSize);
+            const NavTileBuildResult result = createNavDataForConfig(input, inputTile.cfg, inputTile.tris, inputTile.offmesh, inputTile.tx, inputTile.ty, params, navMeshData, navMeshDataSize);
             if (result == NavTileBuildResult::Empty)
             {
                 ++tilesSkipped;
@@ -843,6 +920,8 @@ bool BuildSingleTile(const NavmeshBuildInput& input,
 
     std::vector<int> tileTris;
     tileTris.reserve(input.tris.size());
+    std::vector<OffmeshLink> tileOffmesh;
+    collectOffmeshForTile(input, tileCfg, tileOffmesh);
 
     for (int i = 0; i < input.ntris; ++i)
     {
@@ -891,7 +970,7 @@ bool BuildSingleTile(const NavmeshBuildInput& input,
     dtNavMeshCreateParams createParams{};
     unsigned char* navMeshData = nullptr;
     int navMeshDataSize = 0;
-    const NavTileBuildResult result = createNavDataForConfig(input, tileCfg, tileTris, tileX, tileY, createParams, navMeshData, navMeshDataSize);
+    const NavTileBuildResult result = createNavDataForConfig(input, tileCfg, tileTris, tileOffmesh, tileX, tileY, createParams, navMeshData, navMeshDataSize);
     if (result == NavTileBuildResult::Empty)
     {
         outEmpty = true;
