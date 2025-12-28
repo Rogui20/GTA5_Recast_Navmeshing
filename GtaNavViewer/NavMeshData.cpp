@@ -18,6 +18,8 @@
 #include <tuple>
 #include <unordered_set>
 #include <functional>
+#include <unordered_map>
+#include <cstdint>
 
 namespace
 {
@@ -351,17 +353,40 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
 {
     outLinks.clear();
 
+    const bool generateDropJump = (params.linksGenFlags & 1) != 0;
+    const bool generateFacingNormals = (params.linksGenFlags & 2) != 0;
+
     if (!m_nav)
     {
         printf("[NavMeshData] GenerateAutomaticOffmeshLinks: navmesh nao inicializado.\n");
         return false;
     }
 
-    if (params.jumpHeight < 0.0f || params.maxDropHeight <= 0.0f)
+    if (!generateDropJump && !generateFacingNormals)
+    {
+        printf("[NavMeshData] GenerateAutomaticOffmeshLinks: nenhum modo solicitado (linksGenFlags=0).\n");
+        return true;
+    }
+
+    if (generateDropJump && (params.jumpHeight < 0.0f || params.maxDropHeight <= 0.0f))
     {
         printf("[NavMeshData] GenerateAutomaticOffmeshLinks: parametros invalidos (jumpHeight=%.2f, maxDrop=%.2f).\n",
                params.jumpHeight, params.maxDropHeight);
         return false;
+    }
+
+    if (generateFacingNormals)
+    {
+        if (params.angleTolerance < 0.0f || params.angleTolerance > 180.0f ||
+            params.maxHeightDiff <= 0.0f ||
+            params.maxDistance <= 0.0f ||
+            params.minDistance < 0.0f ||
+            params.minDistance > params.maxDistance)
+        {
+            printf("[NavMeshData] GenerateAutomaticOffmeshLinks: parametros de facing invalidos (angleTol=%.2f, maxHeightDiff=%.2f, minDist=%.2f, maxDist=%.2f).\n",
+                   params.angleTolerance, params.maxHeightDiff, params.minDistance, params.maxDistance);
+            return false;
+        }
     }
 
     if (m_cachedVerts.empty() || m_cachedTris.empty())
@@ -371,7 +396,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
     }
 
     const float slopeCos = cosf(glm::radians(params.maxSlopeDegrees));
-    const float maxRayDistance = params.maxDropHeight + params.raycastExtraHeight + params.upOffset;
+    const float maxRayDistance = generateDropJump ? (params.maxDropHeight + params.raycastExtraHeight + params.upOffset) : 0.0f;
     const glm::vec3 up(0.0f, 1.0f, 0.0f);
     const float startInset = 0.04f; // Empurra o start para dentro do polígono (~4cm)
 
@@ -380,7 +405,37 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
     outLinks.reserve(reserved);
 
     std::unordered_set<std::tuple<int, int, int>, Tuple3Hash> usedStartHashes;
-    usedStartHashes.reserve(reserved);
+    if (generateDropJump)
+        usedStartHashes.reserve(reserved);
+
+    struct EdgeCandidate
+    {
+        glm::vec3 mid;
+        glm::vec3 outward;
+        int tileX = -1;
+        int tileY = -1;
+    };
+
+    std::vector<EdgeCandidate> facingEdges;
+    facingEdges.reserve(reserved);
+
+    const auto resolveTileCoords = [&](const dtMeshTile* tile, const glm::vec3& pos) -> std::pair<int, int>
+    {
+        if (tile && tile->header)
+            return {tile->header->x, tile->header->y};
+
+        const float tileWidth = m_cachedSettings.tileSize * m_cachedBaseCfg.cs;
+        if (m_hasTiledCache && tileWidth > 0.0f)
+        {
+            const int tx = (int)floorf((pos.x - m_cachedBMin[0]) / tileWidth);
+            const int ty = (int)floorf((pos.z - m_cachedBMin[2]) / tileWidth);
+            return {tx, ty};
+        }
+
+        return {-1, -1};
+    };
+
+    size_t dropGenerated = 0;
 
     for (int tileIndex = 0; tileIndex < maxTiles; ++tileIndex)
     {
@@ -408,59 +463,183 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
                 const glm::vec3 vb = GetPolyVertex(tile, poly, vbIndex);
 
                 const dtPolyRef neighbourRef = GetNeighbourRef(tile, poly, edge, m_nav);
-                if (neighbourRef != 0)
-                {
-                    const dtMeshTile* neiTile = nullptr;
-                    const dtPoly* neiPoly = nullptr;
-                    m_nav->getTileAndPolyByRefUnsafe(neighbourRef, &neiTile, &neiPoly);
-                    if (!neiTile || !neiPoly || neiPoly->getType() != DT_POLYTYPE_GROUND)
-                        continue;
+                const bool hasNeighbour = neighbourRef != 0;
 
-                    const float heightDelta = polyCenter.y - ComputePolyCentroid(neiTile, neiPoly).y;
-                    if (heightDelta < params.minNeighborHeightDelta)
-                        continue;
+                glm::vec3 mid(0.0f);
+                glm::vec3 outward(0.0f);
+                bool outwardValid = false;
+                if (generateDropJump || (generateFacingNormals && !hasNeighbour))
+                {
+                    mid = (va + vb) * 0.5f;
+                    outward = ComputeEdgeOutwardNormal(va, vb, polyCenter);
+                    outwardValid = std::isfinite(outward.x) && std::isfinite(outward.z);
                 }
 
-                const glm::vec3 mid = (va + vb) * 0.5f;
-                glm::vec3 outward = ComputeEdgeOutwardNormal(va, vb, polyCenter);
-                if (!std::isfinite(outward.x) || !std::isfinite(outward.z))
-                    continue;
+                if (generateDropJump)
+                {
+                    if (hasNeighbour)
+                    {
+                        const dtMeshTile* neiTile = nullptr;
+                        const dtPoly* neiPoly = nullptr;
+                        m_nav->getTileAndPolyByRefUnsafe(neighbourRef, &neiTile, &neiPoly);
+                        if (!neiTile || !neiPoly || neiPoly->getType() != DT_POLYTYPE_GROUND)
+                            continue;
 
-                const glm::vec3 testPoint = mid + outward * params.edgeOutset + up * params.upOffset;
+                        const float heightDelta = polyCenter.y - ComputePolyCentroid(neiTile, neiPoly).y;
+                        if (heightDelta < params.minNeighborHeightDelta)
+                            continue;
+                    }
 
-                glm::vec3 hitPoint;
-                glm::vec3 hitNormal;
-                if (!RaycastDown(m_cachedVerts, m_cachedTris, testPoint, maxRayDistance, hitPoint, hitNormal))
-                    continue;
+                    if (!outwardValid)
+                        continue;
 
-                glm::vec3 hitPoint2;
-                glm::vec3 hitNormal2;
-                if (RaycastTo(m_cachedVerts, m_cachedTris, hitPoint, testPoint, hitPoint2, hitNormal2))
-                    continue;
+                    const glm::vec3 testPoint = mid + outward * params.edgeOutset + up * params.upOffset;
 
-                const float drop = testPoint.y - hitPoint.y;
-                if (drop < params.minDropThreshold || drop > params.maxDropHeight)
-                    continue;
+                    glm::vec3 hitPoint;
+                    glm::vec3 hitNormal;
+                    if (!RaycastDown(m_cachedVerts, m_cachedTris, testPoint, maxRayDistance, hitPoint, hitNormal))
+                        continue;
 
-                if (glm::dot(hitNormal, up) < slopeCos)
-                    continue;
+                    glm::vec3 hitPoint2;
+                    glm::vec3 hitNormal2;
+                    if (RaycastTo(m_cachedVerts, m_cachedTris, hitPoint, testPoint, hitPoint2, hitNormal2))
+                        continue;
 
-                const auto hash = QuantizePosition(mid, 10.0f);
-                if (usedStartHashes.find(hash) != usedStartHashes.end())
-                    continue;
-                usedStartHashes.insert(hash);
+                    const float drop = testPoint.y - hitPoint.y;
+                    if (drop < params.minDropThreshold || drop > params.maxDropHeight)
+                        continue;
 
-                OffmeshLink link{};
-                link.start = mid - outward * startInset;
-                link.end = hitPoint;
-                link.radius = params.agentRadius;
-                link.bidirectional = drop <= params.jumpHeight;
-                link.area = params.dropArea;
-                link.flags = 1;
-                link.userId = params.userIdBase + static_cast<unsigned int>(outLinks.size());
-                outLinks.push_back(link);
+                    if (glm::dot(hitNormal, up) < slopeCos)
+                        continue;
+
+                    const auto hash = QuantizePosition(mid, 10.0f);
+                    if (usedStartHashes.find(hash) != usedStartHashes.end())
+                        continue;
+                    usedStartHashes.insert(hash);
+
+                    OffmeshLink link{};
+                    link.start = mid - outward * startInset;
+                    link.end = hitPoint;
+                    link.radius = params.agentRadius;
+                    link.bidirectional = drop <= params.jumpHeight;
+                    link.area = params.dropArea;
+                    link.flags = 1;
+                    link.userId = params.userIdBase + static_cast<unsigned int>(outLinks.size());
+                    const auto [tx, ty] = resolveTileCoords(tile, link.start);
+                    link.ownerTx = tx;
+                    link.ownerTy = ty;
+                    outLinks.push_back(link);
+                    ++dropGenerated;
+                }
+
+                if (generateFacingNormals && !hasNeighbour && outwardValid)
+                {
+                    const auto [tx, ty] = resolveTileCoords(tile, mid);
+                    facingEdges.push_back({mid, outward, tx, ty});
+                }
             }
         }
+    }
+
+    size_t facingGenerated = 0;
+    size_t rejectedAngle = 0;
+    size_t rejectedHeight = 0;
+    size_t rejectedDistance = 0;
+    size_t rejectedObstruction = 0;
+
+    if (generateFacingNormals && !facingEdges.empty())
+    {
+        std::unordered_map<int64_t, std::pair<size_t, size_t>> tileCounters;
+        tileCounters.reserve(facingEdges.size());
+        const float facingTarget = 180.0f;
+
+        for (size_t i = 0; i + 1 < facingEdges.size(); ++i)
+        {
+            const auto& edgeA = facingEdges[i];
+            glm::vec2 normA(edgeA.outward.x, edgeA.outward.z);
+            const float lenA = glm::length(normA);
+            if (lenA < 1e-3f)
+                continue;
+            normA /= lenA;
+            const int64_t tileKey = (static_cast<int64_t>(edgeA.tileX) << 32) | (static_cast<int64_t>(edgeA.tileY) & 0xffffffff);
+            auto& counters = tileCounters[tileKey];
+
+            for (size_t j = i + 1; j < facingEdges.size(); ++j)
+            {
+                const auto& edgeB = facingEdges[j];
+                glm::vec2 normB(edgeB.outward.x, edgeB.outward.z);
+                const float lenB = glm::length(normB);
+                if (lenB < 1e-3f)
+                    continue;
+                normB /= lenB;
+
+                const float dot = glm::clamp(glm::dot(normA, normB), -1.0f, 1.0f);
+                const float angleDeg = glm::degrees(acosf(dot));
+                if (fabsf(facingTarget - angleDeg) > params.angleTolerance)
+                {
+                    ++rejectedAngle;
+                    ++counters.second;
+                    continue;
+                }
+
+                const float heightDiff = fabsf(edgeA.mid.y - edgeB.mid.y);
+                if (heightDiff > params.maxHeightDiff)
+                {
+                    ++rejectedHeight;
+                    ++counters.second;
+                    continue;
+                }
+
+                const float distance = glm::length(edgeB.mid - edgeA.mid);
+                if (distance < params.minDistance || distance > params.maxDistance)
+                {
+                    ++rejectedDistance;
+                    ++counters.second;
+                    continue;
+                }
+
+                const glm::vec3 offsetA = edgeA.mid + edgeA.outward * params.normalOffset + up * params.zOffset;
+                const glm::vec3 offsetB = edgeB.mid + edgeB.outward * params.normalOffset + up * params.zOffset;
+
+                glm::vec3 obstructionHit;
+                glm::vec3 obstructionNormal;
+                if (RaycastTo(m_cachedVerts, m_cachedTris, offsetA, offsetB, obstructionHit, obstructionNormal))
+                {
+                    ++rejectedObstruction;
+                    ++counters.second;
+                    continue;
+                }
+
+                OffmeshLink link{};
+                link.start = edgeA.mid;
+                link.end = edgeB.mid;
+                link.radius = params.agentRadius;
+                link.bidirectional = true;
+                link.area = RC_WALKABLE_AREA;
+                link.flags = 1;
+                link.userId = params.userIdBase + static_cast<unsigned int>(outLinks.size());
+                link.ownerTx = edgeA.tileX;
+                link.ownerTy = edgeA.tileY;
+                outLinks.push_back(link);
+                ++facingGenerated;
+                ++counters.first;
+            }
+        }
+
+        for (auto& kv : tileCounters)
+        {
+            const int tx = static_cast<int>(kv.first >> 32);
+            const int ty = static_cast<int>(kv.first & 0xffffffff);
+            printf("[AutoOffmesh] Tile (%d,%d): accepted=%zu rejected=%zu\n", tx, ty, kv.second.first, kv.second.second);
+        }
+    }
+
+    printf("[AutoOffmesh] drop/jump links gerados: %zu\n", dropGenerated);
+    printf("[AutoOffmesh] facing-normal links gerados: %zu\n", facingGenerated);
+    if (generateFacingNormals)
+    {
+        printf("[AutoOffmesh] facing-normal rejeitados (angulo=%zu, altura=%zu, distancia=%zu, obstrucao=%zu)\n",
+               rejectedAngle, rejectedHeight, rejectedDistance, rejectedObstruction);
     }
 
     printf("[NavMeshData] GenerateAutomaticOffmeshLinks: gerados %zu links automaticos.\n", outLinks.size());

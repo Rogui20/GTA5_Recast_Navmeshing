@@ -41,10 +41,13 @@ struct OffmeshLink
     unsigned char area = RC_WALKABLE_AREA;
     unsigned short flags = 1;
     unsigned int userId = 0;
+    int ownerTx = -1;
+    int ownerTy = -1;
 };
 
 struct AutoOffmeshGenerationParams
 {
+    int linksGenFlags = 1;      // bit 0 = drop/jump, bit 1 = facing normals
     float jumpHeight = 2.0f;
     float maxDropHeight = 3.0f;
     float maxSlopeDegrees = 60.0f;
@@ -57,6 +60,12 @@ struct AutoOffmeshGenerationParams
     float minDropThreshold = 0.20f;
     float minNeighborHeightDelta = 0.30f;
     unsigned char dropArea = 5; // segue convenção do RecastDemo (jump area)
+    float angleTolerance = 30.0f;
+    float maxHeightDiff = 1.5f;
+    float minDistance = 0.30f;
+    float maxDistance = 5.0f;
+    float normalOffset = 0.10f;
+    float zOffset = 0.05f;
 };
 
 class NavMeshData
