@@ -589,7 +589,7 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
                                int flags,
                                int maxPoints,
                                float minEdge,
-                               float* outPath)
+                               float* outPath, int options)
 {
     if (!EnsureNavQuery(ctx))
         return 0;
@@ -623,9 +623,9 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
 
     dtStatus straightStatus = DT_FAILURE;
     if (std::isfinite(minEdge) && minEdge > 0.0f)
-        straightStatus = ctx.navQuery->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight.data(), straightFlags.data(), straightRefs.data(), &straightCount, maxPoints, 2, minEdge);
+        straightStatus = ctx.navQuery->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight.data(), straightFlags.data(), straightRefs.data(), &straightCount, maxPoints, options, minEdge);
     else
-        straightStatus = ctx.navQuery->findStraightPath(startNearest, endNearest, polys, polyCount, straight.data(), straightFlags.data(), straightRefs.data(), &straightCount, maxPoints, 2);
+        straightStatus = ctx.navQuery->findStraightPath(startNearest, endNearest, polys, polyCount, straight.data(), straightFlags.data(), straightRefs.data(), &straightCount, maxPoints, options);
 
     if (dtStatusFailed(straightStatus) || straightCount == 0)
         return 0;
@@ -645,7 +645,7 @@ GTANAVVIEWER_API int FindPath(void* navMesh,
                               Vector3 target,
                               int flags,
                               int maxPoints,
-                              float* outPath)
+                              float* outPath, int options)
 {
     if (!navMesh || !outPath || maxPoints <= 0)
         return 0;
@@ -656,7 +656,7 @@ GTANAVVIEWER_API int FindPath(void* navMesh,
                                flags,
                                maxPoints,
                                -1.0f,
-                               outPath);
+                               outPath, options);
 }
 
 GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
@@ -665,7 +665,7 @@ GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
                                          int flags,
                                          int maxPoints,
                                          float minEdge,
-                                         float* outPath)
+                                         float* outPath, int options)
 {
     if (!navMesh || !outPath || maxPoints <= 0)
         return 0;
@@ -676,7 +676,7 @@ GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
                                flags,
                                maxPoints,
                                minEdge,
-                               outPath);
+                               outPath, options);
 }
 
 GTANAVVIEWER_API bool AddOffMeshLink(void* navMesh,
@@ -735,7 +735,7 @@ GTANAVVIEWER_API bool GenerateAutomaticOffmeshLinks(void* navMesh)
     merged.reserve(existing.size() + generated.size());
     for (const auto& link : existing)
     {
-        if ( (link.userId & autoMask) != (params.userIdBase & autoMask) )
+        //if ( (link.userId & autoMask) != (params.userIdBase & autoMask) )
             merged.push_back(link);
     }
     merged.insert(merged.end(), generated.begin(), generated.end());
