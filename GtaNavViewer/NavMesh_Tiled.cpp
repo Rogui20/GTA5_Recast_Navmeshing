@@ -95,6 +95,10 @@ namespace
             hash *= 0x100000001b3ULL;
             hash ^= static_cast<uint64_t>(link.userId);
             hash *= 0x100000001b3ULL;
+            hash ^= static_cast<uint64_t>(static_cast<uint32_t>(link.ownerTx));
+            hash *= 0x100000001b3ULL;
+            hash ^= static_cast<uint64_t>(static_cast<uint32_t>(link.ownerTy));
+            hash *= 0x100000001b3ULL;
         }
 
         return hash;
@@ -154,6 +158,8 @@ namespace
 
     void collectOffmeshForTile(const NavmeshBuildInput& input,
                                const rcConfig& cfg,
+                               int tileX,
+                               int tileY,
                                std::vector<OffmeshLink>& outLinks)
     {
         outLinks.clear();
@@ -162,6 +168,13 @@ namespace
 
         for (const auto& link : *input.offmeshLinks)
         {
+            if (link.ownerTx != -1 && link.ownerTy != -1)
+            {
+                if (link.ownerTx == tileX && link.ownerTy == tileY)
+                    outLinks.push_back(link);
+                continue;
+            }
+
             if (pointInsideBounds(link.start, cfg.bmin, cfg.bmax, link.radius) ||
                 pointInsideBounds(link.end, cfg.bmin, cfg.bmax, link.radius))
             {
@@ -684,7 +697,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
             }
 
             std::vector<OffmeshLink> tileOffmesh;
-            collectOffmeshForTile(input, tileCfg, tileOffmesh);
+            collectOffmeshForTile(input, tileCfg, tx, ty, tileOffmesh);
 
             if (tileTris.empty() && tileOffmesh.empty())
                 continue;
@@ -921,7 +934,7 @@ bool BuildSingleTile(const NavmeshBuildInput& input,
     std::vector<int> tileTris;
     tileTris.reserve(input.tris.size());
     std::vector<OffmeshLink> tileOffmesh;
-    collectOffmeshForTile(input, tileCfg, tileOffmesh);
+    collectOffmeshForTile(input, tileCfg, tileX, tileY, tileOffmesh);
 
     for (int i = 0; i < input.ntris; ++i)
     {
