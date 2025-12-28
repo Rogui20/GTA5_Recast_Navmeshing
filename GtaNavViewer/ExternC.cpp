@@ -418,6 +418,164 @@ namespace
 
         return EnsureNavQuery(ctx);
     }
+
+    Vector3 ToVector3(const glm::vec3& v)
+    {
+        return Vector3{v.x, v.y, v.z};
+    }
+
+    glm::vec3 ComputePolyNormal(const dtMeshTile* tile, const dtPoly* poly)
+    {
+        if (!tile || !poly || poly->vertCount < 3)
+            return glm::vec3(0.0f, 1.0f, 0.0f);
+
+        const int i0 = poly->verts[0];
+        const int i1 = poly->verts[1];
+        const int i2 = poly->verts[2];
+        const float* v0 = &tile->verts[i0 * 3];
+        const float* v1 = &tile->verts[i1 * 3];
+        const float* v2 = &tile->verts[i2 * 3];
+        const glm::vec3 a(v0[0], v0[1], v0[2]);
+        const glm::vec3 b(v1[0], v1[1], v1[2]);
+        const glm::vec3 c(v2[0], v2[1], v2[2]);
+        glm::vec3 normal = glm::normalize(glm::cross(b - a, c - a));
+        if (!std::isfinite(normal.x) || !std::isfinite(normal.y) || !std::isfinite(normal.z))
+            normal = glm::vec3(0.0f, 1.0f, 0.0f);
+        return normal;
+    }
+
+    glm::vec3 ComputePolyCentroid(const dtMeshTile* tile, const dtPoly* poly)
+    {
+        glm::vec3 sum(0.0f);
+        for (int i = 0; i < poly->vertCount; ++i)
+        {
+            const int vi = poly->verts[i];
+            const float* v = &tile->verts[vi * 3];
+            sum += glm::vec3(v[0], v[1], v[2]);
+        }
+        if (poly->vertCount > 0)
+            sum /= static_cast<float>(poly->vertCount);
+        return sum;
+    }
+
+    glm::vec3 ComputeEdgeOutwardNormal(const glm::vec3& a,
+                                       const glm::vec3& b,
+                                       const glm::vec3& polyCenter)
+    {
+        const glm::vec3 edgeDir = glm::normalize(b - a);
+        glm::vec3 outward = glm::normalize(glm::vec3(-edgeDir.z, 0.0f, edgeDir.x));
+        const glm::vec3 edgeCenter = (a + b) * 0.5f;
+        const glm::vec3 toCenter = glm::normalize(edgeCenter - polyCenter);
+        if (glm::dot(outward, toCenter) > 0.0f)
+            outward = -outward;
+        if (!std::isfinite(outward.x) || !std::isfinite(outward.y) || !std::isfinite(outward.z))
+            outward = glm::vec3(0.0f, 0.0f, 0.0f);
+        return outward;
+    }
+
+    dtPolyRef GetNeighbourRef(const dtMeshTile* tile,
+                              const dtPoly* poly,
+                              int edge,
+                              const dtNavMesh* nav)
+    {
+        const unsigned short nei = poly->neis[edge];
+        if (nei == 0)
+            return 0;
+
+        if ((nei & DT_EXT_LINK) == 0)
+        {
+            const unsigned int neighbourIndex = static_cast<unsigned int>(nei - 1);
+            return nav->getPolyRefBase(tile) | neighbourIndex;
+        }
+
+        for (unsigned int linkIndex = poly->firstLink; linkIndex != DT_NULL_LINK; linkIndex = tile->links[linkIndex].next)
+        {
+            const dtLink& link = tile->links[linkIndex];
+            if (link.edge == edge)
+                return link.ref;
+        }
+
+        return 0;
+    }
+
+    Vector3 ToVector3(const glm::vec3& v)
+    {
+        return Vector3{v.x, v.y, v.z};
+    }
+
+    glm::vec3 ComputePolyNormal(const dtMeshTile* tile, const dtPoly* poly)
+    {
+        if (!tile || !poly || poly->vertCount < 3)
+            return glm::vec3(0.0f, 1.0f, 0.0f);
+
+        const int i0 = poly->verts[0];
+        const int i1 = poly->verts[1];
+        const int i2 = poly->verts[2];
+        const float* v0 = &tile->verts[i0 * 3];
+        const float* v1 = &tile->verts[i1 * 3];
+        const float* v2 = &tile->verts[i2 * 3];
+        const glm::vec3 a(v0[0], v0[1], v0[2]);
+        const glm::vec3 b(v1[0], v1[1], v1[2]);
+        const glm::vec3 c(v2[0], v2[1], v2[2]);
+        glm::vec3 normal = glm::normalize(glm::cross(b - a, c - a));
+        if (!std::isfinite(normal.x) || !std::isfinite(normal.y) || !std::isfinite(normal.z))
+            normal = glm::vec3(0.0f, 1.0f, 0.0f);
+        return normal;
+    }
+
+    glm::vec3 ComputePolyCentroid(const dtMeshTile* tile, const dtPoly* poly)
+    {
+        glm::vec3 sum(0.0f);
+        for (int i = 0; i < poly->vertCount; ++i)
+        {
+            const int vi = poly->verts[i];
+            const float* v = &tile->verts[vi * 3];
+            sum += glm::vec3(v[0], v[1], v[2]);
+        }
+        if (poly->vertCount > 0)
+            sum /= static_cast<float>(poly->vertCount);
+        return sum;
+    }
+
+    glm::vec3 ComputeEdgeOutwardNormal(const glm::vec3& a,
+                                       const glm::vec3& b,
+                                       const glm::vec3& polyCenter)
+    {
+        const glm::vec3 edgeDir = glm::normalize(b - a);
+        glm::vec3 outward = glm::normalize(glm::vec3(-edgeDir.z, 0.0f, edgeDir.x));
+        const glm::vec3 edgeCenter = (a + b) * 0.5f;
+        const glm::vec3 toCenter = glm::normalize(edgeCenter - polyCenter);
+        if (glm::dot(outward, toCenter) > 0.0f)
+            outward = -outward;
+        if (!std::isfinite(outward.x) || !std::isfinite(outward.y) || !std::isfinite(outward.z))
+            outward = glm::vec3(0.0f, 0.0f, 0.0f);
+        return outward;
+    }
+
+    dtPolyRef GetNeighbourRef(const dtMeshTile* tile,
+                              const dtPoly* poly,
+                              int edge,
+                              const dtNavMesh* nav)
+    {
+        const unsigned short nei = poly->neis[edge];
+        if (nei == 0)
+            return 0;
+
+        if ((nei & DT_EXT_LINK) == 0)
+        {
+            const unsigned int neighbourIndex = static_cast<unsigned int>(nei - 1);
+            return nav->getPolyRefBase(tile) | neighbourIndex;
+        }
+
+        for (unsigned int linkIndex = poly->firstLink; linkIndex != DT_NULL_LINK; linkIndex = tile->links[linkIndex].next)
+        {
+            const dtLink& link = tile->links[linkIndex];
+            if (link.edge == edge)
+                return link.ref;
+        }
+
+        return 0;
+    }
 }
 
 GTANAVVIEWER_API void* InitNavMesh()
@@ -581,6 +739,169 @@ GTANAVVIEWER_API bool UpdateNavMesh(void* navMesh)
         return false;
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     return UpdateNavmeshState(*ctx, false);
+}
+
+GTANAVVIEWER_API int GetNavMeshPolygons(void* navMesh,
+                                        NavMeshPolygonInfo* polygons,
+                                        int maxPolygons,
+                                        Vector3* vertices,
+                                        int maxVertices,
+                                        NavMeshEdgeInfo* edges,
+                                        int maxEdges,
+                                        int* outVertexCount,
+                                        int* outEdgeCount)
+{
+    if (outVertexCount)
+        *outVertexCount = 0;
+    if (outEdgeCount)
+        *outEdgeCount = 0;
+    if (!navMesh || !polygons || maxPolygons <= 0 || !vertices || maxVertices <= 0 || !edges || maxEdges <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    dtNavMesh* nav = ctx->navData.GetNavMesh();
+    if (!nav)
+        return 0;
+
+    int writtenPolygons = 0;
+    int writtenVertices = 0;
+    int writtenEdges = 0;
+    std::uint64_t generatedId = 1;
+
+    const int maxTiles = nav->getMaxTiles();
+    for (int tileIndex = 0; tileIndex < maxTiles && writtenPolygons < maxPolygons; ++tileIndex)
+    {
+        const dtMeshTile* tile = nav->getTile(tileIndex);
+        if (!tile || !tile->header)
+            continue;
+
+        for (int polyIndex = 0; polyIndex < tile->header->polyCount && writtenPolygons < maxPolygons; ++polyIndex)
+        {
+            const dtPoly* poly = &tile->polys[polyIndex];
+            if (poly->getType() != DT_POLYTYPE_GROUND)
+                continue;
+
+            const dtPolyRef pref = nav->getPolyRefBase(tile) | static_cast<unsigned int>(polyIndex);
+            std::uint64_t polyId = pref != 0 ? static_cast<std::uint64_t>(pref) : generatedId++;
+
+            const glm::vec3 center = ComputePolyCentroid(tile, poly);
+            const glm::vec3 normal = ComputePolyNormal(tile, poly);
+
+            NavMeshPolygonInfo info{};
+            info.polygonId = polyId;
+            info.center = ToVector3(center);
+            info.normal = ToVector3(normal);
+            info.vertexStart = writtenVertices;
+            info.vertexCount = poly->vertCount;
+            info.edgeStart = writtenEdges;
+            info.edgeCount = poly->vertCount;
+
+            if (writtenVertices + poly->vertCount > maxVertices || writtenEdges + poly->vertCount > maxEdges)
+                return writtenPolygons;
+
+            for (int v = 0; v < poly->vertCount; ++v)
+            {
+                const int vi = poly->verts[v];
+                const float* p = &tile->verts[vi * 3];
+                vertices[writtenVertices + v] = Vector3{p[0], p[1], p[2]};
+            }
+
+            for (int edge = 0; edge < poly->vertCount; ++edge)
+            {
+                const int vaIndex = edge;
+                const int vbIndex = (edge + 1) % poly->vertCount;
+                const int va = poly->verts[vaIndex];
+                const int vb = poly->verts[vbIndex];
+                const float* a = &tile->verts[va * 3];
+                const float* b = &tile->verts[vb * 3];
+                const glm::vec3 pa(a[0], a[1], a[2]);
+                const glm::vec3 pb(b[0], b[1], b[2]);
+                NavMeshEdgeInfo e{};
+                e.vertexA = ToVector3(pa);
+                e.vertexB = ToVector3(pb);
+                const glm::vec3 mid = (pa + pb) * 0.5f;
+                e.center = ToVector3(mid);
+                const dtPolyRef neighbour = GetNeighbourRef(tile, poly, edge, nav);
+                const glm::vec3 outward = ComputeEdgeOutwardNormal(pa, pb, center);
+                e.normal = ToVector3(outward);
+                e.polygonId = polyId;
+                edges[writtenEdges + edge] = e;
+            }
+
+            writtenVertices += poly->vertCount;
+            writtenEdges += poly->vertCount;
+            polygons[writtenPolygons++] = info;
+        }
+    }
+
+    if (outVertexCount)
+        *outVertexCount = writtenVertices;
+    if (outEdgeCount)
+        *outEdgeCount = writtenEdges;
+    return writtenPolygons;
+}
+
+GTANAVVIEWER_API int GetNavMeshBorderEdges(void* navMesh,
+                                           NavMeshEdgeInfo* edges,
+                                           int maxEdges,
+                                           int* outEdgeCount)
+{
+    if (outEdgeCount)
+        *outEdgeCount = 0;
+    if (!navMesh || !edges || maxEdges <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    dtNavMesh* nav = ctx->navData.GetNavMesh();
+    if (!nav)
+        return 0;
+
+    int written = 0;
+    const int maxTiles = nav->getMaxTiles();
+    for (int tileIndex = 0; tileIndex < maxTiles && written < maxEdges; ++tileIndex)
+    {
+        const dtMeshTile* tile = nav->getTile(tileIndex);
+        if (!tile || !tile->header)
+            continue;
+
+        for (int polyIndex = 0; polyIndex < tile->header->polyCount && written < maxEdges; ++polyIndex)
+        {
+            const dtPoly* poly = &tile->polys[polyIndex];
+            if (poly->getType() != DT_POLYTYPE_GROUND)
+                continue;
+
+            const dtPolyRef pref = nav->getPolyRefBase(tile) | static_cast<unsigned int>(polyIndex);
+            const glm::vec3 center = ComputePolyCentroid(tile, poly);
+
+            for (int edge = 0; edge < poly->vertCount && written < maxEdges; ++edge)
+            {
+                const dtPolyRef neighbour = GetNeighbourRef(tile, poly, edge, nav);
+                if (neighbour != 0)
+                    continue;
+
+                const int vaIndex = edge;
+                const int vbIndex = (edge + 1) % poly->vertCount;
+                const int va = poly->verts[vaIndex];
+                const int vb = poly->verts[vbIndex];
+                const float* a = &tile->verts[va * 3];
+                const float* b = &tile->verts[vb * 3];
+                const glm::vec3 pa(a[0], a[1], a[2]);
+                const glm::vec3 pb(b[0], b[1], b[2]);
+                NavMeshEdgeInfo e{};
+                e.vertexA = ToVector3(pa);
+                e.vertexB = ToVector3(pb);
+                const glm::vec3 mid = (pa + pb) * 0.5f;
+                e.center = ToVector3(mid);
+                e.normal = ToVector3(ComputeEdgeOutwardNormal(pa, pb, center));
+                e.polygonId = pref != 0 ? static_cast<std::uint64_t>(pref) : 0;
+                edges[written++] = e;
+            }
+        }
+    }
+
+    if (outEdgeCount)
+        *outEdgeCount = written;
+    return written;
 }
 
 static int RunPathfindInternal(ExternNavmeshContext& ctx,
