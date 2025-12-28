@@ -51,7 +51,7 @@ namespace
         glm::vec3 bboxMax{0.0f};
         bool rebuildAll = false;
         std::vector<std::pair<glm::vec3, glm::vec3>> dirtyBounds;
-        float cachedExtents[3]{1.0f, 1.0f, 1.0f};
+        float cachedExtents[3]{20.0f, 10.0f, 20.0f};
     };
 
     glm::mat3 GetRotationMatrix(const glm::vec3& eulerDegrees)
@@ -315,9 +315,9 @@ namespace
             return false;
 
         const float extents[3] = {
-            ctx.genSettings.agentRadius * 4.0f + 0.1f,
-            ctx.genSettings.agentHeight * 0.5f + 0.1f,
-            ctx.genSettings.agentRadius * 4.0f + 0.1f
+            20.0f,
+            10.5f,
+            20.0f
         };
         memcpy(ctx.cachedExtents, extents, sizeof(extents));
         return true;
@@ -623,9 +623,9 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
 
     dtStatus straightStatus = DT_FAILURE;
     if (std::isfinite(minEdge) && minEdge > 0.0f)
-        straightStatus = ctx.navQuery->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight.data(), straightFlags.data(), straightRefs.data(), &straightCount, maxPoints, 0, minEdge);
+        straightStatus = ctx.navQuery->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight.data(), straightFlags.data(), straightRefs.data(), &straightCount, maxPoints, 2, minEdge);
     else
-        straightStatus = ctx.navQuery->findStraightPath(startNearest, endNearest, polys, polyCount, straight.data(), straightFlags.data(), straightRefs.data(), &straightCount, maxPoints, 0);
+        straightStatus = ctx.navQuery->findStraightPath(startNearest, endNearest, polys, polyCount, straight.data(), straightFlags.data(), straightRefs.data(), &straightCount, maxPoints, 2);
 
     if (dtStatusFailed(straightStatus) || straightCount == 0)
         return 0;
