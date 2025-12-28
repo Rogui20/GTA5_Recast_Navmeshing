@@ -737,7 +737,8 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
     const float targetPos[3] = { params.targetPosition.x, params.targetPosition.y, params.targetPosition.z };
     dtPolyRef targetRef = 0;
     float targetNearest[3]{};
-    if (dtStatusFailed(query->findNearestPoly(targetPos, searchExtents, &filter, &targetRef, targetNearest)) || targetRef == 0)
+    bool targetOver = false;
+    if (dtStatusFailed(query->findNearestPoly(targetPos, searchExtents, &filter, &targetRef, targetNearest, &targetOver)) || targetRef == 0)
     {
         printf("[NavMeshData] AddOffmeshLinksToNavMeshIsland: nao encontrou poly pro target.\n");
         return false;
@@ -797,10 +798,21 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
     float queryBMax[3]{};
     rect.ComputeAabb(queryBMin, queryBMax);
 
+    const float queryCenter[3] = {
+        (queryBMin[0] + queryBMax[0]) * 0.5f,
+        (queryBMin[1] + queryBMax[1]) * 0.5f,
+        (queryBMin[2] + queryBMax[2]) * 0.5f
+    };
+    const float queryHalfExtents[3] = {
+        (queryBMax[0] - queryBMin[0]) * 0.5f,
+        (queryBMax[1] - queryBMin[1]) * 0.5f,
+        (queryBMax[2] - queryBMin[2]) * 0.5f
+    };
+
     const int maxPolys = 4096;
     dtPolyRef polys[maxPolys];
     int polyCount = 0;
-    if (dtStatusFailed(query->findPolysInBox(queryBMin, queryBMax, &filter, polys, &polyCount, maxPolys)))
+    if (dtStatusFailed(query->queryPolygons(queryCenter, queryHalfExtents, &filter, polys, &polyCount, maxPolys)))
         return false;
 
     struct Candidate
@@ -869,7 +881,8 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
                 continue;
 
             float closest[3]{};
-            if (dtStatusFailed(query->closestPointOnPoly(targetRef, &mid.x, closest)))
+            bool overPoly = false;
+            if (dtStatusFailed(query->closestPointOnPoly(targetRef, &mid.x, closest, &overPoly)))
                 continue;
 
             const glm::vec3 islandPoint(closest[0], closest[1], closest[2]);
