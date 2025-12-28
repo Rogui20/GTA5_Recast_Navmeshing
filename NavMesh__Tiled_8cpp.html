@@ -112,9 +112,9 @@ $(document).ready(function(){initNavTree('NavMesh__Tiled_8cpp.html',''); initRes
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ac80a3592e72fd96b772ee47a7d8e0d0a" id="r_ac80a3592e72fd96b772ee47a7d8e0d0a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#ac80a3592e72fd96b772ee47a7d8e0d0a">DEBUG_MODE</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memitem:ac80a3592e72fd96b772ee47a7d8e0d0a" id="r_ac80a3592e72fd96b772ee47a7d8e0d0a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#ac80a3592e72fd96b772ee47a7d8e0d0a">DEBUG_MODE</a>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:ac80a3592e72fd96b772ee47a7d8e0d0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd7987666402798824ebc784d17a9928" id="r_afd7987666402798824ebc784d17a9928"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#afd7987666402798824ebc784d17a9928">DEBUG_LOG</a>(fmt, ...)&#160;&#160;&#160;do { } while (0)</td></tr>
+<tr class="memitem:afd7987666402798824ebc784d17a9928" id="r_afd7987666402798824ebc784d17a9928"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#afd7987666402798824ebc784d17a9928">DEBUG_LOG</a>(fmt, ...)&#160;&#160;&#160;<a class="el" href="GtaNav_8cpp.html#a48fe6437a0565928d205a17501dfa22a">printf</a>(fmt, ##__VA_ARGS__)</td></tr>
 <tr class="separator:afd7987666402798824ebc784d17a9928"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -146,7 +146,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;do { } while (0)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="GtaNav_8cpp.html#a48fe6437a0565928d205a17501dfa22a">printf</a>(fmt, ##__VA_ARGS__)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -160,7 +160,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define DEBUG_MODE&#160;&#160;&#160;0</td>
+          <td class="memname">#define DEBUG_MODE&#160;&#160;&#160;1</td>
         </tr>
       </table>
 </div><div class="memdoc">
