@@ -1,5 +1,11 @@
 var NAVTREEINDEX70 =
 {
+"dir_e11a7e58c48007658e5701ecca4dc47e.html":[44,0,6,0,1],
+"dir_e5650ad8b711bedde99f517207c216e4.html":[44,0,7,0,0],
+"dir_e6cf54c9d4d29ff4a28752d861cf44fa.html":[44,0,8],
+"dir_ea3f0eba1256c788d7088ea04a1849f6.html":[44,0,5,0,0],
+"dir_eb75ec87febd43797c051b14714d5644.html":[44,0,0,1],
+"dir_f244c4afb4303a82689423998a79af95.html":[44,0,9,0],
 "dir_f67adae8f6e31608bcf53cdf13e52b2c.html":[44,0,4,0],
 "dir_f73acc4eb87dae63dd8b26467f028b41.html":[44,0,7],
 "dir_f989b3d3473f3227bb3c0f171476a0db.html":[44,0,5,0,0,1],
@@ -149,8 +155,8 @@ var NAVTREEINDEX70 =
 "external_2glm_2simd_2vector__relational_8h.html":[44,0,5,1,1,9],
 "external_2glm_2simd_2vector__relational_8h_source.html":[44,0,5,1,1,9],
 "files.html":[44,0],
-"functions.html":[43,3,0,0],
 "functions.html":[43,3,0],
+"functions.html":[43,3,0,0],
 "functions_a.html":[43,3,0,1],
 "functions_b.html":[43,3,0,2],
 "functions_c.html":[43,3,0,3],
@@ -243,11 +249,5 @@ var NAVTREEINDEX70 =
 "gdk.html#autotoc_md5-required-dlls":[13,3,4],
 "gdk.html#autotoc_md6-setting-up-microsoftgameconfig":[13,3,5],
 "gdk.html#autotoc_md7-adding-required-logos":[13,3,6],
-"gdk.html#autotoc_md8-copying-any-data-files":[13,3,7],
-"gdk.html#autotoc_md9-build-and-run-from-visual-studio":[13,3,8],
-"gdk.html#requirements-1":[13,0],
-"gdk.html#troubleshooting-1":[13,5],
-"gdk.html#visualc-gdk-solution":[13,2],
-"gdk.html#windows-gdk-setup-detailed-steps":[13,3],
-"gdk.html#windows-gdk-status":[13,1]
+"gdk.html#autotoc_md8-copying-any-data-files":[13,3,7]
 };

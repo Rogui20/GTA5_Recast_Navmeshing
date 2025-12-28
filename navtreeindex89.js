@@ -1,5 +1,12 @@
 var NAVTREEINDEX89 =
 {
+"imgui__widgets_8cpp.html#ac8bb93c44323183c6da702c91ce950f8":[44,0,7,0,8,117],
+"imgui__widgets_8cpp.html#ac9b0e445a514615821a5f2c815a00717":[44,0,7,0,8,34],
+"imgui__widgets_8cpp.html#acbb30e32121ef025272892af98f2ac58":[44,0,7,0,8,23],
+"imgui__widgets_8cpp.html#accd8005e99d8b82d357441e068f46393":[44,0,7,0,8,30],
+"imgui__widgets_8cpp.html#acd4c506580a6e7cc632c4fa949f61b35":[44,0,7,0,8,109],
+"imgui__widgets_8cpp.html#acffcd64b4f14cc09b7b1339ce67a7563":[44,0,7,0,8,115],
+"imgui__widgets_8cpp.html#ad4576f39d1ccf89f3c230754c81b278a":[44,0,7,0,8,70],
 "imgui__widgets_8cpp.html#ad8f314afb60770d322bd454ec21e6c15":[44,0,7,0,8,67],
 "imgui__widgets_8cpp.html#adb02051ad064ff8f14557c7483f2fd7e":[44,0,7,0,8,37],
 "imgui__widgets_8cpp.html#adb6231fb52ce1b5fe340d158db4fa113":[44,0,7,0,8,20],
@@ -242,12 +249,5 @@ var NAVTREEINDEX89 =
 "md_Docs_2__99__Roadmap.html#nav-volumes--3d-navigation":[3,3,0],
 "md_Docs_2__99__Roadmap.html#new-recastdetour-functionality":[3,3],
 "md_Docs_2__99__Roadmap.html#opt-in-config-value-validation-system":[3,0,2],
-"md_Docs_2__99__Roadmap.html#revisit-structural-organization":[3,1,4],
-"md_Docs_2__99__Roadmap.html#short-term":[3,0],
-"md_Docs_2__99__Roadmap.html#stb-style-single-header-release-packaging":[3,1,0],
-"md_Docs_2__99__Roadmap.html#tooling":[3,3,2],
-"md_Docs_2__99__Roadmap.html#vehicle-navigation--movement":[3,3,6],
-"md_external_2SDL2_2README.html":[41],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html":[7],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#contributing-code":[7,1]
+"md_Docs_2__99__Roadmap.html#revisit-structural-organization":[3,1,4]
 };

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['glfwclientapi_5fopengl_0',['GlfwClientApi_OpenGL',['../imgui__impl__glfw_8cpp.html#abfd5392e93ee3c4e7f86cc5515e2d413a4bdb1206a80d2fecbccc1ba13a194189',1,'imgui_impl_glfw.cpp']]],
-  ['glfwclientapi_5funknown_1',['GlfwClientApi_Unknown',['../imgui__impl__glfw_8cpp.html#abfd5392e93ee3c4e7f86cc5515e2d413a64b18e86183bf2f895418038ae86fd97',1,'imgui_impl_glfw.cpp']]],
-  ['glfwclientapi_5fvulkan_2',['GlfwClientApi_Vulkan',['../imgui__impl__glfw_8cpp.html#abfd5392e93ee3c4e7f86cc5515e2d413aea35a390f6542022f5704637f7cbefb5',1,'imgui_impl_glfw.cpp']]]
+  ['ev_5fhull_0',['EV_HULL',['../RecastMeshDetail_8cpp.html#a2ce1b25dcb60c164cfbe7620244199ccabd0388f662d97f6027f36ea1c9a887df',1,'RecastMeshDetail.cpp']]],
+  ['ev_5fundef_1',['EV_UNDEF',['../RecastMeshDetail_8cpp.html#a2ce1b25dcb60c164cfbe7620244199ccad1171dcfff57cf1425e53bd38d69999d',1,'RecastMeshDetail.cpp']]]
 ];

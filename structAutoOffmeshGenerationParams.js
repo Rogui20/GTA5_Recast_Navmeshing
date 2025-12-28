@@ -13,6 +13,7 @@ var structAutoOffmeshGenerationParams =
     [ "maxSlopeDegrees", "structAutoOffmeshGenerationParams.html#aff7306adcce5db95250cf44d75295198", null ],
     [ "minDistance", "structAutoOffmeshGenerationParams.html#af82d28e337773ef4f5bc9d213bcb89fe", null ],
     [ "minDropThreshold", "structAutoOffmeshGenerationParams.html#afbf77f27ab3a279f838e701c0b8ea48b", null ],
+    [ "minHeightDiff", "structAutoOffmeshGenerationParams.html#a71ea7d837f96d8257c0122ecb8e043c1", null ],
     [ "minNeighborHeightDelta", "structAutoOffmeshGenerationParams.html#a07e23969b9613f1afa7f162b67d9708d", null ],
     [ "normalOffset", "structAutoOffmeshGenerationParams.html#a433849051a00b85f5b9a22bdc026911a", null ],
     [ "raycastExtraHeight", "structAutoOffmeshGenerationParams.html#a41983ca4ec676c75c91917f098b124ee", null ],

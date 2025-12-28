@@ -1,5 +1,13 @@
 var NAVTREEINDEX101 =
 {
+"structImGui__ImplDX10__ViewportData.html#a2c6451986c5603d9c310141070d6039f":[43,0,128,3],
+"structImGui__ImplDX10__ViewportData.html#a6b9b18f8d433dbd8de968479f30fe457":[43,0,128,2],
+"structImGui__ImplDX10__ViewportData.html#a960caadee1fba4cbc111525e260430c3":[43,0,128,1],
+"structImGui__ImplDX10__ViewportData.html#af729f70dbfb6fcb2e419314d39a82923":[43,0,128,0],
+"structImGui__ImplDX11__Data.html":[43,0,129],
+"structImGui__ImplDX11__Data.html#a0063b20fb683e66ce3b5d900d3b8e319":[43,0,129,9],
+"structImGui__ImplDX11__Data.html#a0c74ff124f14c3385eb988379b40b503":[43,0,129,2],
+"structImGui__ImplDX11__Data.html#a0ccf3bfb070191e4e1ec78edbf9df30f":[43,0,129,0],
 "structImGui__ImplDX11__Data.html#a2f521cc47128e7820fb503365a22c043":[43,0,129,12],
 "structImGui__ImplDX11__Data.html#a356854ee727216fab041b77a80afff1e":[43,0,129,16],
 "structImGui__ImplDX11__Data.html#a4433fbb47832e1caa0c6857225653809":[43,0,129,4],
@@ -241,13 +249,5 @@ var NAVTREEINDEX101 =
 "structImGui__ImplSDLGPU3__FrameData.html#a857e87e10262b6ab55a8d3b19ef31891":[43,0,152,0],
 "structImGui__ImplSDLGPU3__FrameData.html#abc3795751ce3a8bdae88df67dc584d25":[43,0,152,2],
 "structImGui__ImplSDLGPU3__FrameData.html#ad838724b15cdbd5758b833f2d0a0e621":[43,0,152,4],
-"structImGui__ImplSDLGPU3__InitInfo.html":[43,0,153],
-"structImGui__ImplSDLGPU3__InitInfo.html#a14b17726bdf39a25140f3de29665c025":[43,0,153,3],
-"structImGui__ImplSDLGPU3__InitInfo.html#ac5f31eaa10d1c3a198245631b47a7814":[43,0,153,0],
-"structImGui__ImplSDLGPU3__InitInfo.html#ad2152d7d5baa8bb666ed58a4b8bc5b3d":[43,0,153,4],
-"structImGui__ImplSDLGPU3__InitInfo.html#ad21b8838e0492605f4bc8f9b7f97f001":[43,0,153,1],
-"structImGui__ImplSDLGPU3__InitInfo.html#af927fd06fd0d45d0f22cb1b542420e59":[43,0,153,2],
-"structImGui__ImplSDLGPU3__RenderState.html":[43,0,154],
-"structImGui__ImplSDLGPU3__RenderState.html#a29cb0462c19d8cec125e70ce8123cb2a":[43,0,154,1],
-"structImGui__ImplSDLGPU3__RenderState.html#a749fc183640a7fe513f399675a123653":[43,0,154,2]
+"structImGui__ImplSDLGPU3__InitInfo.html":[43,0,153]
 };
