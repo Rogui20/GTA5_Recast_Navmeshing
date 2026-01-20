@@ -1,5 +1,7 @@
 var NAVTREEINDEX18 =
 {
+"SDL__gamecontroller_8h.html#afe5f759b2d709059e4b429cfc08b399ca427cb6b5ae3bcf6f05a012846ad65708":[44,0,5,2,1,29,11,4],
+"SDL__gamecontroller_8h.html#afe5f759b2d709059e4b429cfc08b399ca496d80542c401d459200ceeb7d32b448":[44,0,5,2,1,29,11,10],
 "SDL__gamecontroller_8h.html#afe5f759b2d709059e4b429cfc08b399ca59edb1c7103fa9354d321c5bdf9a4757":[44,0,5,2,1,29,11,5],
 "SDL__gamecontroller_8h.html#afe5f759b2d709059e4b429cfc08b399ca6dc7ea40d95e974f57980fac960eea8e":[44,0,5,2,1,29,11,13],
 "SDL__gamecontroller_8h.html#afe5f759b2d709059e4b429cfc08b399ca813c9e0665c6bda4d727394e253cf8e1":[44,0,5,2,1,29,11,9],
@@ -247,7 +249,5 @@ var NAVTREEINDEX18 =
 "SDL__hints_8h.html#a9b502b557707a58d9f51c593ca0077e2":[44,0,5,2,1,34,175],
 "SDL__hints_8h.html#a9b66ef93d2b547e671881bbfdf6c2ddc":[44,0,5,2,1,34,11],
 "SDL__hints_8h.html#a9b6a9932c2d1b85041e15d8a49eb6042":[44,0,5,2,1,34,34],
-"SDL__hints_8h.html#a9da4631092b78a60e777c89313eb3c2d":[44,0,5,2,1,34,48],
-"SDL__hints_8h.html#a9e69d9d36e721511c14fa4f6c648f8af":[44,0,5,2,1,34,60],
-"SDL__hints_8h.html#a9f9bfde5cbb3d6d154a232223203addb":[44,0,5,2,1,34,84]
+"SDL__hints_8h.html#a9da4631092b78a60e777c89313eb3c2d":[44,0,5,2,1,34,48]
 };

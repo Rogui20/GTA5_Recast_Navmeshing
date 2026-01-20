@@ -115,7 +115,7 @@ var searchData=
   ['maxnum_112',['maxnum',['../structSDL__RWops.html#a7786282ec28451085908f70048ee32c8',1,'SDL_RWops']]],
   ['maxobstacles_113',['maxObstacles',['../structdtTileCacheParams.html#a30fb34944589db46ad6262748d3f4c0c',1,'dtTileCacheParams']]],
   ['maxpath_114',['maxPath',['../structdtRaycastHit.html#a62b75cb350d9ace5e47887c7c1add9b3',1,'dtRaycastHit']]],
-  ['maxpolys_115',['maxpolys',['../structdtNavMeshParams.html#a4f44babd04fff4f8300ecd15d4237375',1,'dtNavMeshParams::maxPolys'],['../structrcPolyMesh.html#afc6261e7cee3e3ff2a83b6ee8baf14a9',1,'rcPolyMesh::maxpolys']]],
+  ['maxpolys_115',['maxpolys',['../structrcPolyMesh.html#afc6261e7cee3e3ff2a83b6ee8baf14a9',1,'rcPolyMesh::maxpolys'],['../structdtNavMeshParams.html#a4f44babd04fff4f8300ecd15d4237375',1,'dtNavMeshParams::maxPolys']]],
   ['maxrectbounds_116',['MaxRectBounds',['../structImFontAtlasBuilder.html#a1a97f57c58a81c35d8c16e989c72356b',1,'ImFontAtlasBuilder']]],
   ['maxrectsize_117',['MaxRectSize',['../structImFontAtlasBuilder.html#a1b386bcf52c3daa5ce5de749d62417d6',1,'ImFontAtlasBuilder']]],
   ['maxregions_118',['maxRegions',['../structrcCompactHeightfield.html#a6bfb7a2fdb06a64b03f0fffa885edd94',1,'rcCompactHeightfield']]],
@@ -167,7 +167,7 @@ var searchData=
   ['minor_164',['minor',['../structSDL__version.html#a6c35c7bf80245028d5970e6a504ecf57',1,'SDL_version::minor'],['../structgladGLversionStruct.html#acc2bff1c8966c6866f2ad6f5a4e475b2',1,'gladGLversionStruct::minor']]],
   ['minregionarea_165',['minRegionArea',['../structrcConfig.html#af91c92dd5bb5ebf51a85b194917062ec',1,'rcConfig']]],
   ['minregionsize_166',['minRegionSize',['../structNavmeshGenerationSettings.html#a2d9597146171044768dec0c394fdf509',1,'NavmeshGenerationSettings']]],
-  ['minx_167',['minx',['../structdtTileCacheLayerHeader.html#ac536f24cbc32f35d0a42bd23f6ac1a56',1,'dtTileCacheLayerHeader::minx'],['../structImGuiTableColumn.html#a7c1bb1f414d4bccf97cf0c1f9d73fcf2',1,'ImGuiTableColumn::MinX'],['../structrcContourHole.html#ab83982af11e1649becfdf57766fe45ee',1,'rcContourHole::minx'],['../structrcHeightfieldLayer.html#adcd87e9ea184d277f36eea61314f6f4a',1,'rcHeightfieldLayer::minx']]],
+  ['minx_167',['minx',['../structImGuiTableColumn.html#a7c1bb1f414d4bccf97cf0c1f9d73fcf2',1,'ImGuiTableColumn::MinX'],['../structrcContourHole.html#ab83982af11e1649becfdf57766fe45ee',1,'rcContourHole::minx'],['../structrcHeightfieldLayer.html#adcd87e9ea184d277f36eea61314f6f4a',1,'rcHeightfieldLayer::minx'],['../structdtTileCacheLayerHeader.html#ac536f24cbc32f35d0a42bd23f6ac1a56',1,'dtTileCacheLayerHeader::minx']]],
   ['miny_168',['miny',['../structrcHeightfieldLayer.html#af5df0f6946f89193ca1c3e5c6f9ab49b',1,'rcHeightfieldLayer::miny'],['../structdtTileCacheLayerHeader.html#a4e0f98a4b6cba8baf300311feb2700e2',1,'dtTileCacheLayerHeader::miny']]],
   ['minz_169',['minz',['../structrcContourHole.html#a6638d0ce2b7972c1a6e795a99fea5504',1,'rcContourHole']]],
   ['mod_170',['mod',['../structSDL__Keysym.html#ab519d1b8a9939d3d035f7103f3208291',1,'SDL_Keysym']]],
@@ -239,7 +239,7 @@ var searchData=
   ['multiselecttempdata_236',['MultiSelectTempData',['../structImGuiContext.html#aff72b8fa0fa1227e9a164f34e44cb039',1,'ImGuiContext']]],
   ['multiselecttempdatastacked_237',['MultiSelectTempDataStacked',['../structImGuiContext.html#a6e4f74dd237ebedef69f0d97a7a5576d',1,'ImGuiContext']]],
   ['mutex_238',['mutex',['../SDL__mutex_8h.html#a0e2ae8dca74d9f6c2bbe87030b9e7a0c',1,'SDL_mutex.h']]],
-  ['mvp_239',['mvp',['../structVERTEX__CONSTANT__BUFFER__DX12.html#af977128a020d49a3a5478a59e4229274',1,'VERTEX_CONSTANT_BUFFER_DX12::mvp'],['../structVERTEX__CONSTANT__BUFFER__DX11.html#a60d5a5fdfbc0fa9455b591ea77dfb8e7',1,'VERTEX_CONSTANT_BUFFER_DX11::mvp'],['../structVERTEX__CONSTANT__BUFFER__DX10.html#a5b919e7d9d3c0194b05ddd336426aecf',1,'VERTEX_CONSTANT_BUFFER_DX10::mvp'],['../structUniforms.html#abcb95d428e91e58d46b1da202a39159f',1,'Uniforms::MVP']]],
+  ['mvp_239',['mvp',['../structUniforms.html#abcb95d428e91e58d46b1da202a39159f',1,'Uniforms::MVP'],['../structVERTEX__CONSTANT__BUFFER__DX12.html#af977128a020d49a3a5478a59e4229274',1,'VERTEX_CONSTANT_BUFFER_DX12::mvp'],['../structVERTEX__CONSTANT__BUFFER__DX11.html#a60d5a5fdfbc0fa9455b591ea77dfb8e7',1,'VERTEX_CONSTANT_BUFFER_DX11::mvp'],['../structVERTEX__CONSTANT__BUFFER__DX10.html#a5b919e7d9d3c0194b05ddd336426aecf',1,'VERTEX_CONSTANT_BUFFER_DX10::mvp']]],
   ['mx_240',['mx',['../structGuiState.html#a500386b3162aeaaa091381e71e65b872',1,'GuiState']]],
   ['my_241',['my',['../structGuiState.html#aaae100f98cc2247cdd4c9f56e760a55e',1,'GuiState']]]
 ];

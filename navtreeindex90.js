@@ -1,5 +1,9 @@
 var NAVTREEINDEX90 =
 {
+"md_Docs_2__1__Introduction.html#what-is-a-navmesh-not":[0,7],
+"md_Docs_2__1__Introduction.html#what-is-recast-navigation":[0,8],
+"md_Docs_2__2__BuildingAndIntegrating.html":[1],
+"md_Docs_2__2__BuildingAndIntegrating.html#a-note-on-dll-exports-and-c-api":[1,5],
 "md_Docs_2__2__BuildingAndIntegrating.html#building-recastdemo":[1,0],
 "md_Docs_2__2__BuildingAndIntegrating.html#customizing-allocation-behavior":[1,4],
 "md_Docs_2__2__BuildingAndIntegrating.html#installation-through-vcpkg":[1,3,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX90 =
 "structDebugLine.html#aa37fd073b2bd7052f6eb3a17efd760d6":[43,0,14,2],
 "structDebugLine.html#aae7b7f3345ece817075fbcf1a758eb44":[43,0,14,3],
 "structDebugLine.html#ad5264bd41158ad33497bb0c723fa90dc":[43,0,14,4],
-"structDirtyEntry.html":[43,0,15],
-"structDirtyEntry.html#a6efa59792bbe3b1feea05da8110151dd":[43,0,15,0],
-"structDirtyEntry.html#a9634e49527d7bdcacc925fe7124b07d1":[43,0,15,1],
-"structDirtyEntry.html#ad3c4712adccfb24f1a7ab8d75f42ab1e":[43,0,15,3],
-"structDirtyEntry.html#af570257530906e231345aa1e4debbfa7":[43,0,15,2]
+"structDirtyEntry.html":[43,0,15]
 };

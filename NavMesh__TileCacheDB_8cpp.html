@@ -116,14 +116,14 @@ Functions</h2></td></tr>
 <tr class="separator:a9bb03ee1a76d76aba6e7185226064301"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1aae2540cef232bbf5875b3b6d68d1cd" id="r_a1aae2540cef232bbf5875b3b6d68d1cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__TileCacheDB_8cpp.html#a1aae2540cef232bbf5875b3b6d68d1cd">TileDbWriteOrUpdateTiles</a> (const char *dbPath, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav, const std::unordered_map&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a>, <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> &gt; &amp;tileHashes)</td></tr>
 <tr class="separator:a1aae2540cef232bbf5875b3b6d68d1cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88271e5cdd1adc3c7b0580175782e1c1" id="r_a88271e5cdd1adc3c7b0580175782e1c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__TileCacheDB_8cpp.html#a88271e5cdd1adc3c7b0580175782e1c1">LoadTileFromDb</a> (const char *dbPath, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav, int tx, int <a class="el" href="SDL__opengl__glext_8h.html#ae09063918284e24e3265a007fd1cc983">ty</a>, bool &amp;outLoaded)</td></tr>
-<tr class="separator:a88271e5cdd1adc3c7b0580175782e1c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58956e073e730c2bb9fd807331255360" id="r_a58956e073e730c2bb9fd807331255360"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__TileCacheDB_8cpp.html#a58956e073e730c2bb9fd807331255360">LoadTileFromDb</a> (const char *dbPath, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav, int tx, int <a class="el" href="SDL__opengl__glext_8h.html#ae09063918284e24e3265a007fd1cc983">ty</a>, bool &amp;outLoaded, const std::unordered_map&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a>, <a class="el" href="structTileDbIndexEntry.html">TileDbIndexEntry</a> &gt; *indexOverride)</td></tr>
+<tr class="separator:a58956e073e730c2bb9fd807331255360"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b9e5dc7fcce5b8221c89612b95f541f" id="r_a3b9e5dc7fcce5b8221c89612b95f541f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__TileCacheDB_8cpp.html#a3b9e5dc7fcce5b8221c89612b95f541f">LoadTilesInBoundsFromDb</a> (const char *dbPath, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav, const float *bmin, const float *bmax, int &amp;outLoadedCount)</td></tr>
 <tr class="separator:a3b9e5dc7fcce5b8221c89612b95f541f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a88271e5cdd1adc3c7b0580175782e1c1" name="a88271e5cdd1adc3c7b0580175782e1c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88271e5cdd1adc3c7b0580175782e1c1">&#9670;&#160;</a></span>LoadTileFromDb()</h2>
+<a id="a58956e073e730c2bb9fd807331255360" name="a58956e073e730c2bb9fd807331255360"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58956e073e730c2bb9fd807331255360">&#9670;&#160;</a></span>LoadTileFromDb()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -156,7 +156,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool &amp;&#160;</td>
-          <td class="paramname"><em>outLoaded</em>&#160;</td>
+          <td class="paramname"><em>outLoaded</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::unordered_map&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a>, <a class="el" href="structTileDbIndexEntry.html">TileDbIndexEntry</a> &gt; *&#160;</td>
+          <td class="paramname"><em>indexOverride</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

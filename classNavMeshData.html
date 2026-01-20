@@ -95,6 +95,7 @@ $(document).ready(function(){initNavTree('classNavMeshData.html',''); initResiza
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classNavMeshData-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">NavMeshData Class Reference</div></div>
 </div><!--header-->
@@ -122,6 +123,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab3432212bbd65a1020926267863756fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5228a482ece81b6b7a3e298d3c7f5bed" id="r_a5228a482ece81b6b7a3e298d3c7f5bed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a5228a482ece81b6b7a3e298d3c7f5bed">BuildFromMesh</a> (const std::vector&lt; glm::vec3 &gt; &amp;verts, const std::vector&lt; unsigned int &gt; &amp;<a class="el" href="glad_8h.html#a94ae715eebfc1eb65456c0ab9b97f1e9">indices</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, bool buildTilesNow=true, const std::atomic_bool *cancelFlag=nullptr, bool useCache=true, const char *cachePath=nullptr, const float *forcedBMin=nullptr, const float *forcedBMax=nullptr)</td></tr>
 <tr class="separator:a5228a482ece81b6b7a3e298d3c7f5bed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfaaa41ba10d2f61f953e4808cab13b2" id="r_adfaaa41ba10d2f61f953e4808cab13b2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#adfaaa41ba10d2f61f953e4808cab13b2">InitTiledGrid</a> (const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, const float *forcedBMin, const float *forcedBMax)</td></tr>
+<tr class="separator:adfaaa41ba10d2f61f953e4808cab13b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a309f93226ce1a4576d932144c9a70363" id="r_a309f93226ce1a4576d932144c9a70363"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a309f93226ce1a4576d932144c9a70363">BuildTileAt</a> (const glm::vec3 &amp;worldPos, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, int &amp;outTileX, int &amp;outTileY)</td></tr>
 <tr class="separator:a309f93226ce1a4576d932144c9a70363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56451182e4858ddea0ec98fef3b2a626" id="r_a56451182e4858ddea0ec98fef3b2a626"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a56451182e4858ddea0ec98fef3b2a626">CollectTilesInBounds</a> (const glm::vec3 &amp;bmin, const glm::vec3 &amp;bmax, bool onlyExistingTiles, std::vector&lt; std::pair&lt; int, int &gt; &gt; &amp;outTiles) const</td></tr>
@@ -158,6 +161,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a81815e24295f756e4bc315392d74a6f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e3a68693ca1bb2655cc9db37a6f111f" id="r_a1e3a68693ca1bb2655cc9db37a6f111f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a1e3a68693ca1bb2655cc9db37a6f111f">ExtractDebugMesh</a> (std::vector&lt; glm::vec3 &gt; &amp;outVerts, std::vector&lt; glm::vec3 &gt; &amp;outLines)</td></tr>
 <tr class="separator:a1e3a68693ca1bb2655cc9db37a6f111f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:aae1d7865256039b880166cf0fc596461" id="r_aae1d7865256039b880166cf0fc596461"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#aae1d7865256039b880166cf0fc596461">EstimateTileGrid</a> (const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, const float *bmin, const float *bmax, <a class="el" href="structTileGridStats.html">TileGridStats</a> &amp;outStats)</td></tr>
+<tr class="separator:aae1d7865256039b880166cf0fc596461"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a47e2aa1ad45af8f6684054e2996a5db9" name="a47e2aa1ad45af8f6684054e2996a5db9"></a>
@@ -490,6 +498,54 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aae1d7865256039b880166cf0fc596461" name="aae1d7865256039b880166cf0fc596461"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae1d7865256039b880166cf0fc596461">&#9670;&#160;</a></span>EstimateTileGrid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NavMeshData::EstimateTileGrid </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;&#160;</td>
+          <td class="paramname"><em>settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>bmin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>bmax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structTileGridStats.html">TileGridStats</a> &amp;&#160;</td>
+          <td class="paramname"><em>outStats</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1e3a68693ca1bb2655cc9db37a6f111f" name="a1e3a68693ca1bb2655cc9db37a6f111f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1e3a68693ca1bb2655cc9db37a6f111f">&#9670;&#160;</a></span>ExtractDebugMesh()</h2>
 
@@ -670,6 +726,40 @@ Public Member Functions</h2></td></tr>
 <span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adfaaa41ba10d2f61f953e4808cab13b2" name="adfaaa41ba10d2f61f953e4808cab13b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfaaa41ba10d2f61f953e4808cab13b2">&#9670;&#160;</a></span>InitTiledGrid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NavMeshData::InitTiledGrid </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;&#160;</td>
+          <td class="paramname"><em>settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>forcedBMin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>forcedBMax</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>

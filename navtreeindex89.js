@@ -1,5 +1,9 @@
 var NAVTREEINDEX89 =
 {
+"imgui__widgets_8cpp.html#a6625118253ca25ee5849aae59cd47c88":[44,0,7,0,8,64],
+"imgui__widgets_8cpp.html#a662633518bb4fb262fc93329df1fa548":[44,0,7,0,8,6],
+"imgui__widgets_8cpp.html#a6ce8e0ae4534a882c54629a82548bd68":[44,0,7,0,8,41],
+"imgui__widgets_8cpp.html#a702ae9e2d8ad2e1c7b40811b31e94857":[44,0,7,0,8,51],
 "imgui__widgets_8cpp.html#a729892eab249074af27a1abf6365e80e":[44,0,7,0,8,74],
 "imgui__widgets_8cpp.html#a72aeada738a69b364a319f3ba3e20c21":[44,0,7,0,8,44],
 "imgui__widgets_8cpp.html#a747e2cea3d296a14a0e79040d35863b5":[44,0,7,0,8,114],
@@ -245,9 +249,5 @@ var NAVTREEINDEX89 =
 "md_Docs_2__1__Introduction.html":[0],
 "md_Docs_2__1__Introduction.html#agent-attributes":[0,6,0],
 "md_Docs_2__1__Introduction.html#high-level-overview-of-the-recast-navmesh-building-process":[0,9],
-"md_Docs_2__1__Introduction.html#what-is-a-navmesh-and-how-does-it-work":[0,6],
-"md_Docs_2__1__Introduction.html#what-is-a-navmesh-not":[0,7],
-"md_Docs_2__1__Introduction.html#what-is-recast-navigation":[0,8],
-"md_Docs_2__2__BuildingAndIntegrating.html":[1],
-"md_Docs_2__2__BuildingAndIntegrating.html#a-note-on-dll-exports-and-c-api":[1,5]
+"md_Docs_2__1__Introduction.html#what-is-a-navmesh-and-how-does-it-work":[0,6]
 };

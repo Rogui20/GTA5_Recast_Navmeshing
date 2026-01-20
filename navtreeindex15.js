@@ -1,5 +1,7 @@
 var NAVTREEINDEX15 =
 {
+"SDL__config__os2_8h.html#a074c8b477744a81b81f35ac25fcf9430":[44,0,5,2,1,16,71],
+"SDL__config__os2_8h.html#a0988bbde3989f4ccf22e10ae1287ec48":[44,0,5,2,1,16,14],
 "SDL__config__os2_8h.html#a0e6b9a04ae66b7846715e51a0a2dccff":[44,0,5,2,1,16,57],
 "SDL__config__os2_8h.html#a0f08977476bc5b181092cf8b3ddaf368":[44,0,5,2,1,16,77],
 "SDL__config__os2_8h.html#a0f803e0f6ea9704c02e514f7f51570f7":[44,0,5,2,1,16,55],
@@ -247,7 +249,5 @@ var NAVTREEINDEX15 =
 "SDL__config__windows_8h.html#ae4a04ebc256919da1ad32f7aa36042d1":[44,0,5,2,1,18,12],
 "SDL__config__windows_8h.html#aef62cc050a5e0734c3b1b2920b00fd1d":[44,0,5,2,1,18,24],
 "SDL__config__windows_8h.html#af824376c0b80ddfe47feff33345d6773":[44,0,5,2,1,18,19],
-"SDL__config__windows_8h_source.html":[44,0,5,2,1,18],
-"SDL__config__wingdk_8h.html":[44,0,5,2,1,19],
-"SDL__config__wingdk_8h.html#a02d2a9cfd5d2421f2eb2fbed9606d647":[44,0,5,2,1,19,4]
+"SDL__config__windows_8h_source.html":[44,0,5,2,1,18]
 };

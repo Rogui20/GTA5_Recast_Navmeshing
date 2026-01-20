@@ -1,6 +1,7 @@
 var NavMeshData_8h =
 [
     [ "NavmeshGenerationSettings", "structNavmeshGenerationSettings.html", "structNavmeshGenerationSettings" ],
+    [ "TileGridStats", "structTileGridStats.html", "structTileGridStats" ],
     [ "OffmeshLink", "structOffmeshLink.html", "structOffmeshLink" ],
     [ "AutoOffmeshGenerationParams", "structAutoOffmeshGenerationParams.html", "structAutoOffmeshGenerationParams" ],
     [ "IslandOffmeshLinkParams", "structIslandOffmeshLinkParams.html", "structIslandOffmeshLinkParams" ],

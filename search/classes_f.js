@@ -8,5 +8,6 @@ var searchData=
   ['tilecachesetheader_5',['TileCacheSetHeader',['../structTileCacheSetHeader.html',1,'']]],
   ['tilecachetileheader_6',['TileCacheTileHeader',['../structTileCacheTileHeader.html',1,'']]],
   ['tiledbheader_7',['TileDbHeader',['../structTileDbHeader.html',1,'']]],
-  ['tiledbindexentry_8',['TileDbIndexEntry',['../structTileDbIndexEntry.html',1,'']]]
+  ['tiledbindexentry_8',['TileDbIndexEntry',['../structTileDbIndexEntry.html',1,'']]],
+  ['tilegridstats_9',['TileGridStats',['../structTileGridStats.html',1,'']]]
 ];

@@ -14,6 +14,7 @@ var ExternC_8cpp =
     [ "GetNavMeshBorderEdges", "ExternC_8cpp.html#af7789da0cef77d265747015c018eae1f", null ],
     [ "GetNavMeshPolygons", "ExternC_8cpp.html#ad18438b5de833265f1d5fea2ecd0213e", null ],
     [ "InitNavMesh", "ExternC_8cpp.html#a243a7a0e45dc62290d8bcd691c8b8744", null ],
+    [ "InitTiledGrid", "ExternC_8cpp.html#a4353b158bd5129b3ebdbd9ce84537a6b", null ],
     [ "RemoveAllGeometries", "ExternC_8cpp.html#abd12c10fe11219e74c416d3df583dfde", null ],
     [ "RemoveGeometry", "ExternC_8cpp.html#a077d4b40564957c7c4d253dea4a48886", null ],
     [ "RemoveNavMeshBoundingBox", "ExternC_8cpp.html#aae230be1b4147bf49c6d7d386c442ae5", null ],

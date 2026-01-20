@@ -1,5 +1,9 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__JoyButtonEvent.html#a8f3312a046d37fa2884b93f69c4cb655":[43,0,408,5],
+"structSDL__JoyButtonEvent.html#ab50b6f7d1ab3ac53df69fc2d6cf5fa2a":[43,0,408,4],
+"structSDL__JoyButtonEvent.html#ad3b6f8d9aa2c5e694f664b97d12bcd2b":[43,0,408,3],
+"structSDL__JoyDeviceEvent.html":[43,0,409],
 "structSDL__JoyDeviceEvent.html#a51f060ba1dd5669b458e9c97aece667e":[43,0,409,1],
 "structSDL__JoyDeviceEvent.html#a5c4a9271bfff5d5c2e09a0dc732df8f3":[43,0,409,0],
 "structSDL__JoyDeviceEvent.html#af9b295798f033b799ebbda7de6cb5a7e":[43,0,409,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX106 =
 "structSDL__VirtualJoystickDesc.html#a845f74a17570b8d8bff01ba88482f060":[43,0,441,3],
 "structSDL__VirtualJoystickDesc.html#a9123c6feebf5690a9331cc22f09b0f77":[43,0,441,25],
 "structSDL__VirtualJoystickDesc.html#a96239732b5073a33e93acbdbd984f0cb":[43,0,441,23],
-"structSDL__VirtualJoystickDesc.html#a9c6c227ce7de6b31d556a85b26425f09":[43,0,441,13],
-"structSDL__VirtualJoystickDesc.html#a9f9d1f676a233c91183963cb3c36d809":[43,0,441,21],
-"structSDL__VirtualJoystickDesc.html#aa59e414ed62e7f3fb4c94713b8c57bc3":[43,0,441,17],
-"structSDL__VirtualJoystickDesc.html#aacffe03c0b064e2a033609e9e6226a8b":[43,0,441,15],
-"structSDL__VirtualJoystickDesc.html#abdee30da3694a698b2d81a1eb1e73a3c":[43,0,441,2]
+"structSDL__VirtualJoystickDesc.html#a9c6c227ce7de6b31d556a85b26425f09":[43,0,441,13]
 };
