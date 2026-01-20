@@ -6,5 +6,7 @@ var searchData=
   ['testcase_3',['TestCase',['../classTestCase.html',1,'']]],
   ['tilecachedata_4',['TileCacheData',['../structTileCacheData.html',1,'']]],
   ['tilecachesetheader_5',['TileCacheSetHeader',['../structTileCacheSetHeader.html',1,'']]],
-  ['tilecachetileheader_6',['TileCacheTileHeader',['../structTileCacheTileHeader.html',1,'']]]
+  ['tilecachetileheader_6',['TileCacheTileHeader',['../structTileCacheTileHeader.html',1,'']]],
+  ['tiledbheader_7',['TileDbHeader',['../structTileDbHeader.html',1,'']]],
+  ['tiledbindexentry_8',['TileDbIndexEntry',['../structTileDbIndexEntry.html',1,'']]]
 ];

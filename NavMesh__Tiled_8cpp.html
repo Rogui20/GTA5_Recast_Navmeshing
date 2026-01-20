@@ -100,6 +100,7 @@ $(document).ready(function(){initNavTree('NavMesh__Tiled_8cpp.html',''); initRes
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="NavMeshBuild_8h_source.html">NavMeshBuild.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="NavMesh__TileCacheDB_8h_source.html">NavMesh_TileCacheDB.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="DetourMath_8h_source.html">DetourMath.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="DetourNavMeshBuilder_8h_source.html">DetourNavMeshBuilder.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="DetourCommon_8h_source.html">DetourCommon.h</a>&gt;</code><br />
@@ -119,8 +120,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a7971b9b5e433570315f9e0950bd6d081" id="r_a7971b9b5e433570315f9e0950bd6d081"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#a7971b9b5e433570315f9e0950bd6d081">BuildTiledNavMesh</a> (const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ad3c78daa7d8673f71649d4840c641779">input</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&amp;outNav, bool buildTilesNow, int *outTilesBuilt, int *outTilesSkipped, const std::atomic_bool *cancelFlag, bool useCache, const char *cachePath)</td></tr>
-<tr class="separator:a7971b9b5e433570315f9e0950bd6d081"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75aa15e9d56e66f81408d64cc0ab145f" id="r_a75aa15e9d56e66f81408d64cc0ab145f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#a75aa15e9d56e66f81408d64cc0ab145f">BuildTiledNavMesh</a> (const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ad3c78daa7d8673f71649d4840c641779">input</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&amp;outNav, bool buildTilesNow, int *outTilesBuilt, int *outTilesSkipped, const std::atomic_bool *cancelFlag, bool useCache, const char *cachePath, std::unordered_map&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a>, <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> &gt; *outTileHashes)</td></tr>
+<tr class="separator:a75aa15e9d56e66f81408d64cc0ab145f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abef178e9026b2092c69014ad09006ab5" id="r_abef178e9026b2092c69014ad09006ab5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__Tiled_8cpp.html#abef178e9026b2092c69014ad09006ab5">BuildSingleTile</a> (const <a class="el" href="structNavmeshBuildInput.html">NavmeshBuildInput</a> &amp;<a class="el" href="SDL__opengl__glext_8h.html#ad3c78daa7d8673f71649d4840c641779">input</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, int tileX, int tileY, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav, bool &amp;outBuilt, bool &amp;outEmpty)</td></tr>
 <tr class="separator:abef178e9026b2092c69014ad09006ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -226,8 +227,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7971b9b5e433570315f9e0950bd6d081" name="a7971b9b5e433570315f9e0950bd6d081"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7971b9b5e433570315f9e0950bd6d081">&#9670;&#160;</a></span>BuildTiledNavMesh()</h2>
+<a id="a75aa15e9d56e66f81408d64cc0ab145f" name="a75aa15e9d56e66f81408d64cc0ab145f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75aa15e9d56e66f81408d64cc0ab145f">&#9670;&#160;</a></span>BuildTiledNavMesh()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -284,7 +285,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>cachePath</em>&#160;</td>
+          <td class="paramname"><em>cachePath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::unordered_map&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a>, <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> &gt; *&#160;</td>
+          <td class="paramname"><em>outTileHashes</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

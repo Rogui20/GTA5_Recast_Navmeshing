@@ -480,6 +480,8 @@ var annotated_dup =
     [ "TileCacheData", "structTileCacheData.html", "structTileCacheData" ],
     [ "TileCacheSetHeader", "structTileCacheSetHeader.html", "structTileCacheSetHeader" ],
     [ "TileCacheTileHeader", "structTileCacheTileHeader.html", "structTileCacheTileHeader" ],
+    [ "TileDbHeader", "structTileDbHeader.html", "structTileDbHeader" ],
+    [ "TileDbIndexEntry", "structTileDbIndexEntry.html", "structTileDbIndexEntry" ],
     [ "Uniforms", "structUniforms.html", "structUniforms" ],
     [ "ValueHistory", "classValueHistory.html", "classValueHistory" ],
     [ "Vector3", "structVector3.html", "structVector3" ],

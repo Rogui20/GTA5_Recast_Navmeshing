@@ -99,6 +99,7 @@ $(document).ready(function(){initNavTree('ExternC_8cpp.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="ExternC_8h_source.html">ExternC.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="NavMesh__TileCacheDB_8h_source.html">NavMesh_TileCacheDB.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="DetourNavMesh_8h_source.html">DetourNavMesh.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="DetourNavMeshQuery_8h_source.html">DetourNavMeshQuery.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="DetourCommon_8h_source.html">DetourCommon.h</a>&gt;</code><br />
@@ -109,6 +110,7 @@ $(document).ready(function(){initNavTree('ExternC_8cpp.html',''); initResizable(
 <code>#include &lt;cstring&gt;</code><br />
 <code>#include &lt;filesystem&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
+<code>#include &lt;limits&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;set&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
@@ -127,6 +129,12 @@ Functions</h2></td></tr>
 <tr class="separator:a8cffc5e7d98e834d8efad83b0b13a324"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa33ea8d31679660f03728f6d5c35a5a0" id="r_aa33ea8d31679660f03728f6d5c35a5a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aa33ea8d31679660f03728f6d5c35a5a0">SetAutoOffMeshGenerationParams</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const <a class="el" href="structAutoOffmeshGenerationParams.html">AutoOffmeshGenerationParams</a> *<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>)</td></tr>
 <tr class="separator:aa33ea8d31679660f03728f6d5c35a5a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8239affe581f2dbb1a68ce23d682fefb" id="r_a8239affe581f2dbb1a68ce23d682fefb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a8239affe581f2dbb1a68ce23d682fefb">SetNavMeshCacheRoot</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *cacheRoot)</td></tr>
+<tr class="separator:a8239affe581f2dbb1a68ce23d682fefb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87a9adba83fdb3bc11375785f1c0a186" id="r_a87a9adba83fdb3bc11375785f1c0a186"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a87a9adba83fdb3bc11375785f1c0a186">SetNavMeshSessionId</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *sessionId)</td></tr>
+<tr class="separator:a87a9adba83fdb3bc11375785f1c0a186"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96e5d68b4f8417e702cbe9e09c7b6ea0" id="r_a96e5d68b4f8417e702cbe9e09c7b6ea0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a96e5d68b4f8417e702cbe9e09c7b6ea0">SetMaxResidentTiles</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, int maxTiles)</td></tr>
+<tr class="separator:a96e5d68b4f8417e702cbe9e09c7b6ea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33dd625e8066802fa192540a9d95f67f" id="r_a33dd625e8066802fa192540a9d95f67f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a33dd625e8066802fa192540a9d95f67f">AddGeometry</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *pathToGeometry, <a class="el" href="structVector3.html">Vector3</a> pos, <a class="el" href="structVector3.html">Vector3</a> rot, const char *customID, bool preferBIN)</td></tr>
 <tr class="separator:a33dd625e8066802fa192540a9d95f67f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3194b4fb64ba867ccee52233e3a84e1" id="r_aa3194b4fb64ba867ccee52233e3a84e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aa3194b4fb64ba867ccee52233e3a84e1">UpdateGeometry</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *customID, const <a class="el" href="structVector3.html">Vector3</a> *pos, const <a class="el" href="structVector3.html">Vector3</a> *rot, bool updateNavMesh)</td></tr>
@@ -139,6 +147,12 @@ Functions</h2></td></tr>
 <tr class="separator:acdcdde7a6aa314427c97c0a2e0743321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af58c6b0d37352974167fecd9270e033a" id="r_af58c6b0d37352974167fecd9270e033a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#af58c6b0d37352974167fecd9270e033a">UpdateNavMesh</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
 <tr class="separator:af58c6b0d37352974167fecd9270e033a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab32e95f2f92eecf32a69f6249f2845fd" id="r_ab32e95f2f92eecf32a69f6249f2845fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ab32e95f2f92eecf32a69f6249f2845fd">StreamTilesAround</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structVector3.html">Vector3</a> center, float radius, bool allowBuildIfMissing)</td></tr>
+<tr class="separator:ab32e95f2f92eecf32a69f6249f2845fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12ac65d1ff6547c4bd97f25b1a1ecd7e" id="r_a12ac65d1ff6547c4bd97f25b1a1ecd7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a12ac65d1ff6547c4bd97f25b1a1ecd7e">ClearAllLoadedTiles</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
+<tr class="separator:a12ac65d1ff6547c4bd97f25b1a1ecd7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf6c699ee4c5738d89858c5660e91fa4" id="r_acf6c699ee4c5738d89858c5660e91fa4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#acf6c699ee4c5738d89858c5660e91fa4">BakeTilesInBounds</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structVector3.html">Vector3</a> bmin, <a class="el" href="structVector3.html">Vector3</a> bmax, bool saveToCache)</td></tr>
+<tr class="separator:acf6c699ee4c5738d89858c5660e91fa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad18438b5de833265f1d5fea2ecd0213e" id="r_ad18438b5de833265f1d5fea2ecd0213e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ad18438b5de833265f1d5fea2ecd0213e">GetNavMeshPolygons</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structNavMeshPolygonInfo.html">NavMeshPolygonInfo</a> *polygons, int maxPolygons, <a class="el" href="structVector3.html">Vector3</a> *vertices, int maxVertices, <a class="el" href="structNavMeshEdgeInfo.html">NavMeshEdgeInfo</a> *edges, int maxEdges, int *outVertexCount, int *outEdgeCount)</td></tr>
 <tr class="separator:ad18438b5de833265f1d5fea2ecd0213e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7789da0cef77d265747015c018eae1f" id="r_af7789da0cef77d265747015c018eae1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#af7789da0cef77d265747015c018eae1f">GetNavMeshBorderEdges</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structNavMeshEdgeInfo.html">NavMeshEdgeInfo</a> *edges, int maxEdges, int *outEdgeCount)</td></tr>
@@ -301,6 +315,46 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="acf6c699ee4c5738d89858c5660e91fa4" name="acf6c699ee4c5738d89858c5660e91fa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf6c699ee4c5738d89858c5660e91fa4">&#9670;&#160;</a></span>BakeTilesInBounds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool BakeTilesInBounds </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVector3.html">Vector3</a>&#160;</td>
+          <td class="paramname"><em>bmin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVector3.html">Vector3</a>&#160;</td>
+          <td class="paramname"><em>bmax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>saveToCache</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="acdcdde7a6aa314427c97c0a2e0743321" name="acdcdde7a6aa314427c97c0a2e0743321"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acdcdde7a6aa314427c97c0a2e0743321">&#9670;&#160;</a></span>BuildNavMesh()</h2>
 
@@ -309,6 +363,24 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool BuildNavMesh </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a12ac65d1ff6547c4bd97f25b1a1ecd7e" name="a12ac65d1ff6547c4bd97f25b1a1ecd7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12ac65d1ff6547c4bd97f25b1a1ecd7e">&#9670;&#160;</a></span>ClearAllLoadedTiles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> ClearAllLoadedTiles </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
           <td class="paramname"><em>navMesh</em></td><td>)</td>
@@ -796,6 +868,34 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a96e5d68b4f8417e702cbe9e09c7b6ea0" name="a96e5d68b4f8417e702cbe9e09c7b6ea0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96e5d68b4f8417e702cbe9e09c7b6ea0">&#9670;&#160;</a></span>SetMaxResidentTiles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> SetMaxResidentTiles </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxTiles</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7b5e3183ba6d48b8d7e48d55c6b5d1ed" name="a7b5e3183ba6d48b8d7e48d55c6b5d1ed"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7b5e3183ba6d48b8d7e48d55c6b5d1ed">&#9670;&#160;</a></span>SetNavMeshBoundingBox()</h2>
 
@@ -830,6 +930,34 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a8239affe581f2dbb1a68ce23d682fefb" name="a8239affe581f2dbb1a68ce23d682fefb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8239affe581f2dbb1a68ce23d682fefb">&#9670;&#160;</a></span>SetNavMeshCacheRoot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> SetNavMeshCacheRoot </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>cacheRoot</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a8cffc5e7d98e834d8efad83b0b13a324" name="a8cffc5e7d98e834d8efad83b0b13a324"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8cffc5e7d98e834d8efad83b0b13a324">&#9670;&#160;</a></span>SetNavMeshGenSettings()</h2>
 
@@ -847,6 +975,74 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> *&#160;</td>
           <td class="paramname"><em>settings</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a87a9adba83fdb3bc11375785f1c0a186" name="a87a9adba83fdb3bc11375785f1c0a186"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87a9adba83fdb3bc11375785f1c0a186">&#9670;&#160;</a></span>SetNavMeshSessionId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> SetNavMeshSessionId </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>sessionId</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab32e95f2f92eecf32a69f6249f2845fd" name="ab32e95f2f92eecf32a69f6249f2845fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab32e95f2f92eecf32a69f6249f2845fd">&#9670;&#160;</a></span>StreamTilesAround()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int StreamTilesAround </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVector3.html">Vector3</a>&#160;</td>
+          <td class="paramname"><em>center</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>radius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>allowBuildIfMissing</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

@@ -3,7 +3,9 @@ var ExternC_8cpp =
     [ "AddGeometry", "ExternC_8cpp.html#a33dd625e8066802fa192540a9d95f67f", null ],
     [ "AddOffMeshLink", "ExternC_8cpp.html#a3f47892fd35980c12612beae6bf9128a", null ],
     [ "AddOffmeshLinksToNavMeshIsland", "ExternC_8cpp.html#ac3f7fd9f646d880edc9031c6a383e883", null ],
+    [ "BakeTilesInBounds", "ExternC_8cpp.html#acf6c699ee4c5738d89858c5660e91fa4", null ],
     [ "BuildNavMesh", "ExternC_8cpp.html#acdcdde7a6aa314427c97c0a2e0743321", null ],
+    [ "ClearAllLoadedTiles", "ExternC_8cpp.html#a12ac65d1ff6547c4bd97f25b1a1ecd7e", null ],
     [ "ClearOffMeshLinks", "ExternC_8cpp.html#a6b32e777a9f5e87992d4cc3bf2fd947c", null ],
     [ "DestroyNavMeshResources", "ExternC_8cpp.html#a84b79a2a59ce0e2005902f0ec88cc178", null ],
     [ "FindPath", "ExternC_8cpp.html#a462e8adf4796b96d81b1563df6e9a8ee", null ],
@@ -17,8 +19,12 @@ var ExternC_8cpp =
     [ "RemoveNavMeshBoundingBox", "ExternC_8cpp.html#aae230be1b4147bf49c6d7d386c442ae5", null ],
     [ "RunPathfindInternal", "ExternC_8cpp.html#adfde2320c2d66296f32d229fe9b1c353", null ],
     [ "SetAutoOffMeshGenerationParams", "ExternC_8cpp.html#aa33ea8d31679660f03728f6d5c35a5a0", null ],
+    [ "SetMaxResidentTiles", "ExternC_8cpp.html#a96e5d68b4f8417e702cbe9e09c7b6ea0", null ],
     [ "SetNavMeshBoundingBox", "ExternC_8cpp.html#a7b5e3183ba6d48b8d7e48d55c6b5d1ed", null ],
+    [ "SetNavMeshCacheRoot", "ExternC_8cpp.html#a8239affe581f2dbb1a68ce23d682fefb", null ],
     [ "SetNavMeshGenSettings", "ExternC_8cpp.html#a8cffc5e7d98e834d8efad83b0b13a324", null ],
+    [ "SetNavMeshSessionId", "ExternC_8cpp.html#a87a9adba83fdb3bc11375785f1c0a186", null ],
+    [ "StreamTilesAround", "ExternC_8cpp.html#ab32e95f2f92eecf32a69f6249f2845fd", null ],
     [ "UpdateGeometry", "ExternC_8cpp.html#aa3194b4fb64ba867ccee52233e3a84e1", null ],
     [ "UpdateNavMesh", "ExternC_8cpp.html#af58c6b0d37352974167fecd9270e033a", null ]
 ];

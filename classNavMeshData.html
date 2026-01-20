@@ -120,8 +120,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1cf96687792fe613b2cc953369aef529"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3432212bbd65a1020926267863756fa" id="r_ab3432212bbd65a1020926267863756fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#ab3432212bbd65a1020926267863756fa">IsLoaded</a> () const</td></tr>
 <tr class="separator:ab3432212bbd65a1020926267863756fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac84ae20a294aebff442e62b0eebfc886" id="r_ac84ae20a294aebff442e62b0eebfc886"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#ac84ae20a294aebff442e62b0eebfc886">BuildFromMesh</a> (const std::vector&lt; glm::vec3 &gt; &amp;verts, const std::vector&lt; unsigned int &gt; &amp;<a class="el" href="glad_8h.html#a94ae715eebfc1eb65456c0ab9b97f1e9">indices</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, bool buildTilesNow=true, const std::atomic_bool *cancelFlag=nullptr, bool useCache=true, const char *cachePath=nullptr)</td></tr>
-<tr class="separator:ac84ae20a294aebff442e62b0eebfc886"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5228a482ece81b6b7a3e298d3c7f5bed" id="r_a5228a482ece81b6b7a3e298d3c7f5bed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a5228a482ece81b6b7a3e298d3c7f5bed">BuildFromMesh</a> (const std::vector&lt; glm::vec3 &gt; &amp;verts, const std::vector&lt; unsigned int &gt; &amp;<a class="el" href="glad_8h.html#a94ae715eebfc1eb65456c0ab9b97f1e9">indices</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, bool buildTilesNow=true, const std::atomic_bool *cancelFlag=nullptr, bool useCache=true, const char *cachePath=nullptr, const float *forcedBMin=nullptr, const float *forcedBMax=nullptr)</td></tr>
+<tr class="separator:a5228a482ece81b6b7a3e298d3c7f5bed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a309f93226ce1a4576d932144c9a70363" id="r_a309f93226ce1a4576d932144c9a70363"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a309f93226ce1a4576d932144c9a70363">BuildTileAt</a> (const glm::vec3 &amp;worldPos, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, int &amp;outTileX, int &amp;outTileY)</td></tr>
 <tr class="separator:a309f93226ce1a4576d932144c9a70363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56451182e4858ddea0ec98fef3b2a626" id="r_a56451182e4858ddea0ec98fef3b2a626"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a56451182e4858ddea0ec98fef3b2a626">CollectTilesInBounds</a> (const glm::vec3 &amp;bmin, const glm::vec3 &amp;bmax, bool onlyExistingTiles, std::vector&lt; std::pair&lt; int, int &gt; &gt; &amp;outTiles) const</td></tr>
@@ -132,6 +132,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a45dd6cd6c7451cd69d01757fc18765f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a45cea84241aa5c00016b16ffee26d1" id="r_a5a45cea84241aa5c00016b16ffee26d1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a5a45cea84241aa5c00016b16ffee26d1">HasTiledCache</a> () const</td></tr>
 <tr class="separator:a5a45cea84241aa5c00016b16ffee26d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaed3ebece63a796479fca8867e5dcef0" id="r_aaed3ebece63a796479fca8867e5dcef0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#aaed3ebece63a796479fca8867e5dcef0">GetCachedBounds</a> (float *outBMin, float *outBMax) const</td></tr>
+<tr class="separator:aaed3ebece63a796479fca8867e5dcef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4729db7f7d5aaed68a129c64a31d850" id="r_af4729db7f7d5aaed68a129c64a31d850"><td class="memItemLeft" align="right" valign="top">const std::unordered_map&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a>, <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#af4729db7f7d5aaed68a129c64a31d850">GetCachedTileHashes</a> () const</td></tr>
+<tr class="separator:af4729db7f7d5aaed68a129c64a31d850"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05d23e3170de5a3bc8852e35e5777131" id="r_a05d23e3170de5a3bc8852e35e5777131"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a05d23e3170de5a3bc8852e35e5777131">UpdateCachedGeometry</a> (const std::vector&lt; glm::vec3 &gt; &amp;verts, const std::vector&lt; unsigned int &gt; &amp;<a class="el" href="glad_8h.html#a94ae715eebfc1eb65456c0ab9b97f1e9">indices</a>)</td></tr>
 <tr class="separator:a05d23e3170de5a3bc8852e35e5777131"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44c1dfa99e290e495f2e0acbf5888942" id="r_a44c1dfa99e290e495f2e0acbf5888942"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a44c1dfa99e290e495f2e0acbf5888942">RemoveTileAt</a> (const glm::vec3 &amp;worldPos, int &amp;outTileX, int &amp;outTileY)</td></tr>
@@ -319,8 +323,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac84ae20a294aebff442e62b0eebfc886" name="ac84ae20a294aebff442e62b0eebfc886"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac84ae20a294aebff442e62b0eebfc886">&#9670;&#160;</a></span>BuildFromMesh()</h2>
+<a id="a5228a482ece81b6b7a3e298d3c7f5bed" name="a5228a482ece81b6b7a3e298d3c7f5bed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5228a482ece81b6b7a3e298d3c7f5bed">&#9670;&#160;</a></span>BuildFromMesh()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -365,7 +369,19 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>cachePath</em> = <code>nullptr</code>&#160;</td>
+          <td class="paramname"><em>cachePath</em> = <code>nullptr</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>forcedBMin</em> = <code>nullptr</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>forcedBMax</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -526,6 +542,59 @@ Public Member Functions</h2></td></tr>
           <td></td><td> const</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaed3ebece63a796479fca8867e5dcef0" name="aaed3ebece63a796479fca8867e5dcef0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaed3ebece63a796479fca8867e5dcef0">&#9670;&#160;</a></span>GetCachedBounds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NavMeshData::GetCachedBounds </td>
+          <td>(</td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outBMin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outBMax</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af4729db7f7d5aaed68a129c64a31d850" name="af4729db7f7d5aaed68a129c64a31d850"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4729db7f7d5aaed68a129c64a31d850">&#9670;&#160;</a></span>GetCachedTileHashes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::unordered_map&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a>, <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> &gt; &amp; NavMeshData::GetCachedTileHashes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
