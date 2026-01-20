@@ -1371,6 +1371,18 @@ bool NavMeshData::UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
 
     m_cachedVerts = std::move(convertedVerts);
     m_cachedTris = std::move(convertedTris);
+    m_cachedTileHashes.clear();
+    return true;
+}
+
+bool NavMeshData::GetCachedBounds(float* outBMin, float* outBMax) const
+{
+    if (!m_nav)
+        return false;
+    if (outBMin)
+        rcVcopy(outBMin, m_cachedBMin);
+    if (outBMax)
+        rcVcopy(outBMax, m_cachedBMax);
     return true;
 }
 
@@ -1435,14 +1447,17 @@ void NavMeshData::ExtractDebugMesh(
 
 
 bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
-                                const std::vector<unsigned int>& idxIn,
-                                const NavmeshGenerationSettings& settings,
-                                bool buildTilesNow,
-                                const std::atomic_bool* cancelFlag,
-                                bool useCache,
-                                const char* cachePath)
+                               const std::vector<unsigned int>& idxIn,
+                               const NavmeshGenerationSettings& settings,
+                               bool buildTilesNow,
+                               const std::atomic_bool* cancelFlag,
+                               bool useCache,
+                               const char* cachePath,
+                               const float* forcedBMin,
+                               const float* forcedBMax)
 {
     m_hasTiledCache = false;
+    m_cachedTileHashes.clear();
     LoggingRcContext ctx;
 
     auto isCancelled = [cancelFlag]()
@@ -1529,6 +1544,15 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         if (v[1] > meshBMax[1]) meshBMax[1] = v[1];
         if (v[2] > meshBMax[2]) meshBMax[2] = v[2];
     }
+    if (forcedBMin && forcedBMax)
+    {
+        meshBMin[0] = std::min(meshBMin[0], forcedBMin[0]);
+        meshBMin[1] = std::min(meshBMin[1], forcedBMin[1]);
+        meshBMin[2] = std::min(meshBMin[2], forcedBMin[2]);
+        meshBMax[0] = std::max(meshBMax[0], forcedBMax[0]);
+        meshBMax[1] = std::max(meshBMax[1], forcedBMax[1]);
+        meshBMax[2] = std::max(meshBMax[2], forcedBMax[2]);
+    }
 
     auto fillBaseConfig = [&](rcConfig& cfg)
     {
@@ -1574,7 +1598,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     }
     else
     {
-        ok = BuildTiledNavMesh(buildInput, settings, newNav, buildTilesNow, nullptr, nullptr, cancelFlag, useCache, cachePath);
+        ok = BuildTiledNavMesh(buildInput, settings, newNav, buildTilesNow, nullptr, nullptr, cancelFlag, useCache, cachePath, &m_cachedTileHashes);
     }
 
     if (!ok)
@@ -1604,6 +1628,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         m_cachedTileWidthCount = 0;
         m_cachedTileHeightCount = 0;
         m_hasTiledCache = false;
+        m_cachedTileHashes.clear();
     }
     return true;
 }

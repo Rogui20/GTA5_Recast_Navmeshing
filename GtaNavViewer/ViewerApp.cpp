@@ -299,7 +299,7 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow, int slotIndex)
         result->navData.SetOffmeshLinks(offmeshLinksCopy);
         if (!verts.empty() && !idx.empty())
         {
-            result->success = result->navData.BuildFromMesh(verts, idx, settingsCopy, buildTilesNow, &navmeshCancelRequested);
+            result->success = result->navData.BuildFromMesh(verts, idx, settingsCopy, buildTilesNow, &navmeshCancelRequested, true, nullptr, nullptr, nullptr);
         }
 
         if (result->success)

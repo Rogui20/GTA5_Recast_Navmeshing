@@ -2,6 +2,7 @@
 #include <utility>
 #include <vector>
 #include <atomic>
+#include <unordered_map>
 #include <glm/glm.hpp>
 #include <Recast.h>
 
@@ -116,7 +117,9 @@ public:
                        bool buildTilesNow = true,
                        const std::atomic_bool* cancelFlag = nullptr,
                        bool useCache = true,
-                       const char* cachePath = nullptr);
+                       const char* cachePath = nullptr,
+                       const float* forcedBMin = nullptr,
+                       const float* forcedBMax = nullptr);
 
     bool BuildTileAt(const glm::vec3& worldPos,
                      const NavmeshGenerationSettings& settings,
@@ -140,6 +143,8 @@ public:
                               std::vector<std::pair<int, int>>* outTiles = nullptr);
 
     bool HasTiledCache() const { return m_hasTiledCache; }
+    bool GetCachedBounds(float* outBMin, float* outBMax) const;
+    const std::unordered_map<uint64_t, uint64_t>& GetCachedTileHashes() const { return m_cachedTileHashes; }
     bool UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
                               const std::vector<unsigned int>& indices);
 
@@ -181,5 +186,6 @@ private:
     int m_cachedTileWidthCount = 0;
     int m_cachedTileHeightCount = 0;
     bool m_hasTiledCache = false;
+    std::unordered_map<uint64_t, uint64_t> m_cachedTileHashes;
     std::vector<OffmeshLink> m_offmeshLinks;
 };

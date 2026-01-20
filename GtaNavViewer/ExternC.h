@@ -47,6 +47,9 @@ GTANAVVIEWER_API void* InitNavMesh();
 GTANAVVIEWER_API void  DestroyNavMeshResources(void* navMesh);
 GTANAVVIEWER_API void  SetNavMeshGenSettings(void* navMesh, const NavmeshGenerationSettings* settings);
 GTANAVVIEWER_API void  SetAutoOffMeshGenerationParams(void* navMesh, const AutoOffmeshGenerationParams* params);
+GTANAVVIEWER_API void  SetNavMeshCacheRoot(void* navMesh, const char* cacheRoot);
+GTANAVVIEWER_API void  SetNavMeshSessionId(void* navMesh, const char* sessionId);
+GTANAVVIEWER_API void  SetMaxResidentTiles(void* navMesh, int maxTiles);
 
 // Geometria dinâmica
 GTANAVVIEWER_API bool AddGeometry(void* navMesh,
@@ -66,6 +69,11 @@ GTANAVVIEWER_API void RemoveAllGeometries(void* navMesh);
 // Navmesh lifecycle
 GTANAVVIEWER_API bool BuildNavMesh(void* navMesh);
 GTANAVVIEWER_API bool UpdateNavMesh(void* navMesh);
+
+// Streaming / bake
+GTANAVVIEWER_API int  StreamTilesAround(void* navMesh, Vector3 center, float radius, bool allowBuildIfMissing);
+GTANAVVIEWER_API void ClearAllLoadedTiles(void* navMesh);
+GTANAVVIEWER_API bool BakeTilesInBounds(void* navMesh, Vector3 bmin, Vector3 bmax, bool saveToCache);
 
 // Pathfind
 GTANAVVIEWER_API int FindPath(void* navMesh,
