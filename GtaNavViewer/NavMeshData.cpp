@@ -42,6 +42,51 @@ namespace
         }
     };
 
+    void FillBaseConfig(const NavmeshGenerationSettings& settings, rcConfig& cfg)
+    {
+        cfg = {};
+        cfg.cs = std::max(0.01f, settings.cellSize);
+        cfg.ch = std::max(0.01f, settings.cellHeight);
+
+        cfg.walkableSlopeAngle   = settings.agentMaxSlope;
+        cfg.walkableHeight       = (int)ceilf(settings.agentHeight / cfg.ch);
+        cfg.walkableClimb        = (int)floorf(settings.agentMaxClimb / cfg.ch);
+        cfg.walkableRadius       = (int)ceilf(settings.agentRadius / cfg.cs);
+        cfg.maxEdgeLen           = std::max(0, (int)std::ceil(settings.maxEdgeLen / cfg.cs));
+        cfg.maxSimplificationError = settings.maxSimplificationError;
+        cfg.minRegionArea        = (int)rcSqr(std::max(0.0f, settings.minRegionSize));
+        cfg.mergeRegionArea      = (int)rcSqr(std::max(0.0f, settings.mergeRegionSize));
+        cfg.maxVertsPerPoly      = std::max(3, settings.maxVertsPerPoly);
+        cfg.detailSampleDist     = std::max(0.0f, settings.detailSampleDist);
+        cfg.detailSampleMaxError = std::max(0.0f, settings.detailSampleMaxError);
+    }
+
+    bool ComputeTiledGridCounts(const NavmeshGenerationSettings& settings,
+                                const float* bmin,
+                                const float* bmax,
+                                TileGridStats& outStats)
+    {
+        if (!bmin || !bmax)
+            return false;
+
+        const float boundsWidth = std::max(0.0f, bmax[0] - bmin[0]);
+        const float boundsHeight = std::max(0.0f, bmax[2] - bmin[2]);
+        const float tileWorld = settings.tileSize * settings.cellSize;
+        if (tileWorld <= 0.0f)
+            return false;
+
+        const int tilesX = std::max(1, static_cast<int>(std::ceil(boundsWidth / tileWorld)));
+        const int tilesY = std::max(1, static_cast<int>(std::ceil(boundsHeight / tileWorld)));
+
+        outStats.tileWorld = tileWorld;
+        outStats.boundsWidth = boundsWidth;
+        outStats.boundsHeight = boundsHeight;
+        outStats.tileCountX = tilesX;
+        outStats.tileCountY = tilesY;
+        outStats.tileCountTotal = tilesX * tilesY;
+        return true;
+    }
+
     glm::vec3 GetPolyVertex(const dtMeshTile* tile, const dtPoly* poly, int index)
     {
         const int vertIndex = poly->verts[index];
@@ -999,13 +1044,17 @@ NavMeshData& NavMeshData::operator=(NavMeshData&& other) noexcept
         m_cachedTileWidthCount = other.m_cachedTileWidthCount;
         m_cachedTileHeightCount = other.m_cachedTileHeightCount;
         m_hasTiledCache = other.m_hasTiledCache;
+        m_cachedTileHashes = std::move(other.m_cachedTileHashes);
         m_offmeshLinks = std::move(other.m_offmeshLinks);
+        m_fixedGridBounds = other.m_fixedGridBounds;
 
         std::memset(other.m_cachedBMin, 0, sizeof(other.m_cachedBMin));
         std::memset(other.m_cachedBMax, 0, sizeof(other.m_cachedBMax));
         other.m_cachedTileWidthCount = 0;
         other.m_cachedTileHeightCount = 0;
         other.m_hasTiledCache = false;
+        other.m_cachedTileHashes.clear();
+        other.m_fixedGridBounds = false;
     }
     return *this;
 }
@@ -1338,6 +1387,128 @@ bool NavMeshData::RebuildSpecificTiles(const std::vector<std::pair<int, int>>& t
     return true;
 }
 
+bool NavMeshData::EstimateTileGrid(const NavmeshGenerationSettings& settings,
+                                   const float* bmin,
+                                   const float* bmax,
+                                   TileGridStats& outStats)
+{
+    return ComputeTiledGridCounts(settings, bmin, bmax, outStats);
+}
+
+bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
+                                const float* forcedBMin,
+                                const float* forcedBMax)
+{
+    if (settings.mode != NavmeshBuildMode::Tiled)
+    {
+        printf("[NavMeshData] InitTiledGrid: modo nao e tiled.\n");
+        return false;
+    }
+
+    if (!forcedBMin || !forcedBMax)
+    {
+        printf("[NavMeshData] InitTiledGrid: bounds obrigatorios para grid fixo.\n");
+        return false;
+    }
+
+    if (m_nav)
+    {
+        dtFreeNavMesh(m_nav);
+        m_nav = nullptr;
+    }
+
+    TileGridStats stats{};
+    if (!ComputeTiledGridCounts(settings, forcedBMin, forcedBMax, stats))
+    {
+        printf("[NavMeshData] InitTiledGrid: parametros invalidos para grid.\n");
+        return false;
+    }
+
+    const int maxAllowedTiles = 32768;
+    if (stats.tileCountTotal > maxAllowedTiles)
+    {
+        const float area = std::max(0.0f, stats.boundsWidth * stats.boundsHeight);
+        const float minTileWorld = area > 0.0f
+            ? std::sqrt(area / static_cast<float>(maxAllowedTiles))
+            : stats.tileWorld;
+        const int suggestedTileSize = static_cast<int>(std::ceil(minTileWorld / std::max(0.001f, settings.cellSize)));
+
+        printf("[NavMeshData] InitTiledGrid: quantidade de tiles (%d) excede limite seguro (%d). tileWorld=%.2f. Sugestao: tileWorld >= %.2f (tileSize >= %d com cellSize=%.3f).\n",
+               stats.tileCountTotal, maxAllowedTiles, stats.tileWorld, minTileWorld, suggestedTileSize, settings.cellSize);
+        return false;
+    }
+
+    rcConfig baseCfg{};
+    FillBaseConfig(settings, baseCfg);
+    rcCalcGridSize(forcedBMin, forcedBMax, baseCfg.cs, &baseCfg.width, &baseCfg.height);
+    if (baseCfg.width == 0 || baseCfg.height == 0)
+    {
+        printf("[NavMeshData] InitTiledGrid: rcCalcGridSize retornou grade invalida (%d x %d).\n",
+               baseCfg.width, baseCfg.height);
+        return false;
+    }
+
+    const int tileWidthCount = (baseCfg.width + settings.tileSize - 1) / settings.tileSize;
+    const int tileHeightCount = (baseCfg.height + settings.tileSize - 1) / settings.tileSize;
+
+    dtNavMesh* nav = dtAllocNavMesh();
+    if (!nav)
+    {
+        printf("[NavMeshData] InitTiledGrid: dtAllocNavMesh falhou.\n");
+        return false;
+    }
+
+    dtNavMeshParams navParams{};
+    rcVcopy(navParams.orig, forcedBMin);
+    navParams.tileWidth = settings.tileSize * baseCfg.cs;
+    navParams.tileHeight = settings.tileSize * baseCfg.cs;
+    navParams.maxTiles = tileWidthCount * tileHeightCount;
+
+    const unsigned int desiredMaxPolys = 2048;
+    const unsigned int tileBits = static_cast<unsigned int>(dtIlog2(dtNextPow2(static_cast<unsigned int>(navParams.maxTiles))));
+    const unsigned int desiredPolyBits = static_cast<unsigned int>(dtIlog2(dtNextPow2(desiredMaxPolys)));
+    const unsigned int maxPolyBitsAllowed = tileBits >= 22 ? 0u : (22u - tileBits);
+    if (maxPolyBitsAllowed == 0)
+    {
+        printf("[NavMeshData] InitTiledGrid: maxTiles=%u consome todos os bits de ref (tileBits=%u). Ajuste tileSize ou reduza a area.\n",
+               static_cast<unsigned int>(navParams.maxTiles), tileBits);
+        dtFreeNavMesh(nav);
+        return false;
+    }
+
+    const unsigned int chosenPolyBits = std::min(desiredPolyBits, maxPolyBitsAllowed);
+    navParams.maxPolys = 1u << chosenPolyBits;
+    if (navParams.maxPolys != desiredMaxPolys)
+    {
+        printf("[NavMeshData] InitTiledGrid: Clamp maxPolys para %u (tileBits=%u polyBits=%u). Numero de tiles=%u\n",
+               static_cast<unsigned int>(navParams.maxPolys), tileBits, chosenPolyBits, static_cast<unsigned int>(navParams.maxTiles));
+    }
+
+    const dtStatus initStatus = nav->init(&navParams);
+    if (dtStatusFailed(initStatus))
+    {
+        printf("[NavMeshData] InitTiledGrid: m_nav->init falhou (tiled). status=0x%x maxTiles=%d maxPolys=%d tileWidth=%.3f tileHeight=%.3f orig=(%.2f, %.2f, %.2f)\n",
+               initStatus, navParams.maxTiles, navParams.maxPolys, navParams.tileWidth, navParams.tileHeight,
+               navParams.orig[0], navParams.orig[1], navParams.orig[2]);
+        dtFreeNavMesh(nav);
+        return false;
+    }
+
+    m_nav = nav;
+    m_cachedVerts.clear();
+    m_cachedTris.clear();
+    rcVcopy(m_cachedBMin, forcedBMin);
+    rcVcopy(m_cachedBMax, forcedBMax);
+    m_cachedBaseCfg = baseCfg;
+    m_cachedSettings = settings;
+    m_cachedTileWidthCount = tileWidthCount;
+    m_cachedTileHeightCount = tileHeightCount;
+    m_cachedTileHashes.clear();
+    m_hasTiledCache = true;
+    m_fixedGridBounds = true;
+    return true;
+}
+
 bool NavMeshData::UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
                                        const std::vector<unsigned int>& indices)
 {
@@ -1367,6 +1538,24 @@ bool NavMeshData::UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
     for (size_t i = 0; i < indices.size(); ++i)
     {
         convertedTris[i] = static_cast<int>(indices[i]);
+    }
+
+    if (!m_fixedGridBounds)
+    {
+        float meshBMin[3] = { convertedVerts[0], convertedVerts[1], convertedVerts[2] };
+        float meshBMax[3] = { convertedVerts[0], convertedVerts[1], convertedVerts[2] };
+        for (size_t i = 1; i < nverts; ++i)
+        {
+            const float* v = &convertedVerts[i * 3];
+            if (v[0] < meshBMin[0]) meshBMin[0] = v[0];
+            if (v[1] < meshBMin[1]) meshBMin[1] = v[1];
+            if (v[2] < meshBMin[2]) meshBMin[2] = v[2];
+            if (v[0] > meshBMax[0]) meshBMax[0] = v[0];
+            if (v[1] > meshBMax[1]) meshBMax[1] = v[1];
+            if (v[2] > meshBMax[2]) meshBMax[2] = v[2];
+        }
+        rcVcopy(m_cachedBMin, meshBMin);
+        rcVcopy(m_cachedBMax, meshBMax);
     }
 
     m_cachedVerts = std::move(convertedVerts);
@@ -1554,27 +1743,8 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         meshBMax[2] = std::max(meshBMax[2], forcedBMax[2]);
     }
 
-    auto fillBaseConfig = [&](rcConfig& cfg)
-    {
-        cfg = {};
-        cfg.cs = std::max(0.01f, settings.cellSize);
-        cfg.ch = std::max(0.01f, settings.cellHeight);
-
-        cfg.walkableSlopeAngle   = settings.agentMaxSlope;
-        cfg.walkableHeight       = (int)ceilf(settings.agentHeight / cfg.ch);
-        cfg.walkableClimb        = (int)floorf(settings.agentMaxClimb / cfg.ch);
-        cfg.walkableRadius       = (int)ceilf(settings.agentRadius / cfg.cs);
-        cfg.maxEdgeLen           = std::max(0, (int)std::ceil(settings.maxEdgeLen / cfg.cs));
-        cfg.maxSimplificationError = settings.maxSimplificationError;
-        cfg.minRegionArea        = (int)rcSqr(std::max(0.0f, settings.minRegionSize));
-        cfg.mergeRegionArea      = (int)rcSqr(std::max(0.0f, settings.mergeRegionSize));
-        cfg.maxVertsPerPoly      = std::max(3, settings.maxVertsPerPoly);
-        cfg.detailSampleDist     = std::max(0.0f, settings.detailSampleDist);
-        cfg.detailSampleMaxError = std::max(0.0f, settings.detailSampleMaxError);
-    };
-
     rcConfig baseCfg{};
-    fillBaseConfig(baseCfg);
+    FillBaseConfig(settings, baseCfg);
 
     rcCalcGridSize(meshBMin, meshBMax, baseCfg.cs, &baseCfg.width, &baseCfg.height);
     if (baseCfg.width == 0 || baseCfg.height == 0)
@@ -1617,6 +1787,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     rcVcopy(m_cachedBMax, meshBMax);
     m_cachedBaseCfg = baseCfg;
     m_cachedSettings = settings;
+    m_fixedGridBounds = (settings.mode == NavmeshBuildMode::Tiled && forcedBMin && forcedBMax);
     if (settings.mode == NavmeshBuildMode::Tiled)
     {
         m_cachedTileWidthCount = (baseCfg.width + settings.tileSize - 1) / settings.tileSize;

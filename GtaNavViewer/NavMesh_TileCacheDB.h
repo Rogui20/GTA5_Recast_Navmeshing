@@ -48,7 +48,8 @@ bool LoadTileFromDb(const char* dbPath,
                     dtNavMesh* nav,
                     int tx,
                     int ty,
-                    bool& outLoaded);
+                    bool& outLoaded,
+                    const std::unordered_map<uint64_t, TileDbIndexEntry>* indexOverride = nullptr);
 
 bool LoadTilesInBoundsFromDb(const char* dbPath,
                              dtNavMesh* nav,
