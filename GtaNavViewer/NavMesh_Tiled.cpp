@@ -1,4 +1,5 @@
 #include "NavMeshBuild.h"
+#include "NavMesh_TileCacheDB.h"
 
 #include <DetourMath.h>
 #include <DetourNavMeshBuilder.h>
@@ -31,25 +32,7 @@ namespace
         return true;
     }
 
-    static constexpr uint32_t TILE_CACHE_MAGIC   = 'G' << 24 | 'T' << 16 | 'A' << 8 | 'V';
-    static constexpr uint32_t TILE_CACHE_VERSION = 1;
-    static constexpr const char* DEFAULT_CACHE_PATH = "navmesh_tilecache.bin";
-
-    struct DiskTileHeader
-    {
-        int      tx;
-        int      ty;
-        uint32_t dataSize;
-        uint64_t geomHash;
-    };
-
-    struct TileCacheFileHeader
-    {
-        uint32_t        magic;
-        uint32_t        version;
-        uint32_t        tileCount;
-        dtNavMeshParams navParams;
-    };
+    static constexpr const char* DEFAULT_CACHE_PATH = "navmesh.tilecache";
 
     uint64_t fnv1a64(const void* data, size_t size)
     {
@@ -142,11 +125,6 @@ namespace
         }
 
         return hash;
-    }
-
-    uint64_t makeTileKey(int tx, int ty)
-    {
-        return (static_cast<uint64_t>(static_cast<uint32_t>(tx)) << 32) | static_cast<uint32_t>(ty);
     }
 
     bool pointInsideBounds(const glm::vec3& p, const float* bmin, const float* bmax, float radius)
@@ -434,144 +412,6 @@ namespace
         return ok ? NavTileBuildResult::Success : NavTileBuildResult::Error;
     }
 
-    bool saveTileCache(const char* cachePath,
-                       dtNavMesh* nav,
-                       const std::unordered_map<uint64_t, uint64_t>& tileHashes)
-    {
-        if (!cachePath || !nav)
-            return false;
-
-        std::vector<DiskTileHeader> diskTiles;
-        std::vector<const unsigned char*> tileData;
-        diskTiles.reserve(nav->getMaxTiles());
-        tileData.reserve(nav->getMaxTiles());
-
-        for (int i = 0; i < nav->getMaxTiles(); ++i)
-        {
-            const dtMeshTile* tile = nav->getTile(i);
-            if (!tile || !tile->header || !tile->data || tile->dataSize == 0)
-                continue;
-
-            DiskTileHeader th{};
-            th.tx = tile->header->x;
-            th.ty = tile->header->y;
-            th.dataSize = tile->dataSize;
-            const uint64_t key = makeTileKey(th.tx, th.ty);
-            const auto itHash = tileHashes.find(key);
-            th.geomHash = itHash != tileHashes.end() ? itHash->second : 0;
-
-            diskTiles.push_back(th);
-            tileData.push_back(tile->data);
-        }
-
-        TileCacheFileHeader header{};
-        header.magic = TILE_CACHE_MAGIC;
-        header.version = TILE_CACHE_VERSION;
-        header.tileCount = static_cast<uint32_t>(diskTiles.size());
-        memcpy(&header.navParams, nav->getParams(), sizeof(dtNavMeshParams));
-
-        FILE* fp = fopen(cachePath, "wb");
-        if (!fp)
-            return false;
-
-        bool ok = fwrite(&header, sizeof(TileCacheFileHeader), 1, fp) == 1;
-        for (size_t i = 0; ok && i < diskTiles.size(); ++i)
-        {
-            ok = fwrite(&diskTiles[i], sizeof(DiskTileHeader), 1, fp) == 1;
-            ok = ok && fwrite(tileData[i], diskTiles[i].dataSize, 1, fp) == 1;
-        }
-
-        fclose(fp);
-
-        if (ok)
-            printf("[NavMeshData] Cache salvo em %s (%zu tiles)\n", cachePath, diskTiles.size());
-
-        return ok;
-    }
-
-    bool loadTileCache(const char* cachePath,
-                       dtNavMesh* nav,
-                       const std::unordered_map<uint64_t, uint64_t>& expectedHashes,
-                       std::unordered_map<uint64_t, bool>& tilesLoaded,
-                       bool& cacheDirty)
-    {
-        if (!cachePath || !nav)
-            return false;
-
-        FILE* fp = fopen(cachePath, "rb");
-        if (!fp)
-            return false;
-
-        TileCacheFileHeader header{};
-        if (fread(&header, sizeof(TileCacheFileHeader), 1, fp) != 1)
-        {
-            fclose(fp);
-            return false;
-        }
-
-        if (header.magic != TILE_CACHE_MAGIC || header.version != TILE_CACHE_VERSION)
-        {
-            fclose(fp);
-            printf("[NavMeshData] Cache incompatível (magic/version).\n");
-            return false;
-        }
-
-        if (memcmp(&header.navParams, nav->getParams(), sizeof(dtNavMeshParams)) != 0)
-        {
-            fclose(fp);
-            printf("[NavMeshData] Cache incompatível com parametros atuais.\n");
-            return false;
-        }
-
-        bool ok = true;
-        for (uint32_t i = 0; ok && i < header.tileCount; ++i)
-        {
-            DiskTileHeader th{};
-            ok = fread(&th, sizeof(DiskTileHeader), 1, fp) == 1;
-            if (!ok)
-                break;
-
-            unsigned char* data = static_cast<unsigned char*>(dtAlloc(th.dataSize, DT_ALLOC_PERM));
-            if (!data)
-            {
-                ok = false;
-                break;
-            }
-
-            ok = fread(data, th.dataSize, 1, fp) == 1;
-            if (!ok)
-            {
-                dtFree(data);
-                break;
-            }
-
-            const uint64_t key = makeTileKey(th.tx, th.ty);
-            const auto itHash = expectedHashes.find(key);
-            const bool hashMatch = itHash != expectedHashes.end() && itHash->second == th.geomHash;
-            if (hashMatch)
-            {
-                dtStatus status = nav->addTile(data, th.dataSize, DT_TILE_FREE_DATA, 0, nullptr);
-                if (dtStatusSucceed(status))
-                {
-                    tilesLoaded[key] = true;
-                }
-                else
-                {
-                    cacheDirty = true;
-                    dtFree(data);
-                    printf("[NavMeshData] Falha ao adicionar tile do cache (%d,%d) status=0x%x\n", th.tx, th.ty, status);
-                }
-            }
-            else
-            {
-                cacheDirty = true;
-                dtFree(data);
-            }
-        }
-
-        fclose(fp);
-        return ok;
-    }
 }
 
 bool BuildTiledNavMesh(const NavmeshBuildInput& input,
@@ -582,7 +422,8 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                        int* outTilesSkipped,
                        const std::atomic_bool* cancelFlag,
                        bool useCache,
-                       const char* cachePath)
+                       const char* cachePath,
+                       std::unordered_map<uint64_t, uint64_t>* outTileHashes)
 {
     auto isCancelled = [cancelFlag]()
     {
@@ -727,9 +568,11 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
     tileHashes.reserve(tilesToBuild.size() * 2);
     for (auto& tile : tilesToBuild)
     {
-        const uint64_t key = makeTileKey(tile.tx, tile.ty);
+        const uint64_t key = MakeTileKey(tile.tx, tile.ty);
         tileHashes[key] = tile.geomHash;
     }
+    if (outTileHashes)
+        *outTileHashes = tileHashes;
 
     dtNavMesh* nav = dtAllocNavMesh();
     if (!nav)
@@ -785,9 +628,48 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
     {
         if (useCache && !tilesToBuild.empty())
         {
-            const bool loaded = loadTileCache(cacheFile, nav, tileHashes, tilesLoadedFromCache, cacheDirty);
-            if (loaded)
+            std::unordered_map<uint64_t, TileDbIndexEntry> index;
+            const bool loadedIndex = TileDbLoadIndex(cacheFile, nav, index);
+            if (loadedIndex)
             {
+                for (const TileInput& inputTile : tilesToBuild)
+                {
+                    const uint64_t tileKey = MakeTileKey(inputTile.tx, inputTile.ty);
+                    const auto itIndex = index.find(tileKey);
+                    const auto itHash = tileHashes.find(tileKey);
+                    if (itIndex == index.end() || itHash == tileHashes.end())
+                    {
+                        cacheDirty = true;
+                        continue;
+                    }
+
+                    if (itIndex->second.geomHash != itHash->second)
+                    {
+                        cacheDirty = true;
+                        continue;
+                    }
+
+                    unsigned char* data = nullptr;
+                    int dataSize = 0;
+                    if (!TileDbReadTile(cacheFile, itIndex->second, data, dataSize))
+                    {
+                        cacheDirty = true;
+                        continue;
+                    }
+
+                    dtStatus status = nav->addTile(data, dataSize, DT_TILE_FREE_DATA, 0, nullptr);
+                    if (dtStatusSucceed(status))
+                    {
+                        tilesLoadedFromCache[tileKey] = true;
+                    }
+                    else
+                    {
+                        cacheDirty = true;
+                        dtFree(data);
+                        printf("[NavMeshData] Falha ao adicionar tile do cache (%d,%d) status=0x%x\n", inputTile.tx, inputTile.ty, status);
+                    }
+                }
+
                 tilesBuilt += static_cast<int>(tilesLoadedFromCache.size());
                 if (!tilesLoadedFromCache.empty())
                 {
@@ -808,7 +690,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                 return false;
             }
 
-            const uint64_t tileKey = makeTileKey(inputTile.tx, inputTile.ty);
+            const uint64_t tileKey = MakeTileKey(inputTile.tx, inputTile.ty);
             if (tilesLoadedFromCache.find(tileKey) != tilesLoadedFromCache.end())
             {
                 continue;
@@ -862,7 +744,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
 
         if (useCache && tilesBuilt > 0)
         {
-            saveTileCache(cacheFile, nav, tileHashes);
+            TileDbWriteOrUpdateTiles(cacheFile, nav, tileHashes);
         }
     }
     else
