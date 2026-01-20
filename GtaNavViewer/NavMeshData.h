@@ -33,6 +33,16 @@ struct NavmeshGenerationSettings
     int tileSize = 48;
 };
 
+struct TileGridStats
+{
+    float tileWorld = 0.0f;
+    float boundsWidth = 0.0f;
+    float boundsHeight = 0.0f;
+    int tileCountX = 0;
+    int tileCountY = 0;
+    int tileCountTotal = 0;
+};
+
 struct OffmeshLink
 {
     glm::vec3 start{0.0f};
@@ -110,6 +120,10 @@ public:
     ~NavMeshData();
     bool Load(const char* path);
     bool IsLoaded() const { return m_nav != nullptr; }
+    static bool EstimateTileGrid(const NavmeshGenerationSettings& settings,
+                                 const float* bmin,
+                                 const float* bmax,
+                                 TileGridStats& outStats);
     // NOVO: constrói navmesh direto da malha
     bool BuildFromMesh(const std::vector<glm::vec3>& verts,
                        const std::vector<unsigned int>& indices,
@@ -120,6 +134,9 @@ public:
                        const char* cachePath = nullptr,
                        const float* forcedBMin = nullptr,
                        const float* forcedBMax = nullptr);
+    bool InitTiledGrid(const NavmeshGenerationSettings& settings,
+                       const float* forcedBMin,
+                       const float* forcedBMax);
 
     bool BuildTileAt(const glm::vec3& worldPos,
                      const NavmeshGenerationSettings& settings,
@@ -188,4 +205,5 @@ private:
     bool m_hasTiledCache = false;
     std::unordered_map<uint64_t, uint64_t> m_cachedTileHashes;
     std::vector<OffmeshLink> m_offmeshLinks;
+    bool m_fixedGridBounds = false;
 };

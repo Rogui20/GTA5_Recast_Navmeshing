@@ -218,19 +218,25 @@ bool LoadTileFromDb(const char* dbPath,
                     dtNavMesh* nav,
                     int tx,
                     int ty,
-                    bool& outLoaded)
+                    bool& outLoaded,
+                    const std::unordered_map<uint64_t, TileDbIndexEntry>* indexOverride)
 {
     outLoaded = false;
     if (!dbPath || !nav)
         return false;
 
-    std::unordered_map<uint64_t, TileDbIndexEntry> index;
-    if (!TileDbLoadIndex(dbPath, nav, index))
-        return false;
+    std::unordered_map<uint64_t, TileDbIndexEntry> localIndex;
+    const std::unordered_map<uint64_t, TileDbIndexEntry>* indexPtr = indexOverride;
+    if (!indexPtr)
+    {
+        if (!TileDbLoadIndex(dbPath, nav, localIndex))
+            return false;
+        indexPtr = &localIndex;
+    }
 
     const uint64_t key = MakeTileKey(tx, ty);
-    const auto it = index.find(key);
-    if (it == index.end())
+    const auto it = indexPtr->find(key);
+    if (it == indexPtr->end())
         return true;
 
     unsigned char* data = nullptr;

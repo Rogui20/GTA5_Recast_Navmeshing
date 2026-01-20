@@ -71,6 +71,7 @@ GTANAVVIEWER_API bool BuildNavMesh(void* navMesh);
 GTANAVVIEWER_API bool UpdateNavMesh(void* navMesh);
 
 // Streaming / bake
+GTANAVVIEWER_API bool InitTiledGrid(void* navMesh, Vector3 bmin, Vector3 bmax);
 GTANAVVIEWER_API int  StreamTilesAround(void* navMesh, Vector3 center, float radius, bool allowBuildIfMissing);
 GTANAVVIEWER_API void ClearAllLoadedTiles(void* navMesh);
 GTANAVVIEWER_API bool BakeTilesInBounds(void* navMesh, Vector3 bmin, Vector3 bmax, bool saveToCache);

@@ -63,6 +63,9 @@ namespace
         std::unordered_map<uint64_t, uint32_t> residentStamp;
         std::unordered_set<uint64_t> residentTiles;
         uint32_t stampCounter = 0;
+        std::unordered_map<uint64_t, TileDbIndexEntry> dbIndexCache;
+        bool dbIndexLoaded = false;
+        std::filesystem::file_time_type dbMTime{};
     };
 
     glm::mat3 GetRotationMatrix(const glm::vec3& eulerDegrees)
@@ -320,6 +323,36 @@ namespace
         return root / (session + ".tilecache");
     }
 
+    bool EnsureDbIndexLoaded(ExternNavmeshContext& ctx, const std::filesystem::path& cachePath)
+    {
+        if (!ctx.navData.GetNavMesh())
+            return false;
+
+        if (!std::filesystem::exists(cachePath))
+        {
+            ctx.dbIndexCache.clear();
+            ctx.dbIndexLoaded = false;
+            ctx.dbMTime = {};
+            return false;
+        }
+
+        const auto mtime = std::filesystem::last_write_time(cachePath);
+        if (!ctx.dbIndexLoaded || ctx.dbMTime != mtime)
+        {
+            ctx.dbIndexCache.clear();
+            if (!TileDbLoadIndex(cachePath.string().c_str(), ctx.navData.GetNavMesh(), ctx.dbIndexCache))
+            {
+                ctx.dbIndexLoaded = false;
+                ctx.dbMTime = mtime;
+                return false;
+            }
+            ctx.dbIndexLoaded = true;
+            ctx.dbMTime = mtime;
+        }
+
+        return ctx.dbIndexLoaded;
+    }
+
     bool EnsureNavQuery(ExternNavmeshContext& ctx)
     {
         if (!ctx.navData.GetNavMesh())
@@ -446,6 +479,33 @@ namespace
 
     bool UpdateNavmeshState(ExternNavmeshContext& ctx, bool forceFullBuild)
     {
+        if (ctx.streamingEnabled)
+        {
+            if (!ctx.navData.IsLoaded() || !ctx.navData.HasTiledCache())
+            {
+                if (!ctx.hasBoundingBox)
+                {
+                    printf("[NavMeshData] UpdateNavmeshState: streaming mode sem bounds fixos.\n");
+                    return false;
+                }
+
+                float forcedMin[3] = { ctx.bboxMin.x, ctx.bboxMin.y, ctx.bboxMin.z };
+                float forcedMax[3] = { ctx.bboxMax.x, ctx.bboxMax.y, ctx.bboxMax.z };
+                ctx.navData.SetOffmeshLinks(ctx.offmeshLinks);
+                if (!ctx.navData.InitTiledGrid(ctx.genSettings, forcedMin, forcedMax))
+                    return false;
+            }
+
+            if (!ctx.dirtyBounds.empty())
+            {
+                if (!RebuildDirtyTiles(ctx))
+                    return false;
+            }
+
+            ctx.rebuildAll = false;
+            return EnsureNavQuery(ctx);
+        }
+
         if (forceFullBuild || ctx.rebuildAll || !ctx.navData.IsLoaded())
             return BuildNavmeshInternal(ctx);
 
@@ -589,6 +649,9 @@ GTANAVVIEWER_API void SetNavMeshCacheRoot(void* navMesh, const char* cacheRoot)
         return;
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->cacheRoot = cacheRoot ? cacheRoot : "";
+    ctx->dbIndexCache.clear();
+    ctx->dbIndexLoaded = false;
+    ctx->dbMTime = {};
 }
 
 GTANAVVIEWER_API void SetNavMeshSessionId(void* navMesh, const char* sessionId)
@@ -597,6 +660,9 @@ GTANAVVIEWER_API void SetNavMeshSessionId(void* navMesh, const char* sessionId)
         return;
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->sessionId = sessionId ? sessionId : "";
+    ctx->dbIndexCache.clear();
+    ctx->dbIndexLoaded = false;
+    ctx->dbMTime = {};
 }
 
 GTANAVVIEWER_API void SetMaxResidentTiles(void* navMesh, int maxTiles)
@@ -726,6 +792,34 @@ GTANAVVIEWER_API bool UpdateNavMesh(void* navMesh)
     return UpdateNavmeshState(*ctx, false);
 }
 
+GTANAVVIEWER_API bool InitTiledGrid(void* navMesh, Vector3 bmin, Vector3 bmax)
+{
+    if (!navMesh)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    if (ctx->genSettings.mode != NavmeshBuildMode::Tiled)
+        return false;
+
+    ctx->bboxMin = glm::vec3(bmin.x, bmin.y, bmin.z);
+    ctx->bboxMax = glm::vec3(bmax.x, bmax.y, bmax.z);
+    ctx->hasBoundingBox = true;
+    ctx->streamingEnabled = true;
+    ctx->rebuildAll = false;
+    ctx->dirtyBounds.clear();
+
+    ctx->navData.SetOffmeshLinks(ctx->offmeshLinks);
+
+    float forcedMin[3] = { ctx->bboxMin.x, ctx->bboxMin.y, ctx->bboxMin.z };
+    float forcedMax[3] = { ctx->bboxMax.x, ctx->bboxMax.y, ctx->bboxMax.z };
+    if (!ctx->navData.InitTiledGrid(ctx->genSettings, forcedMin, forcedMax))
+        return false;
+
+    ctx->residentTiles.clear();
+    ctx->residentStamp.clear();
+    ctx->stampCounter = 0;
+    return EnsureNavQuery(*ctx);
+}
+
 GTANAVVIEWER_API int StreamTilesAround(void* navMesh, Vector3 center, float radius, bool allowBuildIfMissing)
 {
     if (!navMesh)
@@ -738,6 +832,7 @@ GTANAVVIEWER_API int StreamTilesAround(void* navMesh, Vector3 center, float radi
     ctx->streamingEnabled = true;
     std::filesystem::path cachePath = GetSessionCachePath(*ctx);
     const bool hasCacheFile = std::filesystem::exists(cachePath);
+    const bool indexReady = hasCacheFile && EnsureDbIndexLoaded(*ctx, cachePath);
 
     float cachedBMin[3];
     float cachedBMax[3];
@@ -767,9 +862,9 @@ GTANAVVIEWER_API int StreamTilesAround(void* navMesh, Vector3 center, float radi
         if (!alreadyLoaded)
         {
             bool loaded = false;
-            if (hasCacheFile)
+            if (hasCacheFile && indexReady)
             {
-                if (!LoadTileFromDb(cachePath.string().c_str(), nav, tx, ty, loaded))
+                if (!LoadTileFromDb(cachePath.string().c_str(), nav, tx, ty, loaded, &ctx->dbIndexCache))
                 {
                     printf("[NavMeshData] StreamTilesAround: falha ao carregar tile (%d,%d) do cache.\n", tx, ty);
                 }
@@ -886,36 +981,29 @@ GTANAVVIEWER_API bool BakeTilesInBounds(void* navMesh, Vector3 bmin, Vector3 bma
     if (ctx->geometries.empty())
         return false;
 
+    std::vector<glm::vec3> verts;
+    std::vector<unsigned int> indices;
+    if (!CombineGeometry(*ctx, verts, indices))
+        return false;
+
     if (!ctx->navData.IsLoaded() || !ctx->navData.HasTiledCache())
     {
-        std::vector<glm::vec3> verts;
-        std::vector<unsigned int> indices;
-        if (!CombineGeometry(*ctx, verts, indices))
-            return false;
+        const glm::vec3 useMin = ctx->hasBoundingBox ? ctx->bboxMin : glm::vec3(bmin.x, bmin.y, bmin.z);
+        const glm::vec3 useMax = ctx->hasBoundingBox ? ctx->bboxMax : glm::vec3(bmax.x, bmax.y, bmax.z);
 
-        std::filesystem::path cachePath = GetSessionCachePath(*ctx);
-        const float* forcedBMin = nullptr;
-        const float* forcedBMax = nullptr;
-        float forcedMin[3];
-        float forcedMax[3];
-        if (ctx->hasBoundingBox)
-        {
-            forcedMin[0] = ctx->bboxMin.x;
-            forcedMin[1] = ctx->bboxMin.y;
-            forcedMin[2] = ctx->bboxMin.z;
-            forcedMax[0] = ctx->bboxMax.x;
-            forcedMax[1] = ctx->bboxMax.y;
-            forcedMax[2] = ctx->bboxMax.z;
-            forcedBMin = forcedMin;
-            forcedBMax = forcedMax;
-        }
+        float forcedMin[3] = { useMin.x, useMin.y, useMin.z };
+        float forcedMax[3] = { useMax.x, useMax.y, useMax.z };
 
-        if (!ctx->navData.BuildFromMesh(verts, indices, ctx->genSettings, false, nullptr, true, cachePath.string().c_str(), forcedBMin, forcedBMax))
+        ctx->navData.SetOffmeshLinks(ctx->offmeshLinks);
+        if (!ctx->navData.InitTiledGrid(ctx->genSettings, forcedMin, forcedMax))
             return false;
 
         if (!EnsureNavQuery(*ctx))
             return false;
     }
+
+    if (!ctx->navData.UpdateCachedGeometry(verts, indices))
+        return false;
 
     const glm::vec3 min(bmin.x, bmin.y, bmin.z);
     const glm::vec3 max(bmax.x, bmax.y, bmax.z);
@@ -927,6 +1015,8 @@ GTANAVVIEWER_API bool BakeTilesInBounds(void* navMesh, Vector3 bmin, Vector3 bma
         std::filesystem::path cachePath = GetSessionCachePath(*ctx);
         const auto& hashes = ctx->navData.GetCachedTileHashes();
         TileDbWriteOrUpdateTiles(cachePath.string().c_str(), ctx->navData.GetNavMesh(), hashes);
+        ctx->dbIndexCache.clear();
+        ctx->dbIndexLoaded = false;
     }
 
     return true;
