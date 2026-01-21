@@ -503,8 +503,8 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
         const float tileWidth = m_cachedSettings.tileSize * m_cachedBaseCfg.cs;
         if (m_hasTiledCache && tileWidth > 0.0f)
         {
-            const int tx = (int)floorf((pos.x - m_cachedBMin[0]) / tileWidth);
-            const int ty = (int)floorf((pos.z - m_cachedBMin[2]) / tileWidth);
+            const int tx = (int)floorf((pos.x - m_gridBMin[0]) / tileWidth);
+            const int ty = (int)floorf((pos.z - m_gridBMin[2]) / tileWidth);
             return {tx, ty};
         }
 
@@ -882,8 +882,8 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
         const float tileWidth = m_cachedSettings.tileSize * m_cachedBaseCfg.cs;
         if (m_hasTiledCache && tileWidth > 0.0f)
         {
-            const int tx = (int)floorf((pos.x - m_cachedBMin[0]) / tileWidth);
-            const int ty = (int)floorf((pos.z - m_cachedBMin[2]) / tileWidth);
+            const int tx = (int)floorf((pos.x - m_gridBMin[0]) / tileWidth);
+            const int ty = (int)floorf((pos.z - m_gridBMin[2]) / tileWidth);
             return {tx, ty};
         }
 
@@ -1039,6 +1039,8 @@ NavMeshData& NavMeshData::operator=(NavMeshData&& other) noexcept
         m_cachedTris = std::move(other.m_cachedTris);
         std::memcpy(m_cachedBMin, other.m_cachedBMin, sizeof(m_cachedBMin));
         std::memcpy(m_cachedBMax, other.m_cachedBMax, sizeof(m_cachedBMax));
+        std::memcpy(m_gridBMin, other.m_gridBMin, sizeof(m_gridBMin));
+        std::memcpy(m_gridBMax, other.m_gridBMax, sizeof(m_gridBMax));
         m_cachedBaseCfg = other.m_cachedBaseCfg;
         m_cachedSettings = other.m_cachedSettings;
         m_cachedTileWidthCount = other.m_cachedTileWidthCount;
@@ -1050,6 +1052,8 @@ NavMeshData& NavMeshData::operator=(NavMeshData&& other) noexcept
 
         std::memset(other.m_cachedBMin, 0, sizeof(other.m_cachedBMin));
         std::memset(other.m_cachedBMax, 0, sizeof(other.m_cachedBMax));
+        std::memset(other.m_gridBMin, 0, sizeof(other.m_gridBMin));
+        std::memset(other.m_gridBMax, 0, sizeof(other.m_gridBMax));
         other.m_cachedTileWidthCount = 0;
         other.m_cachedTileHeightCount = 0;
         other.m_hasTiledCache = false;
@@ -1149,8 +1153,8 @@ bool NavMeshData::BuildTileAt(const glm::vec3& worldPos,
     }
 
     const float tileWidth = expectedTileWorld;
-    const int tx = (int)floorf((worldPos.x - m_cachedBMin[0]) / tileWidth);
-    const int ty = (int)floorf((worldPos.z - m_cachedBMin[2]) / tileWidth);
+    const int tx = (int)floorf((worldPos.x - m_gridBMin[0]) / tileWidth);
+    const int ty = (int)floorf((worldPos.z - m_gridBMin[2]) / tileWidth);
 
     if (tx < 0 || ty < 0 || tx >= m_cachedTileWidthCount || ty >= m_cachedTileHeightCount)
     {
@@ -1163,8 +1167,8 @@ bool NavMeshData::BuildTileAt(const glm::vec3& worldPos,
     NavmeshBuildInput buildInput{ctx, m_cachedVerts, m_cachedTris};
     buildInput.nverts = (int)(m_cachedVerts.size() / 3);
     buildInput.ntris = (int)(m_cachedTris.size() / 3);
-    rcVcopy(buildInput.meshBMin, m_cachedBMin);
-    rcVcopy(buildInput.meshBMax, m_cachedBMax);
+    rcVcopy(buildInput.meshBMin, m_gridBMin);
+    rcVcopy(buildInput.meshBMax, m_gridBMax);
     buildInput.baseCfg = m_cachedBaseCfg;
     buildInput.offmeshLinks = &m_offmeshLinks;
 
@@ -1207,8 +1211,8 @@ bool NavMeshData::RemoveTileAt(const glm::vec3& worldPos,
     }
 
     const float tileWidth = m_cachedSettings.tileSize * m_cachedBaseCfg.cs;
-    const int tx = (int)floorf((worldPos.x - m_cachedBMin[0]) / tileWidth);
-    const int ty = (int)floorf((worldPos.z - m_cachedBMin[2]) / tileWidth);
+    const int tx = (int)floorf((worldPos.x - m_gridBMin[0]) / tileWidth);
+    const int ty = (int)floorf((worldPos.z - m_gridBMin[2]) / tileWidth);
 
     if (tx < 0 || ty < 0 || tx >= m_cachedTileWidthCount || ty >= m_cachedTileHeightCount)
     {
@@ -1275,10 +1279,10 @@ bool NavMeshData::CollectTilesInBounds(const glm::vec3& bmin,
     }
 
     const float tileWidth = m_cachedSettings.tileSize * m_cachedBaseCfg.cs;
-    int minTx = (int)floorf((bmin.x - m_cachedBMin[0]) / tileWidth);
-    int minTy = (int)floorf((bmin.z - m_cachedBMin[2]) / tileWidth);
-    int maxTx = (int)floorf((bmax.x - m_cachedBMin[0]) / tileWidth);
-    int maxTy = (int)floorf((bmax.z - m_cachedBMin[2]) / tileWidth);
+    int minTx = (int)floorf((bmin.x - m_gridBMin[0]) / tileWidth);
+    int minTy = (int)floorf((bmin.z - m_gridBMin[2]) / tileWidth);
+    int maxTx = (int)floorf((bmax.x - m_gridBMin[0]) / tileWidth);
+    int maxTy = (int)floorf((bmax.z - m_gridBMin[2]) / tileWidth);
 
     minTx = std::max(0, minTx);
     minTy = std::max(0, minTy);
@@ -1343,8 +1347,8 @@ bool NavMeshData::RebuildSpecificTiles(const std::vector<std::pair<int, int>>& t
     NavmeshBuildInput buildInput{ctx, m_cachedVerts, m_cachedTris};
     buildInput.nverts = (int)(m_cachedVerts.size() / 3);
     buildInput.ntris = (int)(m_cachedTris.size() / 3);
-    rcVcopy(buildInput.meshBMin, m_cachedBMin);
-    rcVcopy(buildInput.meshBMax, m_cachedBMax);
+    rcVcopy(buildInput.meshBMin, m_gridBMin);
+    rcVcopy(buildInput.meshBMax, m_gridBMax);
     buildInput.baseCfg = m_cachedBaseCfg;
     buildInput.offmeshLinks = &m_offmeshLinks;
 
@@ -1497,6 +1501,8 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
     m_nav = nav;
     m_cachedVerts.clear();
     m_cachedTris.clear();
+    rcVcopy(m_gridBMin, forcedBMin);
+    rcVcopy(m_gridBMax, forcedBMax);
     rcVcopy(m_cachedBMin, forcedBMin);
     rcVcopy(m_cachedBMax, forcedBMax);
     m_cachedBaseCfg = baseCfg;
@@ -1540,22 +1546,24 @@ bool NavMeshData::UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
         convertedTris[i] = static_cast<int>(indices[i]);
     }
 
+    float meshBMin[3] = { convertedVerts[0], convertedVerts[1], convertedVerts[2] };
+    float meshBMax[3] = { convertedVerts[0], convertedVerts[1], convertedVerts[2] };
+    for (size_t i = 1; i < nverts; ++i)
+    {
+        const float* v = &convertedVerts[i * 3];
+        if (v[0] < meshBMin[0]) meshBMin[0] = v[0];
+        if (v[1] < meshBMin[1]) meshBMin[1] = v[1];
+        if (v[2] < meshBMin[2]) meshBMin[2] = v[2];
+        if (v[0] > meshBMax[0]) meshBMax[0] = v[0];
+        if (v[1] > meshBMax[1]) meshBMax[1] = v[1];
+        if (v[2] > meshBMax[2]) meshBMax[2] = v[2];
+    }
+    rcVcopy(m_cachedBMin, meshBMin);
+    rcVcopy(m_cachedBMax, meshBMax);
     if (!m_fixedGridBounds)
     {
-        float meshBMin[3] = { convertedVerts[0], convertedVerts[1], convertedVerts[2] };
-        float meshBMax[3] = { convertedVerts[0], convertedVerts[1], convertedVerts[2] };
-        for (size_t i = 1; i < nverts; ++i)
-        {
-            const float* v = &convertedVerts[i * 3];
-            if (v[0] < meshBMin[0]) meshBMin[0] = v[0];
-            if (v[1] < meshBMin[1]) meshBMin[1] = v[1];
-            if (v[2] < meshBMin[2]) meshBMin[2] = v[2];
-            if (v[0] > meshBMax[0]) meshBMax[0] = v[0];
-            if (v[1] > meshBMax[1]) meshBMax[1] = v[1];
-            if (v[2] > meshBMax[2]) meshBMax[2] = v[2];
-        }
-        rcVcopy(m_cachedBMin, meshBMin);
-        rcVcopy(m_cachedBMax, meshBMax);
+        rcVcopy(m_gridBMin, meshBMin);
+        rcVcopy(m_gridBMax, meshBMax);
     }
 
     m_cachedVerts = std::move(convertedVerts);
@@ -1569,9 +1577,9 @@ bool NavMeshData::GetCachedBounds(float* outBMin, float* outBMax) const
     if (!m_nav)
         return false;
     if (outBMin)
-        rcVcopy(outBMin, m_cachedBMin);
+        rcVcopy(outBMin, m_gridBMin);
     if (outBMax)
-        rcVcopy(outBMax, m_cachedBMax);
+        rcVcopy(outBMax, m_gridBMax);
     return true;
 }
 
@@ -1721,32 +1729,33 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         return false;
     }
 
-    float meshBMin[3] = { verts[0], verts[1], verts[2] };
-    float meshBMax[3] = { verts[0], verts[1], verts[2] };
+    float geomBMin[3] = { verts[0], verts[1], verts[2] };
+    float geomBMax[3] = { verts[0], verts[1], verts[2] };
     for (int i = 1; i < nverts; ++i)
     {
         const float* v = &verts[i*3];
-        if (v[0] < meshBMin[0]) meshBMin[0] = v[0];
-        if (v[1] < meshBMin[1]) meshBMin[1] = v[1];
-        if (v[2] < meshBMin[2]) meshBMin[2] = v[2];
-        if (v[0] > meshBMax[0]) meshBMax[0] = v[0];
-        if (v[1] > meshBMax[1]) meshBMax[1] = v[1];
-        if (v[2] > meshBMax[2]) meshBMax[2] = v[2];
+        if (v[0] < geomBMin[0]) geomBMin[0] = v[0];
+        if (v[1] < geomBMin[1]) geomBMin[1] = v[1];
+        if (v[2] < geomBMin[2]) geomBMin[2] = v[2];
+        if (v[0] > geomBMax[0]) geomBMax[0] = v[0];
+        if (v[1] > geomBMax[1]) geomBMax[1] = v[1];
+        if (v[2] > geomBMax[2]) geomBMax[2] = v[2];
     }
-    if (forcedBMin && forcedBMax)
+    float gridBMin[3] = { geomBMin[0], geomBMin[1], geomBMin[2] };
+    float gridBMax[3] = { geomBMax[0], geomBMax[1], geomBMax[2] };
+    const bool useForcedGrid = (settings.mode == NavmeshBuildMode::Tiled && forcedBMin && forcedBMax);
+    if (useForcedGrid)
     {
-        meshBMin[0] = std::min(meshBMin[0], forcedBMin[0]);
-        meshBMin[1] = std::min(meshBMin[1], forcedBMin[1]);
-        meshBMin[2] = std::min(meshBMin[2], forcedBMin[2]);
-        meshBMax[0] = std::max(meshBMax[0], forcedBMax[0]);
-        meshBMax[1] = std::max(meshBMax[1], forcedBMax[1]);
-        meshBMax[2] = std::max(meshBMax[2], forcedBMax[2]);
+        rcVcopy(gridBMin, forcedBMin);
+        rcVcopy(gridBMax, forcedBMax);
     }
 
     rcConfig baseCfg{};
     FillBaseConfig(settings, baseCfg);
 
-    rcCalcGridSize(meshBMin, meshBMax, baseCfg.cs, &baseCfg.width, &baseCfg.height);
+    const float* gridMin = (settings.mode == NavmeshBuildMode::Tiled) ? gridBMin : geomBMin;
+    const float* gridMax = (settings.mode == NavmeshBuildMode::Tiled) ? gridBMax : geomBMax;
+    rcCalcGridSize(gridMin, gridMax, baseCfg.cs, &baseCfg.width, &baseCfg.height);
     if (baseCfg.width == 0 || baseCfg.height == 0)
     {
         printf("[NavMeshData] BuildFromMesh: rcCalcGridSize retornou grade invalida (%d x %d).\n",
@@ -1755,8 +1764,8 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     }
 
     NavmeshBuildInput buildInput{ctx, verts, tris, nverts, ntris};
-    rcVcopy(buildInput.meshBMin, meshBMin);
-    rcVcopy(buildInput.meshBMax, meshBMax);
+    rcVcopy(buildInput.meshBMin, gridMin);
+    rcVcopy(buildInput.meshBMax, gridMax);
     buildInput.baseCfg = baseCfg;
     buildInput.offmeshLinks = &m_offmeshLinks;
 
@@ -1783,11 +1792,13 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     m_nav = newNav;
     m_cachedVerts = verts;
     m_cachedTris = tris;
-    rcVcopy(m_cachedBMin, meshBMin);
-    rcVcopy(m_cachedBMax, meshBMax);
+    rcVcopy(m_cachedBMin, geomBMin);
+    rcVcopy(m_cachedBMax, geomBMax);
+    rcVcopy(m_gridBMin, gridMin);
+    rcVcopy(m_gridBMax, gridMax);
     m_cachedBaseCfg = baseCfg;
     m_cachedSettings = settings;
-    m_fixedGridBounds = (settings.mode == NavmeshBuildMode::Tiled && forcedBMin && forcedBMax);
+    m_fixedGridBounds = useForcedGrid;
     if (settings.mode == NavmeshBuildMode::Tiled)
     {
         m_cachedTileWidthCount = (baseCfg.width + settings.tileSize - 1) / settings.tileSize;

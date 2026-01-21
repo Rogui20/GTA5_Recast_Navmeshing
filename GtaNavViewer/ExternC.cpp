@@ -126,7 +126,13 @@ namespace
         return geom;
     }
 
-    struct TempVertex { int v = 0; int vt = 0; int vn = 0; };
+    struct TempVertex
+    {
+        int v = 0;
+        int vt = 0;
+        int vn = 0;
+    };
+
     TempVertex ParseFaceElement(const std::string& token)
     {
         TempVertex tv;
@@ -137,6 +143,31 @@ namespace
             tv.vt = 0;
         }
         return tv;
+    }
+
+    bool SaveGeometryToBin(const std::filesystem::path& path, const LoadedGeometry& geom)
+    {
+        std::ofstream out(path, std::ios::binary);
+        if (!out.is_open())
+        {
+            std::cout << "BIN: failed to open for write " << path << "\n";
+            return false;
+        }
+
+        uint32_t version = 1;
+        uint64_t vertexCount = geom.vertices.size();
+        uint64_t indexCount = geom.indices.size();
+
+        out.write(reinterpret_cast<const char*>(&version), sizeof(version));
+        out.write(reinterpret_cast<const char*>(&vertexCount), sizeof(vertexCount));
+        out.write(reinterpret_cast<const char*>(&indexCount), sizeof(indexCount));
+        out.write(reinterpret_cast<const char*>(&geom.bmin), sizeof(geom.bmin));
+        out.write(reinterpret_cast<const char*>(&geom.bmax), sizeof(geom.bmax));
+
+        out.write(reinterpret_cast<const char*>(geom.vertices.data()), sizeof(glm::vec3) * vertexCount);
+        out.write(reinterpret_cast<const char*>(geom.indices.data()), sizeof(unsigned int) * indexCount);
+
+        return true;
     }
 
     LoadedGeometry LoadObj(const std::filesystem::path& path)
@@ -173,7 +204,14 @@ namespace
                 std::vector<TempVertex> faceVerts;
                 std::string token;
                 while (ss >> token)
-                    faceVerts.push_back(ParseFaceElement(token));
+                {
+                    TempVertex tv = ParseFaceElement(token);
+                    if (tv.v < 0)
+                    {
+                        tv.v = static_cast<int>(originalVerts.size()) + tv.v + 1;
+                    }
+                    faceVerts.push_back(tv);
+                }
 
                 if (faceVerts.size() >= 3)
                 {
@@ -196,6 +234,10 @@ namespace
         geom.indices = std::move(indices);
         geom.bmin = navMinB;
         geom.bmax = navMaxB;
+        if (!geom.vertices.empty() && geom.indices.empty())
+        {
+            std::cout << "OBJ: " << path << " carregado com vertices, mas sem indices. Verifique formato dos faces.\n";
+        }
         return geom;
     }
 
@@ -205,16 +247,36 @@ namespace
             return {};
 
         std::filesystem::path p(path);
+        std::filesystem::path binPath = p;
+        std::filesystem::path objPath = p;
+        if (p.extension() == ".bin")
+        {
+            objPath.replace_extension(".obj");
+        }
+        else
+        {
+            binPath.replace_extension(".bin");
+        }
+
         if (preferBin)
         {
-            std::filesystem::path binPath = p;
-            binPath.replace_extension(".bin");
             if (std::filesystem::exists(binPath))
             {
                 auto geom = LoadBin(binPath);
                 if (geom.Valid())
                     return geom;
             }
+
+            auto geom = LoadObj(objPath);
+            if (geom.Valid())
+            {
+                if (!std::filesystem::exists(binPath) && SaveGeometryToBin(binPath, geom))
+                {
+                    std::cout << "BIN salvo em " << binPath << "\n";
+                }
+                return geom;
+            }
+            return {};
         }
 
         if (std::filesystem::exists(p))
