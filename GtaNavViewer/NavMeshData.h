@@ -198,6 +198,8 @@ private:
     std::vector<int>   m_cachedTris;
     float m_cachedBMin[3] = {0,0,0};
     float m_cachedBMax[3] = {0,0,0};
+    float m_gridBMin[3] = {0,0,0};
+    float m_gridBMax[3] = {0,0,0};
     rcConfig m_cachedBaseCfg{};
     NavmeshGenerationSettings m_cachedSettings{};
     int m_cachedTileWidthCount = 0;
