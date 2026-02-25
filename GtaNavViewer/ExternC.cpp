@@ -69,6 +69,9 @@ namespace
         std::filesystem::file_time_type dbMTime{};
     };
 
+    std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx);
+    bool EnsureNavQuery(ExternNavmeshContext& ctx);
+
     glm::mat3 GetRotationMatrix(const glm::vec3& eulerDegrees)
     {
         glm::vec3 normalized = glm::vec3(
@@ -374,6 +377,297 @@ namespace
         }
 
         return !outVerts.empty() && !outIndices.empty();
+    }
+
+
+    static constexpr uint32_t RUNTIME_CACHE_MAGIC = ('G' << 24) | ('N' << 16) | ('R' << 8) | 'C';
+    static constexpr uint32_t RUNTIME_CACHE_VERSION = 1;
+
+    struct RuntimeCacheHeader
+    {
+        uint32_t magic = RUNTIME_CACHE_MAGIC;
+        uint32_t version = RUNTIME_CACHE_VERSION;
+        uint32_t geometryCount = 0;
+        uint32_t offmeshCount = 0;
+        uint8_t hasBoundingBox = 0;
+        uint8_t hasTileDb = 0;
+        uint16_t reserved = 0;
+        int32_t maxResidentTiles = 0;
+    };
+
+    template <typename T>
+    bool WriteValue(std::ofstream& out, const T& value)
+    {
+        out.write(reinterpret_cast<const char*>(&value), sizeof(T));
+        return out.good();
+    }
+
+    template <typename T>
+    bool ReadValue(std::ifstream& in, T& value)
+    {
+        in.read(reinterpret_cast<char*>(&value), sizeof(T));
+        return in.good();
+    }
+
+    bool WriteString(std::ofstream& out, const std::string& text)
+    {
+        uint32_t len = static_cast<uint32_t>(text.size());
+        if (!WriteValue(out, len))
+            return false;
+        if (len == 0)
+            return true;
+        out.write(text.data(), len);
+        return out.good();
+    }
+
+    bool ReadString(std::ifstream& in, std::string& text)
+    {
+        uint32_t len = 0;
+        if (!ReadValue(in, len))
+            return false;
+        text.resize(len);
+        if (len == 0)
+            return true;
+        in.read(text.data(), len);
+        return in.good();
+    }
+
+    bool SaveRuntimeCacheFile(const ExternNavmeshContext& ctx, const std::filesystem::path& cacheFilePath)
+    {
+        if (!ctx.navData.IsLoaded() || !ctx.navData.HasTiledCache())
+            return false;
+
+        std::filesystem::path tileDbPath = GetSessionCachePath(ctx);
+        if (!std::filesystem::exists(tileDbPath))
+            return false;
+
+        std::ifstream tileDbIn(tileDbPath, std::ios::binary);
+        if (!tileDbIn.is_open())
+            return false;
+        tileDbIn.seekg(0, std::ios::end);
+        const auto tileDbSize = tileDbIn.tellg();
+        if (tileDbSize <= 0)
+            return false;
+        tileDbIn.seekg(0, std::ios::beg);
+        std::vector<char> tileDbBytes(static_cast<size_t>(tileDbSize));
+        tileDbIn.read(tileDbBytes.data(), tileDbBytes.size());
+        if (!tileDbIn.good())
+            return false;
+
+        if (cacheFilePath.has_parent_path())
+            std::filesystem::create_directories(cacheFilePath.parent_path());
+
+        std::ofstream out(cacheFilePath, std::ios::binary);
+        if (!out.is_open())
+            return false;
+
+        RuntimeCacheHeader header{};
+        header.geometryCount = static_cast<uint32_t>(ctx.geometries.size());
+        header.offmeshCount = static_cast<uint32_t>(ctx.offmeshLinks.size());
+        header.hasBoundingBox = ctx.hasBoundingBox ? 1 : 0;
+        header.hasTileDb = 1;
+        header.maxResidentTiles = ctx.maxResidentTiles;
+
+        if (!WriteValue(out, header) ||
+            !WriteValue(out, ctx.genSettings) ||
+            !WriteValue(out, ctx.autoOffmeshParams) ||
+            !WriteValue(out, ctx.bboxMin) ||
+            !WriteValue(out, ctx.bboxMax) ||
+            !WriteValue(out, ctx.cachedExtents))
+        {
+            return false;
+        }
+
+        for (const auto& geom : ctx.geometries)
+        {
+            const uint64_t vertexCount = static_cast<uint64_t>(geom.source.vertices.size());
+            const uint64_t indexCount = static_cast<uint64_t>(geom.source.indices.size());
+            if (!WriteString(out, geom.id) ||
+                !WriteValue(out, geom.position) ||
+                !WriteValue(out, geom.rotation) ||
+                !WriteValue(out, geom.source.bmin) ||
+                !WriteValue(out, geom.source.bmax) ||
+                !WriteValue(out, vertexCount) ||
+                !WriteValue(out, indexCount))
+            {
+                return false;
+            }
+
+            if (vertexCount > 0)
+            {
+                out.write(reinterpret_cast<const char*>(geom.source.vertices.data()), sizeof(glm::vec3) * vertexCount);
+                if (!out.good())
+                    return false;
+            }
+
+            if (indexCount > 0)
+            {
+                out.write(reinterpret_cast<const char*>(geom.source.indices.data()), sizeof(unsigned int) * indexCount);
+                if (!out.good())
+                    return false;
+            }
+        }
+
+        for (const auto& link : ctx.offmeshLinks)
+        {
+            if (!WriteValue(out, link))
+                return false;
+        }
+
+        const uint64_t tileDbSizeU64 = static_cast<uint64_t>(tileDbBytes.size());
+        if (!WriteValue(out, tileDbSizeU64))
+            return false;
+        out.write(tileDbBytes.data(), tileDbBytes.size());
+        return out.good();
+    }
+
+    bool LoadRuntimeCacheFile(ExternNavmeshContext& ctx, const std::filesystem::path& cacheFilePath)
+    {
+        std::ifstream in(cacheFilePath, std::ios::binary);
+        if (!in.is_open())
+            return false;
+
+        RuntimeCacheHeader header{};
+        if (!ReadValue(in, header))
+            return false;
+        if (header.magic != RUNTIME_CACHE_MAGIC || header.version != RUNTIME_CACHE_VERSION || header.hasTileDb == 0)
+            return false;
+
+        ExternNavmeshContext loaded{};
+        if (!ReadValue(in, loaded.genSettings) ||
+            !ReadValue(in, loaded.autoOffmeshParams) ||
+            !ReadValue(in, loaded.bboxMin) ||
+            !ReadValue(in, loaded.bboxMax) ||
+            !ReadValue(in, loaded.cachedExtents))
+        {
+            return false;
+        }
+
+        loaded.hasBoundingBox = header.hasBoundingBox != 0;
+        loaded.maxResidentTiles = std::max(1, header.maxResidentTiles);
+        loaded.cacheRoot = ctx.cacheRoot;
+        loaded.sessionId = ctx.sessionId;
+        loaded.streamingEnabled = loaded.genSettings.mode == NavmeshBuildMode::Tiled;
+
+        loaded.geometries.reserve(header.geometryCount);
+        for (uint32_t i = 0; i < header.geometryCount; ++i)
+        {
+            GeometryInstance geom{};
+            uint64_t vertexCount = 0;
+            uint64_t indexCount = 0;
+            if (!ReadString(in, geom.id) ||
+                !ReadValue(in, geom.position) ||
+                !ReadValue(in, geom.rotation) ||
+                !ReadValue(in, geom.source.bmin) ||
+                !ReadValue(in, geom.source.bmax) ||
+                !ReadValue(in, vertexCount) ||
+                !ReadValue(in, indexCount))
+            {
+                return false;
+            }
+
+            geom.source.vertices.resize(static_cast<size_t>(vertexCount));
+            geom.source.indices.resize(static_cast<size_t>(indexCount));
+            if (vertexCount > 0)
+            {
+                in.read(reinterpret_cast<char*>(geom.source.vertices.data()), sizeof(glm::vec3) * vertexCount);
+                if (!in.good())
+                    return false;
+            }
+            if (indexCount > 0)
+            {
+                in.read(reinterpret_cast<char*>(geom.source.indices.data()), sizeof(unsigned int) * indexCount);
+                if (!in.good())
+                    return false;
+            }
+            UpdateWorldBounds(geom);
+            loaded.geometries.push_back(std::move(geom));
+        }
+
+        loaded.offmeshLinks.resize(header.offmeshCount);
+        for (uint32_t i = 0; i < header.offmeshCount; ++i)
+        {
+            if (!ReadValue(in, loaded.offmeshLinks[i]))
+                return false;
+        }
+
+        uint64_t tileDbSize = 0;
+        if (!ReadValue(in, tileDbSize))
+            return false;
+        std::vector<char> tileDbBytes(static_cast<size_t>(tileDbSize));
+        if (tileDbSize > 0)
+        {
+            in.read(tileDbBytes.data(), static_cast<std::streamsize>(tileDbSize));
+            if (!in.good())
+                return false;
+        }
+
+        const float forcedMin[3] = { loaded.hasBoundingBox ? loaded.bboxMin.x : 0.0f,
+                                     loaded.hasBoundingBox ? loaded.bboxMin.y : 0.0f,
+                                     loaded.hasBoundingBox ? loaded.bboxMin.z : 0.0f };
+        const float forcedMax[3] = { loaded.hasBoundingBox ? loaded.bboxMax.x : 0.0f,
+                                     loaded.hasBoundingBox ? loaded.bboxMax.y : 0.0f,
+                                     loaded.hasBoundingBox ? loaded.bboxMax.z : 0.0f };
+
+        float runtimeMin[3] = { forcedMin[0], forcedMin[1], forcedMin[2] };
+        float runtimeMax[3] = { forcedMax[0], forcedMax[1], forcedMax[2] };
+
+        if (!loaded.hasBoundingBox)
+        {
+            glm::vec3 sceneMin(FLT_MAX);
+            glm::vec3 sceneMax(-FLT_MAX);
+            for (const auto& geom : loaded.geometries)
+            {
+                sceneMin = glm::min(sceneMin, geom.worldBMin);
+                sceneMax = glm::max(sceneMax, geom.worldBMax);
+            }
+            if (sceneMin.x <= sceneMax.x)
+            {
+                runtimeMin[0] = sceneMin.x;
+                runtimeMin[1] = sceneMin.y;
+                runtimeMin[2] = sceneMin.z;
+                runtimeMax[0] = sceneMax.x;
+                runtimeMax[1] = sceneMax.y;
+                runtimeMax[2] = sceneMax.z;
+            }
+        }
+
+        loaded.navData.SetOffmeshLinks(loaded.offmeshLinks);
+        if (!loaded.navData.InitTiledGrid(loaded.genSettings, runtimeMin, runtimeMax))
+            return false;
+
+        if (!tileDbBytes.empty())
+        {
+            std::filesystem::path tileDbPath = GetSessionCachePath(loaded);
+            if (tileDbPath.has_parent_path())
+                std::filesystem::create_directories(tileDbPath.parent_path());
+
+            std::ofstream tileDbOut(tileDbPath, std::ios::binary);
+            if (!tileDbOut.is_open())
+                return false;
+            tileDbOut.write(tileDbBytes.data(), static_cast<std::streamsize>(tileDbBytes.size()));
+            if (!tileDbOut.good())
+                return false;
+
+            int loadedCount = 0;
+            if (!LoadTilesInBoundsFromDb(tileDbPath.string().c_str(), loaded.navData.GetNavMesh(), runtimeMin, runtimeMax, loadedCount))
+                return false;
+        }
+
+        loaded.dbIndexCache.clear();
+        loaded.dbIndexLoaded = false;
+        loaded.dbMTime = {};
+        loaded.rebuildAll = false;
+        loaded.dirtyBounds.clear();
+
+        if (!EnsureNavQuery(loaded))
+            return false;
+
+        if (ctx.navQuery)
+            dtFreeNavMeshQuery(ctx.navQuery);
+
+        ctx = std::move(loaded);
+        return true;
     }
 
     std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx)
@@ -740,6 +1034,22 @@ GTANAVVIEWER_API void SetMaxResidentTiles(void* navMesh, int maxTiles)
         return;
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->maxResidentTiles = std::max(1, maxTiles);
+}
+
+GTANAVVIEWER_API bool SaveNavMeshRuntimeCache(void* navMesh, const char* cacheFilePath)
+{
+    if (!navMesh || !cacheFilePath)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    return SaveRuntimeCacheFile(*ctx, std::filesystem::path(cacheFilePath));
+}
+
+GTANAVVIEWER_API bool LoadNavMeshRuntimeCache(void* navMesh, const char* cacheFilePath)
+{
+    if (!navMesh || !cacheFilePath)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    return LoadRuntimeCacheFile(*ctx, std::filesystem::path(cacheFilePath));
 }
 
 GTANAVVIEWER_API bool AddGeometry(void* navMesh,
