@@ -1,5 +1,9 @@
 var NAVTREEINDEX89 =
 {
+"imgui__widgets_8cpp.html#a591af6c724a8088d03687aba81098ae9":[44,0,7,0,8,81],
+"imgui__widgets_8cpp.html#a5d0ac25abe189c752495f2f26afea2e6":[44,0,7,0,8,91],
+"imgui__widgets_8cpp.html#a5df9e72d33094eda9ddeea990432c447":[44,0,7,0,8,57],
+"imgui__widgets_8cpp.html#a6146d78f94a9da0cf92020500693ef2c":[44,0,7,0,8,99],
 "imgui__widgets_8cpp.html#a6201ac5ca1497718dc28dd5f9cd13a3b":[44,0,7,0,8,46],
 "imgui__widgets_8cpp.html#a6625118253ca25ee5849aae59cd47c88":[44,0,7,0,8,64],
 "imgui__widgets_8cpp.html#a662633518bb4fb262fc93329df1fa548":[44,0,7,0,8,6],
@@ -245,9 +249,5 @@ var NAVTREEINDEX89 =
 "md_CONTRIBUTING.html#found-a-bug":[6,3],
 "md_CONTRIBUTING.html#have-a-question-or-problem":[6,1],
 "md_CONTRIBUTING.html#submitting-a-pull-request":[6,3,1],
-"md_CONTRIBUTING.html#submitting-an-issue":[6,3,0],
-"md_CONTRIBUTING.html#want-a-new-feature":[6,2],
-"md_Docs_2__1__Introduction.html":[0],
-"md_Docs_2__1__Introduction.html#agent-attributes":[0,6,0],
-"md_Docs_2__1__Introduction.html#high-level-overview-of-the-recast-navmesh-building-process":[0,9]
+"md_CONTRIBUTING.html#submitting-an-issue":[6,3,0]
 };

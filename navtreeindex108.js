@@ -1,5 +1,9 @@
 var NAVTREEINDEX108 =
 {
+"structdtPolyDetail.html#aef53174e1c31d4304bc07da5d677528c":[43,0,52,1],
+"structdtPolyState.html":[43,0,54],
+"structdtPolyState.html#a8e3a8a1c15338bbe761ef4d9ca2b4949":[43,0,54,1],
+"structdtPolyState.html#afd684e7c95d1048ace6dc198457b7c69":[43,0,54,0],
 "structdtSegInterval.html":[43,0,58],
 "structdtSegInterval.html#a4463687b08087da04f076ec79beb5c03":[43,0,58,1],
 "structdtSegInterval.html#a93cb86ab8a97836ee145bb03bab7ed89":[43,0,58,2],
@@ -138,8 +142,8 @@ var NAVTREEINDEX108 =
 "structimguiGfxText.html#ad7bf3cc0e24e63d997c335b7a5e15d25":[43,0,203,2],
 "structimguiGfxText.html#aeed4f7559be7abbfa0b5a49adaedbd0f":[43,0,203,0],
 "structrcChunkyTriMesh.html":[43,0,331],
-"structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,331,2],
 "structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,331,0],
+"structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,331,2],
 "structrcChunkyTriMesh.html#a3a942f046287998abef40650d3b590f4":[43,0,331,6],
 "structrcChunkyTriMesh.html#a6ae1d3f004dd90ddf9a60e55095592a0":[43,0,331,8],
 "structrcChunkyTriMesh.html#a72fed74ea56cac960cd9eb282e312d87":[43,0,331,7],
@@ -245,9 +249,5 @@ var NAVTREEINDEX108 =
 "structrcSweepSpan.html":[43,0,360],
 "structrcSweepSpan.html#a4d7da0d9409cf1124f8fed63783da60e":[43,0,360,1],
 "structrcSweepSpan.html#ab92de3221c19c2c9a2d716ea7680146f":[43,0,360,3],
-"structrcSweepSpan.html#ac1a82c65b0a40920eab883fc2b0aa706":[43,0,360,0],
-"structrcSweepSpan.html#afa7aea20a3d345b6663799f60d846737":[43,0,360,2],
-"structstbrp__context.html":[43,0,454],
-"structstbrp__context.html#a007509feee322404083034e4c2d3dc5d":[43,0,454,6],
-"structstbrp__context.html#a0b80e1fbdac125427526f3500d4e7624":[43,0,454,2]
+"structrcSweepSpan.html#ac1a82c65b0a40920eab883fc2b0aa706":[43,0,360,0]
 };

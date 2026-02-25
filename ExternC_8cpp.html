@@ -137,6 +137,10 @@ Functions</h2></td></tr>
 <tr class="separator:a87a9adba83fdb3bc11375785f1c0a186"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96e5d68b4f8417e702cbe9e09c7b6ea0" id="r_a96e5d68b4f8417e702cbe9e09c7b6ea0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a96e5d68b4f8417e702cbe9e09c7b6ea0">SetMaxResidentTiles</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, int maxTiles)</td></tr>
 <tr class="separator:a96e5d68b4f8417e702cbe9e09c7b6ea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23d70761e65d82b683dfbe7cee3f47da" id="r_a23d70761e65d82b683dfbe7cee3f47da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a23d70761e65d82b683dfbe7cee3f47da">SaveNavMeshRuntimeCache</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *cacheFilePath)</td></tr>
+<tr class="separator:a23d70761e65d82b683dfbe7cee3f47da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6b75b9a45387ec8f8de483be1d4748a" id="r_aa6b75b9a45387ec8f8de483be1d4748a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aa6b75b9a45387ec8f8de483be1d4748a">LoadNavMeshRuntimeCache</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *cacheFilePath)</td></tr>
+<tr class="separator:aa6b75b9a45387ec8f8de483be1d4748a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33dd625e8066802fa192540a9d95f67f" id="r_a33dd625e8066802fa192540a9d95f67f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a33dd625e8066802fa192540a9d95f67f">AddGeometry</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *pathToGeometry, <a class="el" href="structVector3.html">Vector3</a> pos, <a class="el" href="structVector3.html">Vector3</a> rot, const char *customID, bool preferBIN)</td></tr>
 <tr class="separator:a33dd625e8066802fa192540a9d95f67f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3194b4fb64ba867ccee52233e3a84e1" id="r_aa3194b4fb64ba867ccee52233e3a84e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aa3194b4fb64ba867ccee52233e3a84e1">UpdateGeometry</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *customID, const <a class="el" href="structVector3.html">Vector3</a> *pos, const <a class="el" href="structVector3.html">Vector3</a> *rot, bool updateNavMesh)</td></tr>
@@ -792,6 +796,34 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aa6b75b9a45387ec8f8de483be1d4748a" name="aa6b75b9a45387ec8f8de483be1d4748a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6b75b9a45387ec8f8de483be1d4748a">&#9670;&#160;</a></span>LoadNavMeshRuntimeCache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool LoadNavMeshRuntimeCache </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>cacheFilePath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="abd12c10fe11219e74c416d3df583dfde" name="abd12c10fe11219e74c416d3df583dfde"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abd12c10fe11219e74c416d3df583dfde">&#9670;&#160;</a></span>RemoveAllGeometries()</h2>
 
@@ -924,6 +956,34 @@ Functions</h2></td></tr>
 <span class="mlabels"><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a23d70761e65d82b683dfbe7cee3f47da" name="a23d70761e65d82b683dfbe7cee3f47da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23d70761e65d82b683dfbe7cee3f47da">&#9670;&#160;</a></span>SaveNavMeshRuntimeCache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool SaveNavMeshRuntimeCache </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>cacheFilePath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>

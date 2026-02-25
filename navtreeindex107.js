@@ -1,5 +1,9 @@
 var NAVTREEINDEX107 =
 {
+"structSDL__VirtualJoystickDesc.html#a787c36ed21a470e96cb69b000c4839ac":[43,0,441,5],
+"structSDL__VirtualJoystickDesc.html#a845f74a17570b8d8bff01ba88482f060":[43,0,441,3],
+"structSDL__VirtualJoystickDesc.html#a9123c6feebf5690a9331cc22f09b0f77":[43,0,441,25],
+"structSDL__VirtualJoystickDesc.html#a96239732b5073a33e93acbdbd984f0cb":[43,0,441,23],
 "structSDL__VirtualJoystickDesc.html#a9c6c227ce7de6b31d556a85b26425f09":[43,0,441,13],
 "structSDL__VirtualJoystickDesc.html#a9f9d1f676a233c91183963cb3c36d809":[43,0,441,21],
 "structSDL__VirtualJoystickDesc.html#aa59e414ed62e7f3fb4c94713b8c57bc3":[43,0,441,17],
@@ -245,9 +249,5 @@ var NAVTREEINDEX107 =
 "structdtPolyDetail.html":[43,0,52],
 "structdtPolyDetail.html#a2b1473cb6f856126db05a2955fbb2a61":[43,0,52,3],
 "structdtPolyDetail.html#aaccd8de89ab39454558ce4bfe6230c98":[43,0,52,0],
-"structdtPolyDetail.html#ae3f408c9c8974ccd058a98f781c58801":[43,0,52,2],
-"structdtPolyDetail.html#aef53174e1c31d4304bc07da5d677528c":[43,0,52,1],
-"structdtPolyState.html":[43,0,54],
-"structdtPolyState.html#a8e3a8a1c15338bbe761ef4d9ca2b4949":[43,0,54,1],
-"structdtPolyState.html#afd684e7c95d1048ace6dc198457b7c69":[43,0,54,0]
+"structdtPolyDetail.html#ae3f408c9c8974ccd058a98f781c58801":[43,0,52,2]
 };
