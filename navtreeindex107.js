@@ -1,5 +1,6 @@
 var NAVTREEINDEX107 =
 {
+"structSDL__VirtualJoystickDesc.html#a9c6c227ce7de6b31d556a85b26425f09":[43,0,441,13],
 "structSDL__VirtualJoystickDesc.html#a9f9d1f676a233c91183963cb3c36d809":[43,0,441,21],
 "structSDL__VirtualJoystickDesc.html#aa59e414ed62e7f3fb4c94713b8c57bc3":[43,0,441,17],
 "structSDL__VirtualJoystickDesc.html#aacffe03c0b064e2a033609e9e6226a8b":[43,0,441,15],
@@ -248,6 +249,5 @@ var NAVTREEINDEX107 =
 "structdtPolyDetail.html#aef53174e1c31d4304bc07da5d677528c":[43,0,52,1],
 "structdtPolyState.html":[43,0,54],
 "structdtPolyState.html#a8e3a8a1c15338bbe761ef4d9ca2b4949":[43,0,54,1],
-"structdtPolyState.html#afd684e7c95d1048ace6dc198457b7c69":[43,0,54,0],
-"structdtSegInterval.html":[43,0,58]
+"structdtPolyState.html#afd684e7c95d1048ace6dc198457b7c69":[43,0,54,0]
 };

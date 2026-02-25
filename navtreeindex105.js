@@ -1,5 +1,6 @@
 var NAVTREEINDEX105 =
 {
+"structSDLTest__TestSuiteReference.html#a01b702b83dad3dc15cfe535554527418":[43,0,451,0],
 "structSDLTest__TestSuiteReference.html#a06d97ce5bcf9ceb1300cc4aa39c028d3":[43,0,451,1],
 "structSDLTest__TestSuiteReference.html#a8aa788b982efb93c93c2ab01202e0007":[43,0,451,2],
 "structSDLTest__TestSuiteReference.html#ad66abaf20653fd7361d28c69f88ac702":[43,0,451,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__JoyButtonEvent.html":[43,0,408],
 "structSDL__JoyButtonEvent.html#a1679049adad7242b28420948fdc79044":[43,0,408,6],
 "structSDL__JoyButtonEvent.html#a3e7ca473fb7783d755d64598529b1ff9":[43,0,408,1],
-"structSDL__JoyButtonEvent.html#a73ebe4261cf80564052af9c1af737a4d":[43,0,408,0],
-"structSDL__JoyButtonEvent.html#a77a78bee38f4bf0682ccd97bbf8f9ab9":[43,0,408,2]
+"structSDL__JoyButtonEvent.html#a73ebe4261cf80564052af9c1af737a4d":[43,0,408,0]
 };

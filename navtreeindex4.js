@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"GtaNavViewer_2imgui_2imgui_8cpp.html#ad9db7fa6563ab5d722f52079643dc27e":[44,0,7,0,2,168],
 "GtaNavViewer_2imgui_2imgui_8cpp.html#ada53bde745722ba2792fb62514579a4f":[44,0,7,0,2,40],
 "GtaNavViewer_2imgui_2imgui_8cpp.html#ada58e5d3e2efc3cef60f213d771408d8":[44,0,7,0,2,13],
 "GtaNavViewer_2imgui_2imgui_8cpp.html#adadf8b6e42972da0a823c2168be33bf6":[44,0,7,0,2,124],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "GtaNavViewer_2imgui_2imgui_8h.html#a27f58d195412a83fd20f60587d77e111":[44,0,7,0,3,71],
 "GtaNavViewer_2imgui_2imgui_8h.html#a289dbbbffdadcf1231821d97a7c4a9be":[44,0,7,0,3,516],
 "GtaNavViewer_2imgui_2imgui_8h.html#a29add481c904a47bbbd2980555524fbe":[44,0,7,0,3,152],
-"GtaNavViewer_2imgui_2imgui_8h.html#a29add481c904a47bbbd2980555524fbea2d49d38bbe755cf849b7e96bcf3f3cb5":[44,0,7,0,3,152,5],
-"GtaNavViewer_2imgui_2imgui_8h.html#a29add481c904a47bbbd2980555524fbea3351643d21ff34cdd9c3d925b2d4bd3b":[44,0,7,0,3,152,1]
+"GtaNavViewer_2imgui_2imgui_8h.html#a29add481c904a47bbbd2980555524fbea2d49d38bbe755cf849b7e96bcf3f3cb5":[44,0,7,0,3,152,5]
 };

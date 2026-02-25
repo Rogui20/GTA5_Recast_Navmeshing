@@ -4,8 +4,9 @@ var NAVTREEINDEX2 =
 "ExternC_8cpp.html#acdcdde7a6aa314427c97c0a2e0743321":[44,0,7,1,4],
 "ExternC_8cpp.html#acf6c699ee4c5738d89858c5660e91fa4":[44,0,7,1,3],
 "ExternC_8cpp.html#ad18438b5de833265f1d5fea2ecd0213e":[44,0,7,1,12],
-"ExternC_8cpp.html#adfde2320c2d66296f32d229fe9b1c353":[44,0,7,1,18],
-"ExternC_8cpp.html#af58c6b0d37352974167fecd9270e033a":[44,0,7,1,27],
+"ExternC_8cpp.html#adfde2320c2d66296f32d229fe9b1c353":[44,0,7,1,19],
+"ExternC_8cpp.html#ae52f298093380d607a5cf860c3b186ae":[44,0,7,1,13],
+"ExternC_8cpp.html#af58c6b0d37352974167fecd9270e033a":[44,0,7,1,28],
 "ExternC_8cpp.html#af7789da0cef77d265747015c018eae1f":[44,0,7,1,11],
 "ExternC_8h.html":[44,0,7,2],
 "ExternC_8h.html#a077d4b40564957c7c4d253dea4a48886":[44,0,7,2,20],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "GtaNavRuntime_2glm_2simd_2platform_8h_source.html":[44,0,6,0,1,7],
 "GtaNavRuntime_2glm_2simd_2trigonometric_8h.html":[44,0,6,0,1,8],
 "GtaNavRuntime_2glm_2simd_2trigonometric_8h_source.html":[44,0,6,0,1,8],
-"GtaNavRuntime_2glm_2simd_2vector__relational_8h.html":[44,0,6,0,1,9],
-"GtaNavRuntime_2glm_2simd_2vector__relational_8h_source.html":[44,0,6,0,1,9]
+"GtaNavRuntime_2glm_2simd_2vector__relational_8h.html":[44,0,6,0,1,9]
 };

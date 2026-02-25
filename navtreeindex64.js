@@ -1,5 +1,6 @@
 var NAVTREEINDEX64 =
 {
+"SDL__surface_8h.html#ac2fe0fda20d38a16ec1802da9d6e49a0":[44,0,5,2,1,68,51],
 "SDL__surface_8h.html#ac418c4404813eeb32f4e1b24f9deae96":[44,0,5,2,1,68,53],
 "SDL__surface_8h.html#ad894d177fae95d7a1c0d23597b69e569":[44,0,5,2,1,68,13],
 "SDL__surface_8h.html#ae2f6d70b8071e83e0c84241dbdcd3a3b":[44,0,5,2,1,68,48],
@@ -248,6 +249,5 @@ var NAVTREEINDEX64 =
 "SDL__version_8h.html#a8fc808626be61507ade364b399f81468":[44,0,5,2,1,88,2],
 "SDL__version_8h.html#ab9a870099fb4c3c2ffc926a067b5243e":[44,0,5,2,1,88,8],
 "SDL__version_8h.html#af77ec4d486c3401e48689a016d304e73":[44,0,5,2,1,88,7],
-"SDL__version_8h_source.html":[44,0,5,2,1,88],
-"SDL__video_8h.html":[44,0,5,2,1,89]
+"SDL__version_8h_source.html":[44,0,5,2,1,88]
 };

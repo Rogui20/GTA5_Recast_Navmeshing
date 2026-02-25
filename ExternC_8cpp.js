@@ -13,6 +13,7 @@ var ExternC_8cpp =
     [ "GenerateAutomaticOffmeshLinks", "ExternC_8cpp.html#a8de7660c9f47651d86ef386ecbe3f6cf", null ],
     [ "GetNavMeshBorderEdges", "ExternC_8cpp.html#af7789da0cef77d265747015c018eae1f", null ],
     [ "GetNavMeshPolygons", "ExternC_8cpp.html#ad18438b5de833265f1d5fea2ecd0213e", null ],
+    [ "HasGroundNeighbourOnEdge", "ExternC_8cpp.html#ae52f298093380d607a5cf860c3b186ae", null ],
     [ "InitNavMesh", "ExternC_8cpp.html#a243a7a0e45dc62290d8bcd691c8b8744", null ],
     [ "InitTiledGrid", "ExternC_8cpp.html#a4353b158bd5129b3ebdbd9ce84537a6b", null ],
     [ "RemoveAllGeometries", "ExternC_8cpp.html#abd12c10fe11219e74c416d3df583dfde", null ],

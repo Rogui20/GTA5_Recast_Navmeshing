@@ -1,5 +1,6 @@
 var NAVTREEINDEX89 =
 {
+"imgui__widgets_8cpp.html#a6201ac5ca1497718dc28dd5f9cd13a3b":[44,0,7,0,8,46],
 "imgui__widgets_8cpp.html#a6625118253ca25ee5849aae59cd47c88":[44,0,7,0,8,64],
 "imgui__widgets_8cpp.html#a662633518bb4fb262fc93329df1fa548":[44,0,7,0,8,6],
 "imgui__widgets_8cpp.html#a6ce8e0ae4534a882c54629a82548bd68":[44,0,7,0,8,41],
@@ -248,6 +249,5 @@ var NAVTREEINDEX89 =
 "md_CONTRIBUTING.html#want-a-new-feature":[6,2],
 "md_Docs_2__1__Introduction.html":[0],
 "md_Docs_2__1__Introduction.html#agent-attributes":[0,6,0],
-"md_Docs_2__1__Introduction.html#high-level-overview-of-the-recast-navmesh-building-process":[0,9],
-"md_Docs_2__1__Introduction.html#what-is-a-navmesh-and-how-does-it-work":[0,6]
+"md_Docs_2__1__Introduction.html#high-level-overview-of-the-recast-navmesh-building-process":[0,9]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX66 =
 {
+"SampleInterfaces_8cpp.html":[44,0,9,1,18],
 "SampleInterfaces_8cpp.html#ace0d90b13fb8095ce8da79758493054e":[44,0,9,1,18,1],
 "SampleInterfaces_8h.html":[44,0,9,0,17],
 "SampleInterfaces_8h_source.html":[44,0,9,0,17],
@@ -248,6 +249,5 @@ var NAVTREEINDEX66 =
 "classImGui_1_1FileBrowser.html#a7b35d76bd1125c5c273f43aafb84eefc":[43,0,0,0,19],
 "classImGui_1_1FileBrowser.html#a7cca32717dbad32d228cc64728fe1663":[43,0,0,0,15],
 "classImGui_1_1FileBrowser.html#a7cf92b59d39b24ef5d2a4fc853636c5c":[43,0,0,0,16],
-"classImGui_1_1FileBrowser.html#a981ca7e889ef4790d8b0a2604bb18ccd":[43,0,0,0,10],
-"classImGui_1_1FileBrowser.html#aa81b5fda3569dd0aa056b4a276fe24a4":[43,0,0,0,2]
+"classImGui_1_1FileBrowser.html#a981ca7e889ef4790d8b0a2604bb18ccd":[43,0,0,0,10]
 };

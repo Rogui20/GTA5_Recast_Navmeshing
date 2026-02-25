@@ -159,6 +159,8 @@ Functions</h2></td></tr>
 <tr class="separator:acf6c699ee4c5738d89858c5660e91fa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad18438b5de833265f1d5fea2ecd0213e" id="r_ad18438b5de833265f1d5fea2ecd0213e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ad18438b5de833265f1d5fea2ecd0213e">GetNavMeshPolygons</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structNavMeshPolygonInfo.html">NavMeshPolygonInfo</a> *polygons, int maxPolygons, <a class="el" href="structVector3.html">Vector3</a> *vertices, int maxVertices, <a class="el" href="structNavMeshEdgeInfo.html">NavMeshEdgeInfo</a> *edges, int maxEdges, int *outVertexCount, int *outEdgeCount)</td></tr>
 <tr class="separator:ad18438b5de833265f1d5fea2ecd0213e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae52f298093380d607a5cf860c3b186ae" id="r_ae52f298093380d607a5cf860c3b186ae"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ae52f298093380d607a5cf860c3b186ae">HasGroundNeighbourOnEdge</a> (const <a class="el" href="structdtMeshTile.html">dtMeshTile</a> *tile, const <a class="el" href="structdtPoly.html">dtPoly</a> *poly, int edge, const <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav)</td></tr>
+<tr class="separator:ae52f298093380d607a5cf860c3b186ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7789da0cef77d265747015c018eae1f" id="r_af7789da0cef77d265747015c018eae1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#af7789da0cef77d265747015c018eae1f">GetNavMeshBorderEdges</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structNavMeshEdgeInfo.html">NavMeshEdgeInfo</a> *edges, int maxEdges, int *outEdgeCount)</td></tr>
 <tr class="separator:af7789da0cef77d265747015c018eae1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfde2320c2d66296f32d229fe9b1c353" id="r_adfde2320c2d66296f32d229fe9b1c353"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#adfde2320c2d66296f32d229fe9b1c353">RunPathfindInternal</a> (ExternNavmeshContext &amp;ctx, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float minEdge, float *outPath, int options)</td></tr>
@@ -687,6 +689,54 @@ Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae52f298093380d607a5cf860c3b186ae" name="ae52f298093380d607a5cf860c3b186ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae52f298093380d607a5cf860c3b186ae">&#9670;&#160;</a></span>HasGroundNeighbourOnEdge()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool HasGroundNeighbourOnEdge </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structdtMeshTile.html">dtMeshTile</a> *&#160;</td>
+          <td class="paramname"><em>tile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structdtPoly.html">dtPoly</a> *&#160;</td>
+          <td class="paramname"><em>poly</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>edge</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&#160;</td>
+          <td class="paramname"><em>nav</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

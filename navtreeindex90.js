@@ -1,5 +1,6 @@
 var NAVTREEINDEX90 =
 {
+"md_Docs_2__1__Introduction.html#what-is-a-navmesh-and-how-does-it-work":[0,6],
 "md_Docs_2__1__Introduction.html#what-is-a-navmesh-not":[0,7],
 "md_Docs_2__1__Introduction.html#what-is-recast-navigation":[0,8],
 "md_Docs_2__2__BuildingAndIntegrating.html":[1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX90 =
 "structDebugLine.html#a6213784d1301c2a2176db243ee1f4666":[43,0,14,5],
 "structDebugLine.html#aa37fd073b2bd7052f6eb3a17efd760d6":[43,0,14,2],
 "structDebugLine.html#aae7b7f3345ece817075fbcf1a758eb44":[43,0,14,3],
-"structDebugLine.html#ad5264bd41158ad33497bb0c723fa90dc":[43,0,14,4],
-"structDirtyEntry.html":[43,0,15]
+"structDebugLine.html#ad5264bd41158ad33497bb0c723fa90dc":[43,0,14,4]
 };

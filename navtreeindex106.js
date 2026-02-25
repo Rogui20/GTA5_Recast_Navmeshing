@@ -1,5 +1,6 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__JoyButtonEvent.html#a77a78bee38f4bf0682ccd97bbf8f9ab9":[43,0,408,2],
 "structSDL__JoyButtonEvent.html#a8f3312a046d37fa2884b93f69c4cb655":[43,0,408,5],
 "structSDL__JoyButtonEvent.html#ab50b6f7d1ab3ac53df69fc2d6cf5fa2a":[43,0,408,4],
 "structSDL__JoyButtonEvent.html#ad3b6f8d9aa2c5e694f664b97d12bcd2b":[43,0,408,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX106 =
 "structSDL__VirtualJoystickDesc.html#a787c36ed21a470e96cb69b000c4839ac":[43,0,441,5],
 "structSDL__VirtualJoystickDesc.html#a845f74a17570b8d8bff01ba88482f060":[43,0,441,3],
 "structSDL__VirtualJoystickDesc.html#a9123c6feebf5690a9331cc22f09b0f77":[43,0,441,25],
-"structSDL__VirtualJoystickDesc.html#a96239732b5073a33e93acbdbd984f0cb":[43,0,441,23],
-"structSDL__VirtualJoystickDesc.html#a9c6c227ce7de6b31d556a85b26425f09":[43,0,441,13]
+"structSDL__VirtualJoystickDesc.html#a96239732b5073a33e93acbdbd984f0cb":[43,0,441,23]
 };

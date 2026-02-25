@@ -1,5 +1,6 @@
 var NAVTREEINDEX16 =
 {
+"SDL__config__windows_8h_source.html":[44,0,5,2,1,18],
 "SDL__config__wingdk_8h.html":[44,0,5,2,1,19],
 "SDL__config__wingdk_8h.html#a02d2a9cfd5d2421f2eb2fbed9606d647":[44,0,5,2,1,19,4],
 "SDL__config__wingdk_8h.html#a0cd874ab096c162f3c1ba8ee55eb3d9b":[44,0,5,2,1,19,25],
@@ -248,6 +249,5 @@ var NAVTREEINDEX16 =
 "SDL__endian_8h_source.html":[44,0,5,2,1,25],
 "SDL__error_8h.html":[44,0,5,2,1,26],
 "SDL__error_8h.html#a007ed517953a99a46e46be567ef5609e":[44,0,5,2,1,26,4],
-"SDL__error_8h.html#a0ec05915c315049ed2ab74cfe1ff980f":[44,0,5,2,1,26,5],
-"SDL__error_8h.html#a230c4f6ec50e6d035801b506097a3f69":[44,0,5,2,1,26,7]
+"SDL__error_8h.html#a0ec05915c315049ed2ab74cfe1ff980f":[44,0,5,2,1,26,5]
 };
