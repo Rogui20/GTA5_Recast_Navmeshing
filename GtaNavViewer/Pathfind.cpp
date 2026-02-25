@@ -69,11 +69,11 @@ void ViewerApp::TryRunPathfind()
     dtStatus straightStatus = DT_FAILURE;
     if (viewportClickMode == ViewportClickMode::Pathfind_Normal)
     {
-        straightStatus = CurrentNavQuery()->findStraightPath(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, 0);
+        straightStatus = CurrentNavQuery()->findStraightPath(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, 2);
     }
     else if (viewportClickMode == ViewportClickMode::Pathfind_MinEdge)
     {
-        straightStatus = CurrentNavQuery()->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, 0, pathfindMinEdgeDistance);
+        straightStatus = CurrentNavQuery()->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, straight, straightFlags, straightRefs, &straightCount, 256, 2, pathfindMinEdgeDistance);
     }
 
     if (dtStatusFailed(straightStatus) || straightCount == 0)

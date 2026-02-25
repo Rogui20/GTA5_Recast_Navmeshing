@@ -12,6 +12,7 @@
 #include "GtaHandler.h"
 #include "GtaHandlerMenu.h"
 #include "MemoryHandler.h"
+#include "WebSockets.h"
 #include "imfilebrowser.h"
 #include <DetourNavMeshQuery.h>
 #include <memory>
@@ -113,6 +114,8 @@ private:
     GtaHandler gtaHandler;
     GtaHandlerMenu gtaHandlerMenu;
     MemoryHandler memoryHandler;
+    WebSockets webSockets;
+    bool webSocketsEnabled = false;
     std::unordered_map<int, uint64_t> memorySlotToMeshId;
 
     enum class NavmeshRenderMode
@@ -235,6 +238,7 @@ private:
     MeshBoundsState ComputeMeshBounds(const MeshInstance& instance) const;
     bool HasMeshChanged(const MeshBoundsState& previous, const MeshBoundsState& current) const;
     void UpdateNavmeshTiles();
+    bool ApplyAutomaticOffmeshLinks(const AutoOffmeshGenerationParams& params);
     bool ComputeRayMeshHit(int mx, int my, glm::vec3& outPoint, int* outTri, int* outMeshIndex);
     void ResetPathState(int slotIndex = -1);
     bool InitNavQueryForCurrentNavmesh();

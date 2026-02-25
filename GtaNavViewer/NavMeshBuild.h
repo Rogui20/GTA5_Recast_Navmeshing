@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <atomic>
+#include <cstdint>
+#include <unordered_map>
 #include <glm/glm.hpp>
 #include <Recast.h>
 #include <DetourNavMesh.h>
@@ -33,7 +35,8 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                        int* outTilesSkipped = nullptr,
                        const std::atomic_bool* cancelFlag = nullptr,
                        bool useCache = true,
-                       const char* cachePath = nullptr);
+                       const char* cachePath = nullptr,
+                       std::unordered_map<uint64_t, uint64_t>* outTileHashes = nullptr);
 
 bool BuildSingleTile(const NavmeshBuildInput& input,
                      const NavmeshGenerationSettings& settings,

@@ -1,4 +1,5 @@
 #include "NavMeshBuild.h"
+#include "NavMesh_TileCacheDB.h"
 
 #include <DetourMath.h>
 #include <DetourNavMeshBuilder.h>
@@ -14,7 +15,7 @@
 namespace
 {
 #ifndef DEBUG_MODE
-#define DEBUG_MODE 0
+#define DEBUG_MODE 1
 #endif
 
 #if DEBUG_MODE
@@ -31,25 +32,7 @@ namespace
         return true;
     }
 
-    static constexpr uint32_t TILE_CACHE_MAGIC   = 'G' << 24 | 'T' << 16 | 'A' << 8 | 'V';
-    static constexpr uint32_t TILE_CACHE_VERSION = 1;
-    static constexpr const char* DEFAULT_CACHE_PATH = "navmesh_tilecache.bin";
-
-    struct DiskTileHeader
-    {
-        int      tx;
-        int      ty;
-        uint32_t dataSize;
-        uint64_t geomHash;
-    };
-
-    struct TileCacheFileHeader
-    {
-        uint32_t        magic;
-        uint32_t        version;
-        uint32_t        tileCount;
-        dtNavMeshParams navParams;
-    };
+    static constexpr const char* DEFAULT_CACHE_PATH = "navmesh.tilecache";
 
     uint64_t fnv1a64(const void* data, size_t size)
     {
@@ -63,7 +46,50 @@ namespace
         return hash;
     }
 
-    uint64_t computeTileHash(const NavmeshBuildInput& input, const std::vector<int>& tileTris)
+    void hashFloat(uint64_t& hash, float value)
+    {
+        uint32_t bits = 0;
+        static_assert(sizeof(bits) == sizeof(value), "float e uint32 devem ter mesmo tamanho");
+        memcpy(&bits, &value, sizeof(bits));
+        hash ^= bits;
+        hash *= 0x100000001b3ULL;
+    }
+
+    uint64_t hashOffmeshLinks(const std::vector<OffmeshLink>& links)
+    {
+        if (links.empty())
+            return 0;
+
+        uint64_t hash = 0xcbf29ce484222325ULL;
+        for (const auto& link : links)
+        {
+            hashFloat(hash, link.start.x);
+            hashFloat(hash, link.start.y);
+            hashFloat(hash, link.start.z);
+            hashFloat(hash, link.end.x);
+            hashFloat(hash, link.end.y);
+            hashFloat(hash, link.end.z);
+            hashFloat(hash, link.radius);
+            hash ^= static_cast<uint64_t>(link.bidirectional ? 1 : 0);
+            hash *= 0x100000001b3ULL;
+            hash ^= static_cast<uint64_t>(link.area);
+            hash *= 0x100000001b3ULL;
+            hash ^= static_cast<uint64_t>(link.flags);
+            hash *= 0x100000001b3ULL;
+            hash ^= static_cast<uint64_t>(link.userId);
+            hash *= 0x100000001b3ULL;
+            hash ^= static_cast<uint64_t>(static_cast<uint32_t>(link.ownerTx));
+            hash *= 0x100000001b3ULL;
+            hash ^= static_cast<uint64_t>(static_cast<uint32_t>(link.ownerTy));
+            hash *= 0x100000001b3ULL;
+        }
+
+        return hash;
+    }
+
+    uint64_t computeTileHash(const NavmeshBuildInput& input,
+                             const std::vector<int>& tileTris,
+                             const std::vector<OffmeshLink>& tileLinks)
     {
         std::vector<int> uniqueIdx = tileTris;
         std::sort(uniqueIdx.begin(), uniqueIdx.end());
@@ -91,12 +117,48 @@ namespace
             hash *= 0x100000001b3ULL;
         }
 
+        const uint64_t offmeshHash = hashOffmeshLinks(tileLinks);
+        if (offmeshHash != 0)
+        {
+            hash ^= offmeshHash;
+            hash *= 0x100000001b3ULL;
+        }
+
         return hash;
     }
 
-    uint64_t makeTileKey(int tx, int ty)
+    bool pointInsideBounds(const glm::vec3& p, const float* bmin, const float* bmax, float radius)
     {
-        return (static_cast<uint64_t>(static_cast<uint32_t>(tx)) << 32) | static_cast<uint32_t>(ty);
+        return (p.x + radius >= bmin[0] && p.x - radius <= bmax[0]) &&
+               (p.y + radius >= bmin[1] && p.y - radius <= bmax[1]) &&
+               (p.z + radius >= bmin[2] && p.z - radius <= bmax[2]);
+    }
+
+    void collectOffmeshForTile(const NavmeshBuildInput& input,
+                               const rcConfig& cfg,
+                               int tileX,
+                               int tileY,
+                               std::vector<OffmeshLink>& outLinks)
+    {
+        outLinks.clear();
+        if (!input.offmeshLinks)
+            return;
+
+        for (const auto& link : *input.offmeshLinks)
+        {
+            if (link.ownerTx != -1 && link.ownerTy != -1)
+            {
+                if (link.ownerTx == tileX && link.ownerTy == tileY)
+                    outLinks.push_back(link);
+                continue;
+            }
+
+            if (pointInsideBounds(link.start, cfg.bmin, cfg.bmax, link.radius) ||
+                pointInsideBounds(link.end, cfg.bmin, cfg.bmax, link.radius))
+            {
+                outLinks.push_back(link);
+            }
+        }
     }
 
     enum class NavTileBuildResult
@@ -109,6 +171,7 @@ namespace
     NavTileBuildResult createNavDataForConfig(const NavmeshBuildInput& input,
                                               const rcConfig& cfg,
                                               const std::vector<int>& triSource,
+                                              const std::vector<OffmeshLink>& tileOffmesh,
                                               int tileX,
                                               int tileY,
                                               dtNavMeshCreateParams& outParams,
@@ -291,17 +354,17 @@ namespace
         std::vector<unsigned short> offmeshFlags;
         std::vector<unsigned int> offmeshIds;
 
-        if (input.offmeshLinks && !input.offmeshLinks->empty())
+        if (!tileOffmesh.empty())
         {
-            offmeshVerts.reserve(input.offmeshLinks->size() * 6);
-            offmeshRads.reserve(input.offmeshLinks->size());
-            offmeshDirs.reserve(input.offmeshLinks->size());
-            offmeshAreas.reserve(input.offmeshLinks->size());
-            offmeshFlags.reserve(input.offmeshLinks->size());
-            offmeshIds.reserve(input.offmeshLinks->size());
+            offmeshVerts.reserve(tileOffmesh.size() * 6);
+            offmeshRads.reserve(tileOffmesh.size());
+            offmeshDirs.reserve(tileOffmesh.size());
+            offmeshAreas.reserve(tileOffmesh.size());
+            offmeshFlags.reserve(tileOffmesh.size());
+            offmeshIds.reserve(tileOffmesh.size());
 
             unsigned int baseId = 1000;
-            for (const auto& link : *input.offmeshLinks)
+            for (const auto& link : tileOffmesh)
             {
                 offmeshVerts.push_back(link.start.x);
                 offmeshVerts.push_back(link.start.y);
@@ -312,9 +375,9 @@ namespace
 
                 offmeshRads.push_back(link.radius);
                 offmeshDirs.push_back(link.bidirectional ? 1 : 0);
-                offmeshAreas.push_back(RC_WALKABLE_AREA);
-                offmeshFlags.push_back(1);
-                offmeshIds.push_back(baseId++);
+                offmeshAreas.push_back(link.area);
+                offmeshFlags.push_back(link.flags);
+                offmeshIds.push_back(link.userId != 0 ? link.userId : baseId++);
             }
 
             params.offMeshConVerts = offmeshVerts.data();
@@ -326,6 +389,7 @@ namespace
             params.offMeshConCount = static_cast<int>(offmeshDirs.size());
         }
 
+        printf("[NavMeshData] params.offMeshConCount %d \n", params.offMeshConCount);
         bool ok = dtCreateNavMeshData(&params, &navData, &navDataSize);
         if (!ok)
         {
@@ -348,144 +412,6 @@ namespace
         return ok ? NavTileBuildResult::Success : NavTileBuildResult::Error;
     }
 
-    bool saveTileCache(const char* cachePath,
-                       dtNavMesh* nav,
-                       const std::unordered_map<uint64_t, uint64_t>& tileHashes)
-    {
-        if (!cachePath || !nav)
-            return false;
-
-        std::vector<DiskTileHeader> diskTiles;
-        std::vector<const unsigned char*> tileData;
-        diskTiles.reserve(nav->getMaxTiles());
-        tileData.reserve(nav->getMaxTiles());
-
-        for (int i = 0; i < nav->getMaxTiles(); ++i)
-        {
-            const dtMeshTile* tile = nav->getTile(i);
-            if (!tile || !tile->header || !tile->data || tile->dataSize == 0)
-                continue;
-
-            DiskTileHeader th{};
-            th.tx = tile->header->x;
-            th.ty = tile->header->y;
-            th.dataSize = tile->dataSize;
-            const uint64_t key = makeTileKey(th.tx, th.ty);
-            const auto itHash = tileHashes.find(key);
-            th.geomHash = itHash != tileHashes.end() ? itHash->second : 0;
-
-            diskTiles.push_back(th);
-            tileData.push_back(tile->data);
-        }
-
-        TileCacheFileHeader header{};
-        header.magic = TILE_CACHE_MAGIC;
-        header.version = TILE_CACHE_VERSION;
-        header.tileCount = static_cast<uint32_t>(diskTiles.size());
-        memcpy(&header.navParams, nav->getParams(), sizeof(dtNavMeshParams));
-
-        FILE* fp = fopen(cachePath, "wb");
-        if (!fp)
-            return false;
-
-        bool ok = fwrite(&header, sizeof(TileCacheFileHeader), 1, fp) == 1;
-        for (size_t i = 0; ok && i < diskTiles.size(); ++i)
-        {
-            ok = fwrite(&diskTiles[i], sizeof(DiskTileHeader), 1, fp) == 1;
-            ok = ok && fwrite(tileData[i], diskTiles[i].dataSize, 1, fp) == 1;
-        }
-
-        fclose(fp);
-
-        if (ok)
-            printf("[NavMeshData] Cache salvo em %s (%zu tiles)\n", cachePath, diskTiles.size());
-
-        return ok;
-    }
-
-    bool loadTileCache(const char* cachePath,
-                       dtNavMesh* nav,
-                       const std::unordered_map<uint64_t, uint64_t>& expectedHashes,
-                       std::unordered_map<uint64_t, bool>& tilesLoaded,
-                       bool& cacheDirty)
-    {
-        if (!cachePath || !nav)
-            return false;
-
-        FILE* fp = fopen(cachePath, "rb");
-        if (!fp)
-            return false;
-
-        TileCacheFileHeader header{};
-        if (fread(&header, sizeof(TileCacheFileHeader), 1, fp) != 1)
-        {
-            fclose(fp);
-            return false;
-        }
-
-        if (header.magic != TILE_CACHE_MAGIC || header.version != TILE_CACHE_VERSION)
-        {
-            fclose(fp);
-            printf("[NavMeshData] Cache incompatível (magic/version).\n");
-            return false;
-        }
-
-        if (memcmp(&header.navParams, nav->getParams(), sizeof(dtNavMeshParams)) != 0)
-        {
-            fclose(fp);
-            printf("[NavMeshData] Cache incompatível com parametros atuais.\n");
-            return false;
-        }
-
-        bool ok = true;
-        for (uint32_t i = 0; ok && i < header.tileCount; ++i)
-        {
-            DiskTileHeader th{};
-            ok = fread(&th, sizeof(DiskTileHeader), 1, fp) == 1;
-            if (!ok)
-                break;
-
-            unsigned char* data = static_cast<unsigned char*>(dtAlloc(th.dataSize, DT_ALLOC_PERM));
-            if (!data)
-            {
-                ok = false;
-                break;
-            }
-
-            ok = fread(data, th.dataSize, 1, fp) == 1;
-            if (!ok)
-            {
-                dtFree(data);
-                break;
-            }
-
-            const uint64_t key = makeTileKey(th.tx, th.ty);
-            const auto itHash = expectedHashes.find(key);
-            const bool hashMatch = itHash != expectedHashes.end() && itHash->second == th.geomHash;
-            if (hashMatch)
-            {
-                dtStatus status = nav->addTile(data, th.dataSize, DT_TILE_FREE_DATA, 0, nullptr);
-                if (dtStatusSucceed(status))
-                {
-                    tilesLoaded[key] = true;
-                }
-                else
-                {
-                    cacheDirty = true;
-                    dtFree(data);
-                    printf("[NavMeshData] Falha ao adicionar tile do cache (%d,%d) status=0x%x\n", th.tx, th.ty, status);
-                }
-            }
-            else
-            {
-                cacheDirty = true;
-                dtFree(data);
-            }
-        }
-
-        fclose(fp);
-        return ok;
-    }
 }
 
 bool BuildTiledNavMesh(const NavmeshBuildInput& input,
@@ -496,7 +422,8 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                        int* outTilesSkipped,
                        const std::atomic_bool* cancelFlag,
                        bool useCache,
-                       const char* cachePath)
+                       const char* cachePath,
+                       std::unordered_map<uint64_t, uint64_t>* outTileHashes)
 {
     auto isCancelled = [cancelFlag]()
     {
@@ -537,6 +464,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
         int ty = 0;
         rcConfig cfg{};
         std::vector<int> tris;
+        std::vector<OffmeshLink> offmesh;
         uint64_t geomHash = 0;
         bool added = false;
     };
@@ -609,16 +537,20 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                 }
             }
 
-            if (tileTris.empty())
+            std::vector<OffmeshLink> tileOffmesh;
+            collectOffmeshForTile(input, tileCfg, tx, ty, tileOffmesh);
+
+            if (tileTris.empty() && tileOffmesh.empty())
                 continue;
 
-            const uint64_t geomHash = computeTileHash(input, tileTris);
+            const uint64_t geomHash = computeTileHash(input, tileTris, tileOffmesh);
 
             TileInput inputTile;
             inputTile.tx = tx;
             inputTile.ty = ty;
             inputTile.cfg = tileCfg;
             inputTile.tris = std::move(tileTris);
+            inputTile.offmesh = std::move(tileOffmesh);
             inputTile.geomHash = geomHash;
             tilesToBuild.push_back(std::move(inputTile));
         }
@@ -636,9 +568,11 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
     tileHashes.reserve(tilesToBuild.size() * 2);
     for (auto& tile : tilesToBuild)
     {
-        const uint64_t key = makeTileKey(tile.tx, tile.ty);
+        const uint64_t key = MakeTileKey(tile.tx, tile.ty);
         tileHashes[key] = tile.geomHash;
     }
+    if (outTileHashes)
+        *outTileHashes = tileHashes;
 
     dtNavMesh* nav = dtAllocNavMesh();
     if (!nav)
@@ -653,7 +587,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
     navParams.tileHeight = cfg.tileSize * cfg.cs;
     navParams.maxTiles = tileCountTotal;
 
-    const unsigned int desiredMaxPolys = 2048;
+    const unsigned int desiredMaxPolys = 1 << 16;
     const unsigned int tileBits = (unsigned int)dtIlog2(dtNextPow2((unsigned int)navParams.maxTiles));
     const unsigned int desiredPolyBits = (unsigned int)dtIlog2(dtNextPow2(desiredMaxPolys));
     const unsigned int maxPolyBitsAllowed = tileBits >= 22 ? 0u : (22u - tileBits);
@@ -694,9 +628,48 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
     {
         if (useCache && !tilesToBuild.empty())
         {
-            const bool loaded = loadTileCache(cacheFile, nav, tileHashes, tilesLoadedFromCache, cacheDirty);
-            if (loaded)
+            std::unordered_map<uint64_t, TileDbIndexEntry> index;
+            const bool loadedIndex = TileDbLoadIndex(cacheFile, nav, index);
+            if (loadedIndex)
             {
+                for (const TileInput& inputTile : tilesToBuild)
+                {
+                    const uint64_t tileKey = MakeTileKey(inputTile.tx, inputTile.ty);
+                    const auto itIndex = index.find(tileKey);
+                    const auto itHash = tileHashes.find(tileKey);
+                    if (itIndex == index.end() || itHash == tileHashes.end())
+                    {
+                        cacheDirty = true;
+                        continue;
+                    }
+
+                    if (itIndex->second.geomHash != itHash->second)
+                    {
+                        cacheDirty = true;
+                        continue;
+                    }
+
+                    unsigned char* data = nullptr;
+                    int dataSize = 0;
+                    if (!TileDbReadTile(cacheFile, itIndex->second, data, dataSize))
+                    {
+                        cacheDirty = true;
+                        continue;
+                    }
+
+                    dtStatus status = nav->addTile(data, dataSize, DT_TILE_FREE_DATA, 0, nullptr);
+                    if (dtStatusSucceed(status))
+                    {
+                        tilesLoadedFromCache[tileKey] = true;
+                    }
+                    else
+                    {
+                        cacheDirty = true;
+                        dtFree(data);
+                        printf("[NavMeshData] Falha ao adicionar tile do cache (%d,%d) status=0x%x\n", inputTile.tx, inputTile.ty, status);
+                    }
+                }
+
                 tilesBuilt += static_cast<int>(tilesLoadedFromCache.size());
                 if (!tilesLoadedFromCache.empty())
                 {
@@ -717,7 +690,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
                 return false;
             }
 
-            const uint64_t tileKey = makeTileKey(inputTile.tx, inputTile.ty);
+            const uint64_t tileKey = MakeTileKey(inputTile.tx, inputTile.ty);
             if (tilesLoadedFromCache.find(tileKey) != tilesLoadedFromCache.end())
             {
                 continue;
@@ -725,7 +698,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
             dtNavMeshCreateParams params{};
             unsigned char* navMeshData = nullptr;
             int navMeshDataSize = 0;
-            const NavTileBuildResult result = createNavDataForConfig(input, inputTile.cfg, inputTile.tris, inputTile.tx, inputTile.ty, params, navMeshData, navMeshDataSize);
+            const NavTileBuildResult result = createNavDataForConfig(input, inputTile.cfg, inputTile.tris, inputTile.offmesh, inputTile.tx, inputTile.ty, params, navMeshData, navMeshDataSize);
             if (result == NavTileBuildResult::Empty)
             {
                 ++tilesSkipped;
@@ -771,7 +744,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
 
         if (useCache && tilesBuilt > 0)
         {
-            saveTileCache(cacheFile, nav, tileHashes);
+            TileDbWriteOrUpdateTiles(cacheFile, nav, tileHashes);
         }
     }
     else
@@ -842,6 +815,8 @@ bool BuildSingleTile(const NavmeshBuildInput& input,
 
     std::vector<int> tileTris;
     tileTris.reserve(input.tris.size());
+    std::vector<OffmeshLink> tileOffmesh;
+    collectOffmeshForTile(input, tileCfg, tileX, tileY, tileOffmesh);
 
     for (int i = 0; i < input.ntris; ++i)
     {
@@ -890,7 +865,7 @@ bool BuildSingleTile(const NavmeshBuildInput& input,
     dtNavMeshCreateParams createParams{};
     unsigned char* navMeshData = nullptr;
     int navMeshDataSize = 0;
-    const NavTileBuildResult result = createNavDataForConfig(input, tileCfg, tileTris, tileX, tileY, createParams, navMeshData, navMeshDataSize);
+    const NavTileBuildResult result = createNavDataForConfig(input, tileCfg, tileTris, tileOffmesh, tileX, tileY, createParams, navMeshData, navMeshDataSize);
     if (result == NavTileBuildResult::Empty)
     {
         outEmpty = true;

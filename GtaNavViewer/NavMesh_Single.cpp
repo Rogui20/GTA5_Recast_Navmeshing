@@ -120,6 +120,25 @@ namespace
             return false;
         }
 
+        printf("[NavMeshData] pmesh npolys=%d nverts=%d\n", pmesh->npolys, pmesh->nverts);
+
+        if (pmesh->nverts == 0 || pmesh->npolys == 0)
+        {
+            printf("[NavMeshData] pmesh vazio: npolys=%d nverts=%d (tile %d,%d)\n",
+                pmesh->npolys, pmesh->nverts, tileX, tileY);
+
+            
+            printf("[NavMeshData] settings: walkH=%d climb=%d rad=%d minReg=%d mergeReg=%d maxEdgeLen=%d maxErr=%.2f\n",
+            cfg.walkableHeight, cfg.walkableClimb, cfg.walkableRadius,
+            cfg.minRegionArea, cfg.mergeRegionArea, cfg.maxEdgeLen, cfg.maxSimplificationError);
+
+            rcFreePolyMesh(pmesh);
+            rcFreeContourSet(cset);
+            rcFreeCompactHeightfield(chf);
+
+            return false;
+        }
+
         rcPolyMeshDetail* dmesh = rcAllocPolyMeshDetail();
         if (!dmesh)
         {
@@ -204,9 +223,9 @@ namespace
 
                 offmeshRads.push_back(link.radius);
                 offmeshDirs.push_back(link.bidirectional ? 1 : 0);
-                offmeshAreas.push_back(RC_WALKABLE_AREA);
-                offmeshFlags.push_back(1);
-                offmeshIds.push_back(baseId++);
+                offmeshAreas.push_back(link.area);
+                offmeshFlags.push_back(link.flags);
+                offmeshIds.push_back(link.userId != 0 ? link.userId : baseId++);
             }
 
             params.offMeshConVerts = offmeshVerts.data();
@@ -241,15 +260,22 @@ bool BuildSingleNavMesh(const NavmeshBuildInput& input,
                         dtNavMesh*& outNav)
 {
     rcConfig cfg = input.baseCfg;
-    cfg.borderSize = cfg.walkableRadius + 3;
     rcVcopy(cfg.bmin, input.meshBMin);
     rcVcopy(cfg.bmax, input.meshBMax);
-    cfg.width  += cfg.borderSize * 2;
-    cfg.height += cfg.borderSize * 2;
+
+    cfg.borderSize = cfg.walkableRadius + 3;
+
+    // expande bounds pelo border em world
     cfg.bmin[0] -= cfg.borderSize * cfg.cs;
     cfg.bmin[2] -= cfg.borderSize * cfg.cs;
     cfg.bmax[0] += cfg.borderSize * cfg.cs;
     cfg.bmax[2] += cfg.borderSize * cfg.cs;
+
+    // agora calc grid size de verdade
+    rcCalcGridSize(cfg.bmin, cfg.bmax, cfg.cs, &cfg.width, &cfg.height);
+
+    printf("[NavMeshData] cs=%.3f ch=%.3f width=%d height=%d border=%d\n",
+       cfg.cs, cfg.ch, cfg.width, cfg.height, cfg.borderSize);
 
     printf("[NavMeshData] BuildFromMesh (single tile): Verts=%d, Tris=%d, Bounds=(%.2f, %.2f, %.2f)-(%.2f, %.2f, %.2f) Grid=%d x %d (border=%d)\n",
            input.nverts, input.ntris,
@@ -276,20 +302,22 @@ bool BuildSingleNavMesh(const NavmeshBuildInput& input,
     navParams.tileWidth  = (params.bmax[0] - params.bmin[0]);
     navParams.tileHeight = (params.bmax[2] - params.bmin[2]);
     navParams.maxTiles   = 1;
-    navParams.maxPolys   = 2048;
+    navParams.maxPolys   = 1 << 16;
 
     if (dtStatusFailed(nav->init(&navParams)))
     {
         printf("[NavMeshData] m_nav->init falhou.\n");
         dtFree(navMeshData);
         dtFreeNavMesh(nav);
-        return false;
+        return false;   
     }
 
     dtStatus status = nav->addTile(navMeshData, navMeshDataSize, DT_TILE_FREE_DATA, 0, nullptr);
     if (dtStatusFailed(status))
     {
         printf("[NavMeshData] addTile falhou. status=0x%x size=%d\n", status, navMeshDataSize);
+        printf("[NavMeshData] addTile failed status=0x%x polyCount=%d navParams.maxPolys=%d\n",
+       status, params.polyCount, navParams.maxPolys);
         dtFree(navMeshData);
         dtFreeNavMesh(nav);
         return false;

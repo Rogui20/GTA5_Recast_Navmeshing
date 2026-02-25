@@ -69,6 +69,7 @@ ViewerApp::ViewerApp()
 ViewerApp::~ViewerApp()
 {
     memoryHandler.SetMonitoringEnabled(false);
+    webSockets.Stop();
     for (auto& query : navQuerySlots)
     {
         if (query)
@@ -298,7 +299,7 @@ bool ViewerApp::buildNavmeshFromMeshes(bool buildTilesNow, int slotIndex)
         result->navData.SetOffmeshLinks(offmeshLinksCopy);
         if (!verts.empty() && !idx.empty())
         {
-            result->success = result->navData.BuildFromMesh(verts, idx, settingsCopy, buildTilesNow, &navmeshCancelRequested);
+            result->success = result->navData.BuildFromMesh(verts, idx, settingsCopy, buildTilesNow, &navmeshCancelRequested, true, nullptr, nullptr, nullptr);
         }
 
         if (result->success)
@@ -394,6 +395,45 @@ void ViewerApp::RebuildOffmeshLinkLines(int slotIndex)
         dl.z1 = remote.end.z;
         offmeshLines.push_back(dl);
     }
+}
+
+bool ViewerApp::ApplyAutomaticOffmeshLinks(const AutoOffmeshGenerationParams& params)
+{
+    if (IsNavmeshJobRunning())
+    {
+        printf("[ViewerApp] Aplicacao de offmesh automatico ignorada: navmesh em construcao.\n");
+        return false;
+    }
+
+    if (!CurrentNavData().IsLoaded())
+    {
+        printf("[ViewerApp] ApplyAutomaticOffmeshLinks: navmesh nao carregado.\n");
+        return false;
+    }
+
+    std::vector<OffmeshLink> generated;
+    if (!CurrentNavData().GenerateAutomaticOffmeshLinks(params, generated))
+    {
+        printf("[ViewerApp] ApplyAutomaticOffmeshLinks: geracao de links automaticos falhou.\n");
+        return false;
+    }
+
+    const unsigned int autoMask = 0xffff0000u;
+    std::vector<OffmeshLink> merged;
+    const auto& existing = CurrentNavData().GetOffmeshLinks();
+    merged.reserve(existing.size() + generated.size());
+    for (const auto& link : existing)
+    {
+        if ( (link.userId & autoMask) != (params.userIdBase & autoMask) )
+            merged.push_back(link);
+    }
+    merged.insert(merged.end(), generated.begin(), generated.end());
+
+    CurrentNavData().SetOffmeshLinks(std::move(merged));
+    RebuildOffmeshLinkLines();
+
+    printf("[ViewerApp] ApplyAutomaticOffmeshLinks: %zu links aplicados.\n", CurrentNavData().GetOffmeshLinks().size());
+    return true;
 }
 
 bool ViewerApp::BuildStaticMap(GtaHandler& handler, const std::filesystem::path& meshDirectory, float scanRange)
@@ -1635,6 +1675,8 @@ void ViewerApp::ProcessMemoryOffmeshLinks()
                 link.end = glm::vec3(slot.end.x, slot.end.y, slot.end.z);
                 link.radius = 1.0f;
                 link.bidirectional = slot.biDir != 0;
+                link.area = RC_WALKABLE_AREA;
+                link.flags = 1;
                 converted.push_back(link);
             }
 
@@ -2158,7 +2200,7 @@ void ViewerApp::RenderFrame()
                     gtaHandlerMenu.Draw(gtaHandler, *this);
                 }
 
-                if (ImGui::CollapsingHeader("Memory Handler", ImGuiTreeNodeFlags_DefaultOpen))
+                if (ImGui::CollapsingHeader("GTA Tracker", ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     bool monitorGta = memoryHandler.IsMonitoringRequested();
                     if (ImGui::Checkbox("Monitorar GTA", &monitorGta))
@@ -2199,6 +2241,31 @@ void ViewerApp::RenderFrame()
                     ImGui::EndDisabled();
 
                     ImGui::TextDisabled("Usa arquivo de hash para nome + pasta OBJ para carregar meshes automaticamente.");
+
+                    if (webSockets.IsSupported())
+                    {
+                        if (ImGui::Checkbox("WebSockets", &webSocketsEnabled))
+                        {
+                            if (webSocketsEnabled)
+                            {
+                                if (!webSockets.Start(8081))
+                                {
+                                    webSocketsEnabled = false;
+                                }
+                            }
+                            else
+                            {
+                                webSockets.Stop();
+                            }
+                        }
+
+                        ImGui::SameLine();
+                        ImGui::TextDisabled(webSockets.IsRunning() ? "(servidor ativo em 0.0.0.0:8081)" : "(servidor parado)");
+                    }
+                    else
+                    {
+                        ImGui::TextDisabled("WebSockets indisponível (uWebSockets não encontrado no build).");
+                    }
                 }
 
                 if (ImGui::CollapsingHeader("Navmesh Tests"))
@@ -2246,6 +2313,35 @@ void ViewerApp::RenderFrame()
                     }
                     ImGui::SameLine();
                     ImGui::TextDisabled("(prepara grid/caches e gera tiles no clique)");
+
+                    ImGui::SeparatorText("Off-Mesh Links Automaticos");
+                    static float autoJumpHeight = 2.0f;
+                    static float autoMaxDrop = 3.0f;
+                    ImGui::SliderFloat("Max Drop Height", &autoMaxDrop, 0.0f, 10.0f, "%.2f");
+                    ImGui::SliderFloat("Jump Height", &autoJumpHeight, 0.0f, 6.0f, "%.2f");
+
+                    ImGui::BeginDisabled(navmeshBusy || !hasNavmeshLoaded || navGenSettings.mode != NavmeshBuildMode::Tiled);
+                    if (ImGui::Button("Generate Edge-Based Off-Mesh Links"))
+                    {
+                        AutoOffmeshGenerationParams autoParams{};
+                        autoParams.jumpHeight = autoJumpHeight;
+                        autoParams.maxDropHeight = autoMaxDrop;
+                        autoParams.agentRadius = navGenSettings.agentRadius;
+                        autoParams.agentHeight = navGenSettings.agentHeight;
+                        autoParams.maxSlopeDegrees = navGenSettings.agentMaxSlope;
+                        if (ApplyAutomaticOffmeshLinks(autoParams))
+                        {
+                            printf("[ViewerApp] Offmesh automaticos gerados com jumpHeight=%.2f drop=%.2f.\n",
+                                   autoJumpHeight, autoMaxDrop);
+                        }
+                        else
+                        {
+                            printf("[ViewerApp] Geracao de offmesh automaticos falhou.\n");
+                        }
+                    }
+                    ImGui::SameLine();
+                    ImGui::TextDisabled("(analisa navmesh ja construida)");
+                    ImGui::EndDisabled();
                     ImGui::EndDisabled();
                 }
 
@@ -2441,7 +2537,7 @@ void ViewerApp::RenderFrame()
 
                     ImGui::SeparatorText("Agente");
                     ImGui::DragFloat("Altura", &navGenSettings.agentHeight, 0.05f, 0.1f, 20.0f, "%.2f");
-                    ImGui::DragFloat("Raio", &navGenSettings.agentRadius, 0.05f, 0.05f, 10.0f, "%.2f");
+                    ImGui::DragFloat("Raio", &navGenSettings.agentRadius, 0.05f, 0.0f, 10.0f, "%.2f");
                     ImGui::DragFloat("Climb", &navGenSettings.agentMaxClimb, 0.05f, 0.0f, 10.0f, "%.2f");
                     ImGui::DragFloat("Slope", &navGenSettings.agentMaxSlope, 1.0f, 0.0f, 89.0f, "%.1f");
 

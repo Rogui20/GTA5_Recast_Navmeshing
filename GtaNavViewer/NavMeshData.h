@@ -2,6 +2,7 @@
 #include <utility>
 #include <vector>
 #include <atomic>
+#include <unordered_map>
 #include <glm/glm.hpp>
 #include <Recast.h>
 
@@ -32,12 +33,80 @@ struct NavmeshGenerationSettings
     int tileSize = 48;
 };
 
+struct TileGridStats
+{
+    float tileWorld = 0.0f;
+    float boundsWidth = 0.0f;
+    float boundsHeight = 0.0f;
+    int tileCountX = 0;
+    int tileCountY = 0;
+    int tileCountTotal = 0;
+};
+
 struct OffmeshLink
 {
     glm::vec3 start{0.0f};
     glm::vec3 end{0.0f};
     float radius = 1.0f;
     bool bidirectional = true;
+    unsigned char area = RC_WALKABLE_AREA;
+    unsigned short flags = 1;
+    unsigned int userId = 0;
+    int ownerTx = -1;
+    int ownerTy = -1;
+};
+
+struct AutoOffmeshGenerationParams
+{
+    int linksGenFlags = 1;      // bit 0 = drop/jump, bit 1 = facing normals
+    float jumpHeight = 2.0f;
+    float maxDropHeight = 3.0f;
+    float maxSlopeDegrees = 60.0f;
+    float agentRadius = 0.6f;
+    float agentHeight = 2.0f;
+    unsigned int userIdBase = 0xAFAF0000u;
+    float edgeOutset = 0.15f;
+    float upOffset = 0.10f;
+    float raycastExtraHeight = 0.5f;
+    float minDropThreshold = 0.20f;
+    float minNeighborHeightDelta = 0.30f;
+    unsigned char dropArea = 5; // segue convenção do RecastDemo (jump area)
+    float angleTolerance = 30.0f;
+    float maxHeightDiff = 1.5f;
+    float minHeightDiff = 1.0f;
+    float minDistance = 0.30f;
+    float maxDistance = 5.0f;
+    float normalOffset = 0.10f;
+    float zOffset = 0.05f;
+};
+
+struct IslandOffmeshLinkParams
+{
+    glm::vec3 targetPosition;
+
+    glm::vec3 searchExtents;
+    float searchAngleDegrees;
+
+    int moreLinks;
+
+    bool linkDown;
+    bool linkUp;
+
+    float minDistance;
+    float maxDistance;
+    float maxHeightDiff;
+
+    unsigned char areaDrop;
+    unsigned char areaJump;
+};
+
+enum NavAreas : unsigned char
+{
+    AREA_NULL     = 0,
+    AREA_GROUND   = RC_WALKABLE_AREA, // 63
+    AREA_OFFMESH  = 2,
+    AREA_JUMP  = 3,
+    AREA_DROP  = 4
 };
 
 class NavMeshData
@@ -51,6 +120,10 @@ public:
     ~NavMeshData();
     bool Load(const char* path);
     bool IsLoaded() const { return m_nav != nullptr; }
+    static bool EstimateTileGrid(const NavmeshGenerationSettings& settings,
+                                 const float* bmin,
+                                 const float* bmax,
+                                 TileGridStats& outStats);
     // NOVO: constrói navmesh direto da malha
     bool BuildFromMesh(const std::vector<glm::vec3>& verts,
                        const std::vector<unsigned int>& indices,
@@ -58,7 +131,12 @@ public:
                        bool buildTilesNow = true,
                        const std::atomic_bool* cancelFlag = nullptr,
                        bool useCache = true,
-                       const char* cachePath = nullptr);
+                       const char* cachePath = nullptr,
+                       const float* forcedBMin = nullptr,
+                       const float* forcedBMax = nullptr);
+    bool InitTiledGrid(const NavmeshGenerationSettings& settings,
+                       const float* forcedBMin,
+                       const float* forcedBMax);
 
     bool BuildTileAt(const glm::vec3& worldPos,
                      const NavmeshGenerationSettings& settings,
@@ -82,6 +160,8 @@ public:
                               std::vector<std::pair<int, int>>* outTiles = nullptr);
 
     bool HasTiledCache() const { return m_hasTiledCache; }
+    bool GetCachedBounds(float* outBMin, float* outBMax) const;
+    const std::unordered_map<uint64_t, uint64_t>& GetCachedTileHashes() const { return m_cachedTileHashes; }
     bool UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
                               const std::vector<unsigned int>& indices);
 
@@ -99,6 +179,10 @@ public:
     void SetOffmeshLinks(std::vector<OffmeshLink> links);
     const std::vector<OffmeshLink>& GetOffmeshLinks() const { return m_offmeshLinks; }
     void ClearOffmeshLinks();
+    bool GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParams& params,
+                                       std::vector<OffmeshLink>& outLinks) const;
+    bool AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& params,
+                                        std::vector<OffmeshLink>& outLinks);
 
 
     // Conversão para desenhar no viewer
@@ -114,10 +198,14 @@ private:
     std::vector<int>   m_cachedTris;
     float m_cachedBMin[3] = {0,0,0};
     float m_cachedBMax[3] = {0,0,0};
+    float m_gridBMin[3] = {0,0,0};
+    float m_gridBMax[3] = {0,0,0};
     rcConfig m_cachedBaseCfg{};
     NavmeshGenerationSettings m_cachedSettings{};
     int m_cachedTileWidthCount = 0;
     int m_cachedTileHeightCount = 0;
     bool m_hasTiledCache = false;
+    std::unordered_map<uint64_t, uint64_t> m_cachedTileHashes;
     std::vector<OffmeshLink> m_offmeshLinks;
+    bool m_fixedGridBounds = false;
 };
