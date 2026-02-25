@@ -50,6 +50,8 @@ GTANAVVIEWER_API void  SetAutoOffMeshGenerationParams(void* navMesh, const AutoO
 GTANAVVIEWER_API void  SetNavMeshCacheRoot(void* navMesh, const char* cacheRoot);
 GTANAVVIEWER_API void  SetNavMeshSessionId(void* navMesh, const char* sessionId);
 GTANAVVIEWER_API void  SetMaxResidentTiles(void* navMesh, int maxTiles);
+GTANAVVIEWER_API bool  SaveNavMeshRuntimeCache(void* navMesh, const char* cacheFilePath);
+GTANAVVIEWER_API bool  LoadNavMeshRuntimeCache(void* navMesh, const char* cacheFilePath);
 
 // Geometria dinâmica
 GTANAVVIEWER_API bool AddGeometry(void* navMesh,
