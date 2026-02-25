@@ -435,11 +435,17 @@ namespace
     bool SaveRuntimeCacheFile(const ExternNavmeshContext& ctx, const std::filesystem::path& cacheFilePath)
     {
         if (!ctx.navData.IsLoaded() || !ctx.navData.HasTiledCache())
+        {
+            printf("[ExternC] SaveRuntimeCacheFile: navmesh nao esta carregado em modo tiled.\n");
             return false;
+        }
 
         std::filesystem::path tileDbPath = GetSessionCachePath(ctx);
         if (!std::filesystem::exists(tileDbPath))
+        {
+            printf("[ExternC] SaveRuntimeCacheFile: tile DB nao encontrado em %s\n", tileDbPath.string().c_str());
             return false;
+        }
 
         std::ifstream tileDbIn(tileDbPath, std::ios::binary);
         if (!tileDbIn.is_open())
@@ -518,20 +524,35 @@ namespace
         if (!WriteValue(out, tileDbSizeU64))
             return false;
         out.write(tileDbBytes.data(), tileDbBytes.size());
-        return out.good();
+        if (!out.good())
+            return false;
+
+        printf("[ExternC] SaveRuntimeCacheFile: cache salvo em %s (geoms=%u links=%u tileDbBytes=%llu).\n",
+               cacheFilePath.string().c_str(),
+               header.geometryCount,
+               header.offmeshCount,
+               static_cast<unsigned long long>(tileDbSizeU64));
+        return true;
     }
+
 
     bool LoadRuntimeCacheFile(ExternNavmeshContext& ctx, const std::filesystem::path& cacheFilePath)
     {
         std::ifstream in(cacheFilePath, std::ios::binary);
         if (!in.is_open())
+        {
+            printf("[ExternC] LoadRuntimeCacheFile: falha ao abrir cache %s\n", cacheFilePath.string().c_str());
             return false;
+        }
 
         RuntimeCacheHeader header{};
         if (!ReadValue(in, header))
             return false;
         if (header.magic != RUNTIME_CACHE_MAGIC || header.version != RUNTIME_CACHE_VERSION || header.hasTileDb == 0)
+        {
+            printf("[ExternC] LoadRuntimeCacheFile: cabecalho invalido/incompativel em %s\n", cacheFilePath.string().c_str());
             return false;
+        }
 
         ExternNavmeshContext loaded{};
         if (!ReadValue(in, loaded.genSettings) ||
@@ -642,16 +663,28 @@ namespace
             if (tileDbPath.has_parent_path())
                 std::filesystem::create_directories(tileDbPath.parent_path());
 
-            std::ofstream tileDbOut(tileDbPath, std::ios::binary);
-            if (!tileDbOut.is_open())
-                return false;
-            tileDbOut.write(tileDbBytes.data(), static_cast<std::streamsize>(tileDbBytes.size()));
-            if (!tileDbOut.good())
-                return false;
+            {
+                std::ofstream tileDbOut(tileDbPath, std::ios::binary);
+                if (!tileDbOut.is_open())
+                {
+                    printf("[ExternC] LoadRuntimeCacheFile: falha ao escrever tile DB em %s\n", tileDbPath.string().c_str());
+                    return false;
+                }
+                tileDbOut.write(tileDbBytes.data(), static_cast<std::streamsize>(tileDbBytes.size()));
+                if (!tileDbOut.good())
+                {
+                    printf("[ExternC] LoadRuntimeCacheFile: escrita incompleta do tile DB em %s\n", tileDbPath.string().c_str());
+                    return false;
+                }
+            }
 
             int loadedCount = 0;
             if (!LoadTilesInBoundsFromDb(tileDbPath.string().c_str(), loaded.navData.GetNavMesh(), runtimeMin, runtimeMax, loadedCount))
+            {
+                printf("[ExternC] LoadRuntimeCacheFile: falha ao carregar tiles do DB %s\n", tileDbPath.string().c_str());
                 return false;
+            }
+            printf("[ExternC] LoadRuntimeCacheFile: %d tiles carregados do DB.\n", loadedCount);
         }
 
         loaded.dbIndexCache.clear();
