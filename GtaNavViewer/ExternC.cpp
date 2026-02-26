@@ -950,14 +950,43 @@ namespace
 
     glm::vec3 ComputeEdgeOutwardNormal(const glm::vec3& a,
                                        const glm::vec3& b,
-                                       const glm::vec3& polyCenter)
+                                       const glm::vec3& polyCenter,
+                                       const glm::vec3& polyNormal)
     {
-        const glm::vec3 edgeDir = glm::normalize(b - a);
-        glm::vec3 outward = glm::normalize(glm::vec3(-edgeDir.z, 0.0f, edgeDir.x));
+        const glm::vec3 edge = b - a;
+        const float edgeLenSq = glm::dot(edge, edge);
+        if (edgeLenSq <= std::numeric_limits<float>::epsilon())
+            return glm::vec3(0.0f);
+
+        const glm::vec3 edgeDir = edge / std::sqrt(edgeLenSq);
+        glm::vec3 surfaceNormal = polyNormal;
+        const float surfaceNormalLenSq = glm::dot(surfaceNormal, surfaceNormal);
+        if (surfaceNormalLenSq <= std::numeric_limits<float>::epsilon())
+            surfaceNormal = glm::vec3(0.0f, 1.0f, 0.0f);
+        else
+            surfaceNormal /= std::sqrt(surfaceNormalLenSq);
+
+        // Em um polígono orientado, cross(edge, normal) aponta para o lado externo.
+        glm::vec3 outward = glm::cross(edgeDir, surfaceNormal);
+        const float outwardLenSq = glm::dot(outward, outward);
+        if (outwardLenSq <= std::numeric_limits<float>::epsilon())
+            return glm::vec3(0.0f);
+        outward /= std::sqrt(outwardLenSq);
+
         const glm::vec3 edgeCenter = (a + b) * 0.5f;
-        const glm::vec3 toCenter = glm::normalize(edgeCenter - polyCenter);
-        if (glm::dot(outward, toCenter) > 0.0f)
+        const glm::vec3 centerToEdge = edgeCenter - polyCenter;
+        const float centerToEdgeLenSq = glm::dot(centerToEdge, centerToEdge);
+        if (centerToEdgeLenSq > std::numeric_limits<float>::epsilon() &&
+            glm::dot(outward, centerToEdge / std::sqrt(centerToEdgeLenSq)) < 0.0f)
             outward = -outward;
+
+        // Mantém o normal no plano XZ, como esperado pelo consumidor atual.
+        outward.y = 0.0f;
+        const float horizontalLenSq = outward.x * outward.x + outward.z * outward.z;
+        if (horizontalLenSq <= std::numeric_limits<float>::epsilon())
+            return glm::vec3(0.0f);
+        outward /= std::sqrt(horizontalLenSq);
+
         if (!std::isfinite(outward.x) || !std::isfinite(outward.y) || !std::isfinite(outward.z))
             outward = glm::vec3(0.0f, 0.0f, 0.0f);
         return outward;
@@ -1514,8 +1543,7 @@ GTANAVVIEWER_API int GetNavMeshPolygons(void* navMesh,
                 e.vertexB = ToVector3(pb);
                 const glm::vec3 mid = (pa + pb) * 0.5f;
                 e.center = ToVector3(mid);
-                const dtPolyRef neighbour = GetNeighbourRef(tile, poly, edge, nav);
-                const glm::vec3 outward = ComputeEdgeOutwardNormal(pa, pb, center);
+                const glm::vec3 outward = ComputeEdgeOutwardNormal(pa, pb, center, normal);
                 e.normal = ToVector3(outward);
                 e.polygonId = polyId;
                 edges[writtenEdges + edge] = e;
@@ -1613,6 +1641,7 @@ GTANAVVIEWER_API int GetNavMeshBorderEdges(void* navMesh,
 
             const dtPolyRef pref = nav->getPolyRefBase(tile) | static_cast<unsigned int>(polyIndex);
             const glm::vec3 center = ComputePolyCentroid(tile, poly);
+            const glm::vec3 normal = ComputePolyNormal(tile, poly);
 
             for (int edge = 0; edge < poly->vertCount && written < maxEdges; ++edge)
             {
@@ -1637,7 +1666,7 @@ GTANAVVIEWER_API int GetNavMeshBorderEdges(void* navMesh,
                 const glm::vec3 mid = (pa + pb) * 0.5f;
                 e.center = ToVector3(mid);
 
-                e.normal = ToVector3(ComputeEdgeOutwardNormal(pa, pb, center));
+                e.normal = ToVector3(ComputeEdgeOutwardNormal(pa, pb, center, normal));
                 e.polygonId = pref != 0 ? static_cast<std::uint64_t>(pref) : 0;
 
                 edges[written++] = e;
