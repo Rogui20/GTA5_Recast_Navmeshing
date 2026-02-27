@@ -1778,7 +1778,10 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
                                int flags,
                                int maxPoints,
                                float minEdge,
-                               float* outPath, int options)
+                               float* outPath,
+                               bool* outIsOffMeshLinkNode,
+                               bool* outIsNextOffMeshLinkNodeHigher,
+                               int options)
 {
     if (!EnsureNavQuery(ctx))
         return 0;
@@ -1828,6 +1831,28 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
         outPath[i * 3 + 0] = straight[i * 3 + 0];
         outPath[i * 3 + 1] = straight[i * 3 + 1];
         outPath[i * 3 + 2] = straight[i * 3 + 2];
+
+        if (outIsOffMeshLinkNode)
+        {
+            const unsigned char nodeFlags = straightFlags[static_cast<size_t>(i)];
+            outIsOffMeshLinkNode[i] = (nodeFlags & DT_STRAIGHTPATH_OFFMESH_CONNECTION) != 0;
+        }
+
+        if (outIsNextOffMeshLinkNodeHigher)
+        {
+            bool isHigher = false;
+            if (i > 0)
+            {
+                const unsigned char nodeFlags = straightFlags[static_cast<size_t>(i)];
+                if ((nodeFlags & DT_STRAIGHTPATH_OFFMESH_CONNECTION) != 0)
+                {
+                    const float previousY = straight[(i - 1) * 3 + 1];
+                    const float currentY = straight[i * 3 + 1];
+                    isHigher = currentY > previousY;
+                }
+            }
+            outIsNextOffMeshLinkNodeHigher[i] = isHigher;
+        }
     }
 
     return straightCount;
@@ -1849,7 +1874,10 @@ GTANAVVIEWER_API int FindPath(void* navMesh,
                                flags,
                                maxPoints,
                                -1.0f,
-                               outPath, options);
+                               outPath,
+                               nullptr,
+                               nullptr,
+                               options);
 }
 
 GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
@@ -1869,7 +1897,37 @@ GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
                                flags,
                                maxPoints,
                                minEdge,
-                               outPath, options);
+                               outPath,
+                               nullptr,
+                               nullptr,
+                               options);
+}
+
+GTANAVVIEWER_API int FindPathWithNodeMetadata(void* navMesh,
+                                              Vector3 start,
+                                              Vector3 target,
+                                              int flags,
+                                              int maxPoints,
+                                              float minEdgeDist,
+                                              float* outPath,
+                                              bool* outIsOffMeshLinkNode,
+                                              bool* outIsNextOffMeshLinkNodeHigher,
+                                              int options)
+{
+    if (!navMesh || !outPath || !outIsOffMeshLinkNode || !outIsNextOffMeshLinkNodeHigher || maxPoints <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    return RunPathfindInternal(*ctx,
+                               glm::vec3(start.x, start.y, start.z),
+                               glm::vec3(target.x, target.y, target.z),
+                               flags,
+                               maxPoints,
+                               minEdgeDist,
+                               outPath,
+                               outIsOffMeshLinkNode,
+                               outIsNextOffMeshLinkNodeHigher,
+                               options);
 }
 
 GTANAVVIEWER_API bool AddOffMeshLink(void* navMesh,

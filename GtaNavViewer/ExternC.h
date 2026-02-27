@@ -119,6 +119,16 @@ GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
                                          int maxPoints,
                                          float minEdge,
                                          float* outPath, int options);
+GTANAVVIEWER_API int FindPathWithNodeMetadata(void* navMesh,
+                                              Vector3 start,
+                                              Vector3 target,
+                                              int flags,
+                                              int maxPoints,
+                                              float minEdgeDist,
+                                              float* outPath,
+                                              bool* outIsOffMeshLinkNode,
+                                              bool* outIsNextOffMeshLinkNodeHigher,
+                                              int options);
 
 // Consulta da malha
 GTANAVVIEWER_API int GetNavMeshPolygons(void* navMesh,
