@@ -32,6 +32,15 @@ struct NavMeshPolygonInfo
     int edgeCount = 0;
 };
 
+struct NavMeshGeometryInfo
+{
+    char customID[128]{};
+    Vector3 position;
+    Vector3 rotation;
+    int vertexCount = 0;
+    int indexCount = 0;
+};
+
 #ifdef _WIN32
   #ifdef GTANAVVIEWER_BUILD_DLL
     #define GTANAVVIEWER_API extern "C" __declspec(dllexport)
@@ -67,6 +76,11 @@ GTANAVVIEWER_API bool UpdateGeometry(void* navMesh,
                                      bool updateNavMesh);
 GTANAVVIEWER_API bool RemoveGeometry(void* navMesh, const char* customID);
 GTANAVVIEWER_API void RemoveAllGeometries(void* navMesh);
+GTANAVVIEWER_API int  GetAllGeometries(void* navMesh,
+                                       NavMeshGeometryInfo* geometries,
+                                       int maxGeometries,
+                                       int* outGeometryCount);
+GTANAVVIEWER_API bool ExportMergedGeometriesObj(void* navMesh, const char* outputObjPath);
 
 // Navmesh lifecycle
 GTANAVVIEWER_API bool BuildNavMesh(void* navMesh);
