@@ -1,5 +1,7 @@
 var NAVTREEINDEX66 =
 {
+"SDL__video_8h.html#afd87aed7ba9ced5094fc36e3f719187e":[44,0,5,2,1,89,17],
+"SDL__video_8h.html#afe1c6ca08d5b8c336b1276236559287a":[44,0,5,2,1,89,72],
 "SDL__video_8h.html#afea37fca3b12f454e7f91d919fc99fbd":[44,0,5,2,1,89,104],
 "SDL__video_8h_source.html":[44,0,5,2,1,89],
 "SDL__vulkan_8h.html":[44,0,5,2,1,90],
@@ -247,7 +249,5 @@ var NAVTREEINDEX66 =
 "classGtaNavProps.html#a6929f8a07108f54839d8899a7508d367":[43,0,94,2],
 "classGtaNavProps.html#a708e83813c7f3138eba7799299bb69e8":[43,0,94,3],
 "classGtaNavTiles.html":[43,0,95],
-"classGtaNavTiles.html#a1388dbc7a63741576d22b1380c56a867":[43,0,95,4],
-"classGtaNavTiles.html#a31eb32fe0ac1c8d1b8429ea3356fc23d":[43,0,95,1],
-"classGtaNavTiles.html#a85c79c25b8b892f8b0c2b5a229f83d39":[43,0,95,5]
+"classGtaNavTiles.html#a1388dbc7a63741576d22b1380c56a867":[43,0,95,4]
 };

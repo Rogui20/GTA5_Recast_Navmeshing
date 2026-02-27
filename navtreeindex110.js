@@ -1,5 +1,7 @@
 var NAVTREEINDEX110 =
 {
+"unionSDL__HapticEffect.html#a5ff6cfd8da91537091e9a6c2108cb179":[43,0,402,6],
+"unionSDL__HapticEffect.html#a8320ec4db6ec1dc1d30feb62ee2a2f04":[43,0,402,4],
 "unionSDL__HapticEffect.html#aa8fdd1ba202ccd7e61f48ef9977080d2":[43,0,402,0],
 "unionSDL__HapticEffect.html#ac435275e9683d6cc5d65b9c7cc2ec659":[43,0,402,1],
 "unionSDL__WindowShapeParams.html":[43,0,446],

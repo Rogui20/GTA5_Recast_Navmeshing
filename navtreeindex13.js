@@ -1,5 +1,7 @@
 var NAVTREEINDEX13 =
 {
+"SDL__config__android_8h.html#aaf5250164f8a3c52b7820317aee7d9ce":[44,0,5,2,1,10,3],
+"SDL__config__android_8h.html#ab452be2c7cc8652644e7782380300b8b":[44,0,5,2,1,10,29],
 "SDL__config__android_8h.html#ab51950b727f094c8c6bc870a89924ceb":[44,0,5,2,1,10,102],
 "SDL__config__android_8h.html#ab6cd6d1c63c1e26ea2d4537b77148354":[44,0,5,2,1,10,69],
 "SDL__config__android_8h.html#ab76a10f8deddbaff251e61ba66645d57":[44,0,5,2,1,10,114],
@@ -247,7 +249,5 @@ var NAVTREEINDEX13 =
 "SDL__config__iphoneos_8h.html#a8a106b4b1b82a5b9dc1878e2a7913b04":[44,0,5,2,1,12,24],
 "SDL__config__iphoneos_8h.html#a8bcdbb0550d2cf79483efdfb3fe9013f":[44,0,5,2,1,12,122],
 "SDL__config__iphoneos_8h.html#a8c92adb1e131f27ed3df84fab1a2f54d":[44,0,5,2,1,12,78],
-"SDL__config__iphoneos_8h.html#a8ff3a28c350664f46a62c4b0a0332bb7":[44,0,5,2,1,12,27],
-"SDL__config__iphoneos_8h.html#a92874201762762e7e75d6f615b93ada1":[44,0,5,2,1,12,114],
-"SDL__config__iphoneos_8h.html#a928cae4d0f25298eee5f58e950abeec7":[44,0,5,2,1,12,21]
+"SDL__config__iphoneos_8h.html#a8ff3a28c350664f46a62c4b0a0332bb7":[44,0,5,2,1,12,27]
 };

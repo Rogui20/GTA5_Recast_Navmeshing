@@ -1,5 +1,7 @@
 var NAVTREEINDEX109 =
 {
+"structrcPotentialDiagonal.html":[43,0,356],
+"structrcPotentialDiagonal.html#aa0ab356474c301630105b9c4125bb0e3":[43,0,356,1],
 "structrcPotentialDiagonal.html#aedf8e9dad665440c8db85e1e9d37b05d":[43,0,356,0],
 "structrcRegion.html":[43,0,357],
 "structrcRegion.html#a058cf62973ff65b0d277724ed7cde9a8":[43,0,357,11],
@@ -247,7 +249,5 @@ var NAVTREEINDEX109 =
 "unionSDL__HapticEffect.html":[43,0,402],
 "unionSDL__HapticEffect.html#a0b2d2af28c515cc39896b2b7c23019d2":[43,0,402,2],
 "unionSDL__HapticEffect.html#a1d32ef4c2d1cc89dc938b392f6ad81bd":[43,0,402,5],
-"unionSDL__HapticEffect.html#a3c254b81c1ff41c7888eee0cd0076a12":[43,0,402,3],
-"unionSDL__HapticEffect.html#a5ff6cfd8da91537091e9a6c2108cb179":[43,0,402,6],
-"unionSDL__HapticEffect.html#a8320ec4db6ec1dc1d30feb62ee2a2f04":[43,0,402,4]
+"unionSDL__HapticEffect.html#a3c254b81c1ff41c7888eee0cd0076a12":[43,0,402,3]
 };

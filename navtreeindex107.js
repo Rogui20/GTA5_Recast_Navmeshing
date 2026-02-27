@@ -1,5 +1,7 @@
 var NAVTREEINDEX107 =
 {
+"structSDL__TouchFingerEvent.html#ab4fca822d0807b5748dbae8d3cc56524":[43,0,439,3],
+"structSDL__TouchFingerEvent.html#abde2ab5cb013bbd21e37a65e2f8fa666":[43,0,439,4],
 "structSDL__TouchFingerEvent.html#ac2bb8af638d2927a8e13f6ffe8f9384e":[43,0,439,9],
 "structSDL__TouchFingerEvent.html#ac6acac209d6e2bd659fdb6760081393d":[43,0,439,0],
 "structSDL__TouchFingerEvent.html#ad7a6f39ec9af1bf47b160d18314edd70":[43,0,439,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX107 =
 "structdtObstacleBox.html#a69fba4f382232b19086228feda8e4cf6":[43,0,43,0],
 "structdtObstacleBox.html#ac0fa4403899b528ae6c2c8b7efcdff51":[43,0,43,1],
 "structdtObstacleCircle.html":[43,0,44],
-"structdtObstacleCircle.html#a04d72360e079c808469b6650fa4e3566":[43,0,44,2],
-"structdtObstacleCircle.html#a14169be1b546aeaf06fb19406f523a08":[43,0,44,0],
-"structdtObstacleCircle.html#a28678b711bbd24d62df014d53b091c68":[43,0,44,3]
+"structdtObstacleCircle.html#a04d72360e079c808469b6650fa4e3566":[43,0,44,2]
 };

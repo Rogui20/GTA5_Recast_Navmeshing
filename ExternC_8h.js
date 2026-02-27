@@ -17,6 +17,7 @@ var ExternC_8h =
     [ "ExportMergedGeometriesObj", "ExternC_8h.html#a018403d7757d15f55ea268bdf830769e", null ],
     [ "FindPath", "ExternC_8h.html#a462e8adf4796b96d81b1563df6e9a8ee", null ],
     [ "FindPathWithMinEdge", "ExternC_8h.html#a0a609079f4645ccec18a5cefc10f79c8", null ],
+    [ "FindPathWithNodeMetadata", "ExternC_8h.html#ac5a45a3f337c3d8bbd8eac5d61df60ec", null ],
     [ "GenerateAutomaticOffmeshLinks", "ExternC_8h.html#a8de7660c9f47651d86ef386ecbe3f6cf", null ],
     [ "GetAllGeometries", "ExternC_8h.html#a2e951947d36a9b91467158920029a8b9", null ],
     [ "GetNavMeshBorderEdges", "ExternC_8h.html#af7789da0cef77d265747015c018eae1f", null ],
