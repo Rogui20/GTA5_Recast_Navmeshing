@@ -427,6 +427,7 @@ var hierarchy =
     [ "ObjLoader", "classObjLoader.html", null ],
     [ "MemoryHandler::OffmeshControlSlot", "structMemoryHandler_1_1OffmeshControlSlot.html", null ],
     [ "OffmeshLink", "structOffmeshLink.html", null ],
+    [ "OffMeshLinkInfo", "structOffMeshLinkInfo.html", null ],
     [ "MemoryHandler::OffmeshLinkSlot", "structMemoryHandler_1_1OffmeshLinkSlot.html", null ],
     [ "PropInstance", "structPropInstance.html", null ],
     [ "RasterizationContext", "structRasterizationContext.html", null ],

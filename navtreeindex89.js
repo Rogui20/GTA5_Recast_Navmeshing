@@ -1,5 +1,11 @@
 var NAVTREEINDEX89 =
 {
+"imgui__widgets_8cpp.html#a4ac168018b20e53285d76c46aa24a122":[44,0,7,0,8,24],
+"imgui__widgets_8cpp.html#a4d14a9af02c8bc14a1a8a9e6fda9bfa2":[44,0,7,0,8,61],
+"imgui__widgets_8cpp.html#a4e2b30a2cf82f491a712ba37c2bf3455":[44,0,7,0,8,98],
+"imgui__widgets_8cpp.html#a4f15972fff9fd018c8355d16aa9814e5":[44,0,7,0,8,112],
+"imgui__widgets_8cpp.html#a5575d74ef7b910bdac413af8c8a315bf":[44,0,7,0,8,79],
+"imgui__widgets_8cpp.html#a56b30ec768c46c2abdd27ae66073c3e8":[44,0,7,0,8,72],
 "imgui__widgets_8cpp.html#a57469838509290dd5088d194ab1e7639":[44,0,7,0,8,43],
 "imgui__widgets_8cpp.html#a578438ad23cd7446c7930de4738cee37":[44,0,7,0,8,28],
 "imgui__widgets_8cpp.html#a579019adb9b5fbb8432121dc10d59755":[44,0,7,0,8,22],
@@ -243,11 +249,5 @@ var NAVTREEINDEX89 =
 "md_CODE__OF__CONDUCT.html#autotoc_md4-permanent-ban":[5,5,3],
 "md_CODE__OF__CONDUCT.html#enforcement":[5,4],
 "md_CODE__OF__CONDUCT.html#enforcement-guidelines":[5,5],
-"md_CODE__OF__CONDUCT.html#enforcement-responsibilities":[5,2],
-"md_CODE__OF__CONDUCT.html#our-pledge":[5,0],
-"md_CODE__OF__CONDUCT.html#our-standards":[5,1],
-"md_CODE__OF__CONDUCT.html#scope":[5,3],
-"md_CONTRIBUTING.html":[6],
-"md_CONTRIBUTING.html#code-of-conduct-1":[6,0],
-"md_CONTRIBUTING.html#commit-message-format":[6,3,2]
+"md_CODE__OF__CONDUCT.html#enforcement-responsibilities":[5,2]
 };

@@ -1,5 +1,11 @@
 var NAVTREEINDEX90 =
 {
+"md_CODE__OF__CONDUCT.html#our-pledge":[5,0],
+"md_CODE__OF__CONDUCT.html#our-standards":[5,1],
+"md_CODE__OF__CONDUCT.html#scope":[5,3],
+"md_CONTRIBUTING.html":[6],
+"md_CONTRIBUTING.html#code-of-conduct-1":[6,0],
+"md_CONTRIBUTING.html#commit-message-format":[6,3,2],
 "md_CONTRIBUTING.html#found-a-bug":[6,3],
 "md_CONTRIBUTING.html#have-a-question-or-problem":[6,1],
 "md_CONTRIBUTING.html#submitting-a-pull-request":[6,3,1],
@@ -243,11 +249,5 @@ var NAVTREEINDEX90 =
 "structCrowdToolParams.html#a50149e1b215b9c9eba1059aa15f11e1e":[43,0,10,1],
 "structCrowdToolParams.html#a642a969b56ed560f2472eb4bd868416a":[43,0,10,18],
 "structCrowdToolParams.html#a8481d268ff04bf7e6b49458c911936cb":[43,0,10,8],
-"structCrowdToolParams.html#a85e1edfba62c2a2e5315ad05a0eaf0f9":[43,0,10,11],
-"structCrowdToolParams.html#a9627c513e79f26b6024c8d01843bc528":[43,0,10,5],
-"structCrowdToolParams.html#aa7340bfdeed7994d7899f8161744a3f6":[43,0,10,12],
-"structCrowdToolParams.html#aaf7a605017a4343c0536704cf0a4f1b0":[43,0,10,15],
-"structCrowdToolParams.html#abb28bf8b771767150348b0264c649991":[43,0,10,17],
-"structCrowdToolParams.html#abd5dd62a05171d60b075e10d9290e7b3":[43,0,10,4],
-"structCrowdToolParams.html#ad4a5ed9be39d3f974e5fae65ced6c7b1":[43,0,10,0]
+"structCrowdToolParams.html#a85e1edfba62c2a2e5315ad05a0eaf0f9":[43,0,10,11]
 };

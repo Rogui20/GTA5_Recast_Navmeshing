@@ -331,6 +331,7 @@ var annotated_dup =
     [ "ObjLoader", "classObjLoader.html", "classObjLoader" ],
     [ "OffMeshConnectionTool", "classOffMeshConnectionTool.html", "classOffMeshConnectionTool" ],
     [ "OffmeshLink", "structOffmeshLink.html", "structOffmeshLink" ],
+    [ "OffMeshLinkInfo", "structOffMeshLinkInfo.html", "structOffMeshLinkInfo" ],
     [ "PropInstance", "structPropInstance.html", "structPropInstance" ],
     [ "RasterizationContext", "structRasterizationContext.html", "structRasterizationContext" ],
     [ "Ray", "structRay.html", "structRay" ],

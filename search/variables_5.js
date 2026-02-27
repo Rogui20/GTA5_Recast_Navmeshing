@@ -22,7 +22,7 @@ var searchData=
   ['enabledmaskbydisplayorder_19',['EnabledMaskByDisplayOrder',['../structImGuiTable.html#a2bfcf66ae07b035488357acae6353d23',1,'ImGuiTable']]],
   ['enabledmaskbyindex_20',['EnabledMaskByIndex',['../structImGuiTable.html#a36ec18d9c4c297098101580c255e94b7',1,'ImGuiTable']]],
   ['enablevertexattribarray_21',['EnableVertexAttribArray',['../unionImGL3WProcs.html#a20e96b3d1517a58b6077f4651c4622d0',1,'ImGL3WProcs']]],
-  ['end_22',['end',['../structOffmeshLink.html#a5143a3e1cdd22a9439004c7fe4001188',1,'OffmeshLink::end'],['../structMemoryHandler_1_1OffmeshLinkSlot.html#a18da32e5c67a99e7f57047ce6cc3ed81',1,'MemoryHandler::OffmeshLinkSlot::end'],['../structSDL__HapticRamp.html#a16dd3ee307795248e21ee45ba8fb4c6c',1,'SDL_HapticRamp::end']]],
+  ['end_22',['end',['../structOffmeshLink.html#a5143a3e1cdd22a9439004c7fe4001188',1,'OffmeshLink::end'],['../structOffMeshLinkInfo.html#a0198f0668b9396ac18da8e34b69ac15d',1,'OffMeshLinkInfo::end'],['../structSDL__HapticRamp.html#a16dd3ee307795248e21ee45ba8fb4c6c',1,'SDL_HapticRamp::end'],['../structMemoryHandler_1_1OffmeshLinkSlot.html#a18da32e5c67a99e7f57047ce6cc3ed81',1,'MemoryHandler::OffmeshLinkSlot::end']]],
   ['endoffset_23',['EndOffset',['../structImGuiTextIndex.html#a885f884d458a6309a1a524a20670c426',1,'ImGuiTextIndex']]],
   ['endpos_24',['endPos',['../structdtCrowdAgentAnimation.html#aed88b3aa0469a0462d5f7d055d3b72cc',1,'dtCrowdAgentAnimation']]],
   ['endposrel_25',['EndPosRel',['../structImGuiBoxSelectState.html#a9b9f96a2176602f72551270e3874fb3c',1,'ImGuiBoxSelectState']]],

@@ -1,5 +1,11 @@
 var NAVTREEINDEX15 =
 {
+"SDL__config__ngage_8h.html#ac5d002420ef5a309454cc6c81128850a":[44,0,5,2,1,15,9],
+"SDL__config__ngage_8h.html#ac5f71bfd69698a6db1ae54177fcac7ea":[44,0,5,2,1,15,6],
+"SDL__config__ngage_8h.html#adec1df1b8b51cb32b77e5b86fff46471":[44,0,5,2,1,15,33],
+"SDL__config__ngage_8h.html#ae021ce4fe74984428cc97427b7358fda":[44,0,5,2,1,15,15],
+"SDL__config__ngage_8h.html#ae8cb3218a402409a6dcbf7e9c5b3a5f3":[44,0,5,2,1,15,1],
+"SDL__config__ngage_8h.html#aec5a6b3c677a69fb466b497ba60d8bee":[44,0,5,2,1,15,25],
 "SDL__config__ngage_8h.html#aef44329758059c91c76d334e8fc09700":[44,0,5,2,1,15,34],
 "SDL__config__ngage_8h.html#af4c7e44be388ec3ad52622f3e1e4e6bc":[44,0,5,2,1,15,24],
 "SDL__config__ngage_8h.html#afb1ce161af1df3c2c55a629ea0d4bb6c":[44,0,5,2,1,15,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX15 =
 "SDL__config__windows_8h.html#a8bcdbb0550d2cf79483efdfb3fe9013f":[44,0,5,2,1,18,42],
 "SDL__config__windows_8h.html#a8c93ace115b3d8d8163359820370a780":[44,0,5,2,1,18,37],
 "SDL__config__windows_8h.html#a8d7bd872a83eee6dc2a5a6132767efde":[44,0,5,2,1,18,26],
-"SDL__config__windows_8h.html#aaa1d89b554b1ab7b6ee1b563fb13cbdd":[44,0,5,2,1,18,3],
-"SDL__config__windows_8h.html#ab51950b727f094c8c6bc870a89924ceb":[44,0,5,2,1,18,17],
-"SDL__config__windows_8h.html#ab5fea56647f25333c758d1b174e44534":[44,0,5,2,1,18,11],
-"SDL__config__windows_8h.html#ab6cd6d1c63c1e26ea2d4537b77148354":[44,0,5,2,1,18,9],
-"SDL__config__windows_8h.html#ac47b156cb0f72b330945cd009c70049d":[44,0,5,2,1,18,14],
-"SDL__config__windows_8h.html#ac5be45e89ba333ee8dedfe53a39e8919":[44,0,5,2,1,18,29],
-"SDL__config__windows_8h.html#acd80e58eb9b3daa221df4e984b7ede74":[44,0,5,2,1,18,1]
+"SDL__config__windows_8h.html#aaa1d89b554b1ab7b6ee1b563fb13cbdd":[44,0,5,2,1,18,3]
 };

@@ -4,5 +4,6 @@ var searchData=
   ['offmeshconnectiontool_1',['OffMeshConnectionTool',['../classOffMeshConnectionTool.html',1,'']]],
   ['offmeshcontrolslot_2',['OffmeshControlSlot',['../structMemoryHandler_1_1OffmeshControlSlot.html',1,'MemoryHandler']]],
   ['offmeshlink_3',['OffmeshLink',['../structOffmeshLink.html',1,'']]],
-  ['offmeshlinkslot_4',['OffmeshLinkSlot',['../structMemoryHandler_1_1OffmeshLinkSlot.html',1,'MemoryHandler']]]
+  ['offmeshlinkinfo_4',['OffMeshLinkInfo',['../structOffMeshLinkInfo.html',1,'']]],
+  ['offmeshlinkslot_5',['OffmeshLinkSlot',['../structMemoryHandler_1_1OffmeshLinkSlot.html',1,'MemoryHandler']]]
 ];

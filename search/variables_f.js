@@ -13,7 +13,7 @@ var searchData=
   ['offmeshconverts_10',['offMeshConVerts',['../structdtNavMeshCreateParams.html#a9b075503ee6bfbb71e1b206b249e260d',1,'dtNavMeshCreateParams']]],
   ['offmeshlinks_11',['offmeshLinks',['../structNavmeshBuildInput.html#a9f8044ab72ea725bdd5e8d6c14fca4ea',1,'NavmeshBuildInput']]],
   ['offminx_12',['OffMinX',['../structImGuiOldColumns.html#a7cbfefcc82a7ca3271c8c0c05cfe9ed4',1,'ImGuiOldColumns']]],
-  ['offset_13',['offset',['../structSDL__RWops.html#ab1ee9d9e4f61b3b30f26160c282ae416',1,'SDL_RWops::offset'],['../structImGuiTabItem.html#ac09eeb85bebba09f18ac959bc32b5cef',1,'ImGuiTabItem::Offset'],['../structImGuiStyleVarInfo.html#ae900d6a02166d3d0433c18b95aec10e8',1,'ImGuiStyleVarInfo::Offset'],['../structExampleMemberInfo.html#a3cc8d0fb5e4fd5db16fcbea82e408c2a',1,'ExampleMemberInfo::Offset'],['../structSDL__HapticPeriodic.html#abc7aa9e9c0d546cb54189a7812fbe554',1,'SDL_HapticPeriodic::offset']]],
+  ['offset_13',['offset',['../structImGuiStyleVarInfo.html#ae900d6a02166d3d0433c18b95aec10e8',1,'ImGuiStyleVarInfo::Offset'],['../structSDL__RWops.html#ab1ee9d9e4f61b3b30f26160c282ae416',1,'SDL_RWops::offset'],['../structSDL__HapticPeriodic.html#abc7aa9e9c0d546cb54189a7812fbe554',1,'SDL_HapticPeriodic::offset'],['../structImGuiTabItem.html#ac09eeb85bebba09f18ac959bc32b5cef',1,'ImGuiTabItem::Offset'],['../structExampleMemberInfo.html#a3cc8d0fb5e4fd5db16fcbea82e408c2a',1,'ExampleMemberInfo::Offset']]],
   ['offseticon_14',['OffsetIcon',['../structImGuiMenuColumns.html#a9f591cacefd793c3f3bbfcee7ccedaf7',1,'ImGuiMenuColumns']]],
   ['offsetlabel_15',['OffsetLabel',['../structImGuiMenuColumns.html#aad3c73c88286f0f65abdc9ec56e7f84f',1,'ImGuiMenuColumns']]],
   ['offsetmark_16',['OffsetMark',['../structImGuiMenuColumns.html#adc12e8f6950487652995fc705459f7fc',1,'ImGuiMenuColumns']]],
@@ -56,7 +56,7 @@ var searchData=
   ['ownercurr_53',['OwnerCurr',['../structImGuiKeyOwnerData.html#a957b86d9290c4f2655c8ff9e6a7d4a16',1,'ImGuiKeyOwnerData']]],
   ['ownerfont_54',['OwnerFont',['../structImFontBaked.html#ae15ee1d965099e538d8174f83deb0912',1,'ImFontBaked']]],
   ['ownernext_55',['OwnerNext',['../structImGuiKeyOwnerData.html#acb224bc0dee65f2e8b2be7bdba509c26',1,'ImGuiKeyOwnerData']]],
-  ['ownertx_56',['ownerTx',['../structOffmeshLink.html#a5db869748c4b4f3fbe90222d9b31bd89',1,'OffmeshLink']]],
-  ['ownerty_57',['ownerTy',['../structOffmeshLink.html#a0f2a7bcbf2436c69a2c1733c35f8db09',1,'OffmeshLink']]],
+  ['ownertx_56',['ownertx',['../structOffMeshLinkInfo.html#ac5dc4ce36ecd78118b19882129b02f62',1,'OffMeshLinkInfo::ownerTx'],['../structOffmeshLink.html#a5db869748c4b4f3fbe90222d9b31bd89',1,'OffmeshLink::ownerTx']]],
+  ['ownerty_57',['ownerty',['../structOffMeshLinkInfo.html#a5b71e4d662d9501163cec8735c3c28b4',1,'OffMeshLinkInfo::ownerTy'],['../structOffmeshLink.html#a0f2a7bcbf2436c69a2c1733c35f8db09',1,'OffmeshLink::ownerTy']]],
   ['ownerviewport_58',['OwnerViewport',['../structImDrawData.html#afe3a34d1f384c37e99627e6efbc91815',1,'ImDrawData']]]
 ];
