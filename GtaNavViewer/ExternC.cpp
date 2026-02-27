@@ -72,6 +72,7 @@ namespace
 
     std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx);
     bool EnsureNavQuery(ExternNavmeshContext& ctx);
+    bool UpdateNavmeshState(ExternNavmeshContext& ctx, bool forceFullBuild);
 
     glm::mat3 GetRotationMatrix(const glm::vec3& eulerDegrees)
     {
@@ -433,7 +434,7 @@ namespace
         return in.good();
     }
 
-    bool SaveRuntimeCacheFile(const ExternNavmeshContext& ctx, const std::filesystem::path& cacheFilePath)
+    bool SaveRuntimeCacheFile(ExternNavmeshContext& ctx, const std::filesystem::path& cacheFilePath)
     {
         if (!ctx.navData.IsLoaded() || !ctx.navData.HasTiledCache())
         {
@@ -441,25 +442,34 @@ namespace
             return false;
         }
 
-        std::filesystem::path tileDbPath = GetSessionCachePath(ctx);
-        if (!std::filesystem::exists(tileDbPath))
+        if ((ctx.rebuildAll || !ctx.dirtyBounds.empty()) && !UpdateNavmeshState(ctx, false))
         {
-            printf("[ExternC] SaveRuntimeCacheFile: tile DB nao encontrado em %s\n", tileDbPath.string().c_str());
+            printf("[ExternC] SaveRuntimeCacheFile: falha ao sincronizar navmesh antes de salvar cache.\n");
             return false;
         }
 
-        std::ifstream tileDbIn(tileDbPath, std::ios::binary);
-        if (!tileDbIn.is_open())
-            return false;
-        tileDbIn.seekg(0, std::ios::end);
-        const auto tileDbSize = tileDbIn.tellg();
-        if (tileDbSize <= 0)
-            return false;
-        tileDbIn.seekg(0, std::ios::beg);
-        std::vector<char> tileDbBytes(static_cast<size_t>(tileDbSize));
-        tileDbIn.read(tileDbBytes.data(), tileDbBytes.size());
-        if (!tileDbIn.good())
-            return false;
+        std::vector<char> tileDbBytes;
+        std::filesystem::path tileDbPath = GetSessionCachePath(ctx);
+        if (std::filesystem::exists(tileDbPath))
+        {
+            std::ifstream tileDbIn(tileDbPath, std::ios::binary);
+            if (tileDbIn.is_open())
+            {
+                tileDbIn.seekg(0, std::ios::end);
+                const auto tileDbSize = tileDbIn.tellg();
+                if (tileDbSize > 0)
+                {
+                    tileDbIn.seekg(0, std::ios::beg);
+                    tileDbBytes.resize(static_cast<size_t>(tileDbSize));
+                    tileDbIn.read(tileDbBytes.data(), tileDbBytes.size());
+                    if (!tileDbIn.good())
+                        tileDbBytes.clear();
+                }
+            }
+        }
+
+        if (tileDbBytes.empty())
+            printf("[ExternC] SaveRuntimeCacheFile: tile DB ausente/invalido; cache sera salvo sem snapshot de tiles (fallback por rebuild no load).\n");
 
         if (cacheFilePath.has_parent_path())
             std::filesystem::create_directories(cacheFilePath.parent_path());
@@ -472,7 +482,7 @@ namespace
         header.geometryCount = static_cast<uint32_t>(ctx.geometries.size());
         header.offmeshCount = static_cast<uint32_t>(ctx.offmeshLinks.size());
         header.hasBoundingBox = ctx.hasBoundingBox ? 1 : 0;
-        header.hasTileDb = 1;
+        header.hasTileDb = tileDbBytes.empty() ? 0 : 1;
         header.maxResidentTiles = ctx.maxResidentTiles;
 
         if (!WriteValue(out, header) ||
@@ -549,7 +559,7 @@ namespace
         RuntimeCacheHeader header{};
         if (!ReadValue(in, header))
             return false;
-        if (header.magic != RUNTIME_CACHE_MAGIC || header.version != RUNTIME_CACHE_VERSION || header.hasTileDb == 0)
+        if (header.magic != RUNTIME_CACHE_MAGIC || header.version != RUNTIME_CACHE_VERSION)
         {
             printf("[ExternC] LoadRuntimeCacheFile: cabecalho invalido/incompativel em %s\n", cacheFilePath.string().c_str());
             return false;
@@ -654,12 +664,13 @@ namespace
             }
         }
 
-        loaded.navData.SetOffmeshLinks(loaded.offmeshLinks);
-        if (!loaded.navData.InitTiledGrid(loaded.genSettings, runtimeMin, runtimeMax))
-            return false;
-
-        if (!tileDbBytes.empty())
+        bool loadedFromTileDb = false;
+        if (header.hasTileDb != 0 && !tileDbBytes.empty())
         {
+            loaded.navData.SetOffmeshLinks(loaded.offmeshLinks);
+            if (!loaded.navData.InitTiledGrid(loaded.genSettings, runtimeMin, runtimeMax))
+                return false;
+
             std::filesystem::path tileDbPath = GetSessionCachePath(loaded);
             if (tileDbPath.has_parent_path())
                 std::filesystem::create_directories(tileDbPath.parent_path());
@@ -680,12 +691,22 @@ namespace
             }
 
             int loadedCount = 0;
-            if (!LoadTilesInBoundsFromDb(tileDbPath.string().c_str(), loaded.navData.GetNavMesh(), runtimeMin, runtimeMax, loadedCount))
+            if (LoadTilesInBoundsFromDb(tileDbPath.string().c_str(), loaded.navData.GetNavMesh(), runtimeMin, runtimeMax, loadedCount))
             {
-                printf("[ExternC] LoadRuntimeCacheFile: falha ao carregar tiles do DB %s\n", tileDbPath.string().c_str());
-                return false;
+                printf("[ExternC] LoadRuntimeCacheFile: %d tiles carregados do DB.\n", loadedCount);
+                loadedFromTileDb = true;
             }
-            printf("[ExternC] LoadRuntimeCacheFile: %d tiles carregados do DB.\n", loadedCount);
+            else
+            {
+                printf("[ExternC] LoadRuntimeCacheFile: falha ao carregar tiles do DB %s; fallback para rebuild completo.\n", tileDbPath.string().c_str());
+            }
+        }
+
+        if (!loadedFromTileDb)
+        {
+            printf("[ExternC] LoadRuntimeCacheFile: reconstruindo navmesh a partir das geometrias/offmesh links salvos.\n");
+            if (!BuildNavmeshInternal(loaded))
+                return false;
         }
 
         loaded.dbIndexCache.clear();
@@ -886,6 +907,9 @@ namespace
                 if (!ctx.navData.InitTiledGrid(ctx.genSettings, forcedMin, forcedMax))
                     return false;
             }
+
+            if (forceFullBuild || ctx.rebuildAll)
+                return BuildNavmeshInternal(ctx);
 
             if (!ctx.dirtyBounds.empty())
             {
