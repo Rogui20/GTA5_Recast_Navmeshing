@@ -48,17 +48,44 @@ namespace
         cfg.cs = std::max(0.01f, settings.cellSize);
         cfg.ch = std::max(0.01f, settings.cellHeight);
 
+        const float minRegionSizeCells = std::max(0.0f, settings.minRegionSize) / cfg.cs;
+        const float mergeRegionSizeCells = std::max(0.0f, settings.mergeRegionSize) / cfg.cs;
+
         cfg.walkableSlopeAngle   = settings.agentMaxSlope;
         cfg.walkableHeight       = (int)ceilf(settings.agentHeight / cfg.ch);
         cfg.walkableClimb        = (int)floorf(settings.agentMaxClimb / cfg.ch);
         cfg.walkableRadius       = (int)ceilf(settings.agentRadius / cfg.cs);
         cfg.maxEdgeLen           = std::max(0, (int)std::ceil(settings.maxEdgeLen / cfg.cs));
         cfg.maxSimplificationError = settings.maxSimplificationError;
-        cfg.minRegionArea        = (int)rcSqr(std::max(0.0f, settings.minRegionSize));
-        cfg.mergeRegionArea      = (int)rcSqr(std::max(0.0f, settings.mergeRegionSize));
+        cfg.minRegionArea        = (int)rcSqr(minRegionSizeCells);
+        cfg.mergeRegionArea      = (int)rcSqr(mergeRegionSizeCells);
         cfg.maxVertsPerPoly      = std::max(3, settings.maxVertsPerPoly);
-        cfg.detailSampleDist     = std::max(0.0f, settings.detailSampleDist);
-        cfg.detailSampleMaxError = std::max(0.0f, settings.detailSampleMaxError);
+        cfg.detailSampleDist     = (settings.detailSampleDist < 0.9f) ? 0.0f : (cfg.cs * settings.detailSampleDist);
+        cfg.detailSampleMaxError = cfg.ch * settings.detailSampleMaxError;
+    }
+
+    void DumpRcConfig(const char* label, const NavmeshGenerationSettings& settings, const rcConfig& cfg)
+    {
+        rcIgnoreUnused(settings);
+        const char* safeLabel = label ? label : "RcConfig";
+        printf("[NavMeshData] %s: cs=%.6f ch=%.6f\n", safeLabel, cfg.cs, cfg.ch);
+        printf("[NavMeshData] %s: walkableHeight=%d walkableClimb=%d walkableRadius=%d\n",
+               safeLabel,
+               cfg.walkableHeight,
+               cfg.walkableClimb,
+               cfg.walkableRadius);
+        printf("[NavMeshData] %s: maxEdgeLen=%d maxSimplificationError=%.6f\n",
+               safeLabel,
+               cfg.maxEdgeLen,
+               cfg.maxSimplificationError);
+        printf("[NavMeshData] %s: minRegionArea=%d mergeRegionArea=%d\n",
+               safeLabel,
+               cfg.minRegionArea,
+               cfg.mergeRegionArea);
+        printf("[NavMeshData] %s: detailSampleDist=%.6f detailSampleMaxError=%.6f\n",
+               safeLabel,
+               cfg.detailSampleDist,
+               cfg.detailSampleMaxError);
     }
 
     bool ComputeTiledGridCounts(const NavmeshGenerationSettings& settings,
@@ -1752,6 +1779,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
 
     rcConfig baseCfg{};
     FillBaseConfig(settings, baseCfg);
+    DumpRcConfig("BaseCfg", settings, baseCfg);
 
     const float* gridMin = (settings.mode == NavmeshBuildMode::Tiled) ? gridBMin : geomBMin;
     const float* gridMax = (settings.mode == NavmeshBuildMode::Tiled) ? gridBMax : geomBMax;
