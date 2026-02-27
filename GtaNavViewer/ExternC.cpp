@@ -72,6 +72,7 @@ namespace
 
     std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx);
     bool EnsureNavQuery(ExternNavmeshContext& ctx);
+    bool UpdateNavmeshState(ExternNavmeshContext& ctx, bool forceFullBuild);
 
     glm::mat3 GetRotationMatrix(const glm::vec3& eulerDegrees)
     {
@@ -433,11 +434,17 @@ namespace
         return in.good();
     }
 
-    bool SaveRuntimeCacheFile(const ExternNavmeshContext& ctx, const std::filesystem::path& cacheFilePath)
+    bool SaveRuntimeCacheFile(ExternNavmeshContext& ctx, const std::filesystem::path& cacheFilePath)
     {
         if (!ctx.navData.IsLoaded() || !ctx.navData.HasTiledCache())
         {
             printf("[ExternC] SaveRuntimeCacheFile: navmesh nao esta carregado em modo tiled.\n");
+            return false;
+        }
+
+        if ((ctx.rebuildAll || !ctx.dirtyBounds.empty()) && !UpdateNavmeshState(ctx, false))
+        {
+            printf("[ExternC] SaveRuntimeCacheFile: falha ao sincronizar navmesh antes de salvar cache.\n");
             return false;
         }
 
@@ -886,6 +893,9 @@ namespace
                 if (!ctx.navData.InitTiledGrid(ctx.genSettings, forcedMin, forcedMax))
                     return false;
             }
+
+            if (forceFullBuild || ctx.rebuildAll)
+                return BuildNavmeshInternal(ctx);
 
             if (!ctx.dirtyBounds.empty())
             {
