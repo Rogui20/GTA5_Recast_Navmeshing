@@ -320,6 +320,7 @@ var annotated_dup =
     [ "NavMeshEdgeInfo", "structNavMeshEdgeInfo.html", "structNavMeshEdgeInfo" ],
     [ "NavmeshFlags", "classNavmeshFlags.html", "classNavmeshFlags" ],
     [ "NavmeshGenerationSettings", "structNavmeshGenerationSettings.html", "structNavmeshGenerationSettings" ],
+    [ "NavMeshGeometryInfo", "structNavMeshGeometryInfo.html", "structNavMeshGeometryInfo" ],
     [ "NavMeshPolygonInfo", "structNavMeshPolygonInfo.html", "structNavMeshPolygonInfo" ],
     [ "NavMeshPruneTool", "classNavMeshPruneTool.html", "classNavMeshPruneTool" ],
     [ "NavMeshSetHeader", "structNavMeshSetHeader.html", "structNavMeshSetHeader" ],

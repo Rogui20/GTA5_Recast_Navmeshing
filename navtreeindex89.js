@@ -1,5 +1,9 @@
 var NAVTREEINDEX89 =
 {
+"imgui__widgets_8cpp.html#a57469838509290dd5088d194ab1e7639":[44,0,7,0,8,43],
+"imgui__widgets_8cpp.html#a578438ad23cd7446c7930de4738cee37":[44,0,7,0,8,28],
+"imgui__widgets_8cpp.html#a579019adb9b5fbb8432121dc10d59755":[44,0,7,0,8,22],
+"imgui__widgets_8cpp.html#a58c3b8bbbb0042371c1c3d83d9bc72c9":[44,0,7,0,8,62],
 "imgui__widgets_8cpp.html#a591af6c724a8088d03687aba81098ae9":[44,0,7,0,8,81],
 "imgui__widgets_8cpp.html#a5d0ac25abe189c752495f2f26afea2e6":[44,0,7,0,8,91],
 "imgui__widgets_8cpp.html#a5df9e72d33094eda9ddeea990432c447":[44,0,7,0,8,57],
@@ -245,9 +249,5 @@ var NAVTREEINDEX89 =
 "md_CODE__OF__CONDUCT.html#scope":[5,3],
 "md_CONTRIBUTING.html":[6],
 "md_CONTRIBUTING.html#code-of-conduct-1":[6,0],
-"md_CONTRIBUTING.html#commit-message-format":[6,3,2],
-"md_CONTRIBUTING.html#found-a-bug":[6,3],
-"md_CONTRIBUTING.html#have-a-question-or-problem":[6,1],
-"md_CONTRIBUTING.html#submitting-a-pull-request":[6,3,1],
-"md_CONTRIBUTING.html#submitting-an-issue":[6,3,0]
+"md_CONTRIBUTING.html#commit-message-format":[6,3,2]
 };

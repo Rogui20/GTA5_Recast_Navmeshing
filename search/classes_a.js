@@ -7,11 +7,12 @@ var searchData=
   ['navmeshedgeinfo_4',['NavMeshEdgeInfo',['../structNavMeshEdgeInfo.html',1,'']]],
   ['navmeshflags_5',['NavmeshFlags',['../classNavmeshFlags.html',1,'']]],
   ['navmeshgenerationsettings_6',['NavmeshGenerationSettings',['../structNavmeshGenerationSettings.html',1,'']]],
-  ['navmeshpolygoninfo_7',['NavMeshPolygonInfo',['../structNavMeshPolygonInfo.html',1,'']]],
-  ['navmeshprunetool_8',['NavMeshPruneTool',['../classNavMeshPruneTool.html',1,'']]],
-  ['navmeshsetheader_9',['NavMeshSetHeader',['../structNavMeshSetHeader.html',1,'']]],
-  ['navmeshtestertool_10',['NavMeshTesterTool',['../classNavMeshTesterTool.html',1,'']]],
-  ['navmeshtilebuildcontext_11',['NavMeshTileBuildContext',['../structNavMeshTileBuildContext.html',1,'']]],
-  ['navmeshtileheader_12',['NavMeshTileHeader',['../structNavMeshTileHeader.html',1,'']]],
-  ['navmeshtiletool_13',['NavMeshTileTool',['../classNavMeshTileTool.html',1,'']]]
+  ['navmeshgeometryinfo_7',['NavMeshGeometryInfo',['../structNavMeshGeometryInfo.html',1,'']]],
+  ['navmeshpolygoninfo_8',['NavMeshPolygonInfo',['../structNavMeshPolygonInfo.html',1,'']]],
+  ['navmeshprunetool_9',['NavMeshPruneTool',['../classNavMeshPruneTool.html',1,'']]],
+  ['navmeshsetheader_10',['NavMeshSetHeader',['../structNavMeshSetHeader.html',1,'']]],
+  ['navmeshtestertool_11',['NavMeshTesterTool',['../classNavMeshTesterTool.html',1,'']]],
+  ['navmeshtilebuildcontext_12',['NavMeshTileBuildContext',['../structNavMeshTileBuildContext.html',1,'']]],
+  ['navmeshtileheader_13',['NavMeshTileHeader',['../structNavMeshTileHeader.html',1,'']]],
+  ['navmeshtiletool_14',['NavMeshTileTool',['../classNavMeshTileTool.html',1,'']]]
 ];

@@ -1,5 +1,9 @@
 var NAVTREEINDEX16 =
 {
+"SDL__config__windows_8h.html#acfae9efd33fa6e961101e9a31820e8c0":[44,0,5,2,1,18,27],
+"SDL__config__windows_8h.html#adc5e91f10fbba524a7eb6ea753938074":[44,0,5,2,1,18,21],
+"SDL__config__windows_8h.html#adf617f5d9c7c0af184ccc8bc2cc368e8":[44,0,5,2,1,18,0],
+"SDL__config__windows_8h.html#ae149117bbd915b4b91ec8876741e36d9":[44,0,5,2,1,18,36],
 "SDL__config__windows_8h.html#ae2fb6dc2177dee3f3e37cd46c2a925aa":[44,0,5,2,1,18,40],
 "SDL__config__windows_8h.html#ae4a04ebc256919da1ad32f7aa36042d1":[44,0,5,2,1,18,12],
 "SDL__config__windows_8h.html#aef62cc050a5e0734c3b1b2920b00fd1d":[44,0,5,2,1,18,24],
@@ -245,9 +249,5 @@ var NAVTREEINDEX16 =
 "SDL__endian_8h.html#a7092866f7153eb705ca7a407955e3a01":[44,0,5,2,1,25,1],
 "SDL__endian_8h.html#a85e40e413e31a55e01eb8fe157528db1":[44,0,5,2,1,25,6],
 "SDL__endian_8h.html#aba916646d6a5abd082d5a21b406d3823":[44,0,5,2,1,25,8],
-"SDL__endian_8h.html#acc75cbc3e0bbf00dfd438e2186b91b03":[44,0,5,2,1,25,10],
-"SDL__endian_8h.html#ad2b20e63545e73207b007b03bf08c2df":[44,0,5,2,1,25,7],
-"SDL__endian_8h.html#ae1c6fb787318750e4e974345bd46ca4b":[44,0,5,2,1,25,15],
-"SDL__endian_8h.html#ae650119b14f608de5d79e0d73a444c35":[44,0,5,2,1,25,13],
-"SDL__endian_8h.html#af22db189169b9aa7e356bf26b2a553f6":[44,0,5,2,1,25,4]
+"SDL__endian_8h.html#acc75cbc3e0bbf00dfd438e2186b91b03":[44,0,5,2,1,25,10]
 };

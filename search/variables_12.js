@@ -142,7 +142,7 @@ var searchData=
   ['rootwindowfortitlebarhighlight_139',['RootWindowForTitleBarHighlight',['../structImGuiWindow.html#ae5d5c6637b63f35edc415162a5674c1e',1,'ImGuiWindow']]],
   ['rootwindowpopuptree_140',['RootWindowPopupTree',['../structImGuiWindow.html#a5b5c4785c370996fbfe7929227ddae53',1,'ImGuiWindow']]],
   ['rot_141',['rot',['../structPropInstance.html#ac1822f89e08e702bdd33f5c1eec8bb9c',1,'PropInstance']]],
-  ['rotation_142',['rotation',['../structMemoryHandler_1_1GeometrySlot.html#aeff01be603681fd1f780e89267966dff',1,'MemoryHandler::GeometrySlot']]],
+  ['rotation_142',['rotation',['../structNavMeshGeometryInfo.html#a98898ae48ce93f5e1f4711f7f8630889',1,'NavMeshGeometryInfo::rotation'],['../structMemoryHandler_1_1GeometrySlot.html#aeff01be603681fd1f780e89267966dff',1,'MemoryHandler::GeometrySlot::rotation']]],
   ['rotaux_143',['rotAux',['../structdtObstacleOrientedBox.html#a458dd50502225f6b7070f9cad93c537b',1,'dtObstacleOrientedBox']]],
   ['routingcurr_144',['RoutingCurr',['../structImGuiKeyRoutingData.html#af26e491135468826805ea383c2883058',1,'ImGuiKeyRoutingData']]],
   ['routingcurrscore_145',['RoutingCurrScore',['../structImGuiKeyRoutingData.html#a7c1d9a5ba10c6abb90a6ff5345aa53dd',1,'ImGuiKeyRoutingData']]],

@@ -69,7 +69,7 @@ var searchData=
   ['delivery_66',['Delivery',['../structImGuiPayload.html#a4c0900e12c8d0bf6869c0ac6f8a66e31',1,'ImGuiPayload']]],
   ['deltatime_67',['DeltaTime',['../structImGuiIO.html#a5068d5414a19c2a1bf58029bd732a7c7',1,'ImGuiIO']]],
   ['demotree_68',['DemoTree',['../structImGuiDemoWindowData.html#a9fedd02505df5772fc67bc83c97a0c84',1,'ImGuiDemoWindowData']]],
-  ['depth_69',['depth',['../structImGuiDockNodeSettings.html#abe6af119ef54ea61af199a15c3095296',1,'ImGuiDockNodeSettings::Depth'],['../structSDLTest__CommonState.html#a6ab7d5f81b55c29594f9ba3e018632fe',1,'SDLTest_CommonState::depth']]],
+  ['depth_69',['depth',['../structSDLTest__CommonState.html#a6ab7d5f81b55c29594f9ba3e018632fe',1,'SDLTest_CommonState::depth'],['../structImGuiDockNodeSettings.html#abe6af119ef54ea61af199a15c3095296',1,'ImGuiDockNodeSettings::Depth']]],
   ['depthstencilformat_70',['depthstencilformat',['../structImGui__ImplWGPU__InitInfo.html#a0e63ac323c2f2c0272677d079fe1a6cb',1,'ImGui_ImplWGPU_InitInfo::DepthStencilFormat'],['../structImGui__ImplWGPU__Data.html#a346d81380745d85c9065283da935c1e2',1,'ImGui_ImplWGPU_Data::depthStencilFormat']]],
   ['descent_71',['Descent',['../structImFontBaked.html#abbb5072bae93cb08364ed22284604cb5',1,'ImFontBaked']]],
   ['descoffset_72',['DescOffset',['../structImGuiStackLevelInfo.html#a07ffeec56425f11bb528f62154129bfb',1,'ImGuiStackLevelInfo']]],

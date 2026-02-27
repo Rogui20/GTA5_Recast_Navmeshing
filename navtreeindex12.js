@@ -1,5 +1,9 @@
 var NAVTREEINDEX12 =
 {
+"SDL__assert_8h.html#a59366c845267d9d6c8f214e096f7b45c":[44,0,5,2,1,3,19],
+"SDL__assert_8h.html#a61c95d5aa8a1bd701e829b0842e04f07":[44,0,5,2,1,3,18],
+"SDL__assert_8h.html#a74c575b310128e12358caf79aec09da7":[44,0,5,2,1,3,3],
+"SDL__assert_8h.html#aa63dc5ca0d954add6893512583b08071":[44,0,5,2,1,3,16],
 "SDL__assert_8h.html#abdbad45c4ede1953c784a7b312349a32":[44,0,5,2,1,3,22],
 "SDL__assert_8h.html#aeee78c1e2347a3cfe4ee3c215d497acd":[44,0,5,2,1,3,8],
 "SDL__assert_8h.html#af03d71e27f06835f6a09358943c33b1d":[44,0,5,2,1,3,1],
@@ -200,8 +204,8 @@ var NAVTREEINDEX12 =
 "SDL__config__android_8h.html#a494d1ecf5a4567ccbf7901e3be337bc7":[44,0,5,2,1,10,64],
 "SDL__config__android_8h.html#a49afaaefcf9868c6d3a9fb43706af4db":[44,0,5,2,1,10,92],
 "SDL__config__android_8h.html#a4ac6a60cb19181437136206238f16497":[44,0,5,2,1,10,96],
-"SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,60],
 "SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,61],
+"SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,60],
 "SDL__config__android_8h.html#a4e31ef0be24f881a3a13e42723db7095":[44,0,5,2,1,10,31],
 "SDL__config__android_8h.html#a4f6ff4162269254c4c4b86bc9892ecce":[44,0,5,2,1,10,42],
 "SDL__config__android_8h.html#a51924e273a5b8653a28e005108ab7ae6":[44,0,5,2,1,10,101],
@@ -245,9 +249,5 @@ var NAVTREEINDEX12 =
 "SDL__config__android_8h.html#ab76a10f8deddbaff251e61ba66645d57":[44,0,5,2,1,10,114],
 "SDL__config__android_8h.html#ab8c46f8750f5f6fd99af7e08bc977861":[44,0,5,2,1,10,40],
 "SDL__config__android_8h.html#ab90a030ff2790ebdc176660a6dd2a478":[44,0,5,2,1,10,36],
-"SDL__config__android_8h.html#ab9262e27fbdd200f4ddc0fd06ac037c0":[44,0,5,2,1,10,47],
-"SDL__config__android_8h.html#abd3c4aff90801d067f0dd1d176a0d1ac":[44,0,5,2,1,10,23],
-"SDL__config__android_8h.html#ac113b1149ff6806b32454e2897354a40":[44,0,5,2,1,10,81],
-"SDL__config__android_8h.html#ac42530bcc02c4d0849d8d4417024d4af":[44,0,5,2,1,10,74],
-"SDL__config__android_8h.html#ac47b156cb0f72b330945cd009c70049d":[44,0,5,2,1,10,100]
+"SDL__config__android_8h.html#ab9262e27fbdd200f4ddc0fd06ac037c0":[44,0,5,2,1,10,47]
 };

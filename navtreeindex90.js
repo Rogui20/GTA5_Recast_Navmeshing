@@ -1,5 +1,9 @@
 var NAVTREEINDEX90 =
 {
+"md_CONTRIBUTING.html#found-a-bug":[6,3],
+"md_CONTRIBUTING.html#have-a-question-or-problem":[6,1],
+"md_CONTRIBUTING.html#submitting-a-pull-request":[6,3,1],
+"md_CONTRIBUTING.html#submitting-an-issue":[6,3,0],
 "md_CONTRIBUTING.html#want-a-new-feature":[6,2],
 "md_Docs_2__1__Introduction.html":[0],
 "md_Docs_2__1__Introduction.html#agent-attributes":[0,6,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX90 =
 "structCrowdToolParams.html#aaf7a605017a4343c0536704cf0a4f1b0":[43,0,10,15],
 "structCrowdToolParams.html#abb28bf8b771767150348b0264c649991":[43,0,10,17],
 "structCrowdToolParams.html#abd5dd62a05171d60b075e10d9290e7b3":[43,0,10,4],
-"structCrowdToolParams.html#ad4a5ed9be39d3f974e5fae65ced6c7b1":[43,0,10,0],
-"structCrowdToolParams.html#ae078b3f35f3d5b2865139b3960708426":[43,0,10,14],
-"structDebugLine.html":[43,0,14],
-"structDebugLine.html#a038052448edbedb93d3ea9d0bbad1a35":[43,0,14,1],
-"structDebugLine.html#a34ca88c2ec26300c10dc2a1f9592614f":[43,0,14,0]
+"structCrowdToolParams.html#ad4a5ed9be39d3f974e5fae65ced6c7b1":[43,0,10,0]
 };

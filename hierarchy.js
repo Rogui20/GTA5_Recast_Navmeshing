@@ -419,6 +419,7 @@ var hierarchy =
     [ "NavMeshEdgeInfo", "structNavMeshEdgeInfo.html", null ],
     [ "NavmeshFlags", "classNavmeshFlags.html", null ],
     [ "NavmeshGenerationSettings", "structNavmeshGenerationSettings.html", null ],
+    [ "NavMeshGeometryInfo", "structNavMeshGeometryInfo.html", null ],
     [ "NavMeshPolygonInfo", "structNavMeshPolygonInfo.html", null ],
     [ "NavMeshSetHeader", "structNavMeshSetHeader.html", null ],
     [ "NavMeshTileBuildContext", "structNavMeshTileBuildContext.html", null ],

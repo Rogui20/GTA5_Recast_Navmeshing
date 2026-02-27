@@ -1,5 +1,9 @@
 var NAVTREEINDEX3 =
 {
+"GtaNavRuntime_2glm_2simd_2platform_8h.html#af513752fc97dd011dfc0662ab27266ad":[44,0,6,0,1,7,68],
+"GtaNavRuntime_2glm_2simd_2platform_8h.html#af7ce19c802c6a917f8827240ed61724f":[44,0,6,0,1,7,75],
+"GtaNavRuntime_2glm_2simd_2platform_8h.html#afabafe48da94c89722d24c992ad763c4":[44,0,6,0,1,7,23],
+"GtaNavRuntime_2glm_2simd_2platform_8h.html#aff82d1f779418f553d7acc4781cd180a":[44,0,6,0,1,7,73],
 "GtaNavRuntime_2glm_2simd_2platform_8h_source.html":[44,0,6,0,1,7],
 "GtaNavRuntime_2glm_2simd_2trigonometric_8h.html":[44,0,6,0,1,8],
 "GtaNavRuntime_2glm_2simd_2trigonometric_8h_source.html":[44,0,6,0,1,8],
@@ -245,9 +249,5 @@ var NAVTREEINDEX3 =
 "GtaNavViewer_2imgui_2imgui_8cpp.html#acf8884e3e377847ddd51090b64ce3648":[44,0,7,0,2,84],
 "GtaNavViewer_2imgui_2imgui_8cpp.html#acfa8fff49f3f1d6e1844743a166433f2":[44,0,7,0,2,126],
 "GtaNavViewer_2imgui_2imgui_8cpp.html#ad00213b916de0bc1519d6d20259391cf":[44,0,7,0,2,204],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#ad0904dbbb719da0d03296bb8c944127d":[44,0,7,0,2,58],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#ad0e39bff5ef1bbdd6ba22c133f211da7":[44,0,7,0,2,66],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#ad1bb36662ef45e0306c21eaa801ea013":[44,0,7,0,2,73],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#ad24d7eec255244bfacce75b3faa053a7":[44,0,7,0,2,65],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#ad3235e1174c0c824c32e469c2bb827d8":[44,0,7,0,2,205]
+"GtaNavViewer_2imgui_2imgui_8cpp.html#ad0904dbbb719da0d03296bb8c944127d":[44,0,7,0,2,58]
 };
