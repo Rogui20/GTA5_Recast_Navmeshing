@@ -1928,6 +1928,112 @@ GTANAVVIEWER_API void ClearOffMeshLinks(void* navMesh, bool updateNavMesh)
         UpdateNavmeshState(*ctx, false);
 }
 
+GTANAVVIEWER_API int GetOffMeshLinks(void* navMesh,
+                                     OffMeshLinkInfo* outLinks,
+                                     int maxLinks,
+                                     int* outLinkCount)
+{
+    if (outLinkCount)
+        *outLinkCount = 0;
+
+    if (!navMesh)
+        return 0;
+
+    const auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    const int total = static_cast<int>(ctx->offmeshLinks.size());
+
+    if (!outLinks || maxLinks <= 0)
+    {
+        if (outLinkCount)
+            *outLinkCount = total;
+        return 0;
+    }
+
+    const int count = std::min(total, maxLinks);
+    for (int i = 0; i < count; ++i)
+    {
+        const auto& src = ctx->offmeshLinks[static_cast<size_t>(i)];
+        OffMeshLinkInfo info{};
+        info.start = ToVector3(src.start);
+        info.end = ToVector3(src.end);
+        info.radius = src.radius;
+        info.biDir = src.bidirectional;
+        info.area = src.area;
+        info.flags = src.flags;
+        info.userId = src.userId;
+        info.ownerTx = src.ownerTx;
+        info.ownerTy = src.ownerTy;
+        outLinks[i] = info;
+    }
+
+    if (outLinkCount)
+        *outLinkCount = total;
+
+    return count;
+}
+
+GTANAVVIEWER_API int RemoveOffMeshLinksInRadius(void* navMesh,
+                                                Vector3 center,
+                                                float radius,
+                                                bool updateNavMesh)
+{
+    if (!navMesh || radius < 0.0f)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    const glm::vec3 c(center.x, center.y, center.z);
+    const float radiusSq = radius * radius;
+
+    const auto oldSize = ctx->offmeshLinks.size();
+    auto& links = ctx->offmeshLinks;
+    links.erase(std::remove_if(links.begin(), links.end(), [&](const OffmeshLink& link)
+    {
+        const float distStart = glm::dot(link.start - c, link.start - c);
+        if (distStart <= radiusSq)
+            return true;
+
+        const float distEnd = glm::dot(link.end - c, link.end - c);
+        return distEnd <= radiusSq;
+    }), links.end());
+
+    const int removedCount = static_cast<int>(oldSize - links.size());
+    if (removedCount <= 0)
+        return 0;
+
+    ctx->navData.SetOffmeshLinks(ctx->offmeshLinks);
+    ctx->rebuildAll = true;
+    if (updateNavMesh)
+        UpdateNavmeshState(*ctx, false);
+
+    return removedCount;
+}
+
+GTANAVVIEWER_API bool RemoveOffMeshLinkById(void* navMesh,
+                                            unsigned int userId,
+                                            bool updateNavMesh)
+{
+    if (!navMesh)
+        return false;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    auto& links = ctx->offmeshLinks;
+    const auto it = std::find_if(links.begin(), links.end(), [&](const OffmeshLink& link)
+    {
+        return link.userId == userId;
+    });
+
+    if (it == links.end())
+        return false;
+
+    links.erase(it);
+    ctx->navData.SetOffmeshLinks(ctx->offmeshLinks);
+    ctx->rebuildAll = true;
+    if (updateNavMesh)
+        UpdateNavmeshState(*ctx, false);
+
+    return true;
+}
+
 GTANAVVIEWER_API bool GenerateAutomaticOffmeshLinks(void* navMesh)
 {
     if (!navMesh)

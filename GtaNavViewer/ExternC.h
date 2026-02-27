@@ -41,6 +41,19 @@ struct NavMeshGeometryInfo
     int indexCount = 0;
 };
 
+struct OffMeshLinkInfo
+{
+    Vector3 start;
+    Vector3 end;
+    float radius = 0.0f;
+    bool biDir = true;
+    unsigned char area = 0;
+    unsigned short flags = 0;
+    unsigned int userId = 0;
+    int ownerTx = -1;
+    int ownerTy = -1;
+};
+
 #ifdef _WIN32
   #ifdef GTANAVVIEWER_BUILD_DLL
     #define GTANAVVIEWER_API extern "C" __declspec(dllexport)
@@ -133,6 +146,17 @@ GTANAVVIEWER_API int AddOffmeshLinksToNavMeshIsland(void* navMesh,
                                                     OffmeshLink* outLinks,
                                                     int maxLinks);
 GTANAVVIEWER_API void ClearOffMeshLinks(void* navMesh, bool updateNavMesh);
+GTANAVVIEWER_API int GetOffMeshLinks(void* navMesh,
+                                     OffMeshLinkInfo* outLinks,
+                                     int maxLinks,
+                                     int* outLinkCount);
+GTANAVVIEWER_API int RemoveOffMeshLinksInRadius(void* navMesh,
+                                                Vector3 center,
+                                                float radius,
+                                                bool updateNavMesh);
+GTANAVVIEWER_API bool RemoveOffMeshLinkById(void* navMesh,
+                                            unsigned int userId,
+                                            bool updateNavMesh);
 GTANAVVIEWER_API bool GenerateAutomaticOffmeshLinks(void* navMesh);
 
 // Bounding box de build
