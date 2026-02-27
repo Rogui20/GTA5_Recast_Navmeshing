@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <cfloat>
+#include <cstdio>
 #include <cmath>
 #include <cstring>
 #include <filesystem>
@@ -1214,6 +1215,97 @@ GTANAVVIEWER_API void RemoveAllGeometries(void* navMesh)
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->geometries.clear();
     ctx->rebuildAll = true;
+}
+
+GTANAVVIEWER_API int GetAllGeometries(void* navMesh,
+                                      NavMeshGeometryInfo* geometries,
+                                      int maxGeometries,
+                                      int* outGeometryCount)
+{
+    if (outGeometryCount)
+        *outGeometryCount = 0;
+
+    if (!navMesh)
+        return 0;
+
+    const auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    const int total = static_cast<int>(ctx->geometries.size());
+
+    if (!geometries || maxGeometries <= 0)
+    {
+        if (outGeometryCount)
+            *outGeometryCount = total;
+        return 0;
+    }
+
+    const int count = std::min(total, maxGeometries);
+    for (int i = 0; i < count; ++i)
+    {
+        const auto& src = ctx->geometries[static_cast<size_t>(i)];
+        NavMeshGeometryInfo info{};
+        std::snprintf(info.customID, sizeof(info.customID), "%s", src.id.c_str());
+        info.position = Vector3{src.position.x, src.position.y, src.position.z};
+        info.rotation = Vector3{src.rotation.x, src.rotation.y, src.rotation.z};
+        info.vertexCount = static_cast<int>(src.source.vertices.size());
+        info.indexCount = static_cast<int>(src.source.indices.size());
+        geometries[i] = info;
+    }
+
+    if (outGeometryCount)
+        *outGeometryCount = total;
+
+    return count;
+}
+
+GTANAVVIEWER_API bool ExportMergedGeometriesObj(void* navMesh, const char* outputObjPath)
+{
+    if (!navMesh || !outputObjPath)
+        return false;
+
+    const auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    if (ctx->geometries.empty())
+        return false;
+
+    std::filesystem::path outPath(outputObjPath);
+    if (outPath.has_parent_path())
+        std::filesystem::create_directories(outPath.parent_path());
+
+    std::ofstream out(outPath);
+    if (!out.is_open())
+        return false;
+
+    out << "# Merged navmesh geometries\n";
+
+    std::size_t globalVertexOffset = 1;
+    for (const auto& geom : ctx->geometries)
+    {
+        if (!geom.source.Valid())
+            continue;
+
+        const glm::mat3 rotation = GetRotationMatrix(geom.rotation);
+
+        out << "\no geometry_" << geom.id << "\n";
+        out << "# position " << geom.position.x << " " << geom.position.y << " " << geom.position.z << "\n";
+        out << "# rotationDeg " << geom.rotation.x << " " << geom.rotation.y << " " << geom.rotation.z << "\n";
+
+        for (const auto& v : geom.source.vertices)
+        {
+            const glm::vec3 transformed = rotation * v + geom.position;
+            out << "v " << transformed.x << " " << transformed.y << " " << transformed.z << "\n";
+        }
+
+        for (size_t i = 0; i + 2 < geom.source.indices.size(); i += 3)
+        {
+            const std::size_t i0 = globalVertexOffset + geom.source.indices[i];
+            const std::size_t i1 = globalVertexOffset + geom.source.indices[i + 1];
+            const std::size_t i2 = globalVertexOffset + geom.source.indices[i + 2];
+            out << "f " << i0 << " " << i1 << " " << i2 << "\n";
+        }
+
+        globalVertexOffset += geom.source.vertices.size();
+    }
+
+    return out.good();
 }
 
 GTANAVVIEWER_API bool BuildNavMesh(void* navMesh)
