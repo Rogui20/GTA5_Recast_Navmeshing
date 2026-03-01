@@ -12,5 +12,6 @@ var searchData=
   ['joystick_20does_20not_20work_9',['Joystick does not work',['../linux-1.html#joystick-does-not-work',1,'']]],
   ['joysticks_20aren_20t_20working_10',['Game controllers / joysticks aren&apos;t working!',['../winrt.html#game-controllers--joysticks-arent-working',1,'']]],
   ['joysticks_20in_20sdl2_3a_11',['Joysticks in SDL2:',['../simple-directmedia-layer-2-for-os2--ecomstation.html#joysticks-in-sdl2',1,'']]],
-  ['jumpheight_12',['jumpHeight',['../structAutoOffmeshGenerationParams.html#a456cea994e8ba6daaaee2c1f05d33280',1,'AutoOffmeshGenerationParams']]]
+  ['jumpheight_12',['jumpHeight',['../structAutoOffmeshGenerationParams.html#a456cea994e8ba6daaaee2c1f05d33280',1,'AutoOffmeshGenerationParams']]],
+  ['jumptype_13',['jumpType',['../structSimEventFFI.html#a337d45342a42263366de5120b7f745ad',1,'SimEventFFI']]]
 ];

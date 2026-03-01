@@ -30,7 +30,7 @@ var searchData=
   ['updatemousemovingwindowendframe_27',['UpdateMouseMovingWindowEndFrame',['../namespaceImGui.html#a6f56217f28aff3a7cea846e6f44eebff',1,'ImGui']]],
   ['updatemousemovingwindownewframe_28',['UpdateMouseMovingWindowNewFrame',['../namespaceImGui.html#a3c60e468d73a0ccd52628f0c82b42fe8',1,'ImGui']]],
   ['updatemousewheel_29',['UpdateMouseWheel',['../namespaceImGui.html#a45a39b3a2cfa3aa899eecb63bac79d1a',1,'ImGui']]],
-  ['updatenavmesh_30',['updatenavmesh',['../ExternC_8cpp.html#af58c6b0d37352974167fecd9270e033a',1,'UpdateNavMesh(void *navMesh):&#160;ExternC.cpp'],['../ExternC_8h.html#af58c6b0d37352974167fecd9270e033a',1,'UpdateNavMesh(void *navMesh):&#160;ExternC.cpp']]],
+  ['updatenavmesh_30',['updatenavmesh',['../ExternC_8h.html#af58c6b0d37352974167fecd9270e033a',1,'UpdateNavMesh(void *navMesh):&#160;ExternC.cpp'],['../ExternC_8cpp.html#af58c6b0d37352974167fecd9270e033a',1,'UpdateNavMesh(void *navMesh):&#160;ExternC.cpp']]],
   ['updateplatformwindows_31',['UpdatePlatformWindows',['../namespaceImGui.html#aec5bbce3200aa681dac6a1915ef07f60',1,'ImGui']]],
   ['updatesettings_32',['UpdateSettings',['../namespaceImGui.html#a8bdb90b84ec6e306d312fc8bfb7caf64',1,'ImGui']]],
   ['updateslicedfindpath_33',['updateSlicedFindPath',['../classdtNavMeshQuery.html#aa0c147e3da7fd0b59342da0fc456afc7',1,'dtNavMeshQuery']]],
@@ -48,5 +48,6 @@ var searchData=
   ['updatewindowparentandrootlinks_45',['UpdateWindowParentAndRootLinks',['../namespaceImGui.html#a85d7262320ed7ce8e40863b99f8db4a3',1,'ImGui']]],
   ['updatewindowskiprefresh_46',['UpdateWindowSkipRefresh',['../namespaceImGui.html#aad7414728bad964a8a6282f3b0ee11be',1,'ImGui']]],
   ['updateworkrect_47',['UpdateWorkRect',['../structImGuiViewportP.html#a00cd6261263e9637c819908d93580e0c',1,'ImGuiViewportP']]],
-  ['uploadtogpu_48',['UploadToGPU',['../classMesh.html#ad2eaffde4decce1cc2045b124a27b981',1,'Mesh']]]
+  ['uploadtogpu_48',['UploadToGPU',['../classMesh.html#ad2eaffde4decce1cc2045b124a27b981',1,'Mesh']]],
+  ['upsertsimagents_49',['upsertsimagents',['../ExternC_8cpp.html#a84987266ecb0fa39aec1785afce31e57',1,'UpsertSimAgents(void *navMesh, const SimAgentDescFFI *agents, int count):&#160;ExternC.cpp'],['../ExternC_8h.html#a84987266ecb0fa39aec1785afce31e57',1,'UpsertSimAgents(void *navMesh, const SimAgentDescFFI *agents, int count):&#160;ExternC.cpp']]]
 ];

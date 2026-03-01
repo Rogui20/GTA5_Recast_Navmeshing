@@ -57,5 +57,7 @@ var searchData=
   ['sdl_5ftouchdevicetype_54',['SDL_TouchDeviceType',['../SDL__touch_8h.html#a63f6b605841f681e036a96d9b2790cff',1,'SDL_touch.h']]],
   ['sdl_5fwindoweventid_55',['SDL_WindowEventID',['../SDL__video_8h.html#ac486b40a4860d980dbc74d0b4adf3bab',1,'SDL_video.h']]],
   ['sdl_5fwindowflags_56',['SDL_WindowFlags',['../SDL__video_8h.html#ab10f4fd6a082ef06fcae96860c95fb18',1,'SDL_video.h']]],
-  ['sdl_5fyuv_5fconversion_5fmode_57',['SDL_YUV_CONVERSION_MODE',['../SDL__surface_8h.html#a00a564600207cec7a2cb50a6e20d2446',1,'SDL_surface.h']]]
+  ['sdl_5fyuv_5fconversion_5fmode_57',['SDL_YUV_CONVERSION_MODE',['../SDL__surface_8h.html#a00a564600207cec7a2cb50a6e20d2446',1,'SDL_surface.h']]],
+  ['simagentflags_58',['SimAgentFlags',['../ExternC_8h.html#aeb23778775ea59335727e2b508440241',1,'ExternC.h']]],
+  ['simshapetype_59',['SimShapeType',['../ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9c',1,'ExternC.h']]]
 ];

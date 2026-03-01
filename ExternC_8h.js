@@ -5,15 +5,30 @@ var ExternC_8h =
     [ "NavMeshPolygonInfo", "structNavMeshPolygonInfo.html", "structNavMeshPolygonInfo" ],
     [ "NavMeshGeometryInfo", "structNavMeshGeometryInfo.html", "structNavMeshGeometryInfo" ],
     [ "OffMeshLinkInfo", "structOffMeshLinkInfo.html", "structOffMeshLinkInfo" ],
+    [ "SimAgentDescFFI", "structSimAgentDescFFI.html", "structSimAgentDescFFI" ],
+    [ "SimParamsFFI", "structSimParamsFFI.html", "structSimParamsFFI" ],
+    [ "SimEventFFI", "structSimEventFFI.html", "structSimEventFFI" ],
     [ "GTANAVVIEWER_API", "ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec", null ],
+    [ "SimAgentFlags", "ExternC_8h.html#aeb23778775ea59335727e2b508440241", [
+      [ "AGENT_ENABLED", "ExternC_8h.html#aeb23778775ea59335727e2b508440241ae04f7ab346f9800825fa23c6b42c7955", null ],
+      [ "AGENT_VEHICLE", "ExternC_8h.html#aeb23778775ea59335727e2b508440241a427c6e673754c46c61ce7654a6479f94", null ]
+    ] ],
+    [ "SimShapeType", "ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9c", [
+      [ "SHAPE_CYLINDER", "ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9ca62eea2af0cd8bf0530c0799ce72b93cf", null ],
+      [ "SHAPE_BOX", "ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9cacd064d47d06a6cf0cb539ae3335d26b5", null ]
+    ] ],
     [ "AddGeometry", "ExternC_8h.html#a33dd625e8066802fa192540a9d95f67f", null ],
     [ "AddOffMeshLink", "ExternC_8h.html#a3f47892fd35980c12612beae6bf9128a", null ],
     [ "AddOffmeshLinksToNavMeshIsland", "ExternC_8h.html#ac3f7fd9f646d880edc9031c6a383e883", null ],
     [ "BakeTilesInBounds", "ExternC_8h.html#acf6c699ee4c5738d89858c5660e91fa4", null ],
+    [ "BuildHeightSamplerForCurrentGeometry", "ExternC_8h.html#a7125f125e4a8a88ce2ae20b52447c900", null ],
     [ "BuildNavMesh", "ExternC_8h.html#acdcdde7a6aa314427c97c0a2e0743321", null ],
     [ "ClearAllLoadedTiles", "ExternC_8h.html#a12ac65d1ff6547c4bd97f25b1a1ecd7e", null ],
     [ "ClearOffMeshLinks", "ExternC_8h.html#a6b32e777a9f5e87992d4cc3bf2fd947c", null ],
+    [ "ClearSimAgents", "ExternC_8h.html#a2220a45cd0107eb61b7106fc27b68420", null ],
+    [ "ComputeAgentPath", "ExternC_8h.html#a7b494c9ea8640a0c2849b35ac8555d77", null ],
     [ "DestroyNavMeshResources", "ExternC_8h.html#a84b79a2a59ce0e2005902f0ec88cc178", null ],
+    [ "EnableHeightSampling", "ExternC_8h.html#a946e5d323ca20456aa6922a4976fb148", null ],
     [ "ExportMergedGeometriesObj", "ExternC_8h.html#a018403d7757d15f55ea268bdf830769e", null ],
     [ "FindPath", "ExternC_8h.html#a462e8adf4796b96d81b1563df6e9a8ee", null ],
     [ "FindPathWithMinEdge", "ExternC_8h.html#a0a609079f4645ccec18a5cefc10f79c8", null ],
@@ -31,6 +46,7 @@ var ExternC_8h =
     [ "RemoveNavMeshBoundingBox", "ExternC_8h.html#aae230be1b4147bf49c6d7d386c442ae5", null ],
     [ "RemoveOffMeshLinkById", "ExternC_8h.html#a1a0f9d943504aca125a94cb69c3a106a", null ],
     [ "RemoveOffMeshLinksInRadius", "ExternC_8h.html#a376a93e7b2a291bcb812a740e83ea8f4", null ],
+    [ "RemoveSimAgents", "ExternC_8h.html#a13bde80dcb8d2370adfb1fdc782f016f", null ],
     [ "SaveNavMeshRuntimeCache", "ExternC_8h.html#a23d70761e65d82b683dfbe7cee3f47da", null ],
     [ "SetAutoOffMeshGenerationParams", "ExternC_8h.html#aa33ea8d31679660f03728f6d5c35a5a0", null ],
     [ "SetMaxResidentTiles", "ExternC_8h.html#a96e5d68b4f8417e702cbe9e09c7b6ea0", null ],
@@ -38,7 +54,10 @@ var ExternC_8h =
     [ "SetNavMeshCacheRoot", "ExternC_8h.html#a8239affe581f2dbb1a68ce23d682fefb", null ],
     [ "SetNavMeshGenSettings", "ExternC_8h.html#a8cffc5e7d98e834d8efad83b0b13a324", null ],
     [ "SetNavMeshSessionId", "ExternC_8h.html#a87a9adba83fdb3bc11375785f1c0a186", null ],
+    [ "SimulateAgentFrames", "ExternC_8h.html#a973c7e1c7f3218f43e3f7742497c5353", null ],
+    [ "SimulateAgentsFramesBatch", "ExternC_8h.html#adfe03941815fc03f9c2a96150d0b2716", null ],
     [ "StreamTilesAround", "ExternC_8h.html#ab32e95f2f92eecf32a69f6249f2845fd", null ],
     [ "UpdateGeometry", "ExternC_8h.html#aa3194b4fb64ba867ccee52233e3a84e1", null ],
-    [ "UpdateNavMesh", "ExternC_8h.html#af58c6b0d37352974167fecd9270e033a", null ]
+    [ "UpdateNavMesh", "ExternC_8h.html#af58c6b0d37352974167fecd9270e033a", null ],
+    [ "UpsertSimAgents", "ExternC_8h.html#a84987266ecb0fa39aec1785afce31e57", null ]
 ];

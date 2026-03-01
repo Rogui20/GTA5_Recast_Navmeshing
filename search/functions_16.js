@@ -13,11 +13,12 @@ var searchData=
   ['windowsettingshandler_5freadopen_10',['WindowSettingsHandler_ReadOpen',['../GtaNavViewer_2imgui_2imgui_8cpp.html#a96167b8831eaf55d73bfd79411b01fd6',1,'imgui.cpp']]],
   ['windowsettingshandler_5fwriteall_11',['WindowSettingsHandler_WriteAll',['../GtaNavViewer_2imgui_2imgui_8cpp.html#a24623093a2b9a7babcc73f502bfabad0',1,'imgui.cpp']]],
   ['windowsyncownedviewport_12',['WindowSyncOwnedViewport',['../namespaceImGui.html#aa10671a357d79bda5447b19e54e03baa',1,'ImGui']]],
-  ['write_13',['write',['../classFileIO.html#aa2ff5f1db6c224a0fa15f3b039a6009d',1,'FileIO::write()'],['../structduFileIO.html#aec33f1c0d1d0d1ec464fc1a5c135cb00',1,'duFileIO::write()']]],
-  ['writeboundingbox_14',['WriteBoundingBox',['../classMemoryHandler.html#a6d68f6a53a96a8f27af71b411d966e69',1,'MemoryHandler']]],
-  ['writegeometryslot_15',['WriteGeometrySlot',['../classMemoryHandler.html#a34787edbb4b1601604aaee255e7a56f0',1,'MemoryHandler']]],
-  ['writeoffmeshcontrol_16',['WriteOffmeshControl',['../classMemoryHandler.html#a196ba639869998ddaaf2cc263ae52cf7',1,'MemoryHandler']]],
-  ['writeoffmeshlinkslot_17',['WriteOffmeshLinkSlot',['../classMemoryHandler.html#a841e0c776c3ecd5653ec536ca59e85d3',1,'MemoryHandler']]],
-  ['writerouterequestslot_18',['WriteRouteRequestSlot',['../classMemoryHandler.html#a57e1d0fccb693b1badf8f0b1cb3b285d',1,'MemoryHandler']]],
-  ['writerouteresultpoints_19',['WriteRouteResultPoints',['../classMemoryHandler.html#a5d4c4c56b7a25d01b85de9289ce51fa8',1,'MemoryHandler']]]
+  ['wrapangledeg_13',['WrapAngleDeg',['../ExternC_8cpp.html#a1c63de9d722fb00d6bf9ada161ab24f8',1,'ExternC.cpp']]],
+  ['write_14',['write',['../classFileIO.html#aa2ff5f1db6c224a0fa15f3b039a6009d',1,'FileIO::write()'],['../structduFileIO.html#aec33f1c0d1d0d1ec464fc1a5c135cb00',1,'duFileIO::write()']]],
+  ['writeboundingbox_15',['WriteBoundingBox',['../classMemoryHandler.html#a6d68f6a53a96a8f27af71b411d966e69',1,'MemoryHandler']]],
+  ['writegeometryslot_16',['WriteGeometrySlot',['../classMemoryHandler.html#a34787edbb4b1601604aaee255e7a56f0',1,'MemoryHandler']]],
+  ['writeoffmeshcontrol_17',['WriteOffmeshControl',['../classMemoryHandler.html#a196ba639869998ddaaf2cc263ae52cf7',1,'MemoryHandler']]],
+  ['writeoffmeshlinkslot_18',['WriteOffmeshLinkSlot',['../classMemoryHandler.html#a841e0c776c3ecd5653ec536ca59e85d3',1,'MemoryHandler']]],
+  ['writerouterequestslot_19',['WriteRouteRequestSlot',['../classMemoryHandler.html#a57e1d0fccb693b1badf8f0b1cb3b285d',1,'MemoryHandler']]],
+  ['writerouteresultpoints_20',['WriteRouteResultPoints',['../classMemoryHandler.html#a5d4c4c56b7a25d01b85de9289ce51fa8',1,'MemoryHandler']]]
 ];

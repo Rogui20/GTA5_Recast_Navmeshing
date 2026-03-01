@@ -46,7 +46,7 @@ var unionImGL3WProcs =
     [ "GetUniformLocation", "unionImGL3WProcs.html#a35f965ba92a706c98e891cf36a55d906", null ],
     [ "GetVertexAttribiv", "unionImGL3WProcs.html#a3ad0430760e672ea731fc04b63c2c9d4", null ],
     [ "GetVertexAttribPointerv", "unionImGL3WProcs.html#abeffb19d607a5ea47725379599a4a7e9", null ],
-    [ "gl", "unionImGL3WProcs.html#a5312128ef3cffcfa7e82698c2b87ec12", null ],
+    [ "gl", "unionImGL3WProcs.html#a678187be5d6618624feb7159cf2f0d0e", null ],
     [ "IsEnabled", "unionImGL3WProcs.html#aac7ad0f2970978d316941601bddaa906", null ],
     [ "IsProgram", "unionImGL3WProcs.html#ad38a8b3eda897e9b93115a054f43989a", null ],
     [ "LinkProgram", "unionImGL3WProcs.html#af79251d573cca52e1977a304f8acb0f6", null ],

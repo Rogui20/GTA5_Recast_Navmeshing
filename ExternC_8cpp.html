@@ -174,6 +174,18 @@ Functions</h2></td></tr>
 <tr class="separator:af7789da0cef77d265747015c018eae1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74f297eafcd6fc93d2c92236b00121cf" id="r_a74f297eafcd6fc93d2c92236b00121cf"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a74f297eafcd6fc93d2c92236b00121cf">RunPathfindInternal</a> (ExternNavmeshContext &amp;ctx, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float minEdge, float *outPath, bool *outIsOffMeshLinkNode, bool *outIsNextOffMeshLinkNodeHigher, int options)</td></tr>
 <tr class="separator:a74f297eafcd6fc93d2c92236b00121cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c63de9d722fb00d6bf9ada161ab24f8" id="r_a1c63de9d722fb00d6bf9ada161ab24f8"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a1c63de9d722fb00d6bf9ada161ab24f8">WrapAngleDeg</a> (float <a class="el" href="SDL__opengl__glext_8h.html#a9e06c1f76a20fed54ca742cd25cb02c4">angle</a>)</td></tr>
+<tr class="separator:a1c63de9d722fb00d6bf9ada161ab24f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c0207a16f3387d3cec9bdad432340eb" id="r_a9c0207a16f3387d3cec9bdad432340eb"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a9c0207a16f3387d3cec9bdad432340eb">ShapeAvoidRadius</a> (const SimAgentState &amp;<a class="el" href="glad_8h.html#ac8729153468b5dcf13f971b21d84d4e5">a</a>)</td></tr>
+<tr class="separator:a9c0207a16f3387d3cec9bdad432340eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a863a8c110d1c96a0a86076b8dd516921" id="r_a863a8c110d1c96a0a86076b8dd516921"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a863a8c110d1c96a0a86076b8dd516921">ComputePathData</a> (ExternNavmeshContext &amp;ctx, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float minEdge, int options, std::vector&lt; float &gt; &amp;outCorners, std::vector&lt; unsigned char &gt; &amp;outCornerFlags, std::vector&lt; <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> &gt; &amp;outPathPolys, <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> *outStartRef, float outStartNearest[3])</td></tr>
+<tr class="separator:a863a8c110d1c96a0a86076b8dd516921"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa127e379b0403975a0741c8fea71acab" id="r_aa127e379b0403975a0741c8fea71acab"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aa127e379b0403975a0741c8fea71acab">SampleAgentHeight</a> (ExternNavmeshContext &amp;ctx, SimAgentState &amp;agent, const glm::vec3 &amp;pos)</td></tr>
+<tr class="separator:aa127e379b0403975a0741c8fea71acab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af215cd1ade1f4bdce4529c40efdaa0c3" id="r_af215cd1ade1f4bdce4529c40efdaa0c3"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#af215cd1ade1f4bdce4529c40efdaa0c3">ComputeAvoidanceForce</a> (const SimAgentState &amp;self, const std::vector&lt; const SimAgentState * &gt; &amp;neighbors, float avoidRange, float avoidWeight)</td></tr>
+<tr class="separator:af215cd1ade1f4bdce4529c40efdaa0c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb9a8d0b6d5a86d2ddde05d0172ec95d" id="r_aeb9a8d0b6d5a86d2ddde05d0172ec95d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aeb9a8d0b6d5a86d2ddde05d0172ec95d">AppendJumpEvent</a> (const SimAgentState &amp;agent, int frameIndex, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents, int eventCount, float speed)</td></tr>
+<tr class="separator:aeb9a8d0b6d5a86d2ddde05d0172ec95d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a462e8adf4796b96d81b1563df6e9a8ee" id="r_a462e8adf4796b96d81b1563df6e9a8ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a462e8adf4796b96d81b1563df6e9a8ee">FindPath</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa">target</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float *outPath, int options)</td></tr>
 <tr class="separator:a462e8adf4796b96d81b1563df6e9a8ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a609079f4645ccec18a5cefc10f79c8" id="r_a0a609079f4645ccec18a5cefc10f79c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a0a609079f4645ccec18a5cefc10f79c8">FindPathWithMinEdge</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa">target</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float minEdge, float *outPath, int options)</td></tr>
@@ -198,6 +210,24 @@ Functions</h2></td></tr>
 <tr class="separator:a7b5e3183ba6d48b8d7e48d55c6b5d1ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae230be1b4147bf49c6d7d386c442ae5" id="r_aae230be1b4147bf49c6d7d386c442ae5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aae230be1b4147bf49c6d7d386c442ae5">RemoveNavMeshBoundingBox</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
 <tr class="separator:aae230be1b4147bf49c6d7d386c442ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84987266ecb0fa39aec1785afce31e57" id="r_a84987266ecb0fa39aec1785afce31e57"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a84987266ecb0fa39aec1785afce31e57">UpsertSimAgents</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const <a class="el" href="structSimAgentDescFFI.html">SimAgentDescFFI</a> *agents, int <a class="el" href="glad_8h.html#a619bc20e8198de3bd3f3d7fc34de66b2">count</a>)</td></tr>
+<tr class="separator:a84987266ecb0fa39aec1785afce31e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a330a231b9f3ca233d809a39f111e5726" id="r_a330a231b9f3ca233d809a39f111e5726"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a330a231b9f3ca233d809a39f111e5726">RemoveSimAgents</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> *agentIds, int <a class="el" href="glad_8h.html#a619bc20e8198de3bd3f3d7fc34de66b2">count</a>)</td></tr>
+<tr class="separator:a330a231b9f3ca233d809a39f111e5726"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2220a45cd0107eb61b7106fc27b68420" id="r_a2220a45cd0107eb61b7106fc27b68420"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a2220a45cd0107eb61b7106fc27b68420">ClearSimAgents</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
+<tr class="separator:a2220a45cd0107eb61b7106fc27b68420"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae520ee5b3d4d0019c143514fe4015441" id="r_ae520ee5b3d4d0019c143514fe4015441"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ae520ee5b3d4d0019c143514fe4015441">ComputeAgentPath</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> agentId, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa">target</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxCorners, float minEdgeDist, int options)</td></tr>
+<tr class="separator:ae520ee5b3d4d0019c143514fe4015441"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a946e5d323ca20456aa6922a4976fb148" id="r_a946e5d323ca20456aa6922a4976fb148"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a946e5d323ca20456aa6922a4976fb148">EnableHeightSampling</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, bool <a class="el" href="SDL__opengl__glext_8h.html#a0455a397ab5468d21c3021f2efa6dd3c">enabled</a>)</td></tr>
+<tr class="separator:a946e5d323ca20456aa6922a4976fb148"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7125f125e4a8a88ce2ae20b52447c900" id="r_a7125f125e4a8a88ce2ae20b52447c900"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a7125f125e4a8a88ce2ae20b52447c900">BuildHeightSamplerForCurrentGeometry</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, int samplesPerTile, bool storeTwoLayers)</td></tr>
+<tr class="separator:a7125f125e4a8a88ce2ae20b52447c900"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd0ed4fc040a484aabd2a27f2208104b" id="r_afd0ed4fc040a484aabd2a27f2208104b"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#afd0ed4fc040a484aabd2a27f2208104b">SimulateAgentsInternal</a> (ExternNavmeshContext &amp;ctx, const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> *agentIds, int agentCount, float dt, int maxSimulationFrames, const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, float *outPosXYZ, float *outHeadingDeg, float *outVelXYZ, <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *outFrameFlags, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents)</td></tr>
+<tr class="separator:afd0ed4fc040a484aabd2a27f2208104b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a903a38084cdbb3f92eb83e82c5fb2517" id="r_a903a38084cdbb3f92eb83e82c5fb2517"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a903a38084cdbb3f92eb83e82c5fb2517">SimulateAgentFrames</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> agentId, float dt, int maxSimulationFrames, const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, float *outPosXYZ, float *outHeadingDeg, float *outVelXYZ, <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *outFrameFlags, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents)</td></tr>
+<tr class="separator:a903a38084cdbb3f92eb83e82c5fb2517"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a212930478372078e40be429bba642149" id="r_a212930478372078e40be429bba642149"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a212930478372078e40be429bba642149">SimulateAgentsFramesBatch</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> *agentIds, int agentCount, float dt, int maxSimulationFrames, const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, float *outPosXYZ, float *outHeadingDeg, float *outVelXYZ, <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *outFrameFlags, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents)</td></tr>
+<tr class="separator:a212930478372078e40be429bba642149"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a33dd625e8066802fa192540a9d95f67f" name="a33dd625e8066802fa192540a9d95f67f"></a>
@@ -338,6 +368,70 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aeb9a8d0b6d5a86d2ddde05d0172ec95d" name="aeb9a8d0b6d5a86d2ddde05d0172ec95d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb9a8d0b6d5a86d2ddde05d0172ec95d">&#9670;&#160;</a></span>AppendJumpEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int AppendJumpEvent </td>
+          <td>(</td>
+          <td class="paramtype">const SimAgentState &amp;&#160;</td>
+          <td class="paramname"><em>agent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>frameIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>end</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSimEventFFI.html">SimEventFFI</a> *&#160;</td>
+          <td class="paramname"><em>outEvents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxEvents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>eventCount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>speed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="acf6c699ee4c5738d89858c5660e91fa4" name="acf6c699ee4c5738d89858c5660e91fa4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acf6c699ee4c5738d89858c5660e91fa4">&#9670;&#160;</a></span>BakeTilesInBounds()</h2>
 
@@ -367,6 +461,40 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>saveToCache</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7125f125e4a8a88ce2ae20b52447c900" name="a7125f125e4a8a88ce2ae20b52447c900"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7125f125e4a8a88ce2ae20b52447c900">&#9670;&#160;</a></span>BuildHeightSamplerForCurrentGeometry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool BuildHeightSamplerForCurrentGeometry </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>samplesPerTile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>storeTwoLayers</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -442,6 +570,216 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a2220a45cd0107eb61b7106fc27b68420" name="a2220a45cd0107eb61b7106fc27b68420"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2220a45cd0107eb61b7106fc27b68420">&#9670;&#160;</a></span>ClearSimAgents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> ClearSimAgents </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae520ee5b3d4d0019c143514fe4015441" name="ae520ee5b3d4d0019c143514fe4015441"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae520ee5b3d4d0019c143514fe4015441">&#9670;&#160;</a></span>ComputeAgentPath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int ComputeAgentPath </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a>&#160;</td>
+          <td class="paramname"><em>agentId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVector3.html">Vector3</a>&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVector3.html">Vector3</a>&#160;</td>
+          <td class="paramname"><em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>flags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxCorners</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>minEdgeDist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>options</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af215cd1ade1f4bdce4529c40efdaa0c3" name="af215cd1ade1f4bdce4529c40efdaa0c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af215cd1ade1f4bdce4529c40efdaa0c3">&#9670;&#160;</a></span>ComputeAvoidanceForce()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">glm::vec3 ComputeAvoidanceForce </td>
+          <td>(</td>
+          <td class="paramtype">const SimAgentState &amp;&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; const SimAgentState * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>neighbors</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>avoidRange</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>avoidWeight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a863a8c110d1c96a0a86076b8dd516921" name="a863a8c110d1c96a0a86076b8dd516921"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a863a8c110d1c96a0a86076b8dd516921">&#9670;&#160;</a></span>ComputePathData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ComputePathData </td>
+          <td>(</td>
+          <td class="paramtype">ExternNavmeshContext &amp;&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>end</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>flags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>minEdge</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>options</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>outCorners</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; unsigned char &gt; &amp;&#160;</td>
+          <td class="paramname"><em>outCornerFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>outPathPolys</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> *&#160;</td>
+          <td class="paramname"><em>outStartRef</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>outStartNearest</em>[3]&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a84b79a2a59ce0e2005902f0ec88cc178" name="a84b79a2a59ce0e2005902f0ec88cc178"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a84b79a2a59ce0e2005902f0ec88cc178">&#9670;&#160;</a></span>DestroyNavMeshResources()</h2>
 
@@ -454,6 +792,34 @@ Functions</h2></td></tr>
           <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
           <td class="paramname"><em>navMesh</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a946e5d323ca20456aa6922a4976fb148" name="a946e5d323ca20456aa6922a4976fb148"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a946e5d323ca20456aa6922a4976fb148">&#9670;&#160;</a></span>EnableHeightSampling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> EnableHeightSampling </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1159,6 +1525,40 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a330a231b9f3ca233d809a39f111e5726" name="a330a231b9f3ca233d809a39f111e5726"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a330a231b9f3ca233d809a39f111e5726">&#9670;&#160;</a></span>RemoveSimAgents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int RemoveSimAgents </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> *&#160;</td>
+          <td class="paramname"><em>agentIds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a74f297eafcd6fc93d2c92236b00121cf" name="a74f297eafcd6fc93d2c92236b00121cf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a74f297eafcd6fc93d2c92236b00121cf">&#9670;&#160;</a></span>RunPathfindInternal()</h2>
 
@@ -1239,6 +1639,40 @@ Functions</h2></td></tr>
 <span class="mlabels"><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa127e379b0403975a0741c8fea71acab" name="aa127e379b0403975a0741c8fea71acab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa127e379b0403975a0741c8fea71acab">&#9670;&#160;</a></span>SampleAgentHeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SampleAgentHeight </td>
+          <td>(</td>
+          <td class="paramtype">ExternNavmeshContext &amp;&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SimAgentState &amp;&#160;</td>
+          <td class="paramname"><em>agent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>pos</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>
@@ -1445,6 +1879,290 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a9c0207a16f3387d3cec9bdad432340eb" name="a9c0207a16f3387d3cec9bdad432340eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c0207a16f3387d3cec9bdad432340eb">&#9670;&#160;</a></span>ShapeAvoidRadius()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float ShapeAvoidRadius </td>
+          <td>(</td>
+          <td class="paramtype">const SimAgentState &amp;&#160;</td>
+          <td class="paramname"><em>a</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a903a38084cdbb3f92eb83e82c5fb2517" name="a903a38084cdbb3f92eb83e82c5fb2517"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a903a38084cdbb3f92eb83e82c5fb2517">&#9670;&#160;</a></span>SimulateAgentFrames()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int SimulateAgentFrames </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a>&#160;</td>
+          <td class="paramname"><em>agentId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>dt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxSimulationFrames</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *&#160;</td>
+          <td class="paramname"><em>params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outPosXYZ</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outHeadingDeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outVelXYZ</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *&#160;</td>
+          <td class="paramname"><em>outFrameFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSimEventFFI.html">SimEventFFI</a> *&#160;</td>
+          <td class="paramname"><em>outEvents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxEvents</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a212930478372078e40be429bba642149" name="a212930478372078e40be429bba642149"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a212930478372078e40be429bba642149">&#9670;&#160;</a></span>SimulateAgentsFramesBatch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int SimulateAgentsFramesBatch </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> *&#160;</td>
+          <td class="paramname"><em>agentIds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>agentCount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>dt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxSimulationFrames</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *&#160;</td>
+          <td class="paramname"><em>params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outPosXYZ</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outHeadingDeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outVelXYZ</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *&#160;</td>
+          <td class="paramname"><em>outFrameFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSimEventFFI.html">SimEventFFI</a> *&#160;</td>
+          <td class="paramname"><em>outEvents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxEvents</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afd0ed4fc040a484aabd2a27f2208104b" name="afd0ed4fc040a484aabd2a27f2208104b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd0ed4fc040a484aabd2a27f2208104b">&#9670;&#160;</a></span>SimulateAgentsInternal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int SimulateAgentsInternal </td>
+          <td>(</td>
+          <td class="paramtype">ExternNavmeshContext &amp;&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> *&#160;</td>
+          <td class="paramname"><em>agentIds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>agentCount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>dt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxSimulationFrames</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *&#160;</td>
+          <td class="paramname"><em>params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outPosXYZ</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outHeadingDeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outVelXYZ</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *&#160;</td>
+          <td class="paramname"><em>outFrameFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSimEventFFI.html">SimEventFFI</a> *&#160;</td>
+          <td class="paramname"><em>outEvents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxEvents</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab32e95f2f92eecf32a69f6249f2845fd" name="ab32e95f2f92eecf32a69f6249f2845fd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab32e95f2f92eecf32a69f6249f2845fd">&#9670;&#160;</a></span>StreamTilesAround()</h2>
 
@@ -1542,6 +2260,58 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
           <td class="paramname"><em>navMesh</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a84987266ecb0fa39aec1785afce31e57" name="a84987266ecb0fa39aec1785afce31e57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84987266ecb0fa39aec1785afce31e57">&#9670;&#160;</a></span>UpsertSimAgents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int UpsertSimAgents </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSimAgentDescFFI.html">SimAgentDescFFI</a> *&#160;</td>
+          <td class="paramname"><em>agents</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1c63de9d722fb00d6bf9ada161ab24f8" name="a1c63de9d722fb00d6bf9ada161ab24f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c63de9d722fb00d6bf9ada161ab24f8">&#9670;&#160;</a></span>WrapAngleDeg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float WrapAngleDeg </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>angle</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

@@ -76,7 +76,7 @@ var searchData=
   ['len_5fcvt_73',['len_cvt',['../structSDL__AudioCVT.html#a5c60163f34d1947e5b166c23aba9879d',1,'SDL_AudioCVT']]],
   ['len_5fmult_74',['len_mult',['../structSDL__AudioCVT.html#ac9662d47cf2348b82b27b151150116b0',1,'SDL_AudioCVT']]],
   ['len_5fratio_75',['len_ratio',['../structSDL__AudioCVT.html#a5628ff5ccf711de9d77c0a4a9f57d2f0',1,'SDL_AudioCVT']]],
-  ['length_76',['length',['../structSDL__HapticCustom.html#ad70e8bc2cff74b99d704a757c16b363f',1,'SDL_HapticCustom::length'],['../structSDL__HapticLeftRight.html#a5b942fee53f1ec77d3fb91a6e89b0196',1,'SDL_HapticLeftRight::length'],['../structSDL__HapticRamp.html#a57e75237507701405af2a3caf34cdb5a',1,'SDL_HapticRamp::length'],['../structSDL__HapticCondition.html#ad0efb0a6ddc20f058e87199eaaa95978',1,'SDL_HapticCondition::length'],['../structSDL__HapticConstant.html#aeb994c356b1d236b060f277d157e98ec',1,'SDL_HapticConstant::length'],['../structSDL__TextEditingExtEvent.html#afd96e3974e222f777383ce8558e9e4ce',1,'SDL_TextEditingExtEvent::length'],['../structSDL__TextEditingEvent.html#adca95505c0bf212834930df58f6d1aa5',1,'SDL_TextEditingEvent::length'],['../structSDL__HapticPeriodic.html#a0ef0b17c54aaa5c99886c2a618444026',1,'SDL_HapticPeriodic::length']]],
+  ['length_76',['length',['../structSDL__TextEditingEvent.html#adca95505c0bf212834930df58f6d1aa5',1,'SDL_TextEditingEvent::length'],['../structSDL__TextEditingExtEvent.html#afd96e3974e222f777383ce8558e9e4ce',1,'SDL_TextEditingExtEvent::length'],['../structSDL__HapticConstant.html#aeb994c356b1d236b060f277d157e98ec',1,'SDL_HapticConstant::length'],['../structSDL__HapticPeriodic.html#a0ef0b17c54aaa5c99886c2a618444026',1,'SDL_HapticPeriodic::length'],['../structSDL__HapticCondition.html#ad0efb0a6ddc20f058e87199eaaa95978',1,'SDL_HapticCondition::length'],['../structSDL__HapticRamp.html#a57e75237507701405af2a3caf34cdb5a',1,'SDL_HapticRamp::length'],['../structSDL__HapticLeftRight.html#a5b942fee53f1ec77d3fb91a6e89b0196',1,'SDL_HapticLeftRight::length'],['../structSDL__HapticCustom.html#ad70e8bc2cff74b99d704a757c16b363f',1,'SDL_HapticCustom::length']]],
   ['level_77',['level',['../structSDL__JoyBatteryEvent.html#a035f2b336030c875ab0393dc2b3f3c9d',1,'SDL_JoyBatteryEvent::level'],['../structSDL__HapticConstant.html#a5b095eea77464623ed57af15f29f4ca6',1,'SDL_HapticConstant::level']]],
   ['line_78',['line',['../structimguiGfxCmd.html#a7cc3675a387e8714dd2a2f6d6303a12d',1,'imguiGfxCmd']]],
   ['linecount_79',['LineCount',['../structImGuiInputTextState.html#a3928292f9f316fde3832aa908b316f91',1,'ImGuiInputTextState']]],
@@ -103,7 +103,7 @@ var searchData=
   ['localflagsinwindows_100',['LocalFlagsInWindows',['../structImGuiDockNode.html#a87ec1cfa96a01d459b5e6e719eaf14aa',1,'ImGuiDockNode']]],
   ['localizationtable_101',['LocalizationTable',['../structImGuiContext.html#a2cf1146eb06a9a6c9f982b5d17a13c71',1,'ImGuiContext']]],
   ['lockdisableresize_102',['LockDisableResize',['../structImFontAtlasBuilder.html#a94c30248204c48b5c152e320f45856ee',1,'ImFontAtlasBuilder']]],
-  ['locked_103',['locked',['../structImFontAtlas.html#a2222ff64ba974a8ee7a286617f879f9b',1,'ImFontAtlas::Locked'],['../structSDL__Surface.html#a5022edaeea1c0a055fa5d6dccba41de2',1,'SDL_Surface::locked']]],
+  ['locked_103',['locked',['../structSDL__Surface.html#a5022edaeea1c0a055fa5d6dccba41de2',1,'SDL_Surface::locked'],['../structImFontAtlas.html#a2222ff64ba974a8ee7a286617f879f9b',1,'ImFontAtlas::Locked']]],
   ['lockthisframe_104',['LockThisFrame',['../structImGuiKeyOwnerData.html#a7b1257efe2131c10ba983abcb68f78d4',1,'ImGuiKeyOwnerData']]],
   ['lockuntilrelease_105',['LockUntilRelease',['../structImGuiKeyOwnerData.html#a8f730afbcce2f74be5870967ff5d97ab',1,'ImGuiKeyOwnerData']]],
   ['logbuffer_106',['LogBuffer',['../structImGuiContext.html#a7ee6cc4eb7d913073f7f65245f74b44b',1,'ImGuiContext']]],
@@ -122,8 +122,9 @@ var searchData=
   ['lognextsuffix_119',['LogNextSuffix',['../structImGuiContext.html#a877334cd40755e94cad5549f30774767',1,'ImGuiContext']]],
   ['logsliderdeadzone_120',['LogSliderDeadzone',['../structImGuiStyle.html#a6c8674e8aa93236717b36110d7b1f1da',1,'ImGuiStyle']]],
   ['logwindow_121',['LogWindow',['../structImGuiContext.html#a86e142506a5a953d6c764d9a0d4fbfa6',1,'ImGuiContext']]],
-  ['looprequestsetall_122',['LoopRequestSetAll',['../structImGuiMultiSelectTempData.html#a0c27a4ca6dde42a3bcedf349f0088e18',1,'ImGuiMultiSelectTempData']]],
-  ['lossynessoffset_123',['LossynessOffset',['../structImGuiListClipperData.html#a34eda33d4bf1e848709b0360fe4e743f',1,'ImGuiListClipperData']]],
-  ['low_5ffrequency_5frumble_124',['low_frequency_rumble',['../structSDL__VirtualJoystickDesc.html#a9c6c227ce7de6b31d556a85b26425f09',1,'SDL_VirtualJoystickDesc']]],
-  ['lset_125',['lset',['../structRasterizationContext.html#ae8ab461bba69577efde5b1bbc9af3bab',1,'RasterizationContext']]]
+  ['lookaheaddist_122',['lookAheadDist',['../structSimParamsFFI.html#a2673bc60d2a0a0ab98d347db2fca207c',1,'SimParamsFFI']]],
+  ['looprequestsetall_123',['LoopRequestSetAll',['../structImGuiMultiSelectTempData.html#a0c27a4ca6dde42a3bcedf349f0088e18',1,'ImGuiMultiSelectTempData']]],
+  ['lossynessoffset_124',['LossynessOffset',['../structImGuiListClipperData.html#a34eda33d4bf1e848709b0360fe4e743f',1,'ImGuiListClipperData']]],
+  ['low_5ffrequency_5frumble_125',['low_frequency_rumble',['../structSDL__VirtualJoystickDesc.html#a9c6c227ce7de6b31d556a85b26425f09',1,'SDL_VirtualJoystickDesc']]],
+  ['lset_126',['lset',['../structRasterizationContext.html#ae8ab461bba69577efde5b1bbc9af3bab',1,'RasterizationContext']]]
 ];
