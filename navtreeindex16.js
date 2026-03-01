@@ -1,5 +1,8 @@
 var NAVTREEINDEX16 =
 {
+"SDL__config__pandora_8h.html#ac5f71bfd69698a6db1ae54177fcac7ea":[44,0,5,2,1,17,22],
+"SDL__config__pandora_8h.html#ac70f0930238c8d095d7cc2ee8b522c77":[44,0,5,2,1,17,21],
+"SDL__config__pandora_8h.html#ac8369b841499e6a5d54c36bb7f45442c":[44,0,5,2,1,17,93],
 "SDL__config__pandora_8h.html#acc0a82e924c3573aabbfdd996ae56bde":[44,0,5,2,1,17,74],
 "SDL__config__pandora_8h.html#ace5ae74bc378f6ef1beb5cb0aaa13747":[44,0,5,2,1,17,87],
 "SDL__config__pandora_8h.html#ad1747f7e6af3ad2381edbd45e3372d34":[44,0,5,2,1,17,19],
@@ -246,8 +249,5 @@ var NAVTREEINDEX16 =
 "SDL__config__xbox_8h.html#a83cefad440f49f68aa7a8d1af68fa855":[44,0,5,2,1,21,21],
 "SDL__config__xbox_8h.html#a8bcdbb0550d2cf79483efdfb3fe9013f":[44,0,5,2,1,21,28],
 "SDL__config__xbox_8h.html#a8c93ace115b3d8d8163359820370a780":[44,0,5,2,1,21,25],
-"SDL__config__xbox_8h.html#a8d7bd872a83eee6dc2a5a6132767efde":[44,0,5,2,1,21,16],
-"SDL__config__xbox_8h.html#a8f96bad320625b3ebc45b5e178d84ef8":[44,0,5,2,1,21,18],
-"SDL__config__xbox_8h.html#aad939a445a2185034c228c5ef388b0b4":[44,0,5,2,1,21,26],
-"SDL__config__xbox_8h.html#ab51950b727f094c8c6bc870a89924ceb":[44,0,5,2,1,21,10]
+"SDL__config__xbox_8h.html#a8d7bd872a83eee6dc2a5a6132767efde":[44,0,5,2,1,21,16]
 };

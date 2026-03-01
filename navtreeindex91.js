@@ -1,5 +1,8 @@
 var NAVTREEINDEX91 =
 {
+"structAutoOffmeshGenerationParams.html#aff7306adcce5db95250cf44d75295198":[43,0,1,10],
+"structBVItem.html":[43,0,5],
+"structBVItem.html#a40e595a0791532d1f41ada14843bc087":[43,0,5,1],
 "structBVItem.html#a50d6602a0adbcd8ac0bfa5e20edd554a":[43,0,5,2],
 "structBVItem.html#a93bd79d5cff1032583c104c06c1496ec":[43,0,5,0],
 "structBoundsItem.html":[43,0,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX91 =
 "structImChunkStream.html#a0454c7345104dad27a52828584765edb":[43,0,99,9],
 "structImChunkStream.html#a10a9b29c856b3f84ce8811ebfaf2cfe8":[43,0,99,1],
 "structImChunkStream.html#a1a83609aaee47cf8b59a8ae09a04a06b":[43,0,99,2],
-"structImChunkStream.html#a29ced7ee3e9a2ae8123a92b110b4b0bd":[43,0,99,0],
-"structImChunkStream.html#a385c84c0a5eca2d402f3550530af587e":[43,0,99,8],
-"structImChunkStream.html#a3a99f21ce1867d694104d740ac7ab133":[43,0,99,6],
-"structImChunkStream.html#a3bf3babbba7a8edafce99be0589379a3":[43,0,99,3]
+"structImChunkStream.html#a29ced7ee3e9a2ae8123a92b110b4b0bd":[43,0,99,0]
 };

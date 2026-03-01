@@ -1,5 +1,8 @@
 var NAVTREEINDEX13 =
 {
+"SDL__config__android_8h.html#a2af11e1db137370de1217c3708c50e3d":[44,0,5,2,1,10,35],
+"SDL__config__android_8h.html#a2b6b73803f82d92d00fa159b590a49cf":[44,0,5,2,1,10,30],
+"SDL__config__android_8h.html#a348655482f599e61eeead7304ad0d52d":[44,0,5,2,1,10,82],
 "SDL__config__android_8h.html#a37bb486d90aa4e96552e0b9cc4f63cf6":[44,0,5,2,1,10,54],
 "SDL__config__android_8h.html#a37eb0020e42f0ebb6cba24c2888cc48b":[44,0,5,2,1,10,73],
 "SDL__config__android_8h.html#a391fe86ae55f2addd7ee59fe0ba163fb":[44,0,5,2,1,10,93],
@@ -11,8 +14,8 @@ var NAVTREEINDEX13 =
 "SDL__config__android_8h.html#a494d1ecf5a4567ccbf7901e3be337bc7":[44,0,5,2,1,10,64],
 "SDL__config__android_8h.html#a49afaaefcf9868c6d3a9fb43706af4db":[44,0,5,2,1,10,92],
 "SDL__config__android_8h.html#a4ac6a60cb19181437136206238f16497":[44,0,5,2,1,10,96],
-"SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,61],
 "SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,60],
+"SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,61],
 "SDL__config__android_8h.html#a4e31ef0be24f881a3a13e42723db7095":[44,0,5,2,1,10,31],
 "SDL__config__android_8h.html#a4f6ff4162269254c4c4b86bc9892ecce":[44,0,5,2,1,10,42],
 "SDL__config__android_8h.html#a51924e273a5b8653a28e005108ab7ae6":[44,0,5,2,1,10,101],
@@ -246,8 +249,5 @@ var NAVTREEINDEX13 =
 "SDL__config__iphoneos_8h.html#a0f08977476bc5b181092cf8b3ddaf368":[44,0,5,2,1,12,88],
 "SDL__config__iphoneos_8h.html#a11ac21032a27eeea45cb607b129fff62":[44,0,5,2,1,12,118],
 "SDL__config__iphoneos_8h.html#a120d438f0cfa74d629beb6c85096003f":[44,0,5,2,1,12,93],
-"SDL__config__iphoneos_8h.html#a14503280ca0cb757db915eea09282bfc":[44,0,5,2,1,12,44],
-"SDL__config__iphoneos_8h.html#a14b60a4af99d03305d834018299c97c4":[44,0,5,2,1,12,20],
-"SDL__config__iphoneos_8h.html#a1569275063253ce85180e755a82e536d":[44,0,5,2,1,12,72],
-"SDL__config__iphoneos_8h.html#a15fd2358449a953a0d5540e2f17e5db8":[44,0,5,2,1,12,64]
+"SDL__config__iphoneos_8h.html#a14503280ca0cb757db915eea09282bfc":[44,0,5,2,1,12,44]
 };

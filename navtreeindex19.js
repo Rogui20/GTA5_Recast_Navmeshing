@@ -1,5 +1,8 @@
 var NAVTREEINDEX19 =
 {
+"SDL__hints_8h.html#a52a6bf663295014ad53bd47b760f05d5":[44,0,5,2,1,34,139],
+"SDL__hints_8h.html#a541dd6da44a19e00e598e6d63d8a5bc5":[44,0,5,2,1,34,101],
+"SDL__hints_8h.html#a54e6d642afbb4a0ca37424898da2291f":[44,0,5,2,1,34,58],
 "SDL__hints_8h.html#a586a6bdbac5b0b53424a236761c70862":[44,0,5,2,1,34,143],
 "SDL__hints_8h.html#a58db46309f4295553ed4b0f1a4ccfa54":[44,0,5,2,1,34,119],
 "SDL__hints_8h.html#a58f4b26bb24cadfbb78ab1e6c73c9296":[44,0,5,2,1,34,123],
@@ -246,8 +249,5 @@ var NAVTREEINDEX19 =
 "SDL__keyboard_8h.html#a026985a9c6b23a6c71828542cc679ebf":[44,0,5,2,1,36,15],
 "SDL__keyboard_8h.html#a074ae08acbe79dba712775b95267f4d2":[44,0,5,2,1,36,1],
 "SDL__keyboard_8h.html#a092c44261fe9c44f77a46a705f59eb57":[44,0,5,2,1,36,11],
-"SDL__keyboard_8h.html#a0cb32dd58d3dc5b77c9daf0b6000f93c":[44,0,5,2,1,36,10],
-"SDL__keyboard_8h.html#a106356274c192b53844c8f1a821b00d7":[44,0,5,2,1,36,12],
-"SDL__keyboard_8h.html#a1b619a22759e8e833b46a06a6b0b7115":[44,0,5,2,1,36,2],
-"SDL__keyboard_8h.html#a25e699451e621cd1ce29ae20f352f318":[44,0,5,2,1,36,7]
+"SDL__keyboard_8h.html#a0cb32dd58d3dc5b77c9daf0b6000f93c":[44,0,5,2,1,36,10]
 };

@@ -16,6 +16,14 @@ var structSimParamsFFI =
     [ "maxSpeedForward", "structSimParamsFFI.html#ad4b16ee96f25f7413dee18c5b01b4cc5", null ],
     [ "maxSpeedReverse", "structSimParamsFFI.html#a8050cc28597c667a733d2c9121c64b82", null ],
     [ "reachRadius", "structSimParamsFFI.html#a8749b521ff7862fdd3e207fdc6357693", null ],
+    [ "vehicleGroundUpOffset", "structSimParamsFFI.html#aa049b053bed9d0d8fa11c9b4ea40d650", null ],
+    [ "vehicleMaxPitchDeg", "structSimParamsFFI.html#a0f08a813d03602b6941fdbc75aed8f83", null ],
+    [ "vehicleMaxRollDeg", "structSimParamsFFI.html#a87f4be00f26d2552def42c5ed5b866b5", null ],
+    [ "vehicleRotAlpha", "structSimParamsFFI.html#a48e150dc246c3cd0ae2c8683a9e38d2c", null ],
+    [ "vehicleSampleDown", "structSimParamsFFI.html#ada773d03a9e47f6f5360f15eda8df37e", null ],
+    [ "vehicleSampleUp", "structSimParamsFFI.html#a0a6743ce0b6eebf0698735d7e6dcd89d", null ],
+    [ "vehicleSuspensionAlpha", "structSimParamsFFI.html#af628ca9895607988ce196122f09dc36d", null ],
+    [ "vehicleWheelInset", "structSimParamsFFI.html#a2211f6736d71b673b1542b65a700f211", null ],
     [ "wallAvoidDist", "structSimParamsFFI.html#a08f4a3b87c7d89495e3bcedd37a1318b", null ],
     [ "wallAvoidWeight", "structSimParamsFFI.html#afea60f6603180fd3cef0d2126a8d59ed", null ]
 ];

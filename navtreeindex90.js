@@ -1,5 +1,8 @@
 var NAVTREEINDEX90 =
 {
+"ios.html#notes----retina--high-dpi-and-window-sizes":[17,2],
+"ios.html#notes----xcframework":[17,9],
+"ios.html#using-the-simple-directmedia-layer-for-ios":[17,1],
 "khrplatform_8h.html":[44,0,5,0,0,1,0],
 "khrplatform_8h.html#a0b823cfbc138820708978d43a5f26c64":[44,0,5,0,0,1,0,21],
 "khrplatform_8h.html#a0b823cfbc138820708978d43a5f26c64a37d68e7202b4d30f7742acebb50d1ba6":[44,0,5,0,0,1,0,21,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX90 =
 "structAutoOffmeshGenerationParams.html#acea89bb90014c3b4d484faddbb932225":[43,0,1,0],
 "structAutoOffmeshGenerationParams.html#ad41d6c2146562d991f592975950f441b":[43,0,1,9],
 "structAutoOffmeshGenerationParams.html#af82d28e337773ef4f5bc9d213bcb89fe":[43,0,1,11],
-"structAutoOffmeshGenerationParams.html#afbf77f27ab3a279f838e701c0b8ea48b":[43,0,1,12],
-"structAutoOffmeshGenerationParams.html#aff7306adcce5db95250cf44d75295198":[43,0,1,10],
-"structBVItem.html":[43,0,5],
-"structBVItem.html#a40e595a0791532d1f41ada14843bc087":[43,0,5,1]
+"structAutoOffmeshGenerationParams.html#afbf77f27ab3a279f838e701c0b8ea48b":[43,0,1,12]
 };

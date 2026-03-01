@@ -203,6 +203,12 @@ Functions</h2></td></tr>
 <tr class="separator:af215cd1ade1f4bdce4529c40efdaa0c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb9a8d0b6d5a86d2ddde05d0172ec95d" id="r_aeb9a8d0b6d5a86d2ddde05d0172ec95d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aeb9a8d0b6d5a86d2ddde05d0172ec95d">AppendJumpEvent</a> (const SimAgentState &amp;agent, int frameIndex, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents, int eventCount, float speed)</td></tr>
 <tr class="separator:aeb9a8d0b6d5a86d2ddde05d0172ec95d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afff063db4b690384f63ecb4d28a549c6" id="r_afff063db4b690384f63ecb4d28a549c6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#afff063db4b690384f63ecb4d28a549c6">SampleGroundAtXZ</a> (ExternNavmeshContext &amp;ctx, SimAgentState &amp;agent, float <a class="el" href="glad_8h.html#abe1577120f1766eff913e9a74879f373">x</a>, float <a class="el" href="glad_8h.html#a1c599441d9dece861ee2cd70e31ce120">z</a>, float baseY, float up, float down, float &amp;<a class="el" href="SDL__opengl__glext_8h.html#ab117d69745dd2957030b968f6ee21c4d">outY</a>)</td></tr>
+<tr class="separator:afff063db4b690384f63ecb4d28a549c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac39641f182549d14dff7334b6ca40b02" id="r_ac39641f182549d14dff7334b6ca40b02"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ac39641f182549d14dff7334b6ca40b02">ComputeYawBasis</a> (float yawDeg, glm::vec3 &amp;outForward, glm::vec3 &amp;outRight)</td></tr>
+<tr class="separator:ac39641f182549d14dff7334b6ca40b02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac18e3a104a6b9ec3f283432bd337cf6b" id="r_ac18e3a104a6b9ec3f283432bd337cf6b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ac18e3a104a6b9ec3f283432bd337cf6b">FitVehicleToGround</a> (ExternNavmeshContext &amp;ctx, SimAgentState &amp;agent, const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> &amp;<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, float dt, <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> &amp;frameFlags)</td></tr>
+<tr class="separator:ac18e3a104a6b9ec3f283432bd337cf6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a462e8adf4796b96d81b1563df6e9a8ee" id="r_a462e8adf4796b96d81b1563df6e9a8ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a462e8adf4796b96d81b1563df6e9a8ee">FindPath</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa">target</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float *outPath, int options)</td></tr>
 <tr class="separator:a462e8adf4796b96d81b1563df6e9a8ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a609079f4645ccec18a5cefc10f79c8" id="r_a0a609079f4645ccec18a5cefc10f79c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a0a609079f4645ccec18a5cefc10f79c8">FindPathWithMinEdge</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa">target</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float minEdge, float *outPath, int options)</td></tr>
@@ -241,12 +247,12 @@ Functions</h2></td></tr>
 <tr class="separator:a946e5d323ca20456aa6922a4976fb148"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7125f125e4a8a88ce2ae20b52447c900" id="r_a7125f125e4a8a88ce2ae20b52447c900"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a7125f125e4a8a88ce2ae20b52447c900">BuildHeightSamplerForCurrentGeometry</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, int samplesPerTile, bool storeTwoLayers)</td></tr>
 <tr class="separator:a7125f125e4a8a88ce2ae20b52447c900"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd0ed4fc040a484aabd2a27f2208104b" id="r_afd0ed4fc040a484aabd2a27f2208104b"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#afd0ed4fc040a484aabd2a27f2208104b">SimulateAgentsInternal</a> (ExternNavmeshContext &amp;ctx, const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> *agentIds, int agentCount, float dt, int maxSimulationFrames, const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, float *outPosXYZ, float *outHeadingDeg, float *outVelXYZ, <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *outFrameFlags, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents)</td></tr>
-<tr class="separator:afd0ed4fc040a484aabd2a27f2208104b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a903a38084cdbb3f92eb83e82c5fb2517" id="r_a903a38084cdbb3f92eb83e82c5fb2517"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a903a38084cdbb3f92eb83e82c5fb2517">SimulateAgentFrames</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> agentId, float dt, int maxSimulationFrames, const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, float *outPosXYZ, float *outHeadingDeg, float *outVelXYZ, <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *outFrameFlags, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents)</td></tr>
-<tr class="separator:a903a38084cdbb3f92eb83e82c5fb2517"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a212930478372078e40be429bba642149" id="r_a212930478372078e40be429bba642149"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a212930478372078e40be429bba642149">SimulateAgentsFramesBatch</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> *agentIds, int agentCount, float dt, int maxSimulationFrames, const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, float *outPosXYZ, float *outHeadingDeg, float *outVelXYZ, <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *outFrameFlags, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents)</td></tr>
-<tr class="separator:a212930478372078e40be429bba642149"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5122c30db92fec937db5eea90c6bec6" id="r_ad5122c30db92fec937db5eea90c6bec6"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ad5122c30db92fec937db5eea90c6bec6">SimulateAgentsInternal</a> (ExternNavmeshContext &amp;ctx, const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> *agentIds, int agentCount, float dt, int maxSimulationFrames, const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, float *outPosXYZ, float *outHeadingDeg, float *outVelXYZ, <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *outFrameFlags, float *outEulerRPYDeg, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents)</td></tr>
+<tr class="separator:ad5122c30db92fec937db5eea90c6bec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c1f9309b27b7f42b62fbd17714ff18e" id="r_a6c1f9309b27b7f42b62fbd17714ff18e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a6c1f9309b27b7f42b62fbd17714ff18e">SimulateAgentFrames</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> agentId, float dt, int maxSimulationFrames, const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, float *outPosXYZ, float *outHeadingDeg, float *outVelXYZ, <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *outFrameFlags, float *outEulerRPYDeg, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents)</td></tr>
+<tr class="separator:a6c1f9309b27b7f42b62fbd17714ff18e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a436d80ea2836187771dcd025cc00b419" id="r_a436d80ea2836187771dcd025cc00b419"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a436d80ea2836187771dcd025cc00b419">SimulateAgentsFramesBatch</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> *agentIds, int agentCount, float dt, int maxSimulationFrames, const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> *<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, float *outPosXYZ, float *outHeadingDeg, float *outVelXYZ, <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *outFrameFlags, float *outEulerRPYDeg, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents)</td></tr>
+<tr class="separator:a436d80ea2836187771dcd025cc00b419"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -902,6 +908,40 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="ac39641f182549d14dff7334b6ca40b02" name="ac39641f182549d14dff7334b6ca40b02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac39641f182549d14dff7334b6ca40b02">&#9670;&#160;</a></span>ComputeYawBasis()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> ComputeYawBasis </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>yawDeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>outForward</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>outRight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2b00f9c15b630b237b19c60461bc3e4c" name="a2b00f9c15b630b237b19c60461bc3e4c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b00f9c15b630b237b19c60461bc3e4c">&#9670;&#160;</a></span>CornerAt()</h2>
 
@@ -1299,6 +1339,52 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>options</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac18e3a104a6b9ec3f283432bd337cf6b" name="ac18e3a104a6b9ec3f283432bd337cf6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac18e3a104a6b9ec3f283432bd337cf6b">&#9670;&#160;</a></span>FitVehicleToGround()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FitVehicleToGround </td>
+          <td>(</td>
+          <td class="paramtype">ExternNavmeshContext &amp;&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SimAgentState &amp;&#160;</td>
+          <td class="paramname"><em>agent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> &amp;&#160;</td>
+          <td class="paramname"><em>params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>dt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>frameFlags</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2021,6 +2107,70 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="afff063db4b690384f63ecb4d28a549c6" name="afff063db4b690384f63ecb4d28a549c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afff063db4b690384f63ecb4d28a549c6">&#9670;&#160;</a></span>SampleGroundAtXZ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SampleGroundAtXZ </td>
+          <td>(</td>
+          <td class="paramtype">ExternNavmeshContext &amp;&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SimAgentState &amp;&#160;</td>
+          <td class="paramname"><em>agent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>baseY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>up</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>down</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &amp;&#160;</td>
+          <td class="paramname"><em>outY</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a23d70761e65d82b683dfbe7cee3f47da" name="a23d70761e65d82b683dfbe7cee3f47da"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a23d70761e65d82b683dfbe7cee3f47da">&#9670;&#160;</a></span>SaveNavMeshRuntimeCache()</h2>
 
@@ -2241,8 +2391,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a903a38084cdbb3f92eb83e82c5fb2517" name="a903a38084cdbb3f92eb83e82c5fb2517"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a903a38084cdbb3f92eb83e82c5fb2517">&#9670;&#160;</a></span>SimulateAgentFrames()</h2>
+<a id="a6c1f9309b27b7f42b62fbd17714ff18e" name="a6c1f9309b27b7f42b62fbd17714ff18e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c1f9309b27b7f42b62fbd17714ff18e">&#9670;&#160;</a></span>SimulateAgentFrames()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2304,6 +2454,12 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outEulerRPYDeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="structSimEventFFI.html">SimEventFFI</a> *&#160;</td>
           <td class="paramname"><em>outEvents</em>, </td>
         </tr>
@@ -2323,8 +2479,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a212930478372078e40be429bba642149" name="a212930478372078e40be429bba642149"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a212930478372078e40be429bba642149">&#9670;&#160;</a></span>SimulateAgentsFramesBatch()</h2>
+<a id="a436d80ea2836187771dcd025cc00b419" name="a436d80ea2836187771dcd025cc00b419"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a436d80ea2836187771dcd025cc00b419">&#9670;&#160;</a></span>SimulateAgentsFramesBatch()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2392,6 +2548,12 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outEulerRPYDeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="structSimEventFFI.html">SimEventFFI</a> *&#160;</td>
           <td class="paramname"><em>outEvents</em>, </td>
         </tr>
@@ -2411,8 +2573,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="afd0ed4fc040a484aabd2a27f2208104b" name="afd0ed4fc040a484aabd2a27f2208104b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd0ed4fc040a484aabd2a27f2208104b">&#9670;&#160;</a></span>SimulateAgentsInternal()</h2>
+<a id="ad5122c30db92fec937db5eea90c6bec6" name="ad5122c30db92fec937db5eea90c6bec6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5122c30db92fec937db5eea90c6bec6">&#9670;&#160;</a></span>SimulateAgentsInternal()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2479,6 +2641,12 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *&#160;</td>
           <td class="paramname"><em>outFrameFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outEulerRPYDeg</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

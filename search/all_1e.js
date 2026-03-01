@@ -199,7 +199,7 @@ var searchData=
   ['test_5fskipped_196',['TEST_SKIPPED',['../SDL__test__harness_8h.html#adc53d81b0aba42f8a5773a4bd1c3da88',1,'SDL_test_harness.h']]],
   ['test_5fstarted_197',['TEST_STARTED',['../SDL__test__harness_8h.html#a24c50cc9207eee59e73f95faff5ef07a',1,'SDL_test_harness.h']]],
   ['testbit_198',['testbit',['../structImBitVector.html#ac472600d0eb12fabafae58db68ab7e2b',1,'ImBitVector::TestBit()'],['../structImBitArray.html#a803e52b9d1653dca6cac959cb84d64e9',1,'ImBitArray::TestBit()']]],
-  ['testcase_199',['testcase',['../structSDLTest__TestCaseReference.html#af9472f0c421a2845b540fc28fb30a3ef',1,'SDLTest_TestCaseReference::testCase'],['../classTestCase.html#ac62aa15cb45a40bdc0b9a1c6554c7e0a',1,'TestCase::TestCase()'],['../classTestCase.html',1,'TestCase']]],
+  ['testcase_199',['testcase',['../classTestCase.html#ac62aa15cb45a40bdc0b9a1c6554c7e0a',1,'TestCase::TestCase()'],['../structSDLTest__TestCaseReference.html#af9472f0c421a2845b540fc28fb30a3ef',1,'SDLTest_TestCaseReference::testCase'],['../classTestCase.html',1,'TestCase']]],
   ['testcase_2ecpp_200',['TestCase.cpp',['../TestCase_8cpp.html',1,'']]],
   ['testcase_2eh_201',['TestCase.h',['../TestCase_8h.html',1,'']]],
   ['testcases_202',['testCases',['../structSDLTest__TestSuiteReference.html#a06d97ce5bcf9ceb1300cc4aa39c028d3',1,'SDLTest_TestSuiteReference']]],

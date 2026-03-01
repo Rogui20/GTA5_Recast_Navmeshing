@@ -1,5 +1,8 @@
 var NAVTREEINDEX17 =
 {
+"SDL__config__xbox_8h.html#a8f96bad320625b3ebc45b5e178d84ef8":[44,0,5,2,1,21,18],
+"SDL__config__xbox_8h.html#aad939a445a2185034c228c5ef388b0b4":[44,0,5,2,1,21,26],
+"SDL__config__xbox_8h.html#ab51950b727f094c8c6bc870a89924ceb":[44,0,5,2,1,21,10],
 "SDL__config__xbox_8h.html#ab5fea56647f25333c758d1b174e44534":[44,0,5,2,1,21,6],
 "SDL__config__xbox_8h.html#ab6cd6d1c63c1e26ea2d4537b77148354":[44,0,5,2,1,21,5],
 "SDL__config__xbox_8h.html#ac47b156cb0f72b330945cd009c70049d":[44,0,5,2,1,21,8],
@@ -246,8 +249,5 @@ var NAVTREEINDEX17 =
 "SDL__gamecontroller_8h.html#a84b429f3155d4bdbcf447390c13bc232":[44,0,5,2,1,29,27],
 "SDL__gamecontroller_8h.html#a85be71ba10423ad4da459131a13a0f5f":[44,0,5,2,1,29,65],
 "SDL__gamecontroller_8h.html#a86b050862858714f651a4cf08fea2d3a":[44,0,5,2,1,29,1],
-"SDL__gamecontroller_8h.html#a893f6a99573d654ea5180cf73824ccda":[44,0,5,2,1,29,38],
-"SDL__gamecontroller_8h.html#a8bc636752e61693a6d38bb4b9c999ea2":[44,0,5,2,1,29,35],
-"SDL__gamecontroller_8h.html#a8cab24dcd19022722c306f04fdfc6b6a":[44,0,5,2,1,29,67],
-"SDL__gamecontroller_8h.html#a8cde272903e8091013bc5d1eafcd673d":[44,0,5,2,1,29,60]
+"SDL__gamecontroller_8h.html#a893f6a99573d654ea5180cf73824ccda":[44,0,5,2,1,29,38]
 };
