@@ -12,11 +12,16 @@ var ExternC_8cpp =
     [ "ClearOffMeshLinks", "ExternC_8cpp.html#a6b32e777a9f5e87992d4cc3bf2fd947c", null ],
     [ "ClearSimAgents", "ExternC_8cpp.html#a2220a45cd0107eb61b7106fc27b68420", null ],
     [ "ComputeAgentPath", "ExternC_8cpp.html#ae520ee5b3d4d0019c143514fe4015441", null ],
+    [ "ComputeAgentPathEx", "ExternC_8cpp.html#ad807beb22d5e13ad954236d4b79d90fd", null ],
     [ "ComputeAvoidanceForce", "ExternC_8cpp.html#af215cd1ade1f4bdce4529c40efdaa0c3", null ],
     [ "ComputePathData", "ExternC_8cpp.html#a863a8c110d1c96a0a86076b8dd516921", null ],
+    [ "CornerAt", "ExternC_8cpp.html#a2b00f9c15b630b237b19c60461bc3e4c", null ],
     [ "DestroyNavMeshResources", "ExternC_8cpp.html#a84b79a2a59ce0e2005902f0ec88cc178", null ],
+    [ "Distance2DSq", "ExternC_8cpp.html#a3cde5004dfcfb609be7429c9479f88be", null ],
     [ "EnableHeightSampling", "ExternC_8cpp.html#a946e5d323ca20456aa6922a4976fb148", null ],
     [ "ExportMergedGeometriesObj", "ExternC_8cpp.html#a018403d7757d15f55ea268bdf830769e", null ],
+    [ "FindBestCornerIndexByCorner", "ExternC_8cpp.html#ac09bc3e5fee5a7873ad19ba478bacadd", null ],
+    [ "FindBestCornerIndexBySegment", "ExternC_8cpp.html#a01bba6a85c657e74f8fc9deffb4ff378", null ],
     [ "FindPath", "ExternC_8cpp.html#a462e8adf4796b96d81b1563df6e9a8ee", null ],
     [ "FindPathWithMinEdge", "ExternC_8cpp.html#a0a609079f4645ccec18a5cefc10f79c8", null ],
     [ "FindPathWithNodeMetadata", "ExternC_8cpp.html#ac5a45a3f337c3d8bbd8eac5d61df60ec", null ],
@@ -55,5 +60,6 @@ var ExternC_8cpp =
     [ "UpdateGeometry", "ExternC_8cpp.html#aa3194b4fb64ba867ccee52233e3a84e1", null ],
     [ "UpdateNavMesh", "ExternC_8cpp.html#af58c6b0d37352974167fecd9270e033a", null ],
     [ "UpsertSimAgents", "ExternC_8cpp.html#a84987266ecb0fa39aec1785afce31e57", null ],
-    [ "WrapAngleDeg", "ExternC_8cpp.html#a1c63de9d722fb00d6bf9ada161ab24f8", null ]
+    [ "WrapAngleDeg", "ExternC_8cpp.html#a1c63de9d722fb00d6bf9ada161ab24f8", null ],
+    [ "kSoftRepathMaxSnapDist", "ExternC_8cpp.html#a5560da589236f8dd2b5e8986fceb16f2", null ]
 ];

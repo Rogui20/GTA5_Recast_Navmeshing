@@ -17,6 +17,12 @@ var ExternC_8h =
       [ "AGENT_ANCHOR_HEADING", "ExternC_8h.html#aeb23778775ea59335727e2b508440241aeb49b774ad92163de8e064880f817d07", null ],
       [ "AGENT_ANCHOR_VELOCITY", "ExternC_8h.html#aeb23778775ea59335727e2b508440241a6681fd0fe85faf83e832bbb7a6b7cb5b", null ]
     ] ],
+    [ "SimPathModeFlags", "ExternC_8h.html#af8c6012843abe38a792b543f8ae97b46", [
+      [ "SIM_PATH_SOFT_REPATH", "ExternC_8h.html#af8c6012843abe38a792b543f8ae97b46aff0e26ce09647f88a5f4f4b08e78cea2", null ],
+      [ "SIM_PATH_HARD_RESET", "ExternC_8h.html#af8c6012843abe38a792b543f8ae97b46ae2f4129344e7f600e8b6d6dc44694744", null ],
+      [ "SIM_PATH_KEEP_CORNER_INDEX_IF_VALID", "ExternC_8h.html#af8c6012843abe38a792b543f8ae97b46acf0aeb1d895fab064d4d03dd8cf26c42", null ],
+      [ "SIM_PATH_FIND_CORNER_BY_SEGMENT", "ExternC_8h.html#af8c6012843abe38a792b543f8ae97b46ae5c9219be03ec5e1ba781e4466f6eca0", null ]
+    ] ],
     [ "SimShapeType", "ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9c", [
       [ "SHAPE_CYLINDER", "ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9ca62eea2af0cd8bf0530c0799ce72b93cf", null ],
       [ "SHAPE_BOX", "ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9cacd064d47d06a6cf0cb539ae3335d26b5", null ]
@@ -31,6 +37,7 @@ var ExternC_8h =
     [ "ClearOffMeshLinks", "ExternC_8h.html#a6b32e777a9f5e87992d4cc3bf2fd947c", null ],
     [ "ClearSimAgents", "ExternC_8h.html#a2220a45cd0107eb61b7106fc27b68420", null ],
     [ "ComputeAgentPath", "ExternC_8h.html#a7b494c9ea8640a0c2849b35ac8555d77", null ],
+    [ "ComputeAgentPathEx", "ExternC_8h.html#a21290aeb5a365eb898b0abbc862a5548", null ],
     [ "DestroyNavMeshResources", "ExternC_8h.html#a84b79a2a59ce0e2005902f0ec88cc178", null ],
     [ "EnableHeightSampling", "ExternC_8h.html#a946e5d323ca20456aa6922a4976fb148", null ],
     [ "ExportMergedGeometriesObj", "ExternC_8h.html#a018403d7757d15f55ea268bdf830769e", null ],

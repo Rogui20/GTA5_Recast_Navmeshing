@@ -22,5 +22,6 @@ var searchData=
   ['koffmeshcontrolcount_19',['kOffmeshControlCount',['../classMemoryHandler.html#af7be3d710e2c6a54cc925b32ec138c0d',1,'MemoryHandler']]],
   ['koffmeshlinkcount_20',['kOffmeshLinkCount',['../classMemoryHandler.html#a8ddb15663ba5d491e8a96533b33435fb',1,'MemoryHandler']]],
   ['krouterequestcount_21',['kRouteRequestCount',['../classMemoryHandler.html#a29eba59ceb6fd7d22a98b4d7536b9167',1,'MemoryHandler']]],
-  ['krouteresultpoints_22',['kRouteResultPoints',['../classMemoryHandler.html#af7c8c98ba41373e88290102871e4ee95',1,'MemoryHandler']]]
+  ['krouteresultpoints_22',['kRouteResultPoints',['../classMemoryHandler.html#af7c8c98ba41373e88290102871e4ee95',1,'MemoryHandler']]],
+  ['ksoftrepathmaxsnapdist_23',['kSoftRepathMaxSnapDist',['../ExternC_8cpp.html#a5560da589236f8dd2b5e8986fceb16f2',1,'ExternC.cpp']]]
 ];

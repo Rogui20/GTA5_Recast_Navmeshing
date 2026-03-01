@@ -148,6 +148,12 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:aeb23778775ea59335727e2b508440241"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8c6012843abe38a792b543f8ae97b46" id="r_af8c6012843abe38a792b543f8ae97b46"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#af8c6012843abe38a792b543f8ae97b46">SimPathModeFlags</a> : std::uint32_t { <a class="el" href="ExternC_8h.html#af8c6012843abe38a792b543f8ae97b46aff0e26ce09647f88a5f4f4b08e78cea2">SIM_PATH_SOFT_REPATH</a> = 0u
+, <a class="el" href="ExternC_8h.html#af8c6012843abe38a792b543f8ae97b46ae2f4129344e7f600e8b6d6dc44694744">SIM_PATH_HARD_RESET</a> = 1u &lt;&lt; 0
+, <a class="el" href="ExternC_8h.html#af8c6012843abe38a792b543f8ae97b46acf0aeb1d895fab064d4d03dd8cf26c42">SIM_PATH_KEEP_CORNER_INDEX_IF_VALID</a> = 1u &lt;&lt; 1
+, <a class="el" href="ExternC_8h.html#af8c6012843abe38a792b543f8ae97b46ae5c9219be03ec5e1ba781e4466f6eca0">SIM_PATH_FIND_CORNER_BY_SEGMENT</a> = 1u &lt;&lt; 2
+ }</td></tr>
+<tr class="separator:af8c6012843abe38a792b543f8ae97b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -225,6 +231,8 @@ Functions</h2></td></tr>
 <tr class="separator:a2220a45cd0107eb61b7106fc27b68420"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b494c9ea8640a0c2849b35ac8555d77" id="r_a7b494c9ea8640a0c2849b35ac8555d77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#a7b494c9ea8640a0c2849b35ac8555d77">ComputeAgentPath</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a> agentId, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa">target</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxCorners, float minEdgeDist, int options)</td></tr>
 <tr class="separator:a7b494c9ea8640a0c2849b35ac8555d77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21290aeb5a365eb898b0abbc862a5548" id="r_a21290aeb5a365eb898b0abbc862a5548"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#a21290aeb5a365eb898b0abbc862a5548">ComputeAgentPathEx</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a> agentId, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa">target</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxCorners, float minEdgeDist, int options, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a> pathModeFlags)</td></tr>
+<tr class="separator:a21290aeb5a365eb898b0abbc862a5548"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a946e5d323ca20456aa6922a4976fb148" id="r_a946e5d323ca20456aa6922a4976fb148"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#a946e5d323ca20456aa6922a4976fb148">EnableHeightSampling</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, bool <a class="el" href="SDL__opengl__glext_8h.html#a0455a397ab5468d21c3021f2efa6dd3c">enabled</a>)</td></tr>
 <tr class="separator:a946e5d323ca20456aa6922a4976fb148"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7125f125e4a8a88ce2ae20b52447c900" id="r_a7125f125e4a8a88ce2ae20b52447c900"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#a7125f125e4a8a88ce2ae20b52447c900">BuildHeightSamplerForCurrentGeometry</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, int samplesPerTile, bool storeTwoLayers)</td></tr>
@@ -272,6 +280,26 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="aeb23778775ea59335727e2b508440241a2b3a8264f634f47da6a572cc8a52c523" name="aeb23778775ea59335727e2b508440241a2b3a8264f634f47da6a572cc8a52c523"></a>AGENT_ANCHOR&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="aeb23778775ea59335727e2b508440241aeb49b774ad92163de8e064880f817d07" name="aeb23778775ea59335727e2b508440241aeb49b774ad92163de8e064880f817d07"></a>AGENT_ANCHOR_HEADING&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="aeb23778775ea59335727e2b508440241a6681fd0fe85faf83e832bbb7a6b7cb5b" name="aeb23778775ea59335727e2b508440241a6681fd0fe85faf83e832bbb7a6b7cb5b"></a>AGENT_ANCHOR_VELOCITY&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="af8c6012843abe38a792b543f8ae97b46" name="af8c6012843abe38a792b543f8ae97b46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8c6012843abe38a792b543f8ae97b46">&#9670;&#160;</a></span>SimPathModeFlags</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="ExternC_8h.html#af8c6012843abe38a792b543f8ae97b46">SimPathModeFlags</a> : <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af8c6012843abe38a792b543f8ae97b46aff0e26ce09647f88a5f4f4b08e78cea2" name="af8c6012843abe38a792b543f8ae97b46aff0e26ce09647f88a5f4f4b08e78cea2"></a>SIM_PATH_SOFT_REPATH&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af8c6012843abe38a792b543f8ae97b46ae2f4129344e7f600e8b6d6dc44694744" name="af8c6012843abe38a792b543f8ae97b46ae2f4129344e7f600e8b6d6dc44694744"></a>SIM_PATH_HARD_RESET&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af8c6012843abe38a792b543f8ae97b46acf0aeb1d895fab064d4d03dd8cf26c42" name="af8c6012843abe38a792b543f8ae97b46acf0aeb1d895fab064d4d03dd8cf26c42"></a>SIM_PATH_KEEP_CORNER_INDEX_IF_VALID&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af8c6012843abe38a792b543f8ae97b46ae5c9219be03ec5e1ba781e4466f6eca0" name="af8c6012843abe38a792b543f8ae97b46ae5c9219be03ec5e1ba781e4466f6eca0"></a>SIM_PATH_FIND_CORNER_BY_SEGMENT&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -642,6 +670,76 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>options</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a21290aeb5a365eb898b0abbc862a5548" name="a21290aeb5a365eb898b0abbc862a5548"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21290aeb5a365eb898b0abbc862a5548">&#9670;&#160;</a></span>ComputeAgentPathEx()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int ComputeAgentPathEx </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a>&#160;</td>
+          <td class="paramname"><em>agentId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVector3.html">Vector3</a>&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVector3.html">Vector3</a>&#160;</td>
+          <td class="paramname"><em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>flags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxCorners</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>minEdgeDist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>options</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a>&#160;</td>
+          <td class="paramname"><em>pathModeFlags</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

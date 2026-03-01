@@ -181,6 +181,7 @@ var menudata={children:[
 {text:"g",url:"globals_vars_g.html#index_g"},
 {text:"h",url:"globals_vars_h.html#index_h"},
 {text:"i",url:"globals_vars_i.html#index_i"},
+{text:"k",url:"globals_vars_k.html#index_k"},
 {text:"m",url:"globals_vars_m.html#index_m"},
 {text:"n",url:"globals_vars_n.html#index_n"},
 {text:"o",url:"globals_vars_o.html#index_o"},

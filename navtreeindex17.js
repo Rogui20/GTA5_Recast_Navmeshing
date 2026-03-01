@@ -1,5 +1,17 @@
 var NAVTREEINDEX17 =
 {
+"SDL__config__xbox_8h.html#ab5fea56647f25333c758d1b174e44534":[44,0,5,2,1,21,6],
+"SDL__config__xbox_8h.html#ab6cd6d1c63c1e26ea2d4537b77148354":[44,0,5,2,1,21,5],
+"SDL__config__xbox_8h.html#ac47b156cb0f72b330945cd009c70049d":[44,0,5,2,1,21,8],
+"SDL__config__xbox_8h.html#ac5be45e89ba333ee8dedfe53a39e8919":[44,0,5,2,1,21,19],
+"SDL__config__xbox_8h.html#ada4e7cddf7a81b364b8031e070b724ed":[44,0,5,2,1,21,12],
+"SDL__config__xbox_8h.html#adf617f5d9c7c0af184ccc8bc2cc368e8":[44,0,5,2,1,21,0],
+"SDL__config__xbox_8h.html#ae4a04ebc256919da1ad32f7aa36042d1":[44,0,5,2,1,21,7],
+"SDL__config__xbox_8h.html#ae545940591284896734884f6463a1021":[44,0,5,2,1,21,11],
+"SDL__config__xbox_8h.html#aef62cc050a5e0734c3b1b2920b00fd1d":[44,0,5,2,1,21,14],
+"SDL__config__xbox_8h_source.html":[44,0,5,2,1,21],
+"SDL__copying_8h.html":[44,0,5,2,1,22],
+"SDL__copying_8h_source.html":[44,0,5,2,1,22],
 "SDL__cpuinfo_8h.html":[44,0,5,2,1,23],
 "SDL__cpuinfo_8h.html#a05d74b2aab28d821ea7f3f78372fd00e":[44,0,5,2,1,23,0],
 "SDL__cpuinfo_8h.html#a1fa7d982a27fb5a29fc1b291fc1054f4":[44,0,5,2,1,23,8],
@@ -237,17 +249,5 @@ var NAVTREEINDEX17 =
 "SDL__gamecontroller_8h.html#a893f6a99573d654ea5180cf73824ccda":[44,0,5,2,1,29,38],
 "SDL__gamecontroller_8h.html#a8bc636752e61693a6d38bb4b9c999ea2":[44,0,5,2,1,29,35],
 "SDL__gamecontroller_8h.html#a8cab24dcd19022722c306f04fdfc6b6a":[44,0,5,2,1,29,67],
-"SDL__gamecontroller_8h.html#a8cde272903e8091013bc5d1eafcd673d":[44,0,5,2,1,29,60],
-"SDL__gamecontroller_8h.html#a8e072a1f116583ca136be6b609e41d13":[44,0,5,2,1,29,26],
-"SDL__gamecontroller_8h.html#a8ea81761681d1666a3b447eb9ef2dee8":[44,0,5,2,1,29,32],
-"SDL__gamecontroller_8h.html#a8f0f6e273545be2c3f44c3def6dab602":[44,0,5,2,1,29,36],
-"SDL__gamecontroller_8h.html#a92fe68241a17b60b2240c04d01b73e6b":[44,0,5,2,1,29,68],
-"SDL__gamecontroller_8h.html#a9519468dd6fc6fef421a50437403f21f":[44,0,5,2,1,29,16],
-"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1c":[44,0,5,2,1,29,8],
-"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1ca1bfd993bdf7fba84fbff1136bf0544e8":[44,0,5,2,1,29,8,1],
-"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1ca592ce519a63cd82125ca0560a204eb2f":[44,0,5,2,1,29,8,6],
-"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1ca5de779d8bd6705e149a7716938343eff":[44,0,5,2,1,29,8,0],
-"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1caadb3ea3a60521d9f7302aac903344ce6":[44,0,5,2,1,29,8,4],
-"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1cae585879e750723896120b1cab1339bd5":[44,0,5,2,1,29,8,3],
-"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1cae5c03400ecb6557710d76c9f08bf7440":[44,0,5,2,1,29,8,7]
+"SDL__gamecontroller_8h.html#a8cde272903e8091013bc5d1eafcd673d":[44,0,5,2,1,29,60]
 };
