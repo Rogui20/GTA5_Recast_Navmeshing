@@ -50,6 +50,9 @@ namespace
         SIM_FRAMEFLAG_OFFMESH_SOON = 1u << 1,
         SIM_FRAMEFLAG_NEEDS_REPATH = 1u << 2,
         SIM_FRAMEFLAG_STUCK = 1u << 3,
+        SIM_FRAMEFLAG_AIRBORNE = 1u << 4,
+        SIM_FRAMEFLAG_GROUND_FIT_OK = 1u << 5,
+        SIM_FRAMEFLAG_GROUND_FIT_PARTIAL = 1u << 6,
     };
 
     struct HeightSampler
@@ -81,6 +84,9 @@ namespace
         dtPolyRef currentRef = 0;
         float verticalVel = 0.0f;
         glm::vec3 lastVel{0.0f};
+        glm::vec3 eulerRPYDeg{0.0f};
+        float rollDeg = 0.0f;
+        float pitchDeg = 0.0f;
         int moveSurfaceFailCount = 0;
     };
 
@@ -2234,6 +2240,166 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
         outEvents[eventCount++] = ev;
         return eventCount;
     }
+
+
+    bool SampleGroundAtXZ(ExternNavmeshContext& ctx,
+                          SimAgentState& agent,
+                          float x,
+                          float z,
+                          float baseY,
+                          float up,
+                          float down,
+                          float& outY)
+    {
+        if (!EnsureNavQuery(ctx))
+            return false;
+
+        dtQueryFilter filter{};
+        filter.setIncludeFlags(0xFFFF);
+        filter.setExcludeFlags(0);
+
+        const float halfHeight = std::max(0.5f, (up + down) * 0.5f);
+        const float ext[3] = { std::max(0.25f, ctx.cachedExtents[0] * 0.1f), halfHeight, std::max(0.25f, ctx.cachedExtents[2] * 0.1f) };
+        const float query[3] = { x, baseY, z };
+
+        dtPolyRef ref = 0;
+        float nearest[3]{};
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(query, ext, &filter, &ref, nearest)) || ref == 0)
+            return false;
+
+        const float topY = baseY + std::max(0.0f, up);
+        const float bottomY = baseY - std::max(0.0f, down);
+
+        float y = nearest[1];
+        if (dtStatusFailed(ctx.navQuery->getPolyHeight(ref, query, &y)))
+            y = nearest[1];
+
+        if (y > topY + 1e-3f || y < bottomY - 1e-3f)
+            return false;
+
+        outY = y;
+        agent.currentRef = ref;
+        return true;
+    }
+
+    void ComputeYawBasis(float yawDeg, glm::vec3& outForward, glm::vec3& outRight)
+    {
+        const float yawRad = glm::radians(yawDeg);
+        outForward = glm::normalize(glm::vec3(std::sin(yawRad), 0.0f, std::cos(yawRad)));
+        outRight = glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), outForward));
+    }
+
+    bool FitVehicleToGround(ExternNavmeshContext& ctx,
+                            SimAgentState& agent,
+                            const SimParamsFFI& params,
+                            float dt,
+                            uint8_t& frameFlags)
+    {
+        (void)dt;
+        const float wheelInset = std::max(0.0f, params.vehicleWheelInset);
+        const float hx = std::max(0.05f, agent.halfX - wheelInset);
+        const float hz = std::max(0.05f, agent.halfZ - wheelInset);
+
+        glm::vec3 fYaw;
+        glm::vec3 rYaw;
+        ComputeYawBasis(agent.headingDeg, fYaw, rYaw);
+
+        const glm::vec2 offsets[4] = {
+            { +hx, +hz },
+            { +hx, -hz },
+            { -hx, +hz },
+            { -hx, -hz }
+        };
+
+        glm::vec3 wheelPos[4]{};
+        float wheelY[4]{};
+        bool hits[4]{};
+        int hitCount = 0;
+        const float up = std::max(0.0f, params.vehicleSampleUp);
+        const float down = std::max(0.0f, params.vehicleSampleDown);
+        const float baseY = agent.pos.y + up;
+
+        for (int i = 0; i < 4; ++i)
+        {
+            const glm::vec3 worldOffset = rYaw * offsets[i].x + fYaw * offsets[i].y;
+            const float wx = agent.pos.x + worldOffset.x;
+            const float wz = agent.pos.z + worldOffset.z;
+            wheelPos[i] = glm::vec3(wx, agent.pos.y, wz);
+            hits[i] = SampleGroundAtXZ(ctx, agent, wx, wz, baseY, up, down, wheelY[i]);
+            if (hits[i])
+            {
+                wheelPos[i].y = wheelY[i];
+                ++hitCount;
+            }
+        }
+
+        if (hitCount < 2)
+        {
+            frameFlags |= SIM_FRAMEFLAG_AIRBORNE;
+            return false;
+        }
+
+        if (hitCount == 4)
+            frameFlags |= SIM_FRAMEFLAG_GROUND_FIT_OK;
+        else
+            frameFlags |= SIM_FRAMEFLAG_GROUND_FIT_PARTIAL;
+
+        auto fallbackY = [&](int a, int b, int c) {
+            int n = 0;
+            float sum = 0.0f;
+            if (hits[a]) { sum += wheelPos[a].y; ++n; }
+            if (hits[b]) { sum += wheelPos[b].y; ++n; }
+            if (hits[c]) { sum += wheelPos[c].y; ++n; }
+            return n > 0 ? (sum / static_cast<float>(n)) : agent.pos.y;
+        };
+
+        if (!hits[0]) wheelPos[0].y = fallbackY(1,2,3);
+        if (!hits[1]) wheelPos[1].y = fallbackY(0,2,3);
+        if (!hits[2]) wheelPos[2].y = fallbackY(0,1,3);
+        if (!hits[3]) wheelPos[3].y = fallbackY(0,1,2);
+
+        const glm::vec3 frontMid = (wheelPos[0] + wheelPos[1]) * 0.5f;
+        const glm::vec3 rearMid = (wheelPos[2] + wheelPos[3]) * 0.5f;
+        const glm::vec3 leftMid = (wheelPos[0] + wheelPos[2]) * 0.5f;
+        const glm::vec3 rightMid = (wheelPos[1] + wheelPos[3]) * 0.5f;
+
+        glm::vec3 vf = frontMid - rearMid;
+        glm::vec3 vr = rightMid - leftMid;
+        if (glm::dot(vf, vf) < 1e-6f)
+            vf = fYaw;
+        else
+            vf = glm::normalize(vf);
+        if (glm::dot(vr, vr) < 1e-6f)
+            vr = rYaw;
+        else
+            vr = glm::normalize(vr);
+
+        glm::vec3 upVec = glm::cross(vr, vf);
+        if (glm::dot(upVec, upVec) < 1e-6f)
+            upVec = glm::vec3(0.0f, 1.0f, 0.0f);
+        else
+            upVec = glm::normalize(upVec);
+        if (upVec.y < 0.0f)
+            upVec = -upVec;
+
+        float targetPitch = glm::degrees(std::atan2(glm::dot(fYaw, upVec), glm::dot(glm::vec3(0.0f, 1.0f, 0.0f), upVec)));
+        float targetRoll = -glm::degrees(std::atan2(glm::dot(rYaw, upVec), glm::dot(glm::vec3(0.0f, 1.0f, 0.0f), upVec)));
+        targetPitch = std::clamp(targetPitch, -std::max(0.0f, params.vehicleMaxPitchDeg), std::max(0.0f, params.vehicleMaxPitchDeg));
+        targetRoll = std::clamp(targetRoll, -std::max(0.0f, params.vehicleMaxRollDeg), std::max(0.0f, params.vehicleMaxRollDeg));
+
+        const float rotAlpha = std::clamp(params.vehicleRotAlpha, 0.0f, 1.0f);
+        agent.pitchDeg = agent.pitchDeg + (targetPitch - agent.pitchDeg) * rotAlpha;
+        agent.rollDeg = agent.rollDeg + (targetRoll - agent.rollDeg) * rotAlpha;
+
+        const float minY = std::min(std::min(wheelPos[0].y, wheelPos[1].y), std::min(wheelPos[2].y, wheelPos[3].y));
+        const float targetY = minY + params.vehicleGroundUpOffset;
+        const float suspAlpha = std::clamp(params.vehicleSuspensionAlpha, 0.0f, 1.0f);
+        agent.pos.y = agent.pos.y + (targetY - agent.pos.y) * suspAlpha;
+        agent.verticalVel = 0.0f;
+
+        agent.eulerRPYDeg = glm::vec3(agent.rollDeg, agent.pitchDeg, agent.headingDeg);
+        return true;
+    }
 GTANAVVIEWER_API int FindPath(void* navMesh,
                               Vector3 start,
                               Vector3 target,
@@ -2856,6 +3022,7 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
                                   float* outHeadingDeg,
                                   float* outVelXYZ,
                                   uint8_t* outFrameFlags,
+                                  float* outEulerRPYDeg,
                                   SimEventFFI* outEvents,
                                   int maxEvents)
 {
@@ -2900,6 +3067,20 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
                 outVelXYZ[basePos + 1] = 0.0f;
                 outVelXYZ[basePos + 2] = 0.0f;
                 outFrameFlags[baseScalar] = frameFlags;
+                if ((agent.flags & AGENT_VEHICLE) == 0 || agent.shape != SHAPE_BOX)
+                {
+                    agent.rollDeg = 0.0f;
+                    agent.pitchDeg = 0.0f;
+                    agent.eulerRPYDeg = glm::vec3(0.0f, 0.0f, agent.headingDeg);
+                }
+                if (outEulerRPYDeg)
+                {
+                    const size_t baseEuler = baseScalar * 3;
+                    const bool isVehicleBoxOut = ((agent.flags & AGENT_VEHICLE) != 0) && agent.shape == SHAPE_BOX;
+                    outEulerRPYDeg[baseEuler + 0] = isVehicleBoxOut ? agent.rollDeg : 0.0f;
+                    outEulerRPYDeg[baseEuler + 1] = isVehicleBoxOut ? agent.pitchDeg : 0.0f;
+                    outEulerRPYDeg[baseEuler + 2] = agent.headingDeg;
+                }
                 continue;
             }
 
@@ -2953,11 +3134,30 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
             }
 
             glm::vec3 avoid = ComputeAvoidanceForce(agent, neighbors, params->avoidRange, params->avoidWeight);
-            glm::vec3 moveDir = desiredDir + avoid;
-            moveDir.y = 0.0f;
-            const float moveLen = glm::length(moveDir);
-            if (moveLen > 1e-4f)
-                moveDir /= moveLen;
+            const bool isVehicleBox = ((agent.flags & AGENT_VEHICLE) != 0) && agent.shape == SHAPE_BOX;
+            glm::vec3 moveDir(0.0f);
+            if (isVehicleBox)
+            {
+                float targetHeading = agent.headingDeg;
+                if (glm::dot(desiredDir, desiredDir) > 1e-6f)
+                    targetHeading = std::atan2(desiredDir.x, desiredDir.z) * 180.0f / 3.1415926535f;
+                float deltaYaw = WrapAngleDeg(targetHeading - agent.headingDeg);
+                const float maxTurn = std::max(0.0f, params->agentTurnSpeedDeg) * dt;
+                deltaYaw = std::clamp(deltaYaw, -maxTurn, maxTurn);
+                if (std::isfinite(deltaYaw))
+                    agent.headingDeg = WrapAngleDeg(agent.headingDeg + deltaYaw);
+
+                const float yawRad = glm::radians(agent.headingDeg);
+                moveDir = glm::vec3(std::sin(yawRad), 0.0f, std::cos(yawRad));
+            }
+            else
+            {
+                moveDir = desiredDir + avoid;
+                moveDir.y = 0.0f;
+                const float moveLen = glm::length(moveDir);
+                if (moveLen > 1e-4f)
+                    moveDir /= moveLen;
+            }
 
             float speed = std::max(0.0f, params->agentSpeed);
             if ((agent.flags & AGENT_VEHICLE) != 0)
@@ -2969,6 +3169,8 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
             if (velDeltaLen > maxDelta && maxDelta > 0.0f)
                 velDelta = velDelta / velDeltaLen * maxDelta;
             agent.lastVel += velDelta;
+            if (isVehicleBox)
+                agent.lastVel.y = 0.0f;
 
             glm::vec3 candidate = agent.pos + agent.lastVel * dt;
             float startPos[3] = { agent.pos.x, agent.pos.y, agent.pos.z };
@@ -3008,7 +3210,25 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
             float h = candidate.y;
             if (ctx.heightSampler.enabled)
                 h = SampleAgentHeight(ctx, agent, candidate);
-            if (params->gravity > 0.0f)
+            if (isVehicleBox)
+            {
+                const bool fitOk = FitVehicleToGround(ctx, agent, *params, dt, frameFlags);
+                if (!fitOk)
+                {
+                    if (params->gravity > 0.0f)
+                    {
+                        agent.verticalVel = std::max(agent.verticalVel - params->gravity * dt, -std::max(params->maxFallSpeed, 0.0f));
+                        const float targetY = h;
+                        agent.pos.y += agent.verticalVel * dt;
+                        if (agent.pos.y < targetY)
+                        {
+                            agent.pos.y = targetY;
+                            agent.verticalVel = 0.0f;
+                        }
+                    }
+                }
+            }
+            else if (params->gravity > 0.0f)
             {
                 agent.verticalVel = std::max(agent.verticalVel - params->gravity * dt, -std::max(params->maxFallSpeed, 0.0f));
                 const float targetY = h;
@@ -3030,12 +3250,15 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
             if (moved < 0.001f)
                 frameFlags |= SIM_FRAMEFLAG_STUCK;
 
-            const float targetHeading = std::atan2(moveDir.x, moveDir.z) * 180.0f / 3.1415926535f;
-            float deltaYaw = WrapAngleDeg(targetHeading - agent.headingDeg);
-            const float maxTurn = std::max(0.0f, params->agentTurnSpeedDeg) * dt;
-            deltaYaw = std::clamp(deltaYaw, -maxTurn, maxTurn);
-            if (std::isfinite(deltaYaw))
-                agent.headingDeg = WrapAngleDeg(agent.headingDeg + deltaYaw);
+            if (!isVehicleBox)
+            {
+                const float targetHeading = std::atan2(moveDir.x, moveDir.z) * 180.0f / 3.1415926535f;
+                float deltaYaw = WrapAngleDeg(targetHeading - agent.headingDeg);
+                const float maxTurn = std::max(0.0f, params->agentTurnSpeedDeg) * dt;
+                deltaYaw = std::clamp(deltaYaw, -maxTurn, maxTurn);
+                if (std::isfinite(deltaYaw))
+                    agent.headingDeg = WrapAngleDeg(agent.headingDeg + deltaYaw);
+            }
 
             if (agent.cornerIndex < agent.cornerCount)
             {
@@ -3052,6 +3275,19 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
             outVelXYZ[basePos + 1] = agent.lastVel.y;
             outVelXYZ[basePos + 2] = agent.lastVel.z;
             outFrameFlags[baseScalar] = frameFlags;
+            if (!isVehicleBox)
+            {
+                agent.rollDeg = 0.0f;
+                agent.pitchDeg = 0.0f;
+                agent.eulerRPYDeg = glm::vec3(0.0f, 0.0f, agent.headingDeg);
+            }
+            if (outEulerRPYDeg)
+            {
+                const size_t baseEuler = baseScalar * 3;
+                outEulerRPYDeg[baseEuler + 0] = isVehicleBox ? agent.rollDeg : 0.0f;
+                outEulerRPYDeg[baseEuler + 1] = isVehicleBox ? agent.pitchDeg : 0.0f;
+                outEulerRPYDeg[baseEuler + 2] = agent.headingDeg;
+            }
         }
     }
 
@@ -3067,6 +3303,7 @@ GTANAVVIEWER_API int SimulateAgentFrames(void* navMesh,
                                          float* outHeadingDeg,
                                          float* outVelXYZ,
                                          uint8_t* outFrameFlags,
+                                         float* outEulerRPYDeg,
                                          SimEventFFI* outEvents,
                                          int maxEvents)
 {
@@ -3084,6 +3321,7 @@ GTANAVVIEWER_API int SimulateAgentFrames(void* navMesh,
                                   outHeadingDeg,
                                   outVelXYZ,
                                   outFrameFlags,
+                                  outEulerRPYDeg,
                                   outEvents,
                                   maxEvents);
 }
@@ -3098,6 +3336,7 @@ GTANAVVIEWER_API int SimulateAgentsFramesBatch(void* navMesh,
                                                float* outHeadingDeg,
                                                float* outVelXYZ,
                                                uint8_t* outFrameFlags,
+                                               float* outEulerRPYDeg,
                                                SimEventFFI* outEvents,
                                                int maxEvents)
 {
@@ -3114,6 +3353,7 @@ GTANAVVIEWER_API int SimulateAgentsFramesBatch(void* navMesh,
                                   outHeadingDeg,
                                   outVelXYZ,
                                   outFrameFlags,
+                                  outEulerRPYDeg,
                                   outEvents,
                                   maxEvents);
 }

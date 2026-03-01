@@ -131,6 +131,16 @@ struct SimParamsFFI
     float anchorMaxSnapDist = 15.0f;
     // Se delta de heading exceder esse valor, aplica snap de yaw ao inves de blend.
     float anchorMaxSnapYawDeg = 90.0f;
+
+    // Vehicle ground fit / suspension
+    float vehicleGroundUpOffset = 0.2f;
+    float vehicleSuspensionAlpha = 0.35f;
+    float vehicleRotAlpha = 0.35f;
+    float vehicleMaxPitchDeg = 25.0f;
+    float vehicleMaxRollDeg = 25.0f;
+    float vehicleSampleUp = 3.0f;
+    float vehicleSampleDown = 10.0f;
+    float vehicleWheelInset = 0.2f;
 };
 
 struct SimEventFFI
@@ -145,7 +155,7 @@ struct SimEventFFI
 };
 
 static_assert(sizeof(SimAgentDescFFI) == 64, "Unexpected SimAgentDescFFI ABI size");
-static_assert(sizeof(SimParamsFFI) == 72, "Unexpected SimParamsFFI ABI size");
+static_assert(sizeof(SimParamsFFI) == 104, "Unexpected SimParamsFFI ABI size");
 
 #ifdef _WIN32
   #ifdef GTANAVVIEWER_BUILD_DLL
@@ -294,6 +304,7 @@ GTANAVVIEWER_API int SimulateAgentFrames(void* navMesh,
                                          float* outHeadingDeg,
                                          float* outVelXYZ,
                                          std::uint8_t* outFrameFlags,
+                                         float* outEulerRPYDeg,
                                          SimEventFFI* outEvents,
                                          int maxEvents);
 GTANAVVIEWER_API int SimulateAgentsFramesBatch(void* navMesh,
@@ -306,6 +317,7 @@ GTANAVVIEWER_API int SimulateAgentsFramesBatch(void* navMesh,
                                                float* outHeadingDeg,
                                                float* outVelXYZ,
                                                std::uint8_t* outFrameFlags,
+                                               float* outEulerRPYDeg,
                                                SimEventFFI* outEvents,
                                                int maxEvents);
 
