@@ -53,6 +53,7 @@ namespace
         SIM_FRAMEFLAG_AIRBORNE = 1u << 4,
         SIM_FRAMEFLAG_GROUND_FIT_OK = 1u << 5,
         SIM_FRAMEFLAG_GROUND_FIT_PARTIAL = 1u << 6,
+        SIM_FRAMEFLAG_OFFMESH_TRAVERSAL = 1u << 7,
     };
 
     struct HeightSampler
@@ -88,6 +89,14 @@ namespace
         float rollDeg = 0.0f;
         float pitchDeg = 0.0f;
         int moveSurfaceFailCount = 0;
+        bool inOffmesh = false;
+        glm::vec3 offStart{0.0f};
+        glm::vec3 offEnd{0.0f};
+        float offT = 0.0f;
+        float offDuration = 0.0f;
+        std::uint8_t offType = 0;
+        float offArcHeight = 0.0f;
+        int offmeshStartCornerIndex = -1;
     };
 
     struct ExternNavmeshContext
@@ -2041,6 +2050,14 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
         st.cornerFlags.clear();
         st.pathPolys.clear();
         st.currentRef = 0;
+        st.inOffmesh = false;
+        st.offStart = glm::vec3(0.0f);
+        st.offEnd = glm::vec3(0.0f);
+        st.offT = 0.0f;
+        st.offDuration = 0.0f;
+        st.offType = 0;
+        st.offArcHeight = 0.0f;
+        st.offmeshStartCornerIndex = -1;
     }
 
     void ClampAgentHorizontalSpeed(const SimParamsFFI& params, SimAgentState& st)
@@ -2214,7 +2231,8 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
                         SimEventFFI* outEvents,
                         int maxEvents,
                         int eventCount,
-                        float speed)
+                        float speed,
+                        float durationOverride = -1.0f)
     {
         if (!outEvents || eventCount >= maxEvents)
             return eventCount;
@@ -2235,8 +2253,15 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
         ev.jumpType = jumpType;
         ev.start[0] = start.x; ev.start[1] = start.y; ev.start[2] = start.z;
         ev.end[0] = end.x; ev.end[1] = end.y; ev.end[2] = end.z;
-        const float denom = std::max(speed, 0.5f);
-        ev.duration = std::clamp(dist2d / denom, 0.2f, 1.5f);
+        if (durationOverride > 0.0f)
+        {
+            ev.duration = durationOverride;
+        }
+        else
+        {
+            const float denom = std::max(speed, 0.5f);
+            ev.duration = std::clamp(dist2d / denom, 0.2f, 1.5f);
+        }
         outEvents[eventCount++] = ev;
         return eventCount;
     }
@@ -3084,6 +3109,93 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
                 continue;
             }
 
+            const bool isVehicleBox = ((agent.flags & AGENT_VEHICLE) != 0) && agent.shape == SHAPE_BOX;
+            auto emitOffmeshFrame = [&]()
+            {
+                agent.offT += dt;
+                float u = (agent.offDuration > 1e-4f) ? (agent.offT / agent.offDuration) : 1.0f;
+                u = std::clamp(u, 0.0f, 1.0f);
+
+                glm::vec3 p = glm::mix(agent.offStart, agent.offEnd, u);
+                if (agent.offArcHeight > 0.0f)
+                {
+                    const float arc = 4.0f * u * (1.0f - u);
+                    p.y += arc * agent.offArcHeight;
+                }
+
+                glm::vec3 d = agent.offEnd - agent.pos;
+                d.y = 0.0f;
+                if (glm::dot(d, d) > 1e-6f)
+                {
+                    d = glm::normalize(d);
+                    const float targetHeading = std::atan2(d.x, d.z) * 180.0f / 3.1415926535f;
+                    float deltaYaw = WrapAngleDeg(targetHeading - agent.headingDeg);
+                    const float maxTurn = std::max(0.0f, params->agentTurnSpeedDeg) * dt;
+                    deltaYaw = std::clamp(deltaYaw, -maxTurn, maxTurn);
+                    if (std::isfinite(deltaYaw))
+                        agent.headingDeg = WrapAngleDeg(agent.headingDeg + deltaYaw);
+                }
+
+                if (dt > 1e-6f)
+                    agent.lastVel = (p - agent.pos) / dt;
+                else
+                    agent.lastVel = glm::vec3(0.0f);
+                agent.pos = p;
+
+                frameFlags |= SIM_FRAMEFLAG_JUMP;
+                frameFlags |= SIM_FRAMEFLAG_OFFMESH_TRAVERSAL;
+
+                if (u >= 1.0f)
+                {
+                    agent.inOffmesh = false;
+                    agent.pos = agent.offEnd;
+                    agent.verticalVel = 0.0f;
+                    agent.offT = 0.0f;
+                    agent.offDuration = 0.0f;
+                    agent.offArcHeight = 0.0f;
+                    agent.offType = 0;
+                    agent.offmeshStartCornerIndex = -1;
+                    agent.cornerIndex += 2;
+                    if (agent.cornerIndex >= agent.cornerCount)
+                    {
+                        frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+                    }
+                    else if (!RefreshAgentNearestPoly(ctx, agent))
+                    {
+                        agent.currentRef = 0;
+                        frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+                    }
+                }
+
+                outPosXYZ[basePos + 0] = agent.pos.x;
+                outPosXYZ[basePos + 1] = agent.pos.y;
+                outPosXYZ[basePos + 2] = agent.pos.z;
+                outHeadingDeg[baseScalar] = agent.headingDeg;
+                outVelXYZ[basePos + 0] = agent.lastVel.x;
+                outVelXYZ[basePos + 1] = agent.lastVel.y;
+                outVelXYZ[basePos + 2] = agent.lastVel.z;
+                outFrameFlags[baseScalar] = frameFlags;
+                if (!isVehicleBox)
+                {
+                    agent.rollDeg = 0.0f;
+                    agent.pitchDeg = 0.0f;
+                    agent.eulerRPYDeg = glm::vec3(0.0f, 0.0f, agent.headingDeg);
+                }
+                if (outEulerRPYDeg)
+                {
+                    const size_t baseEuler = baseScalar * 3;
+                    outEulerRPYDeg[baseEuler + 0] = isVehicleBox ? agent.rollDeg : 0.0f;
+                    outEulerRPYDeg[baseEuler + 1] = isVehicleBox ? agent.pitchDeg : 0.0f;
+                    outEulerRPYDeg[baseEuler + 2] = agent.headingDeg;
+                }
+            };
+
+            if (agent.inOffmesh)
+            {
+                emitOffmeshFrame();
+                continue;
+            }
+
             glm::vec3 target(agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 0],
                              agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 1],
                              agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 2]);
@@ -3098,12 +3210,34 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
                     const glm::vec3 end(agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex + 1) * 3 + 0],
                                         agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex + 1) * 3 + 1],
                                         agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex + 1) * 3 + 2]);
-                    eventCount = AppendJumpEvent(agent, frame, target, end, outEvents, maxEvents, eventCount, params->agentSpeed);
-                    frameFlags |= SIM_FRAMEFLAG_JUMP;
+                    agent.inOffmesh = true;
+                    agent.offStart = agent.pos;
+                    agent.offEnd = end;
+                    agent.offT = 0.0f;
+                    const float distToEnd = glm::length(agent.offEnd - agent.offStart);
+                    const float baseSpeed = std::max((agent.flags & AGENT_VEHICLE) != 0 ? params->maxSpeedForward : params->agentSpeed, 0.1f);
+                    agent.offDuration = std::clamp(distToEnd / baseSpeed, 0.15f, 1.25f);
+                    if (agent.offDuration <= 1e-4f)
+                        agent.offDuration = 0.2f;
+                    agent.offType = 2;
+                    agent.offArcHeight = ((agent.flags & AGENT_VEHICLE) != 0) ? 0.0f : std::clamp(distToEnd * 0.15f, 0.0f, 1.2f);
+                    agent.offmeshStartCornerIndex = agent.cornerIndex;
+
+                    eventCount = AppendJumpEvent(agent, frame, target, end, outEvents, maxEvents, eventCount, params->agentSpeed, agent.offDuration);
+                    emitOffmeshFrame();
+                    continue;
                 }
-                ++agent.cornerIndex;
-                if (agent.cornerIndex >= agent.cornerCount)
+                if (wasOffmesh)
+                {
                     frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+                    agent.cornerIndex = agent.cornerCount;
+                }
+                else
+                {
+                    ++agent.cornerIndex;
+                    if (agent.cornerIndex >= agent.cornerCount)
+                        frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+                }
             }
 
             glm::vec3 desiredDir(0.0f);
@@ -3134,7 +3268,6 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
             }
 
             glm::vec3 avoid = ComputeAvoidanceForce(agent, neighbors, params->avoidRange, params->avoidWeight);
-            const bool isVehicleBox = ((agent.flags & AGENT_VEHICLE) != 0) && agent.shape == SHAPE_BOX;
             glm::vec3 moveDir(0.0f);
             if (isVehicleBox)
             {
