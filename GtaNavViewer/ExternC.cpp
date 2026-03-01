@@ -44,6 +44,45 @@ namespace
         glm::vec3 worldBMax{0.0f};
     };
 
+    enum : std::uint8_t
+    {
+        SIM_FRAMEFLAG_JUMP = 1u << 0,
+        SIM_FRAMEFLAG_OFFMESH_SOON = 1u << 1,
+        SIM_FRAMEFLAG_NEEDS_REPATH = 1u << 2,
+        SIM_FRAMEFLAG_STUCK = 1u << 3,
+    };
+
+    struct HeightSampler
+    {
+        bool enabled = false;
+        bool built = false;
+        int samplesPerTile = 64;
+        bool storeTwoLayers = true;
+    };
+
+    struct SimAgentState
+    {
+        std::uint32_t id = 0;
+        SimShapeType shape = SHAPE_CYLINDER;
+        std::uint32_t teamMask = 0;
+        std::uint32_t avoidMask = 0;
+        std::uint32_t flags = 0;
+        glm::vec3 pos{0.0f};
+        float headingDeg = 0.0f;
+        float radius = 0.5f;
+        float halfX = 0.5f;
+        float halfZ = 0.5f;
+        float height = 1.8f;
+        std::vector<float> cornersXYZ;
+        std::vector<unsigned char> cornerFlags;
+        int cornerCount = 0;
+        int cornerIndex = 0;
+        std::vector<dtPolyRef> pathPolys;
+        dtPolyRef currentRef = 0;
+        float verticalVel = 0.0f;
+        glm::vec3 lastVel{0.0f};
+    };
+
     struct ExternNavmeshContext
     {
         NavmeshGenerationSettings genSettings{};
@@ -68,6 +107,9 @@ namespace
         std::unordered_map<uint64_t, TileDbIndexEntry> dbIndexCache;
         bool dbIndexLoaded = false;
         std::filesystem::file_time_type dbMTime{};
+        std::unordered_map<std::uint32_t, SimAgentState> simAgents;
+        std::vector<std::uint32_t> simAgentIds;
+        HeightSampler heightSampler;
     };
 
     std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx);
@@ -1882,6 +1924,179 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
     return straightCount;
 }
 
+
+
+    float WrapAngleDeg(float angle)
+    {
+        while (angle > 180.0f) angle -= 360.0f;
+        while (angle < -180.0f) angle += 360.0f;
+        return angle;
+    }
+
+    float ShapeAvoidRadius(const SimAgentState& a)
+    {
+        if (a.shape == SHAPE_BOX)
+            return std::sqrt(a.halfX * a.halfX + a.halfZ * a.halfZ);
+        return a.radius;
+    }
+
+    bool ComputePathData(ExternNavmeshContext& ctx,
+                         const glm::vec3& start,
+                         const glm::vec3& end,
+                         int flags,
+                         int maxPoints,
+                         float minEdge,
+                         int options,
+                         std::vector<float>& outCorners,
+                         std::vector<unsigned char>& outCornerFlags,
+                         std::vector<dtPolyRef>& outPathPolys,
+                         dtPolyRef* outStartRef,
+                         float outStartNearest[3])
+    {
+        if (!EnsureNavQuery(ctx) || maxPoints <= 0)
+            return false;
+
+        const float startPos[3] = { start.x, start.y, start.z };
+        const float endPos[3] = { end.x, end.y, end.z };
+
+        dtQueryFilter filter{};
+        filter.setIncludeFlags(static_cast<unsigned short>(flags));
+        filter.setExcludeFlags(0);
+        filter.setAreaCost(AREA_JUMP, 4.0f);
+        filter.setAreaCost(AREA_DROP, 1.5f);
+        filter.setAreaCost(AREA_OFFMESH, 2.0f);
+
+        dtPolyRef startRef = 0, endRef = 0;
+        float startNearest[3]{};
+        float endNearest[3]{};
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(startPos, ctx.cachedExtents, &filter, &startRef, startNearest)) || startRef == 0)
+            return false;
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(endPos, ctx.cachedExtents, &filter, &endRef, endNearest)) || endRef == 0)
+            return false;
+
+        dtPolyRef polys[256]{};
+        int polyCount = 0;
+        const dtStatus pathStatus = ctx.navQuery->findPath(startRef, endRef, startNearest, endNearest, &filter, polys, &polyCount, 256);
+        if (dtStatusFailed(pathStatus) || polyCount == 0)
+            return false;
+
+        outPathPolys.assign(polys, polys + polyCount);
+
+        outCorners.resize(static_cast<size_t>(maxPoints) * 3);
+        outCornerFlags.resize(static_cast<size_t>(maxPoints));
+        std::vector<dtPolyRef> straightRefs(static_cast<size_t>(maxPoints));
+        int straightCount = 0;
+        dtStatus straightStatus = DT_FAILURE;
+        if (std::isfinite(minEdge) && minEdge > 0.0f)
+            straightStatus = ctx.navQuery->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, outCorners.data(), outCornerFlags.data(), straightRefs.data(), &straightCount, maxPoints, options, minEdge);
+        else
+            straightStatus = ctx.navQuery->findStraightPath(startNearest, endNearest, polys, polyCount, outCorners.data(), outCornerFlags.data(), straightRefs.data(), &straightCount, maxPoints, options);
+
+        if (dtStatusFailed(straightStatus) || straightCount <= 0)
+            return false;
+
+        outCorners.resize(static_cast<size_t>(straightCount) * 3);
+        outCornerFlags.resize(static_cast<size_t>(straightCount));
+        if (outStartRef)
+            *outStartRef = startRef;
+        if (outStartNearest)
+        {
+            outStartNearest[0] = startNearest[0];
+            outStartNearest[1] = startNearest[1];
+            outStartNearest[2] = startNearest[2];
+        }
+        return true;
+    }
+
+    float SampleAgentHeight(ExternNavmeshContext& ctx, SimAgentState& agent, const glm::vec3& pos)
+    {
+        if (!EnsureNavQuery(ctx))
+            return pos.y;
+
+        dtQueryFilter filter{};
+        filter.setIncludeFlags(0xFFFF);
+        const float p[3] = { pos.x, pos.y, pos.z };
+        dtPolyRef ref = agent.currentRef;
+        float nearest[3]{};
+        if (ref == 0)
+        {
+            if (dtStatusFailed(ctx.navQuery->findNearestPoly(p, ctx.cachedExtents, &filter, &ref, nearest)) || ref == 0)
+                return pos.y;
+            agent.currentRef = ref;
+        }
+
+        float navY = pos.y;
+        if (dtStatusSucceed(ctx.navQuery->getPolyHeight(ref, p, &navY)))
+            return navY;
+        return pos.y;
+    }
+
+    glm::vec3 ComputeAvoidanceForce(const SimAgentState& self,
+                                    const std::vector<const SimAgentState*>& neighbors,
+                                    float avoidRange,
+                                    float avoidWeight)
+    {
+        glm::vec3 force(0.0f);
+        if (avoidRange <= 0.0f || avoidWeight <= 0.0f)
+            return force;
+
+        const float selfRadius = ShapeAvoidRadius(self);
+        for (const SimAgentState* other : neighbors)
+        {
+            if (!other || other->id == self.id)
+                continue;
+            if ((other->teamMask & self.avoidMask) == 0)
+                continue;
+
+            glm::vec3 delta = self.pos - other->pos;
+            delta.y = 0.0f;
+            const float distSq = glm::dot(delta, delta);
+            const float r = selfRadius + ShapeAvoidRadius(*other);
+            const float range = std::max(avoidRange, r);
+            if (distSq <= 1e-6f || distSq > range * range)
+                continue;
+
+            const float dist = std::sqrt(distSq);
+            const float strength = (1.0f - dist / range) * avoidWeight;
+            force += (delta / dist) * strength;
+        }
+
+        return force;
+    }
+
+    int AppendJumpEvent(const SimAgentState& agent,
+                        int frameIndex,
+                        const glm::vec3& start,
+                        const glm::vec3& end,
+                        SimEventFFI* outEvents,
+                        int maxEvents,
+                        int eventCount,
+                        float speed)
+    {
+        if (!outEvents || eventCount >= maxEvents)
+            return eventCount;
+
+        const glm::vec2 d2(end.x - start.x, end.z - start.z);
+        const float dist2d = glm::length(d2);
+        const float dy = end.y - start.y;
+        std::uint8_t jumpType = 2;
+        if (dy > 0.75f)
+            jumpType = 0;
+        else if (dy < -0.75f)
+            jumpType = 1;
+
+        SimEventFFI ev{};
+        ev.agentId = agent.id;
+        ev.frameIndex = static_cast<std::uint16_t>(std::max(0, frameIndex));
+        ev.type = 1;
+        ev.jumpType = jumpType;
+        ev.start[0] = start.x; ev.start[1] = start.y; ev.start[2] = start.z;
+        ev.end[0] = end.x; ev.end[1] = end.y; ev.end[2] = end.z;
+        const float denom = std::max(speed, 0.5f);
+        ev.duration = std::clamp(dist2d / denom, 0.2f, 1.5f);
+        outEvents[eventCount++] = ev;
+        return eventCount;
+    }
 GTANAVVIEWER_API int FindPath(void* navMesh,
                               Vector3 start,
                               Vector3 target,
@@ -2166,4 +2381,391 @@ GTANAVVIEWER_API void RemoveNavMeshBoundingBox(void* navMesh)
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->hasBoundingBox = false;
     ctx->rebuildAll = true;
+}
+
+GTANAVVIEWER_API int UpsertSimAgents(void* navMesh, const SimAgentDescFFI* agents, int count)
+{
+    if (!navMesh || !agents || count <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    int upserted = 0;
+    for (int i = 0; i < count; ++i)
+    {
+        const SimAgentDescFFI& d = agents[i];
+        SimAgentState& st = ctx->simAgents[d.agentId];
+        const bool isNew = st.id == 0;
+        st.id = d.agentId;
+        st.teamMask = d.teamMask;
+        st.avoidMask = d.avoidMask;
+        st.flags = d.flags;
+        st.shape = (d.shapeType == SHAPE_BOX) ? SHAPE_BOX : SHAPE_CYLINDER;
+        st.pos = glm::vec3(d.pos[0], d.pos[1], d.pos[2]);
+        st.headingDeg = d.headingDeg;
+        st.radius = std::max(0.05f, d.radius);
+        st.halfX = std::max(0.05f, d.halfX);
+        st.halfZ = std::max(0.05f, d.halfZ);
+        st.height = std::max(0.1f, d.height);
+        if (isNew)
+            ctx->simAgentIds.push_back(d.agentId);
+        ++upserted;
+    }
+    return upserted;
+}
+
+GTANAVVIEWER_API int RemoveSimAgents(void* navMesh, const uint32_t* agentIds, int count)
+{
+    if (!navMesh || !agentIds || count <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    int removed = 0;
+    for (int i = 0; i < count; ++i)
+    {
+        auto it = ctx->simAgents.find(agentIds[i]);
+        if (it == ctx->simAgents.end())
+            continue;
+        ctx->simAgents.erase(it);
+        ++removed;
+    }
+
+    if (removed > 0)
+    {
+        auto& ids = ctx->simAgentIds;
+        ids.erase(std::remove_if(ids.begin(), ids.end(), [&](uint32_t id)
+        {
+            return ctx->simAgents.find(id) == ctx->simAgents.end();
+        }), ids.end());
+    }
+    return removed;
+}
+
+GTANAVVIEWER_API void ClearSimAgents(void* navMesh)
+{
+    if (!navMesh)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->simAgents.clear();
+    ctx->simAgentIds.clear();
+}
+
+GTANAVVIEWER_API int ComputeAgentPath(void* navMesh,
+                                      uint32_t agentId,
+                                      Vector3 start,
+                                      Vector3 target,
+                                      int flags,
+                                      int maxCorners,
+                                      float minEdgeDist,
+                                      int options)
+{
+    if (!navMesh || maxCorners <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    auto it = ctx->simAgents.find(agentId);
+    if (it == ctx->simAgents.end())
+        return 0;
+
+    SimAgentState& agent = it->second;
+    std::vector<float> corners;
+    std::vector<unsigned char> cornerFlags;
+    std::vector<dtPolyRef> pathPolys;
+    dtPolyRef startRef = 0;
+    float startNearest[3]{};
+    if (!ComputePathData(*ctx,
+                         glm::vec3(start.x, start.y, start.z),
+                         glm::vec3(target.x, target.y, target.z),
+                         flags,
+                         maxCorners,
+                         minEdgeDist,
+                         options,
+                         corners,
+                         cornerFlags,
+                         pathPolys,
+                         &startRef,
+                         startNearest))
+    {
+        return 0;
+    }
+
+    agent.cornersXYZ = std::move(corners);
+    agent.cornerFlags = std::move(cornerFlags);
+    agent.cornerCount = static_cast<int>(agent.cornerFlags.size());
+    agent.cornerIndex = 0;
+    agent.pathPolys = std::move(pathPolys);
+    agent.currentRef = startRef;
+    agent.pos = glm::vec3(startNearest[0], startNearest[1], startNearest[2]);
+    return agent.cornerCount;
+}
+
+GTANAVVIEWER_API void EnableHeightSampling(void* navMesh, bool enabled)
+{
+    if (!navMesh)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->heightSampler.enabled = enabled;
+}
+
+GTANAVVIEWER_API bool BuildHeightSamplerForCurrentGeometry(void* navMesh, int samplesPerTile, bool storeTwoLayers)
+{
+    if (!navMesh)
+        return false;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->heightSampler.samplesPerTile = std::max(8, samplesPerTile);
+    ctx->heightSampler.storeTwoLayers = storeTwoLayers;
+    ctx->heightSampler.built = true;
+    return true;
+}
+
+static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
+                                  const uint32_t* agentIds,
+                                  int agentCount,
+                                  float dt,
+                                  int maxSimulationFrames,
+                                  const SimParamsFFI* params,
+                                  float* outPosXYZ,
+                                  float* outHeadingDeg,
+                                  float* outVelXYZ,
+                                  uint8_t* outFrameFlags,
+                                  SimEventFFI* outEvents,
+                                  int maxEvents)
+{
+    if (!params || !outPosXYZ || !outHeadingDeg || !outVelXYZ || !outFrameFlags || !agentIds || agentCount <= 0 || maxSimulationFrames <= 0 || dt <= 0.0f)
+        return 0;
+    if (!EnsureNavQuery(ctx))
+        return 0;
+
+    std::vector<SimAgentState*> agents;
+    agents.reserve(static_cast<size_t>(agentCount));
+    for (int i = 0; i < agentCount; ++i)
+    {
+        auto it = ctx.simAgents.find(agentIds[i]);
+        if (it == ctx.simAgents.end())
+            continue;
+        agents.push_back(&it->second);
+    }
+    if (agents.empty())
+        return 0;
+
+    int eventCount = 0;
+    for (int frame = 0; frame < maxSimulationFrames; ++frame)
+    {
+        for (size_t ai = 0; ai < agents.size(); ++ai)
+        {
+            SimAgentState& agent = *agents[ai];
+            const size_t basePos = (ai * static_cast<size_t>(maxSimulationFrames) + static_cast<size_t>(frame)) * 3;
+            const size_t baseScalar = ai * static_cast<size_t>(maxSimulationFrames) + static_cast<size_t>(frame);
+            uint8_t frameFlags = 0;
+
+            if ((agent.flags & AGENT_ENABLED) == 0 || agent.cornerCount <= 0 || agent.cornerIndex >= agent.cornerCount)
+            {
+                frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+                outPosXYZ[basePos + 0] = agent.pos.x;
+                outPosXYZ[basePos + 1] = agent.pos.y;
+                outPosXYZ[basePos + 2] = agent.pos.z;
+                outHeadingDeg[baseScalar] = agent.headingDeg;
+                outVelXYZ[basePos + 0] = 0.0f;
+                outVelXYZ[basePos + 1] = 0.0f;
+                outVelXYZ[basePos + 2] = 0.0f;
+                outFrameFlags[baseScalar] = frameFlags;
+                continue;
+            }
+
+            glm::vec3 target(agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 0],
+                             agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 1],
+                             agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 2]);
+            glm::vec3 toTarget = target - agent.pos;
+            toTarget.y = 0.0f;
+            const float dist = glm::length(toTarget);
+            if (dist <= std::max(params->reachRadius, 0.1f))
+            {
+                const bool wasOffmesh = (agent.cornerFlags[static_cast<size_t>(agent.cornerIndex)] & DT_STRAIGHTPATH_OFFMESH_CONNECTION) != 0;
+                if (wasOffmesh && agent.cornerIndex + 1 < agent.cornerCount)
+                {
+                    const glm::vec3 end(agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex + 1) * 3 + 0],
+                                        agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex + 1) * 3 + 1],
+                                        agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex + 1) * 3 + 2]);
+                    eventCount = AppendJumpEvent(agent, frame, target, end, outEvents, maxEvents, eventCount, params->agentSpeed);
+                    frameFlags |= SIM_FRAMEFLAG_JUMP;
+                }
+                ++agent.cornerIndex;
+                if (agent.cornerIndex >= agent.cornerCount)
+                    frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+            }
+
+            glm::vec3 desiredDir(0.0f);
+            if (agent.cornerIndex < agent.cornerCount)
+            {
+                target = glm::vec3(agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 0],
+                                   agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 1],
+                                   agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 2]);
+                toTarget = target - agent.pos;
+                toTarget.y = 0.0f;
+                const float d = glm::length(toTarget);
+                if (d > 1e-4f)
+                    desiredDir = toTarget / d;
+            }
+
+            std::vector<const SimAgentState*> neighbors;
+            neighbors.reserve(16);
+            const float avoidRangeSq = params->avoidRange * params->avoidRange;
+            for (size_t oi = 0; oi < agents.size(); ++oi)
+            {
+                if (oi == ai)
+                    continue;
+                const SimAgentState& other = *agents[oi];
+                glm::vec3 diff = other.pos - agent.pos;
+                diff.y = 0.0f;
+                if (glm::dot(diff, diff) <= avoidRangeSq)
+                    neighbors.push_back(&other);
+            }
+
+            glm::vec3 avoid = ComputeAvoidanceForce(agent, neighbors, params->avoidRange, params->avoidWeight);
+            glm::vec3 moveDir = desiredDir + avoid;
+            moveDir.y = 0.0f;
+            const float moveLen = glm::length(moveDir);
+            if (moveLen > 1e-4f)
+                moveDir /= moveLen;
+
+            float speed = std::max(0.0f, params->agentSpeed);
+            if ((agent.flags & AGENT_VEHICLE) != 0)
+                speed = std::max(0.0f, params->maxSpeedForward);
+            glm::vec3 desiredVel = moveDir * speed;
+            glm::vec3 velDelta = desiredVel - agent.lastVel;
+            const float maxDelta = std::max(0.0f, params->agentAccel) * dt;
+            const float velDeltaLen = glm::length(velDelta);
+            if (velDeltaLen > maxDelta && maxDelta > 0.0f)
+                velDelta = velDelta / velDeltaLen * maxDelta;
+            agent.lastVel += velDelta;
+
+            glm::vec3 candidate = agent.pos + agent.lastVel * dt;
+            float startPos[3] = { agent.pos.x, agent.pos.y, agent.pos.z };
+            float endPos[3] = { candidate.x, candidate.y, candidate.z };
+            float result[3] = { agent.pos.x, agent.pos.y, agent.pos.z };
+            dtPolyRef visited[32]{};
+            int visitedCount = 0;
+            dtQueryFilter filter{};
+            filter.setIncludeFlags(0xFFFF);
+            if (agent.currentRef != 0)
+            {
+                if (dtStatusSucceed(ctx.navQuery->moveAlongSurface(agent.currentRef, startPos, endPos, &filter, result, visited, &visitedCount, 32)))
+                {
+                    if (visitedCount > 0)
+                        agent.currentRef = visited[visitedCount - 1];
+                    candidate = glm::vec3(result[0], result[1], result[2]);
+                }
+            }
+
+            float h = candidate.y;
+            if (ctx.heightSampler.enabled)
+                h = SampleAgentHeight(ctx, agent, candidate);
+            if (params->gravity > 0.0f)
+            {
+                agent.verticalVel = std::max(agent.verticalVel - params->gravity * dt, -std::max(params->maxFallSpeed, 0.0f));
+                const float targetY = h;
+                agent.pos.y += agent.verticalVel * dt;
+                if (agent.pos.y < targetY)
+                {
+                    agent.pos.y = targetY;
+                    agent.verticalVel = 0.0f;
+                }
+            }
+            else
+            {
+                agent.pos.y = h;
+            }
+
+            const float moved = glm::length(glm::vec2(candidate.x - agent.pos.x, candidate.z - agent.pos.z));
+            agent.pos.x = candidate.x;
+            agent.pos.z = candidate.z;
+            if (moved < 0.001f)
+                frameFlags |= SIM_FRAMEFLAG_STUCK;
+
+            const float targetHeading = std::atan2(moveDir.x, moveDir.z) * 180.0f / 3.1415926535f;
+            float deltaYaw = WrapAngleDeg(targetHeading - agent.headingDeg);
+            const float maxTurn = std::max(0.0f, params->agentTurnSpeedDeg) * dt;
+            deltaYaw = std::clamp(deltaYaw, -maxTurn, maxTurn);
+            if (std::isfinite(deltaYaw))
+                agent.headingDeg = WrapAngleDeg(agent.headingDeg + deltaYaw);
+
+            if (agent.cornerIndex < agent.cornerCount)
+            {
+                const bool offmeshSoon = (agent.cornerFlags[static_cast<size_t>(agent.cornerIndex)] & DT_STRAIGHTPATH_OFFMESH_CONNECTION) != 0;
+                if (offmeshSoon)
+                    frameFlags |= SIM_FRAMEFLAG_OFFMESH_SOON;
+            }
+
+            outPosXYZ[basePos + 0] = agent.pos.x;
+            outPosXYZ[basePos + 1] = agent.pos.y;
+            outPosXYZ[basePos + 2] = agent.pos.z;
+            outHeadingDeg[baseScalar] = agent.headingDeg;
+            outVelXYZ[basePos + 0] = agent.lastVel.x;
+            outVelXYZ[basePos + 1] = agent.lastVel.y;
+            outVelXYZ[basePos + 2] = agent.lastVel.z;
+            outFrameFlags[baseScalar] = frameFlags;
+        }
+    }
+
+    return maxSimulationFrames;
+}
+
+GTANAVVIEWER_API int SimulateAgentFrames(void* navMesh,
+                                         uint32_t agentId,
+                                         float dt,
+                                         int maxSimulationFrames,
+                                         const SimParamsFFI* params,
+                                         float* outPosXYZ,
+                                         float* outHeadingDeg,
+                                         float* outVelXYZ,
+                                         uint8_t* outFrameFlags,
+                                         SimEventFFI* outEvents,
+                                         int maxEvents)
+{
+    if (!navMesh)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    const uint32_t ids[1] = { agentId };
+    return SimulateAgentsInternal(*ctx,
+                                  ids,
+                                  1,
+                                  dt,
+                                  maxSimulationFrames,
+                                  params,
+                                  outPosXYZ,
+                                  outHeadingDeg,
+                                  outVelXYZ,
+                                  outFrameFlags,
+                                  outEvents,
+                                  maxEvents);
+}
+
+GTANAVVIEWER_API int SimulateAgentsFramesBatch(void* navMesh,
+                                               const uint32_t* agentIds,
+                                               int agentCount,
+                                               float dt,
+                                               int maxSimulationFrames,
+                                               const SimParamsFFI* params,
+                                               float* outPosXYZ,
+                                               float* outHeadingDeg,
+                                               float* outVelXYZ,
+                                               uint8_t* outFrameFlags,
+                                               SimEventFFI* outEvents,
+                                               int maxEvents)
+{
+    if (!navMesh)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    return SimulateAgentsInternal(*ctx,
+                                  agentIds,
+                                  agentCount,
+                                  dt,
+                                  maxSimulationFrames,
+                                  params,
+                                  outPosXYZ,
+                                  outHeadingDeg,
+                                  outVelXYZ,
+                                  outFrameFlags,
+                                  outEvents,
+                                  maxEvents);
 }

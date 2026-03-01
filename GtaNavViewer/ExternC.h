@@ -54,6 +54,65 @@ struct OffMeshLinkInfo
     int ownerTy = -1;
 };
 
+enum SimShapeType : std::uint8_t
+{
+    SHAPE_CYLINDER = 0,
+    SHAPE_BOX = 1,
+};
+
+enum SimAgentFlags : std::uint32_t
+{
+    AGENT_ENABLED = 1u << 0,
+    AGENT_VEHICLE = 1u << 1,
+};
+
+struct SimAgentDescFFI
+{
+    std::uint32_t agentId = 0;
+    std::uint32_t teamMask = 0;
+    std::uint32_t avoidMask = 0;
+    std::uint32_t flags = 0;
+    std::uint8_t shapeType = 0;
+    std::uint8_t _pad[3]{};
+
+    float pos[3]{};
+    float headingDeg = 0.0f;
+
+    float radius = 0.0f;
+    float halfX = 0.0f;
+    float halfZ = 0.0f;
+    float height = 0.0f;
+};
+
+struct SimParamsFFI
+{
+    float agentSpeed = 0.0f;
+    float agentAccel = 0.0f;
+    float agentTurnSpeedDeg = 0.0f;
+    float lookAheadDist = 0.0f;
+    float reachRadius = 0.0f;
+    float avoidWeight = 0.0f;
+    float avoidRange = 0.0f;
+    float wallAvoidWeight = 0.0f;
+    float wallAvoidDist = 0.0f;
+    float gravity = 0.0f;
+    float maxFallSpeed = 0.0f;
+    float maxSpeedForward = 0.0f;
+    float maxSpeedReverse = 0.0f;
+    float brakeDecel = 0.0f;
+};
+
+struct SimEventFFI
+{
+    std::uint32_t agentId = 0;
+    std::uint16_t frameIndex = 0;
+    std::uint8_t type = 0;
+    std::uint8_t jumpType = 0;
+    float start[3]{};
+    float end[3]{};
+    float duration = 0.0f;
+};
+
 #ifdef _WIN32
   #ifdef GTANAVVIEWER_BUILD_DLL
     #define GTANAVVIEWER_API extern "C" __declspec(dllexport)
@@ -168,6 +227,44 @@ GTANAVVIEWER_API bool RemoveOffMeshLinkById(void* navMesh,
                                             unsigned int userId,
                                             bool updateNavMesh);
 GTANAVVIEWER_API bool GenerateAutomaticOffmeshLinks(void* navMesh);
+
+// Simulação de agentes
+GTANAVVIEWER_API int UpsertSimAgents(void* navMesh, const SimAgentDescFFI* agents, int count);
+GTANAVVIEWER_API int RemoveSimAgents(void* navMesh, const std::uint32_t* agentIds, int count);
+GTANAVVIEWER_API void ClearSimAgents(void* navMesh);
+GTANAVVIEWER_API int ComputeAgentPath(void* navMesh,
+                                      std::uint32_t agentId,
+                                      Vector3 start,
+                                      Vector3 target,
+                                      int flags,
+                                      int maxCorners,
+                                      float minEdgeDist,
+                                      int options);
+GTANAVVIEWER_API void EnableHeightSampling(void* navMesh, bool enabled);
+GTANAVVIEWER_API bool BuildHeightSamplerForCurrentGeometry(void* navMesh, int samplesPerTile, bool storeTwoLayers);
+GTANAVVIEWER_API int SimulateAgentFrames(void* navMesh,
+                                         std::uint32_t agentId,
+                                         float dt,
+                                         int maxSimulationFrames,
+                                         const SimParamsFFI* params,
+                                         float* outPosXYZ,
+                                         float* outHeadingDeg,
+                                         float* outVelXYZ,
+                                         std::uint8_t* outFrameFlags,
+                                         SimEventFFI* outEvents,
+                                         int maxEvents);
+GTANAVVIEWER_API int SimulateAgentsFramesBatch(void* navMesh,
+                                               const std::uint32_t* agentIds,
+                                               int agentCount,
+                                               float dt,
+                                               int maxSimulationFrames,
+                                               const SimParamsFFI* params,
+                                               float* outPosXYZ,
+                                               float* outHeadingDeg,
+                                               float* outVelXYZ,
+                                               std::uint8_t* outFrameFlags,
+                                               SimEventFFI* outEvents,
+                                               int maxEvents);
 
 // Bounding box de build
 GTANAVVIEWER_API void SetNavMeshBoundingBox(void* navMesh, Vector3 bmin, Vector3 bmax);
