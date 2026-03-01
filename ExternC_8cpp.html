@@ -201,8 +201,8 @@ Functions</h2></td></tr>
 <tr class="separator:aa127e379b0403975a0741c8fea71acab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af215cd1ade1f4bdce4529c40efdaa0c3" id="r_af215cd1ade1f4bdce4529c40efdaa0c3"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#af215cd1ade1f4bdce4529c40efdaa0c3">ComputeAvoidanceForce</a> (const SimAgentState &amp;self, const std::vector&lt; const SimAgentState * &gt; &amp;neighbors, float avoidRange, float avoidWeight)</td></tr>
 <tr class="separator:af215cd1ade1f4bdce4529c40efdaa0c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb9a8d0b6d5a86d2ddde05d0172ec95d" id="r_aeb9a8d0b6d5a86d2ddde05d0172ec95d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aeb9a8d0b6d5a86d2ddde05d0172ec95d">AppendJumpEvent</a> (const SimAgentState &amp;agent, int frameIndex, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents, int eventCount, float speed)</td></tr>
-<tr class="separator:aeb9a8d0b6d5a86d2ddde05d0172ec95d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add66e4c4aecd12616c8a7872b535b796" id="r_add66e4c4aecd12616c8a7872b535b796"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#add66e4c4aecd12616c8a7872b535b796">AppendJumpEvent</a> (const SimAgentState &amp;agent, int frameIndex, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, <a class="el" href="structSimEventFFI.html">SimEventFFI</a> *outEvents, int maxEvents, int eventCount, float speed, float durationOverride=-1.0f)</td></tr>
+<tr class="separator:add66e4c4aecd12616c8a7872b535b796"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afff063db4b690384f63ecb4d28a549c6" id="r_afff063db4b690384f63ecb4d28a549c6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#afff063db4b690384f63ecb4d28a549c6">SampleGroundAtXZ</a> (ExternNavmeshContext &amp;ctx, SimAgentState &amp;agent, float <a class="el" href="glad_8h.html#abe1577120f1766eff913e9a74879f373">x</a>, float <a class="el" href="glad_8h.html#a1c599441d9dece861ee2cd70e31ce120">z</a>, float baseY, float up, float down, float &amp;<a class="el" href="SDL__opengl__glext_8h.html#ab117d69745dd2957030b968f6ee21c4d">outY</a>)</td></tr>
 <tr class="separator:afff063db4b690384f63ecb4d28a549c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac39641f182549d14dff7334b6ca40b02" id="r_ac39641f182549d14dff7334b6ca40b02"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ac39641f182549d14dff7334b6ca40b02">ComputeYawBasis</a> (float yawDeg, glm::vec3 &amp;outForward, glm::vec3 &amp;outRight)</td></tr>
@@ -398,8 +398,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aeb9a8d0b6d5a86d2ddde05d0172ec95d" name="aeb9a8d0b6d5a86d2ddde05d0172ec95d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb9a8d0b6d5a86d2ddde05d0172ec95d">&#9670;&#160;</a></span>AppendJumpEvent()</h2>
+<a id="add66e4c4aecd12616c8a7872b535b796" name="add66e4c4aecd12616c8a7872b535b796"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add66e4c4aecd12616c8a7872b535b796">&#9670;&#160;</a></span>AppendJumpEvent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -450,7 +450,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>speed</em>&#160;</td>
+          <td class="paramname"><em>speed</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>durationOverride</em> = <code>-1.0f</code>&#160;</td>
         </tr>
         <tr>
           <td></td>

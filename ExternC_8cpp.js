@@ -3,7 +3,7 @@ var ExternC_8cpp =
     [ "AddGeometry", "ExternC_8cpp.html#a33dd625e8066802fa192540a9d95f67f", null ],
     [ "AddOffMeshLink", "ExternC_8cpp.html#a3f47892fd35980c12612beae6bf9128a", null ],
     [ "AddOffmeshLinksToNavMeshIsland", "ExternC_8cpp.html#ac3f7fd9f646d880edc9031c6a383e883", null ],
-    [ "AppendJumpEvent", "ExternC_8cpp.html#aeb9a8d0b6d5a86d2ddde05d0172ec95d", null ],
+    [ "AppendJumpEvent", "ExternC_8cpp.html#add66e4c4aecd12616c8a7872b535b796", null ],
     [ "BakeTilesInBounds", "ExternC_8cpp.html#acf6c699ee4c5738d89858c5660e91fa4", null ],
     [ "BuildHeightSamplerForCurrentGeometry", "ExternC_8cpp.html#a7125f125e4a8a88ce2ae20b52447c900", null ],
     [ "BuildNavMesh", "ExternC_8cpp.html#acdcdde7a6aa314427c97c0a2e0743321", null ],
