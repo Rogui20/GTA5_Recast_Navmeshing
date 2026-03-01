@@ -1,5 +1,13 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__HapticCustom.html#ad6e394e3775372af3eb9e02823987405":[43,0,400,1],
+"structSDL__HapticCustom.html#ad70e8bc2cff74b99d704a757c16b363f":[43,0,400,10],
+"structSDL__HapticCustom.html#ad7eb84f59404d9e0da07570b4b57dd43":[43,0,400,6],
+"structSDL__HapticCustom.html#afdeb26b1709254545e00a59a0a6c360c":[43,0,400,9],
+"structSDL__HapticDirection.html":[43,0,401],
+"structSDL__HapticDirection.html#a6cebd8118a3e61e36bd0c503ae020362":[43,0,401,0],
+"structSDL__HapticDirection.html#acd6830ad68c4ba2af16057fa418087cc":[43,0,401,1],
+"structSDL__HapticLeftRight.html":[43,0,403],
 "structSDL__HapticLeftRight.html#a5b942fee53f1ec77d3fb91a6e89b0196":[43,0,403,1],
 "structSDL__HapticLeftRight.html#a8cd16fe2200ef10cc4f3b4209adef959":[43,0,403,0],
 "structSDL__HapticLeftRight.html#aaa1f2c1e767a780e447d82efce6cd1cf":[43,0,403,2],
@@ -241,13 +249,5 @@ var NAVTREEINDEX106 =
 "structSDL__Surface.html#ae66d973dcb9b57cb34815892e1ee1f31":[43,0,432,10],
 "structSDL__Surface.html#af33bcf87a1f5e10a99b3c7e8626b38c8":[43,0,432,3],
 "structSDL__SysWMEvent.html":[43,0,433],
-"structSDL__SysWMEvent.html#a5d3cb97006d99b620c2671c27bd82c06":[43,0,433,1],
-"structSDL__SysWMEvent.html#a84697e96cb16bf6a570e10b5bfdcd392":[43,0,433,2],
-"structSDL__SysWMEvent.html#ad5e3dc68aa15582cd0641847d41c74e8":[43,0,433,0],
-"structSDL__SysWMinfo.html":[43,0,434],
-"structSDL__SysWMinfo.html#a0e7fc58b98ae8317076e763fa94bc41f":[43,0,434,0],
-"structSDL__SysWMinfo.html#a438b6a06ab3ee417293c7b7fc5a23855":[43,0,434,2],
-"structSDL__SysWMinfo.html#ac3a70af022d4849e9ff546595e94627f":[43,0,434,3],
-"structSDL__SysWMinfo.html#aded93aa13e3661b0cb3884101d63bfc3":[43,0,434,1],
-"structSDL__SysWMmsg.html":[43,0,435]
+"structSDL__SysWMEvent.html#a5d3cb97006d99b620c2671c27bd82c06":[43,0,433,1]
 };

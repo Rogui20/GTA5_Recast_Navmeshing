@@ -1,5 +1,13 @@
 var NAVTREEINDEX90 =
 {
+"khrplatform_8h.html#a8bd045e2edc004c61c2586c7cbcff35d":[44,0,5,0,0,1,0,12],
+"khrplatform_8h.html#a8c07fcf14a1c0f49618f9abd659a3c99":[44,0,5,0,0,1,0,16],
+"khrplatform_8h.html#a8c4a2ace0aee51dc1c2c9827b90a31cf":[44,0,5,0,0,1,0,15],
+"khrplatform_8h.html#a99a2182846c1c18bb6629ac57ccbe178":[44,0,5,0,0,1,0,14],
+"khrplatform_8h.html#aaec967d90a72559fa6aa12e0160743f8":[44,0,5,0,0,1,0,13],
+"khrplatform_8h.html#ab18f061b993d901e1161a4de18e8fc6b":[44,0,5,0,0,1,0,17],
+"khrplatform_8h.html#ab5f63ab277fa98e81850e4d15f87c19b":[44,0,5,0,0,1,0,18],
+"khrplatform_8h.html#aea31402f1f8fad5bec8bdc4dd0919da9":[44,0,5,0,0,1,0,7],
 "khrplatform_8h.html#af23931754c6a5adf1892efe8933bf788":[44,0,5,0,0,1,0,3],
 "khrplatform_8h.html#af409d81dd359bf16ec33a34810a61b7c":[44,0,5,0,0,1,0,8],
 "khrplatform_8h.html#afb103620f76ee8c038529cbf0375cfed":[44,0,5,0,0,1,0,10],
@@ -241,13 +249,5 @@ var NAVTREEINDEX90 =
 "structBuildSettings.html#a3d005a4039976ee34798ff06775f6d73":[43,0,4,14],
 "structBuildSettings.html#a5b8f1ba1531e71e839b1a5f340a674e4":[43,0,4,2],
 "structBuildSettings.html#a63ce3b211778f995a0db1853a8f9e48f":[43,0,4,11],
-"structBuildSettings.html#a677f0a3a0d3c600dccd8a4c84ade2bdc":[43,0,4,7],
-"structBuildSettings.html#a83e53cfc86be5ed82d845ef9487f963e":[43,0,4,1],
-"structBuildSettings.html#a84a1f04954895d4e378f7525266e0cdf":[43,0,4,16],
-"structBuildSettings.html#a854de08adaac1dc5c97ffd797d442b2e":[43,0,4,8],
-"structBuildSettings.html#a931732fe8e5fd099eff774610f315a29":[43,0,4,3],
-"structBuildSettings.html#aa0ba3ebfa84413cb718ea2c5f5d22baf":[43,0,4,5],
-"structBuildSettings.html#ab0fdeb8745ad42637b9c4159d5d0b673":[43,0,4,15],
-"structBuildSettings.html#abf7ba7d73fd303a69b22c04f6741b7df":[43,0,4,6],
-"structBuildSettings.html#acb225540c7c5af7a1f7b69818594e2c1":[43,0,4,4]
+"structBuildSettings.html#a677f0a3a0d3c600dccd8a4c84ade2bdc":[43,0,4,7]
 };

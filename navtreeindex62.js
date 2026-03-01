@@ -1,5 +1,13 @@
 var NAVTREEINDEX62 =
 {
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba14d9dc55e896e1fa48e1be90cb461b19":[44,0,5,2,1,64,1,13],
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba1515b23b35f10df6656c38bda0d7e50a":[44,0,5,2,1,64,1,66],
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba173f6d7a2f039b14a358c5c25617ce37":[44,0,5,2,1,64,1,24],
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba180806321fa10f45e07d2ad05615f53f":[44,0,5,2,1,64,1,23],
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba1c8f021b8ccb97985ac18c688695f7ce":[44,0,5,2,1,64,1,175],
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba1d3bad83d9e6f78c3157298a69863d98":[44,0,5,2,1,64,1,132],
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba1d8d826cabd5ccdc93171ee531fc8009":[44,0,5,2,1,64,1,84],
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba1f619f756d28fd94545368c62fb054a7":[44,0,5,2,1,64,1,58],
 "SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba21ac9ec9b92b6b88c5341046e2a17d6f":[44,0,5,2,1,64,1,145],
 "SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba25f7475bec9d651de48dfad4f74c667a":[44,0,5,2,1,64,1,45],
 "SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba271484c36406e14309d6456a7b105d11":[44,0,5,2,1,64,1,129],
@@ -241,13 +249,5 @@ var NAVTREEINDEX62 =
 "SDL__sensor_8h.html#a23afdba77827b8ad6c212eedce5c2069":[44,0,5,2,1,65,20],
 "SDL__sensor_8h.html#a33718f4ef5c3f4ea306ddecf3ae3e3ad":[44,0,5,2,1,65,1],
 "SDL__sensor_8h.html#a398fee521f652c9c51b8865ea0c2aa02":[44,0,5,2,1,65,6],
-"SDL__sensor_8h.html#a3d8e4d70062a1af56dea369a2a017907":[44,0,5,2,1,65,18],
-"SDL__sensor_8h.html#a44812626ba1cf80f9c027cf86959065b":[44,0,5,2,1,65,19],
-"SDL__sensor_8h.html#a4ff6e8813bb524a17f1d9b07d2a26005":[44,0,5,2,1,65,7],
-"SDL__sensor_8h.html#a52d83f263e764e3fe77932bd748d34e8":[44,0,5,2,1,65,11],
-"SDL__sensor_8h.html#a577adbb3be3bab2814caf71e9995f177":[44,0,5,2,1,65,0],
-"SDL__sensor_8h.html#a735c61476c9cff3db9499dc258096096":[44,0,5,2,1,65,13],
-"SDL__sensor_8h.html#a870ea62d8a824fb70b0b6540978ad8f1":[44,0,5,2,1,65,16],
-"SDL__sensor_8h.html#a94a441696f7d053dd541ec0b7e00e33a":[44,0,5,2,1,65,4],
-"SDL__sensor_8h.html#a94a441696f7d053dd541ec0b7e00e33aa071b5c060ac0943a4fc1d8df5ea3cdd0":[44,0,5,2,1,65,4,5]
+"SDL__sensor_8h.html#a3d8e4d70062a1af56dea369a2a017907":[44,0,5,2,1,65,18]
 };

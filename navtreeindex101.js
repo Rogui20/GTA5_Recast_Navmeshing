@@ -1,5 +1,13 @@
 var NAVTREEINDEX101 =
 {
+"structImGuiWindowSettings.html#a4426a1fdde8c99e0bb2b155a9073de93":[43,0,283,12],
+"structImGuiWindowSettings.html#a5ae7316219230c82a05618c227e5a7b7":[43,0,283,6],
+"structImGuiWindowSettings.html#a694e496dba59b5aaabe14cce66309acd":[43,0,283,0],
+"structImGuiWindowSettings.html#a79308182bdab97cb87b3d6284f22c1d2":[43,0,283,3],
+"structImGuiWindowSettings.html#a7a480e4ccc61ce5b8a4ac92d28ff5fd1":[43,0,283,1],
+"structImGuiWindowSettings.html#a7e4a26f4e4bfaf97a379641dcdbb6d14":[43,0,283,9],
+"structImGuiWindowSettings.html#a84a5493ff2f7e75a26e6909cc1bc6b97":[43,0,283,5],
+"structImGuiWindowSettings.html#ac15f967d69f83ca76b37b9403db73e1b":[43,0,283,2],
 "structImGuiWindowSettings.html#ad55031a983d16773d5a903c228ea2a1f":[43,0,283,4],
 "structImGuiWindowSettings.html#af82c14a41e90d62cbd6d8d5177cbe5a5":[43,0,283,7],
 "structImGuiWindowSettings.html#afe2e8f97751166b10042bfd537e77c89":[43,0,283,8],
@@ -241,13 +249,5 @@ var NAVTREEINDEX101 =
 "structImGui__ImplOpenGL3__Data.html#a207e0bc0e956f26b8a3279e7242707c5":[43,0,146,11],
 "structImGui__ImplOpenGL3__Data.html#a2778e5caad83bc7b69981c53d5e9ed5e":[43,0,146,14],
 "structImGui__ImplOpenGL3__Data.html#a29c0f955e5c0f2b183bc67a11169a43c":[43,0,146,17],
-"structImGui__ImplOpenGL3__Data.html#a2c1913777648318ae2e5b2d25b897549":[43,0,146,15],
-"structImGui__ImplOpenGL3__Data.html#a471c9bee70d528144387b4f9dc44c240":[43,0,146,9],
-"structImGui__ImplOpenGL3__Data.html#a4fff755aff6cc130aab106a8b20e3041":[43,0,146,16],
-"structImGui__ImplOpenGL3__Data.html#a509c50b6469ce2b9a6db8b70acf49199":[43,0,146,7],
-"structImGui__ImplOpenGL3__Data.html#a53b57a562a470fa751e2f8fe78576ebd":[43,0,146,21],
-"structImGui__ImplOpenGL3__Data.html#a6bc713060002e1ac64f1daa7b7cecb59":[43,0,146,0],
-"structImGui__ImplOpenGL3__Data.html#a7e52bd10bd4d2688df2fbdc915f0e075":[43,0,146,20],
-"structImGui__ImplOpenGL3__Data.html#a836fce172a5b586aa755d6a111fa15f0":[43,0,146,19],
-"structImGui__ImplOpenGL3__Data.html#a87f73a98eed8bef47bf268113ab1e487":[43,0,146,8]
+"structImGui__ImplOpenGL3__Data.html#a2c1913777648318ae2e5b2d25b897549":[43,0,146,15]
 };

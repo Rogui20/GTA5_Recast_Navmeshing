@@ -11,7 +11,11 @@ var ExternC_8h =
     [ "GTANAVVIEWER_API", "ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec", null ],
     [ "SimAgentFlags", "ExternC_8h.html#aeb23778775ea59335727e2b508440241", [
       [ "AGENT_ENABLED", "ExternC_8h.html#aeb23778775ea59335727e2b508440241ae04f7ab346f9800825fa23c6b42c7955", null ],
-      [ "AGENT_VEHICLE", "ExternC_8h.html#aeb23778775ea59335727e2b508440241a427c6e673754c46c61ce7654a6479f94", null ]
+      [ "AGENT_VEHICLE", "ExternC_8h.html#aeb23778775ea59335727e2b508440241a427c6e673754c46c61ce7654a6479f94", null ],
+      [ "AGENT_TELEPORT", "ExternC_8h.html#aeb23778775ea59335727e2b508440241aabfb3e949494930a3073e20afdd7e74b", null ],
+      [ "AGENT_ANCHOR", "ExternC_8h.html#aeb23778775ea59335727e2b508440241a2b3a8264f634f47da6a572cc8a52c523", null ],
+      [ "AGENT_ANCHOR_HEADING", "ExternC_8h.html#aeb23778775ea59335727e2b508440241aeb49b774ad92163de8e064880f817d07", null ],
+      [ "AGENT_ANCHOR_VELOCITY", "ExternC_8h.html#aeb23778775ea59335727e2b508440241a6681fd0fe85faf83e832bbb7a6b7cb5b", null ]
     ] ],
     [ "SimShapeType", "ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9c", [
       [ "SHAPE_CYLINDER", "ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9ca62eea2af0cd8bf0530c0799ce72b93cf", null ],

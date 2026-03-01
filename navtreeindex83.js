@@ -1,5 +1,13 @@
 var NAVTREEINDEX83 =
 {
+"imgui__impl__sdl2_8h.html#af1099ff56d96b2bcfb890e460bf42962ae964181dca65c8617f2a6b5fe91b5854":[44,0,7,0,0,26,1,1],
+"imgui__impl__sdl2_8h.html#af7c83b04890a2f678a41816b52696a76":[44,0,7,0,0,26,9],
+"imgui__impl__sdl2_8h_source.html":[44,0,7,0,0,26],
+"imgui__impl__sdl3_8cpp.html":[44,0,7,0,0,27],
+"imgui__impl__sdl3_8cpp.html#a02fe102aaf2bd58d47062febfe7a4698":[44,0,7,0,0,27,49],
+"imgui__impl__sdl3_8cpp.html#a03afaa99093649884b140532ac7fb6e8":[44,0,7,0,0,27,32],
+"imgui__impl__sdl3_8cpp.html#a061009e592f919d45ee5b79c35d516f9":[44,0,7,0,0,27,34],
+"imgui__impl__sdl3_8cpp.html#a16f11d35275ffed2f93f1393a31a1964":[44,0,7,0,0,27,38],
 "imgui__impl__sdl3_8cpp.html#a1a1247d7322098d0dc26fa7fdd5c045f":[44,0,7,0,0,27,52],
 "imgui__impl__sdl3_8cpp.html#a1d76e5346965f134192f2b8882d4c1dc":[44,0,7,0,0,27,12],
 "imgui__impl__sdl3_8cpp.html#a234e948df1bab6e801daf91ec31d4f0b":[44,0,7,0,0,27,29],
@@ -241,13 +249,5 @@ var NAVTREEINDEX83 =
 "imgui__impl__wgpu_8cpp.html#aaa8f45009f9608018d7cb79929812e2e":[44,0,7,0,0,38,16],
 "imgui__impl__wgpu_8cpp.html#abfc56bd6378d7e810dc81cbd89af93e4":[44,0,7,0,0,38,35],
 "imgui__impl__wgpu_8cpp.html#ac425abe1e87be63f7a7c6d791fa2c9b4":[44,0,7,0,0,38,9],
-"imgui__impl__wgpu_8cpp.html#aca2411ed280634836ff3a1afe7b12fc9":[44,0,7,0,0,38,37],
-"imgui__impl__wgpu_8cpp.html#ace109a19f1ee28c02a0b98f72554fa40":[44,0,7,0,0,38,20],
-"imgui__impl__wgpu_8cpp.html#ae1c610accf37d8943a600737db8fdb08":[44,0,7,0,0,38,31],
-"imgui__impl__wgpu_8cpp.html#aeaa1450e26a0882933a23bf506ab9120":[44,0,7,0,0,38,19],
-"imgui__impl__wgpu_8cpp.html#af62448836920fc75035d6da0373fc167":[44,0,7,0,0,38,26],
-"imgui__impl__wgpu_8cpp.html#af7f4e72487b3d8b5f98ca6c7adf31e82":[44,0,7,0,0,38,24],
-"imgui__impl__wgpu_8cpp.html#afd5a943072e49be9d6a4742c4534591b":[44,0,7,0,0,38,7],
-"imgui__impl__wgpu_8cpp.html#afde252afe527435623394999102549fc":[44,0,7,0,0,38,15],
-"imgui__impl__wgpu_8cpp.html#aff570d3e2469305ca0a0b87cfd819bc4":[44,0,7,0,0,38,21]
+"imgui__impl__wgpu_8cpp.html#aca2411ed280634836ff3a1afe7b12fc9":[44,0,7,0,0,38,37]
 };

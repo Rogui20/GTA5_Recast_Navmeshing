@@ -1,5 +1,13 @@
 var NAVTREEINDEX63 =
 {
+"SDL__sensor_8h.html#a44812626ba1cf80f9c027cf86959065b":[44,0,5,2,1,65,19],
+"SDL__sensor_8h.html#a4ff6e8813bb524a17f1d9b07d2a26005":[44,0,5,2,1,65,7],
+"SDL__sensor_8h.html#a52d83f263e764e3fe77932bd748d34e8":[44,0,5,2,1,65,11],
+"SDL__sensor_8h.html#a577adbb3be3bab2814caf71e9995f177":[44,0,5,2,1,65,0],
+"SDL__sensor_8h.html#a735c61476c9cff3db9499dc258096096":[44,0,5,2,1,65,13],
+"SDL__sensor_8h.html#a870ea62d8a824fb70b0b6540978ad8f1":[44,0,5,2,1,65,16],
+"SDL__sensor_8h.html#a94a441696f7d053dd541ec0b7e00e33a":[44,0,5,2,1,65,4],
+"SDL__sensor_8h.html#a94a441696f7d053dd541ec0b7e00e33aa071b5c060ac0943a4fc1d8df5ea3cdd0":[44,0,5,2,1,65,4,5],
 "SDL__sensor_8h.html#a94a441696f7d053dd541ec0b7e00e33aa473fc0b4fcd77e59c39260888a0fb6ed":[44,0,5,2,1,65,4,0],
 "SDL__sensor_8h.html#a94a441696f7d053dd541ec0b7e00e33aa6f5ff988acabc5ac39635976f1c1ac56":[44,0,5,2,1,65,4,3],
 "SDL__sensor_8h.html#a94a441696f7d053dd541ec0b7e00e33aa94031e96692f6b0f1109c9d2ca1403c7":[44,0,5,2,1,65,4,6],
@@ -241,13 +249,5 @@ var NAVTREEINDEX63 =
 "SDL__stdinc_8h.html#afd309afc21b31ace3b0f433bbf5fa5f3":[44,0,5,2,1,67,190],
 "SDL__stdinc_8h.html#afddee3f5be8611a2956f21ea899ea6f1":[44,0,5,2,1,67,206],
 "SDL__stdinc_8h.html#afe3ee9cc3fc388193f23d3e5c98197ab":[44,0,5,2,1,67,187],
-"SDL__stdinc_8h.html#aff8263002d42c66ef04687cda86bc3d2":[44,0,5,2,1,67,44],
-"SDL__stdinc_8h_source.html":[44,0,5,2,1,67],
-"SDL__surface_8h.html":[44,0,5,2,1,68],
-"SDL__surface_8h.html#a0035f0239f0588d16c57aff7672be174":[44,0,5,2,1,68,44],
-"SDL__surface_8h.html#a00a564600207cec7a2cb50a6e20d2446":[44,0,5,2,1,68,15],
-"SDL__surface_8h.html#a00a564600207cec7a2cb50a6e20d2446a58058f0ed3146de73b031e256aa2aaaa":[44,0,5,2,1,68,15,1],
-"SDL__surface_8h.html#a00a564600207cec7a2cb50a6e20d2446a779237ffb78ee935518b83e8ab8a35dc":[44,0,5,2,1,68,15,0],
-"SDL__surface_8h.html#a00a564600207cec7a2cb50a6e20d2446a806aeb86ff618a298206cbf921c0202a":[44,0,5,2,1,68,15,2],
-"SDL__surface_8h.html#a00a564600207cec7a2cb50a6e20d2446acbf0cb1b718195c6c0960d4471a5ed0a":[44,0,5,2,1,68,15,3]
+"SDL__stdinc_8h.html#aff8263002d42c66ef04687cda86bc3d2":[44,0,5,2,1,67,44]
 };

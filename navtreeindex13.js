@@ -1,5 +1,13 @@
 var NAVTREEINDEX13 =
 {
+"SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,60],
+"SDL__config__android_8h.html#a4e31ef0be24f881a3a13e42723db7095":[44,0,5,2,1,10,31],
+"SDL__config__android_8h.html#a4f6ff4162269254c4c4b86bc9892ecce":[44,0,5,2,1,10,42],
+"SDL__config__android_8h.html#a51924e273a5b8653a28e005108ab7ae6":[44,0,5,2,1,10,101],
+"SDL__config__android_8h.html#a52de22f2e81bce94222ff968b2b3c8c1":[44,0,5,2,1,10,8],
+"SDL__config__android_8h.html#a550e5c272cc3cf3814651721167dcd23":[44,0,5,2,1,10,122],
+"SDL__config__android_8h.html#a561075a6afb23894833fc887a1552928":[44,0,5,2,1,10,65],
+"SDL__config__android_8h.html#a570d25fc0fcbd8b8433792ecba1258b8":[44,0,5,2,1,10,110],
 "SDL__config__android_8h.html#a5d1948f54475325c483e4e487435c543":[44,0,5,2,1,10,88],
 "SDL__config__android_8h.html#a61909f2610e1cfb79b200baa2d6c6ce7":[44,0,5,2,1,10,9],
 "SDL__config__android_8h.html#a631f7011e0e3afd6f6732e18ea7be4ac":[44,0,5,2,1,10,15],
@@ -241,13 +249,5 @@ var NAVTREEINDEX13 =
 "SDL__config__iphoneos_8h.html#a2af11e1db137370de1217c3708c50e3d":[44,0,5,2,1,12,34],
 "SDL__config__iphoneos_8h.html#a2b6b73803f82d92d00fa159b590a49cf":[44,0,5,2,1,12,29],
 "SDL__config__iphoneos_8h.html#a348655482f599e61eeead7304ad0d52d":[44,0,5,2,1,12,83],
-"SDL__config__iphoneos_8h.html#a37bb486d90aa4e96552e0b9cc4f63cf6":[44,0,5,2,1,12,55],
-"SDL__config__iphoneos_8h.html#a37eb0020e42f0ebb6cba24c2888cc48b":[44,0,5,2,1,12,74],
-"SDL__config__iphoneos_8h.html#a391fe86ae55f2addd7ee59fe0ba163fb":[44,0,5,2,1,12,95],
-"SDL__config__iphoneos_8h.html#a3df52e9809253860c385be6f3a160607":[44,0,5,2,1,12,49],
-"SDL__config__iphoneos_8h.html#a3f7e8b5e13d96d1de1a0848f7aa80157":[44,0,5,2,1,12,38],
-"SDL__config__iphoneos_8h.html#a426fe1791bd221fd7dd82ee4a1467e2e":[44,0,5,2,1,12,100],
-"SDL__config__iphoneos_8h.html#a45bd7023ba6d49717851ccffe306840d":[44,0,5,2,1,12,6],
-"SDL__config__iphoneos_8h.html#a494d1ecf5a4567ccbf7901e3be337bc7":[44,0,5,2,1,12,65],
-"SDL__config__iphoneos_8h.html#a49afaaefcf9868c6d3a9fb43706af4db":[44,0,5,2,1,12,94]
+"SDL__config__iphoneos_8h.html#a37bb486d90aa4e96552e0b9cc4f63cf6":[44,0,5,2,1,12,55]
 };

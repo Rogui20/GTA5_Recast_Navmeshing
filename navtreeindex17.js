@@ -1,5 +1,13 @@
 var NAVTREEINDEX17 =
 {
+"SDL__cpuinfo_8h.html":[44,0,5,2,1,23],
+"SDL__cpuinfo_8h.html#a05d74b2aab28d821ea7f3f78372fd00e":[44,0,5,2,1,23,0],
+"SDL__cpuinfo_8h.html#a1fa7d982a27fb5a29fc1b291fc1054f4":[44,0,5,2,1,23,8],
+"SDL__cpuinfo_8h.html#a4ba9b02bf2d3a362f0424c1e3fc69a04":[44,0,5,2,1,23,10],
+"SDL__cpuinfo_8h.html#a5108ee8d59a6d8a0a978f96b799bd3b1":[44,0,5,2,1,23,9],
+"SDL__cpuinfo_8h.html#a57efd279a93553cf43a54e3a49db6305":[44,0,5,2,1,23,4],
+"SDL__cpuinfo_8h.html#a5bd4b538ff298ee8f2c31ed9da3253d4":[44,0,5,2,1,23,21],
+"SDL__cpuinfo_8h.html#a6719853bee3dd03b8823540705a55932":[44,0,5,2,1,23,18],
 "SDL__cpuinfo_8h.html#a674d89c2b103e08a7c94b96103cc27f8":[44,0,5,2,1,23,23],
 "SDL__cpuinfo_8h.html#a888cf77e53a67803402e1740a9639bd7":[44,0,5,2,1,23,2],
 "SDL__cpuinfo_8h.html#a99cf6527faa408c398a5a678aaf892d5":[44,0,5,2,1,23,22],
@@ -241,13 +249,5 @@ var NAVTREEINDEX17 =
 "SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1ca5de779d8bd6705e149a7716938343eff":[44,0,5,2,1,29,8,0],
 "SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1caadb3ea3a60521d9f7302aac903344ce6":[44,0,5,2,1,29,8,4],
 "SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1cae585879e750723896120b1cab1339bd5":[44,0,5,2,1,29,8,3],
-"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1cae5c03400ecb6557710d76c9f08bf7440":[44,0,5,2,1,29,8,7],
-"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1cafaa85151001c0a30a15cdfaf5ae8f339":[44,0,5,2,1,29,8,5],
-"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1cafc13ab2522c6ebc3341a79b49c7c7676":[44,0,5,2,1,29,8,2],
-"SDL__gamecontroller_8h.html#a97fcf011947b35403c7d5319673a35e9":[44,0,5,2,1,29,14],
-"SDL__gamecontroller_8h.html#a99740db152ae93bcdc59a8b540c3178d":[44,0,5,2,1,29,31],
-"SDL__gamecontroller_8h.html#a9e4d3f8c9c9860064a68a700e0486f98":[44,0,5,2,1,29,10],
-"SDL__gamecontroller_8h.html#a9e4d3f8c9c9860064a68a700e0486f98a070a080f115d0feea90bd1c422ef6fc1":[44,0,5,2,1,29,10,2],
-"SDL__gamecontroller_8h.html#a9e4d3f8c9c9860064a68a700e0486f98a180b1a4d5433cee7a806cab698da8477":[44,0,5,2,1,29,10,5],
-"SDL__gamecontroller_8h.html#a9e4d3f8c9c9860064a68a700e0486f98a1c9e6552dd22452a5f7ad952bdd986d4":[44,0,5,2,1,29,10,8]
+"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1cae5c03400ecb6557710d76c9f08bf7440":[44,0,5,2,1,29,8,7]
 };

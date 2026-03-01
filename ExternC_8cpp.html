@@ -176,6 +176,14 @@ Functions</h2></td></tr>
 <tr class="separator:a74f297eafcd6fc93d2c92236b00121cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c63de9d722fb00d6bf9ada161ab24f8" id="r_a1c63de9d722fb00d6bf9ada161ab24f8"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a1c63de9d722fb00d6bf9ada161ab24f8">WrapAngleDeg</a> (float <a class="el" href="SDL__opengl__glext_8h.html#a9e06c1f76a20fed54ca742cd25cb02c4">angle</a>)</td></tr>
 <tr class="separator:a1c63de9d722fb00d6bf9ada161ab24f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73c779eaa14805cf7716e7f9acbd052e" id="r_a73c779eaa14805cf7716e7f9acbd052e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a73c779eaa14805cf7716e7f9acbd052e">LerpAngleDeg</a> (float fromDeg, float toDeg, float <a class="el" href="glad_8h.html#ac03904b1f7e359bb2acf10a755e97c5a">alpha</a>)</td></tr>
+<tr class="separator:a73c779eaa14805cf7716e7f9acbd052e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad03e28b24e969c788e057ec9db9c6d8e" id="r_ad03e28b24e969c788e057ec9db9c6d8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ad03e28b24e969c788e057ec9db9c6d8e">ResetAgentPathState</a> (SimAgentState &amp;st)</td></tr>
+<tr class="separator:ad03e28b24e969c788e057ec9db9c6d8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a956854d8d9da51c2a5f7176e26d0fc" id="r_a9a956854d8d9da51c2a5f7176e26d0fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a9a956854d8d9da51c2a5f7176e26d0fc">ClampAgentHorizontalSpeed</a> (const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> &amp;<a class="el" href="glad_8h.html#a22557289048c77f6913601e8537ceeea">params</a>, SimAgentState &amp;st)</td></tr>
+<tr class="separator:a9a956854d8d9da51c2a5f7176e26d0fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a782d5738b1ac491d83e277d364199475" id="r_a782d5738b1ac491d83e277d364199475"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a782d5738b1ac491d83e277d364199475">RefreshAgentNearestPoly</a> (ExternNavmeshContext &amp;ctx, SimAgentState &amp;st, int includeFlags=0xFFFF)</td></tr>
+<tr class="separator:a782d5738b1ac491d83e277d364199475"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c0207a16f3387d3cec9bdad432340eb" id="r_a9c0207a16f3387d3cec9bdad432340eb"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a9c0207a16f3387d3cec9bdad432340eb">ShapeAvoidRadius</a> (const SimAgentState &amp;<a class="el" href="glad_8h.html#ac8729153468b5dcf13f971b21d84d4e5">a</a>)</td></tr>
 <tr class="separator:a9c0207a16f3387d3cec9bdad432340eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a863a8c110d1c96a0a86076b8dd516921" id="r_a863a8c110d1c96a0a86076b8dd516921"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a863a8c110d1c96a0a86076b8dd516921">ComputePathData</a> (ExternNavmeshContext &amp;ctx, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float minEdge, int options, std::vector&lt; float &gt; &amp;outCorners, std::vector&lt; unsigned char &gt; &amp;outCornerFlags, std::vector&lt; <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> &gt; &amp;outPathPolys, <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> *outStartRef, float outStartNearest[3])</td></tr>
@@ -518,6 +526,34 @@ Functions</h2></td></tr>
           <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
           <td class="paramname"><em>navMesh</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9a956854d8d9da51c2a5f7176e26d0fc" name="a9a956854d8d9da51c2a5f7176e26d0fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a956854d8d9da51c2a5f7176e26d0fc">&#9670;&#160;</a></span>ClampAgentHorizontalSpeed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> ClampAgentHorizontalSpeed </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSimParamsFFI.html">SimParamsFFI</a> &amp;&#160;</td>
+          <td class="paramname"><em>params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SimAgentState &amp;&#160;</td>
+          <td class="paramname"><em>st</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1359,6 +1395,40 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a73c779eaa14805cf7716e7f9acbd052e" name="a73c779eaa14805cf7716e7f9acbd052e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73c779eaa14805cf7716e7f9acbd052e">&#9670;&#160;</a></span>LerpAngleDeg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float LerpAngleDeg </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>fromDeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>toDeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>alpha</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa6b75b9a45387ec8f8de483be1d4748a" name="aa6b75b9a45387ec8f8de483be1d4748a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa6b75b9a45387ec8f8de483be1d4748a">&#9670;&#160;</a></span>LoadNavMeshRuntimeCache()</h2>
 
@@ -1376,6 +1446,40 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>cacheFilePath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a782d5738b1ac491d83e277d364199475" name="a782d5738b1ac491d83e277d364199475"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a782d5738b1ac491d83e277d364199475">&#9670;&#160;</a></span>RefreshAgentNearestPoly()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool RefreshAgentNearestPoly </td>
+          <td>(</td>
+          <td class="paramtype">ExternNavmeshContext &amp;&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SimAgentState &amp;&#160;</td>
+          <td class="paramname"><em>st</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>includeFlags</em> = <code>0xFFFF</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1553,6 +1657,24 @@ Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad03e28b24e969c788e057ec9db9c6d8e" name="ad03e28b24e969c788e057ec9db9c6d8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad03e28b24e969c788e057ec9db9c6d8e">&#9670;&#160;</a></span>ResetAgentPathState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> ResetAgentPathState </td>
+          <td>(</td>
+          <td class="paramtype">SimAgentState &amp;&#160;</td>
+          <td class="paramname"><em>st</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

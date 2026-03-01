@@ -1,5 +1,13 @@
 var NAVTREEINDEX21 =
 {
+"SDL__keycode_8h.html#aadd1a74ebca2eb807caae35589f9b179":[44,0,5,2,1,37,4],
+"SDL__keycode_8h.html#ad1ff7a791f8bc7b5c16cd89cf24fa927":[44,0,5,2,1,37,1],
+"SDL__keycode_8h.html#ae9265f064f13f0f74dfca26a67875171":[44,0,5,2,1,37,2],
+"SDL__keycode_8h.html#afa050ad71f0a5b86aa05cb13f542d747":[44,0,5,2,1,37,6],
+"SDL__keycode_8h.html#afa050ad71f0a5b86aa05cb13f542d747a101e3925efb24e29276b49b53cddccdf":[44,0,5,2,1,37,6,16],
+"SDL__keycode_8h.html#afa050ad71f0a5b86aa05cb13f542d747a13e0c30a345ae85eb2c4ece47d1d6f12":[44,0,5,2,1,37,6,11],
+"SDL__keycode_8h.html#afa050ad71f0a5b86aa05cb13f542d747a1ab40aeaee41d33e24b4c317e6a0de20":[44,0,5,2,1,37,6,14],
+"SDL__keycode_8h.html#afa050ad71f0a5b86aa05cb13f542d747a3b6792b49146077114f24271663cd4c9":[44,0,5,2,1,37,6,6],
 "SDL__keycode_8h.html#afa050ad71f0a5b86aa05cb13f542d747a428cde62c7cf8e088ff2ab3a93f20737":[44,0,5,2,1,37,6,1],
 "SDL__keycode_8h.html#afa050ad71f0a5b86aa05cb13f542d747a5b6d7336c60fae9c61d906e0a52c94ca":[44,0,5,2,1,37,6,17],
 "SDL__keycode_8h.html#afa050ad71f0a5b86aa05cb13f542d747a7e8df2f49185dbb88254dd02d4463a74":[44,0,5,2,1,37,6,7],
@@ -241,13 +249,5 @@ var NAVTREEINDEX21 =
 "SDL__opengl_8h.html#a035994f83a88d5dcecdfdcf46c5185c3":[44,0,5,2,1,48,1040],
 "SDL__opengl_8h.html#a039b24faa844b125288064149433c944":[44,0,5,2,1,48,1163],
 "SDL__opengl_8h.html#a03a9e3d5c885da537073d80ac7a0dc76":[44,0,5,2,1,48,963],
-"SDL__opengl_8h.html#a03fa5900875722a524b9f41a4b0bea46":[44,0,5,2,1,48,1258],
-"SDL__opengl_8h.html#a041e5ccf48023ab3edbb54f1fc1130a0":[44,0,5,2,1,48,1097],
-"SDL__opengl_8h.html#a04850ba275b382d256d9a66c44f4cf8a":[44,0,5,2,1,48,387],
-"SDL__opengl_8h.html#a048a84139039edcde8acd283ca924fb0":[44,0,5,2,1,48,986],
-"SDL__opengl_8h.html#a04c0cec2100c6fb7735aa6deab99e4b1":[44,0,5,2,1,48,1076],
-"SDL__opengl_8h.html#a0549ede41a6727d0168ee9f96eff4f3c":[44,0,5,2,1,48,1182],
-"SDL__opengl_8h.html#a0595908be03a8cff881a23cdc9170e7c":[44,0,5,2,1,48,804],
-"SDL__opengl_8h.html#a05dc64c77e376f6b8b26057470b3ca44":[44,0,5,2,1,48,362],
-"SDL__opengl_8h.html#a05ef297538d40139f965ed3c52651ca4":[44,0,5,2,1,48,694]
+"SDL__opengl_8h.html#a03fa5900875722a524b9f41a4b0bea46":[44,0,5,2,1,48,1258]
 };

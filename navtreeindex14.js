@@ -1,5 +1,13 @@
 var NAVTREEINDEX14 =
 {
+"SDL__config__iphoneos_8h.html#a37eb0020e42f0ebb6cba24c2888cc48b":[44,0,5,2,1,12,74],
+"SDL__config__iphoneos_8h.html#a391fe86ae55f2addd7ee59fe0ba163fb":[44,0,5,2,1,12,95],
+"SDL__config__iphoneos_8h.html#a3df52e9809253860c385be6f3a160607":[44,0,5,2,1,12,49],
+"SDL__config__iphoneos_8h.html#a3f7e8b5e13d96d1de1a0848f7aa80157":[44,0,5,2,1,12,38],
+"SDL__config__iphoneos_8h.html#a426fe1791bd221fd7dd82ee4a1467e2e":[44,0,5,2,1,12,100],
+"SDL__config__iphoneos_8h.html#a45bd7023ba6d49717851ccffe306840d":[44,0,5,2,1,12,6],
+"SDL__config__iphoneos_8h.html#a494d1ecf5a4567ccbf7901e3be337bc7":[44,0,5,2,1,12,65],
+"SDL__config__iphoneos_8h.html#a49afaaefcf9868c6d3a9fb43706af4db":[44,0,5,2,1,12,94],
 "SDL__config__iphoneos_8h.html#a4ac6a60cb19181437136206238f16497":[44,0,5,2,1,12,98],
 "SDL__config__iphoneos_8h.html#a4ae0130997c433d6207e0484df21b1c3":[44,0,5,2,1,12,105],
 "SDL__config__iphoneos_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,12,61],
@@ -241,13 +249,5 @@ var NAVTREEINDEX14 =
 "SDL__config__minimal_8h.html#a5807a152fd68558b1eac13d9e3c94e59":[44,0,5,2,1,14,13],
 "SDL__config__minimal_8h.html#a617bdba16de4e76e0d31812f43b37ea3":[44,0,5,2,1,14,5],
 "SDL__config__minimal_8h.html#a8cdc4198a67ddf1473bd889f7bbceeeb":[44,0,5,2,1,14,11],
-"SDL__config__minimal_8h.html#a95be8fb298db3e54e01bfa875b285728":[44,0,5,2,1,14,7],
-"SDL__config__minimal_8h.html#aafe80c1d26fed54dc72c0f6a977cbbf8":[44,0,5,2,1,14,12],
-"SDL__config__minimal_8h.html#ab51950b727f094c8c6bc870a89924ceb":[44,0,5,2,1,14,4],
-"SDL__config__minimal_8h.html#ab6cd6d1c63c1e26ea2d4537b77148354":[44,0,5,2,1,14,2],
-"SDL__config__minimal_8h.html#ac47b156cb0f72b330945cd009c70049d":[44,0,5,2,1,14,3],
-"SDL__config__minimal_8h.html#aec5a6b3c677a69fb466b497ba60d8bee":[44,0,5,2,1,14,9],
-"SDL__config__minimal_8h.html#af4c7e44be388ec3ad52622f3e1e4e6bc":[44,0,5,2,1,14,8],
-"SDL__config__minimal_8h_source.html":[44,0,5,2,1,14],
-"SDL__config__ngage_8h.html":[44,0,5,2,1,15]
+"SDL__config__minimal_8h.html#a95be8fb298db3e54e01bfa875b285728":[44,0,5,2,1,14,7]
 };

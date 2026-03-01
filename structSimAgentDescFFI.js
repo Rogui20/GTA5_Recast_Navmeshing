@@ -11,5 +11,6 @@ var structSimAgentDescFFI =
     [ "pos", "structSimAgentDescFFI.html#a93662feb6b4091000772625fbf28bcbf", null ],
     [ "radius", "structSimAgentDescFFI.html#a869430870d3af54392c9dfab442454a9", null ],
     [ "shapeType", "structSimAgentDescFFI.html#a2ed1938b56bc3e8d9b88ecbd1ee8a9ec", null ],
-    [ "teamMask", "structSimAgentDescFFI.html#a8e4504e76f24e54de9387d1d4799ea89", null ]
+    [ "teamMask", "structSimAgentDescFFI.html#a8e4504e76f24e54de9387d1d4799ea89", null ],
+    [ "vel", "structSimAgentDescFFI.html#a81d110ed83942b98654e8a197aaf68a5", null ]
 ];

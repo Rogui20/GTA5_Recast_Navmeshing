@@ -1,5 +1,13 @@
 var NAVTREEINDEX18 =
 {
+"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1cafaa85151001c0a30a15cdfaf5ae8f339":[44,0,5,2,1,29,8,5],
+"SDL__gamecontroller_8h.html#a96d0bda99d806397e4c697241ccffa1cafc13ab2522c6ebc3341a79b49c7c7676":[44,0,5,2,1,29,8,2],
+"SDL__gamecontroller_8h.html#a97fcf011947b35403c7d5319673a35e9":[44,0,5,2,1,29,14],
+"SDL__gamecontroller_8h.html#a99740db152ae93bcdc59a8b540c3178d":[44,0,5,2,1,29,31],
+"SDL__gamecontroller_8h.html#a9e4d3f8c9c9860064a68a700e0486f98":[44,0,5,2,1,29,10],
+"SDL__gamecontroller_8h.html#a9e4d3f8c9c9860064a68a700e0486f98a070a080f115d0feea90bd1c422ef6fc1":[44,0,5,2,1,29,10,2],
+"SDL__gamecontroller_8h.html#a9e4d3f8c9c9860064a68a700e0486f98a180b1a4d5433cee7a806cab698da8477":[44,0,5,2,1,29,10,5],
+"SDL__gamecontroller_8h.html#a9e4d3f8c9c9860064a68a700e0486f98a1c9e6552dd22452a5f7ad952bdd986d4":[44,0,5,2,1,29,10,8],
 "SDL__gamecontroller_8h.html#a9e4d3f8c9c9860064a68a700e0486f98a294c504c7fcb6632f69976c57886e9be":[44,0,5,2,1,29,10,7],
 "SDL__gamecontroller_8h.html#a9e4d3f8c9c9860064a68a700e0486f98a2999601c50861a576034679f019c032a":[44,0,5,2,1,29,10,18],
 "SDL__gamecontroller_8h.html#a9e4d3f8c9c9860064a68a700e0486f98a4fc8aee99f12ab3c57d2f820eb2c6635":[44,0,5,2,1,29,10,17],
@@ -241,13 +249,5 @@ var NAVTREEINDEX18 =
 "SDL__hints_8h.html#a5cae24f3b2d33de5471fedb9d84c199a":[44,0,5,2,1,34,173],
 "SDL__hints_8h.html#a5db818227b8005dc71f47f1aedf099eb":[44,0,5,2,1,34,99],
 "SDL__hints_8h.html#a5e18379beee9d389892aaa7a91531e45":[44,0,5,2,1,34,182],
-"SDL__hints_8h.html#a5eef83e49dd47d681b9cc7453618fd4e":[44,0,5,2,1,34,72],
-"SDL__hints_8h.html#a5f898b6a1c5658f84c812540bb857560":[44,0,5,2,1,34,193],
-"SDL__hints_8h.html#a60ffebe32576f285060421d0c75d103f":[44,0,5,2,1,34,144],
-"SDL__hints_8h.html#a6103647cafa8a5a06a73897c8f5a4c4a":[44,0,5,2,1,34,73],
-"SDL__hints_8h.html#a631bd1a3cc0bc03e9ff225d604749226":[44,0,5,2,1,34,163],
-"SDL__hints_8h.html#a637cb45d5e5565bd7730dcbeb918fda7":[44,0,5,2,1,34,64],
-"SDL__hints_8h.html#a63dd635fa195f590f645c1170f50968d":[44,0,5,2,1,34,104],
-"SDL__hints_8h.html#a64cf86da8e0fab9201f5d6e677df1a87":[44,0,5,2,1,34,168],
-"SDL__hints_8h.html#a65756e851cf882bb46b108ac096e7bf2":[44,0,5,2,1,34,102]
+"SDL__hints_8h.html#a5eef83e49dd47d681b9cc7453618fd4e":[44,0,5,2,1,34,72]
 };

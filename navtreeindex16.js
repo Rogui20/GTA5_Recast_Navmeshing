@@ -1,5 +1,13 @@
 var NAVTREEINDEX16 =
 {
+"SDL__config__pandora_8h.html#aef62cc050a5e0734c3b1b2920b00fd1d":[44,0,5,2,1,17,83],
+"SDL__config__pandora_8h.html#af12ab17c63aca5c37153de42489318f6":[44,0,5,2,1,17,88],
+"SDL__config__pandora_8h.html#af187d71ae8983ddad9530d5c031f48fe":[44,0,5,2,1,17,72],
+"SDL__config__pandora_8h.html#af5e1c674bb7ab42ee349e48b33705a04":[44,0,5,2,1,17,58],
+"SDL__config__pandora_8h.html#af79e3ccb09ebc4ef1a87bf506f07cd79":[44,0,5,2,1,17,38],
+"SDL__config__pandora_8h.html#afb1ce161af1df3c2c55a629ea0d4bb6c":[44,0,5,2,1,17,8],
+"SDL__config__pandora_8h.html#afbc6197a413f7eec8834dd9270d11792":[44,0,5,2,1,17,46],
+"SDL__config__pandora_8h.html#afc2fe630617aea4b3a774d3f5b859875":[44,0,5,2,1,17,39],
 "SDL__config__pandora_8h_source.html":[44,0,5,2,1,17],
 "SDL__config__windows_8h.html":[44,0,5,2,1,18],
 "SDL__config__windows_8h.html#a02d2a9cfd5d2421f2eb2fbed9606d647":[44,0,5,2,1,18,2],
@@ -241,13 +249,5 @@ var NAVTREEINDEX16 =
 "SDL__config__xbox_8h.html#aef62cc050a5e0734c3b1b2920b00fd1d":[44,0,5,2,1,21,14],
 "SDL__config__xbox_8h_source.html":[44,0,5,2,1,21],
 "SDL__copying_8h.html":[44,0,5,2,1,22],
-"SDL__copying_8h_source.html":[44,0,5,2,1,22],
-"SDL__cpuinfo_8h.html":[44,0,5,2,1,23],
-"SDL__cpuinfo_8h.html#a05d74b2aab28d821ea7f3f78372fd00e":[44,0,5,2,1,23,0],
-"SDL__cpuinfo_8h.html#a1fa7d982a27fb5a29fc1b291fc1054f4":[44,0,5,2,1,23,8],
-"SDL__cpuinfo_8h.html#a4ba9b02bf2d3a362f0424c1e3fc69a04":[44,0,5,2,1,23,10],
-"SDL__cpuinfo_8h.html#a5108ee8d59a6d8a0a978f96b799bd3b1":[44,0,5,2,1,23,9],
-"SDL__cpuinfo_8h.html#a57efd279a93553cf43a54e3a49db6305":[44,0,5,2,1,23,4],
-"SDL__cpuinfo_8h.html#a5bd4b538ff298ee8f2c31ed9da3253d4":[44,0,5,2,1,23,21],
-"SDL__cpuinfo_8h.html#a6719853bee3dd03b8823540705a55932":[44,0,5,2,1,23,18]
+"SDL__copying_8h_source.html":[44,0,5,2,1,22]
 };

@@ -1,5 +1,13 @@
 var NAVTREEINDEX105 =
 {
+"structSDLTest__CommonState.html#a33772305944410d726908efb5e0663ce":[43,0,447,25],
+"structSDLTest__CommonState.html#a34b3dccdaec98232fa01274d6842f534":[43,0,447,47],
+"structSDLTest__CommonState.html#a39177b165c6a9c2164937c82402e2d4f":[43,0,447,28],
+"structSDLTest__CommonState.html#a3d23ac90e722af5098e7869a7302c119":[43,0,447,10],
+"structSDLTest__CommonState.html#a3fcf7d8f0f8d2f2351a75b5966cf9fe4":[43,0,447,38],
+"structSDLTest__CommonState.html#a41527c9f496fb3326802de595aa0f306":[43,0,447,37],
+"structSDLTest__CommonState.html#a4c20729a710f51ed67bdd1910da1a16b":[43,0,447,11],
+"structSDLTest__CommonState.html#a4f8020400392b1ae374c066b45a56538":[43,0,447,31],
 "structSDLTest__CommonState.html#a501eff715371dedcff65da16b43b62be":[43,0,447,3],
 "structSDLTest__CommonState.html#a5413ab562164642b3e6ee97ab5d938bf":[43,0,447,50],
 "structSDLTest__CommonState.html#a5a50c65004454c791da21a3473388608":[43,0,447,21],
@@ -241,13 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__HapticCustom.html#aa4fbaf7220f3197aa6631b3e64ad6562":[43,0,400,2],
 "structSDL__HapticCustom.html#ab47fac94baeba28a3acd6c706e0b6a5c":[43,0,400,7],
 "structSDL__HapticCustom.html#aba7fafa808e90baddef25f009b8f4817":[43,0,400,11],
-"structSDL__HapticCustom.html#ad5a034f97e1699eacbe3f478538537c5":[43,0,400,4],
-"structSDL__HapticCustom.html#ad6e394e3775372af3eb9e02823987405":[43,0,400,1],
-"structSDL__HapticCustom.html#ad70e8bc2cff74b99d704a757c16b363f":[43,0,400,10],
-"structSDL__HapticCustom.html#ad7eb84f59404d9e0da07570b4b57dd43":[43,0,400,6],
-"structSDL__HapticCustom.html#afdeb26b1709254545e00a59a0a6c360c":[43,0,400,9],
-"structSDL__HapticDirection.html":[43,0,401],
-"structSDL__HapticDirection.html#a6cebd8118a3e61e36bd0c503ae020362":[43,0,401,0],
-"structSDL__HapticDirection.html#acd6830ad68c4ba2af16057fa418087cc":[43,0,401,1],
-"structSDL__HapticLeftRight.html":[43,0,403]
+"structSDL__HapticCustom.html#ad5a034f97e1699eacbe3f478538537c5":[43,0,400,4]
 };
