@@ -64,6 +64,14 @@ enum SimAgentFlags : std::uint32_t
 {
     AGENT_ENABLED = 1u << 0,
     AGENT_VEHICLE = 1u << 1,
+    // Reset forte do estado (teleport).
+    AGENT_TELEPORT = 1u << 2,
+    // Reancora estado no input sem destruir steering por completo.
+    AGENT_ANCHOR = 1u << 3,
+    // Com AGENT_ANCHOR: corrige heading com blend/snap.
+    AGENT_ANCHOR_HEADING = 1u << 4,
+    // Com AGENT_ANCHOR: corrige velocidade com blend/snap.
+    AGENT_ANCHOR_VELOCITY = 1u << 5,
 };
 
 struct SimAgentDescFFI
@@ -76,6 +84,8 @@ struct SimAgentDescFFI
     std::uint8_t _pad[3]{};
 
     float pos[3]{};
+    // Velocidade opcional para reanchor/teleport.
+    float vel[3]{};
     float headingDeg = 0.0f;
 
     float radius = 0.0f;
@@ -100,6 +110,15 @@ struct SimParamsFFI
     float maxSpeedForward = 0.0f;
     float maxSpeedReverse = 0.0f;
     float brakeDecel = 0.0f;
+
+    // Blend de heading durante AGENT_ANCHOR + AGENT_ANCHOR_HEADING.
+    float anchorHeadingAlpha = 0.25f;
+    // Blend de velocidade durante AGENT_ANCHOR + AGENT_ANCHOR_VELOCITY.
+    float anchorVelAlpha = 0.35f;
+    // Se distancia de anchor exceder esse valor, aplica snap forte (estilo teleport).
+    float anchorMaxSnapDist = 15.0f;
+    // Se delta de heading exceder esse valor, aplica snap de yaw ao inves de blend.
+    float anchorMaxSnapYawDeg = 90.0f;
 };
 
 struct SimEventFFI
@@ -112,6 +131,9 @@ struct SimEventFFI
     float end[3]{};
     float duration = 0.0f;
 };
+
+static_assert(sizeof(SimAgentDescFFI) == 64, "Unexpected SimAgentDescFFI ABI size");
+static_assert(sizeof(SimParamsFFI) == 72, "Unexpected SimParamsFFI ABI size");
 
 #ifdef _WIN32
   #ifdef GTANAVVIEWER_BUILD_DLL
