@@ -10,11 +10,15 @@ const SimShapeType = Object.freeze({
 const SimAgentFlags = Object.freeze({
   AGENT_ENABLED: 1 << 0,
   AGENT_VEHICLE: 1 << 1,
+  AGENT_TELEPORT: 1 << 2,
+  AGENT_ANCHOR: 1 << 3,
+  AGENT_ANCHOR_HEADING: 1 << 4,
+  AGENT_ANCHOR_VELOCITY: 1 << 5,
 });
 
 const Structs = Object.freeze({
   SimAgentDescFFI: {
-    size: 52,
+    size: 64,
     offsets: {
       agentId: 0,
       teamMask: 4,
@@ -22,15 +26,22 @@ const Structs = Object.freeze({
       flags: 12,
       shapeType: 16,
       pos: 20,
-      headingDeg: 32,
-      radius: 36,
-      halfX: 40,
-      halfZ: 44,
-      height: 48,
+      vel: 32,
+      headingDeg: 44,
+      radius: 48,
+      halfX: 52,
+      halfZ: 56,
+      height: 60,
     },
   },
   SimParamsFFI: {
-    size: 56,
+    size: 72,
+    offsets: {
+      anchorHeadingAlpha: 56,
+      anchorVelAlpha: 60,
+      anchorMaxSnapDist: 64,
+      anchorMaxSnapYawDeg: 68,
+    },
   },
   SimEventFFI: {
     size: 36,

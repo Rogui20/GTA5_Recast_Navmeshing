@@ -81,6 +81,7 @@ namespace
         dtPolyRef currentRef = 0;
         float verticalVel = 0.0f;
         glm::vec3 lastVel{0.0f};
+        int moveSurfaceFailCount = 0;
     };
 
     struct ExternNavmeshContext
@@ -110,6 +111,8 @@ namespace
         std::unordered_map<std::uint32_t, SimAgentState> simAgents;
         std::vector<std::uint32_t> simAgentIds;
         HeightSampler heightSampler;
+        SimParamsFFI lastSimParams{};
+        bool hasLastSimParams = false;
     };
 
     std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx);
@@ -1933,6 +1936,56 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
         return angle;
     }
 
+    float LerpAngleDeg(float fromDeg, float toDeg, float alpha)
+    {
+        const float t = std::clamp(alpha, 0.0f, 1.0f);
+        const float delta = WrapAngleDeg(toDeg - fromDeg);
+        return WrapAngleDeg(fromDeg + delta * t);
+    }
+
+    void ResetAgentPathState(SimAgentState& st)
+    {
+        st.cornerIndex = 0;
+        st.cornerCount = 0;
+        st.cornersXYZ.clear();
+        st.cornerFlags.clear();
+        st.pathPolys.clear();
+        st.currentRef = 0;
+    }
+
+    void ClampAgentHorizontalSpeed(const SimParamsFFI& params, SimAgentState& st)
+    {
+        const float maxSpeed = std::max(0.0f, (st.flags & AGENT_VEHICLE) != 0 ? params.maxSpeedForward : params.agentSpeed);
+        glm::vec2 v2(st.lastVel.x, st.lastVel.z);
+        const float len = glm::length(v2);
+        if (len > maxSpeed && len > 1e-4f)
+        {
+            const float k = maxSpeed / len;
+            st.lastVel.x *= k;
+            st.lastVel.z *= k;
+        }
+    }
+
+    bool RefreshAgentNearestPoly(ExternNavmeshContext& ctx, SimAgentState& st, int includeFlags = 0xFFFF)
+    {
+        if (!EnsureNavQuery(ctx))
+            return false;
+
+        dtQueryFilter filter{};
+        filter.setIncludeFlags(static_cast<unsigned short>(includeFlags));
+        filter.setExcludeFlags(0);
+
+        const float p[3] = { st.pos.x, st.pos.y, st.pos.z };
+        float nearest[3]{};
+        dtPolyRef ref = 0;
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(p, ctx.cachedExtents, &filter, &ref, nearest)) || ref == 0)
+            return false;
+
+        st.currentRef = ref;
+        st.pos = glm::vec3(nearest[0], nearest[1], nearest[2]);
+        return true;
+    }
+
     float ShapeAvoidRadius(const SimAgentState& a)
     {
         if (a.shape == SHAPE_BOX)
@@ -2390,24 +2443,121 @@ GTANAVVIEWER_API int UpsertSimAgents(void* navMesh, const SimAgentDescFFI* agent
 
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     int upserted = 0;
+
+    static bool sLoggedAbi = false;
+    if (!sLoggedAbi)
+    {
+        sLoggedAbi = true;
+        std::printf("[ExternC] ABI: sizeof(SimAgentDescFFI)=%zu sizeof(SimParamsFFI)=%zu\n",
+                    sizeof(SimAgentDescFFI), sizeof(SimParamsFFI));
+    }
+
+    const SimParamsFFI params = ctx->hasLastSimParams ? ctx->lastSimParams : SimParamsFFI{};
+    const float anchorHeadingAlpha = std::clamp(params.anchorHeadingAlpha, 0.0f, 1.0f);
+    const float anchorVelAlpha = std::clamp(params.anchorVelAlpha, 0.0f, 1.0f);
+
     for (int i = 0; i < count; ++i)
     {
         const SimAgentDescFFI& d = agents[i];
         SimAgentState& st = ctx->simAgents[d.agentId];
         const bool isNew = st.id == 0;
         st.id = d.agentId;
+
+        // Sempre atualiza descritores.
         st.teamMask = d.teamMask;
         st.avoidMask = d.avoidMask;
         st.flags = d.flags;
         st.shape = (d.shapeType == SHAPE_BOX) ? SHAPE_BOX : SHAPE_CYLINDER;
-        st.pos = glm::vec3(d.pos[0], d.pos[1], d.pos[2]);
-        st.headingDeg = d.headingDeg;
         st.radius = std::max(0.05f, d.radius);
         st.halfX = std::max(0.05f, d.halfX);
         st.halfZ = std::max(0.05f, d.halfZ);
         st.height = std::max(0.1f, d.height);
+
+        const glm::vec3 inPos(d.pos[0], d.pos[1], d.pos[2]);
+        const glm::vec3 inVel(d.vel[0], d.vel[1], d.vel[2]);
+        const float inHeading = WrapAngleDeg(d.headingDeg);
+
+        const bool wantsTeleport = (d.flags & AGENT_TELEPORT) != 0;
+        const bool wantsAnchor = !wantsTeleport && (d.flags & AGENT_ANCHOR) != 0;
+        const bool anchorHeading = wantsAnchor && ((d.flags & AGENT_ANCHOR_HEADING) != 0);
+        const bool anchorVelocity = wantsAnchor && ((d.flags & AGENT_ANCHOR_VELOCITY) != 0);
+
+        auto teleportReset = [&]()
+        {
+            st.pos = inPos;
+            st.headingDeg = inHeading;
+            st.lastVel = inVel;
+            st.verticalVel = 0.0f;
+            st.moveSurfaceFailCount = 0;
+            ResetAgentPathState(st);
+            if (!RefreshAgentNearestPoly(*ctx, st))
+                st.currentRef = 0;
+        };
+
         if (isNew)
+        {
+            teleportReset();
+            st.lastVel = glm::vec3(0.0f);
+            if (!RefreshAgentNearestPoly(*ctx, st))
+                st.currentRef = 0;
             ctx->simAgentIds.push_back(d.agentId);
+#ifdef GTANAVVIEWER_SIM_DEBUG_UPSERT
+            std::printf("[Sim] Upsert NEW id=%u\n", d.agentId);
+#endif
+        }
+        else if (wantsTeleport)
+        {
+            teleportReset();
+#ifdef GTANAVVIEWER_SIM_DEBUG_UPSERT
+            std::printf("[Sim] Upsert TELEPORT id=%u\n", d.agentId);
+#endif
+        }
+        else if (wantsAnchor)
+        {
+            const glm::vec3 oldPos = st.pos;
+            st.pos = inPos;
+
+            const float yawDelta = std::abs(WrapAngleDeg(inHeading - st.headingDeg));
+            const bool headingSnap = params.anchorMaxSnapYawDeg > 0.0f && yawDelta > params.anchorMaxSnapYawDeg;
+            if (anchorHeading)
+            {
+                st.headingDeg = headingSnap ? inHeading : LerpAngleDeg(st.headingDeg, inHeading, anchorHeadingAlpha);
+            }
+
+            if (anchorVelocity)
+            {
+                st.lastVel = st.lastVel + (inVel - st.lastVel) * anchorVelAlpha;
+            }
+            else
+            {
+                ClampAgentHorizontalSpeed(params, st);
+            }
+
+            const float anchorDist = glm::length(glm::vec2(inPos.x - oldPos.x, inPos.z - oldPos.z));
+            const bool shouldSnapTeleport = params.anchorMaxSnapDist > 0.0f && anchorDist > params.anchorMaxSnapDist;
+            if (shouldSnapTeleport)
+            {
+                teleportReset();
+            }
+            else
+            {
+                if (!RefreshAgentNearestPoly(*ctx, st))
+                {
+                    st.currentRef = 0;
+                    ResetAgentPathState(st);
+                }
+            }
+#ifdef GTANAVVIEWER_SIM_DEBUG_UPSERT
+            std::printf("[Sim] Upsert ANCHOR id=%u\n", d.agentId);
+#endif
+        }
+#ifdef GTANAVVIEWER_SIM_DEBUG_UPSERT
+        else
+        {
+            std::printf("[Sim] Upsert PARAMS_ONLY id=%u\n", d.agentId);
+        }
+#endif
+
         ++upserted;
     }
     return upserted;
@@ -2536,6 +2686,9 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
     if (!EnsureNavQuery(ctx))
         return 0;
 
+    ctx.lastSimParams = *params;
+    ctx.hasLastSimParams = true;
+
     std::vector<SimAgentState*> agents;
     agents.reserve(static_cast<size_t>(agentCount));
     for (int i = 0; i < agentCount; ++i)
@@ -2651,10 +2804,27 @@ static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
             {
                 if (dtStatusSucceed(ctx.navQuery->moveAlongSurface(agent.currentRef, startPos, endPos, &filter, result, visited, &visitedCount, 32)))
                 {
+                    agent.moveSurfaceFailCount = 0;
                     if (visitedCount > 0)
                         agent.currentRef = visited[visitedCount - 1];
                     candidate = glm::vec3(result[0], result[1], result[2]);
                 }
+                else
+                {
+                    ++agent.moveSurfaceFailCount;
+                }
+            }
+            else
+            {
+                ++agent.moveSurfaceFailCount;
+            }
+
+            if (agent.currentRef == 0 || agent.moveSurfaceFailCount >= 3)
+            {
+                if (RefreshAgentNearestPoly(ctx, agent))
+                    agent.moveSurfaceFailCount = 0;
+                else
+                    frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
             }
 
             float h = candidate.y;
