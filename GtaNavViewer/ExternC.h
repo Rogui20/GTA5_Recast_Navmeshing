@@ -74,6 +74,18 @@ enum SimAgentFlags : std::uint32_t
     AGENT_ANCHOR_VELOCITY = 1u << 5,
 };
 
+enum SimPathModeFlags : std::uint32_t
+{
+    // Modo padrão: recalcula path preservando estado dinâmico do agente.
+    SIM_PATH_SOFT_REPATH = 0u,
+    // Força reset completo de estado/corredor e reposiciona no nearest do start informado.
+    SIM_PATH_HARD_RESET = 1u << 0,
+    // No soft repath: tenta manter cornerIndex atual quando ainda é válido.
+    SIM_PATH_KEEP_CORNER_INDEX_IF_VALID = 1u << 1,
+    // No soft repath: escolhe corner pelo segmento mais próximo em vez de vértice mais próximo.
+    SIM_PATH_FIND_CORNER_BY_SEGMENT = 1u << 2,
+};
+
 struct SimAgentDescFFI
 {
     std::uint32_t agentId = 0;
@@ -262,6 +274,15 @@ GTANAVVIEWER_API int ComputeAgentPath(void* navMesh,
                                       int maxCorners,
                                       float minEdgeDist,
                                       int options);
+GTANAVVIEWER_API int ComputeAgentPathEx(void* navMesh,
+                                        std::uint32_t agentId,
+                                        Vector3 start,
+                                        Vector3 target,
+                                        int flags,
+                                        int maxCorners,
+                                        float minEdgeDist,
+                                        int options,
+                                        std::uint32_t pathModeFlags);
 GTANAVVIEWER_API void EnableHeightSampling(void* navMesh, bool enabled);
 GTANAVVIEWER_API bool BuildHeightSamplerForCurrentGeometry(void* navMesh, int samplesPerTile, bool storeTwoLayers);
 GTANAVVIEWER_API int SimulateAgentFrames(void* navMesh,

@@ -1929,11 +1929,95 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
 
 
 
+    constexpr float kSoftRepathMaxSnapDist = 3.0f;
+
     float WrapAngleDeg(float angle)
     {
         while (angle > 180.0f) angle -= 360.0f;
         while (angle < -180.0f) angle += 360.0f;
         return angle;
+    }
+
+    float Distance2DSq(const glm::vec3& a, const glm::vec3& b)
+    {
+        const float dx = a.x - b.x;
+        const float dz = a.z - b.z;
+        return dx * dx + dz * dz;
+    }
+
+    glm::vec3 CornerAt(const std::vector<float>& cornersXYZ, int idx)
+    {
+        return glm::vec3(cornersXYZ[static_cast<size_t>(idx) * 3 + 0],
+                         cornersXYZ[static_cast<size_t>(idx) * 3 + 1],
+                         cornersXYZ[static_cast<size_t>(idx) * 3 + 2]);
+    }
+
+    int FindBestCornerIndexByCorner(const glm::vec3& pos,
+                                    const std::vector<float>& cornersXYZ,
+                                    int cornerCount,
+                                    float maxSnapDist)
+    {
+        if (cornerCount <= 0)
+            return 0;
+
+        int bestIndex = 0;
+        float bestDistSq = std::numeric_limits<float>::max();
+        for (int i = 0; i < cornerCount; ++i)
+        {
+            const float distSq = Distance2DSq(pos, CornerAt(cornersXYZ, i));
+            if (distSq < bestDistSq)
+            {
+                bestDistSq = distSq;
+                bestIndex = i;
+            }
+        }
+
+        if (maxSnapDist > 0.0f && bestDistSq > maxSnapDist * maxSnapDist)
+            return 0;
+
+        return std::clamp(bestIndex, 0, cornerCount - 1);
+    }
+
+    int FindBestCornerIndexBySegment(const glm::vec3& pos,
+                                     const std::vector<float>& cornersXYZ,
+                                     int cornerCount,
+                                     float maxSnapDist)
+    {
+        if (cornerCount <= 1)
+            return FindBestCornerIndexByCorner(pos, cornersXYZ, cornerCount, maxSnapDist);
+
+        int bestIndex = 1;
+        float bestDistSq = std::numeric_limits<float>::max();
+
+        for (int i = 0; i + 1 < cornerCount; ++i)
+        {
+            const glm::vec3 a = CornerAt(cornersXYZ, i);
+            const glm::vec3 b = CornerAt(cornersXYZ, i + 1);
+            glm::vec2 ab(b.x - a.x, b.z - a.z);
+            const float abLenSq = glm::dot(ab, ab);
+
+            float t = 0.0f;
+            if (abLenSq > 1e-6f)
+            {
+                const glm::vec2 ap(pos.x - a.x, pos.z - a.z);
+                t = std::clamp(glm::dot(ap, ab) / abLenSq, 0.0f, 1.0f);
+            }
+
+            const glm::vec3 p(a.x + (b.x - a.x) * t,
+                              a.y + (b.y - a.y) * t,
+                              a.z + (b.z - a.z) * t);
+            const float distSq = Distance2DSq(pos, p);
+            if (distSq < bestDistSq)
+            {
+                bestDistSq = distSq;
+                bestIndex = (t >= 0.5f) ? (i + 1) : i;
+            }
+        }
+
+        if (maxSnapDist > 0.0f && bestDistSq > maxSnapDist * maxSnapDist)
+            return 0;
+
+        return std::clamp(bestIndex, 0, cornerCount - 1);
     }
 
     float LerpAngleDeg(float fromDeg, float toDeg, float alpha)
@@ -2599,14 +2683,15 @@ GTANAVVIEWER_API void ClearSimAgents(void* navMesh)
     ctx->simAgentIds.clear();
 }
 
-GTANAVVIEWER_API int ComputeAgentPath(void* navMesh,
-                                      uint32_t agentId,
-                                      Vector3 start,
-                                      Vector3 target,
-                                      int flags,
-                                      int maxCorners,
-                                      float minEdgeDist,
-                                      int options)
+GTANAVVIEWER_API int ComputeAgentPathEx(void* navMesh,
+                                        uint32_t agentId,
+                                        Vector3 start,
+                                        Vector3 target,
+                                        int flags,
+                                        int maxCorners,
+                                        float minEdgeDist,
+                                        int options,
+                                        std::uint32_t pathModeFlags)
 {
     if (!navMesh || maxCorners <= 0)
         return 0;
@@ -2617,13 +2702,30 @@ GTANAVVIEWER_API int ComputeAgentPath(void* navMesh,
         return 0;
 
     SimAgentState& agent = it->second;
+    const bool hardReset = (pathModeFlags & SIM_PATH_HARD_RESET) != 0;
+    const bool keepCornerIfValid = (pathModeFlags & SIM_PATH_KEEP_CORNER_INDEX_IF_VALID) != 0;
+    const bool findBySegment = (pathModeFlags & SIM_PATH_FIND_CORNER_BY_SEGMENT) != 0;
+
+    const glm::vec3 requestedStart(start.x, start.y, start.z);
+    const glm::vec3 usedStart = hardReset ? requestedStart : agent.pos;
+
+#ifdef GTANAVVIEWER_SIM_DEBUG_PATH
+    std::printf("[Sim] ComputeAgentPath id=%u mode=0x%08X hard=%d start=(%.3f,%.3f,%.3f) usedStart=(%.3f,%.3f,%.3f) target=(%.3f,%.3f,%.3f)\n",
+                agentId,
+                pathModeFlags,
+                hardReset ? 1 : 0,
+                requestedStart.x, requestedStart.y, requestedStart.z,
+                usedStart.x, usedStart.y, usedStart.z,
+                target.x, target.y, target.z);
+#endif
+
     std::vector<float> corners;
     std::vector<unsigned char> cornerFlags;
     std::vector<dtPolyRef> pathPolys;
     dtPolyRef startRef = 0;
     float startNearest[3]{};
     if (!ComputePathData(*ctx,
-                         glm::vec3(start.x, start.y, start.z),
+                         usedStart,
                          glm::vec3(target.x, target.y, target.z),
                          flags,
                          maxCorners,
@@ -2638,14 +2740,90 @@ GTANAVVIEWER_API int ComputeAgentPath(void* navMesh,
         return 0;
     }
 
+    const int oldCornerIndex = agent.cornerIndex;
+    const int oldCornerCount = agent.cornerCount;
+
     agent.cornersXYZ = std::move(corners);
     agent.cornerFlags = std::move(cornerFlags);
     agent.cornerCount = static_cast<int>(agent.cornerFlags.size());
-    agent.cornerIndex = 0;
     agent.pathPolys = std::move(pathPolys);
     agent.currentRef = startRef;
-    agent.pos = glm::vec3(startNearest[0], startNearest[1], startNearest[2]);
+
+    if (hardReset)
+    {
+        agent.cornerIndex = 0;
+        agent.pos = glm::vec3(startNearest[0], startNearest[1], startNearest[2]);
+        agent.lastVel = glm::vec3(0.0f);
+        agent.verticalVel = 0.0f;
+        agent.moveSurfaceFailCount = 0;
+        if (agent.cornerCount <= 0)
+            ResetAgentPathState(agent);
+        else if (!RefreshAgentNearestPoly(*ctx, agent, flags))
+            agent.currentRef = startRef;
+#ifdef GTANAVVIEWER_SIM_DEBUG_PATH
+        std::printf("[Sim] ComputeAgentPath hard-reset id=%u corners=%d idx=%d\n", agentId, agent.cornerCount, agent.cornerIndex);
+#endif
+        return agent.cornerCount;
+    }
+
+    int selectedCornerIndex = 0;
+    bool usedFallbackCorner0 = false;
+    if (agent.cornerCount > 0)
+    {
+        if (keepCornerIfValid && oldCornerCount > 0 && oldCornerIndex >= 0 && oldCornerIndex < agent.cornerCount)
+        {
+            selectedCornerIndex = oldCornerIndex;
+        }
+        else
+        {
+            selectedCornerIndex = findBySegment
+                ? FindBestCornerIndexBySegment(agent.pos, agent.cornersXYZ, agent.cornerCount, kSoftRepathMaxSnapDist)
+                : FindBestCornerIndexByCorner(agent.pos, agent.cornersXYZ, agent.cornerCount, kSoftRepathMaxSnapDist);
+
+            const glm::vec3 selectedCorner = CornerAt(agent.cornersXYZ, selectedCornerIndex);
+            usedFallbackCorner0 = (selectedCornerIndex == 0) &&
+                                  (Distance2DSq(agent.pos, selectedCorner) > kSoftRepathMaxSnapDist * kSoftRepathMaxSnapDist);
+        }
+
+        if (oldCornerCount > 0)
+            selectedCornerIndex = std::max(selectedCornerIndex, std::max(0, oldCornerIndex - 2));
+
+        agent.cornerIndex = std::clamp(selectedCornerIndex, 0, agent.cornerCount - 1);
+    }
+    else
+    {
+        agent.cornerIndex = 0;
+    }
+
+#ifdef GTANAVVIEWER_SIM_DEBUG_PATH
+    std::printf("[Sim] ComputeAgentPath soft-repath id=%u corners=%d idx=%d fallback0=%d\n",
+                agentId,
+                agent.cornerCount,
+                agent.cornerIndex,
+                usedFallbackCorner0 ? 1 : 0);
+#endif
+
     return agent.cornerCount;
+}
+
+GTANAVVIEWER_API int ComputeAgentPath(void* navMesh,
+                                      uint32_t agentId,
+                                      Vector3 start,
+                                      Vector3 target,
+                                      int flags,
+                                      int maxCorners,
+                                      float minEdgeDist,
+                                      int options)
+{
+    return ComputeAgentPathEx(navMesh,
+                              agentId,
+                              start,
+                              target,
+                              flags,
+                              maxCorners,
+                              minEdgeDist,
+                              options,
+                              SIM_PATH_SOFT_REPATH);
 }
 
 GTANAVVIEWER_API void EnableHeightSampling(void* navMesh, bool enabled)
