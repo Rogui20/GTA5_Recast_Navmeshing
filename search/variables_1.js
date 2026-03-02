@@ -1,7 +1,7 @@
 var searchData=
 [
   ['a_0',['a',['../structSDLTest__RandomContext.html#a24f830d6cb476c96fbe325c99331e45f',1,'SDLTest_RandomContext::a'],['../structSDL__Color.html#ac497ba67af6ecb4d51bdd0945b314526',1,'SDL_Color::a']]],
-  ['active_1',['active',['../structdtCrowdAgentAnimation.html#a063331d0a657ca1e138dde68ad6375f4',1,'dtCrowdAgentAnimation::active'],['../structdtCrowdAgent.html#a6473f48354abf6f46f5b4d7ead9bca20',1,'dtCrowdAgent::active'],['../structImGuiWindow.html#a42f141fa0eed059176cb4360df1b1eb2',1,'ImGuiWindow::Active'],['../structGuiState.html#a8182ed7ea717727bd7ae4b6bd906f89d',1,'GuiState::active'],['../structImGuiDebugItemPathQuery.html#aca722f19c820cf6bcbd76920ad0c33ae',1,'ImGuiDebugItemPathQuery::Active']]],
+  ['active_1',['active',['../structImGuiWindow.html#a42f141fa0eed059176cb4360df1b1eb2',1,'ImGuiWindow::Active'],['../structImGuiDebugItemPathQuery.html#aca722f19c820cf6bcbd76920ad0c33ae',1,'ImGuiDebugItemPathQuery::Active'],['../structGuiState.html#a8182ed7ea717727bd7ae4b6bd906f89d',1,'GuiState::active'],['../structdtCrowdAgent.html#a6473f48354abf6f46f5b4d7ead9bca20',1,'dtCrowdAgent::active'],['../structdtCrowdAgentAnimation.html#a063331d0a657ca1e138dde68ad6375f4',1,'dtCrowdAgentAnimation::active']]],
   ['active_5fhead_2',['active_head',['../structstbrp__context.html#a13277239636803aff28f00b0a0376120',1,'stbrp_context']]],
   ['activeid_3',['ActiveId',['../structImGuiContext.html#a11c874eb6cf74ba9162bd1d01c4ccbcc',1,'ImGuiContext']]],
   ['activeidallowoverlap_4',['ActiveIdAllowOverlap',['../structImGuiContext.html#ab3234556023eabcfed157b79ba4c5869',1,'ImGuiContext']]],
@@ -111,7 +111,7 @@ var searchData=
   ['autofitsinglecolumn_108',['AutoFitSingleColumn',['../structImGuiTable.html#a393160a00b60d647071b9f2925e5161e',1,'ImGuiTable']]],
   ['autoposlastdirection_109',['AutoPosLastDirection',['../structImGuiWindow.html#aa8219e984ed273d6cfd19fb4b93eff5e',1,'ImGuiWindow']]],
   ['autoscroll_110',['autoscroll',['../structExampleAppConsole.html#a01c861ed21b9ec8de5e1ee2c762c627a',1,'ExampleAppConsole::AutoScroll'],['../structExampleAppLog.html#a6b32bf0242b10d45376a7b43a4bde2f5',1,'ExampleAppLog::AutoScroll']]],
-  ['avoidmask_111',['avoidMask',['../structSimAgentDescFFI.html#a89d523318522b9ef91a492faafc1ddb6',1,'SimAgentDescFFI']]],
+  ['avoidmask_111',['avoidmask',['../structDynObstacleDescFFI.html#a8cbfa50fb20647d0e3f4f54b04205276',1,'DynObstacleDescFFI::avoidMask'],['../structSimAgentDescFFI.html#a89d523318522b9ef91a492faafc1ddb6',1,'SimAgentDescFFI::avoidMask']]],
   ['avoidrange_112',['avoidRange',['../structSimParamsFFI.html#a113158b9b98677c5303fa887b1c0b9c7',1,'SimParamsFFI']]],
   ['avoidweight_113',['avoidWeight',['../structSimParamsFFI.html#aa38133d5432ec5b03eee8a8da7794d7f',1,'SimParamsFFI']]],
   ['axis_114',['axis',['../structSDL__JoyAxisEvent.html#a0beac2fb161e45771c424bd0b6daeabb',1,'SDL_JoyAxisEvent::axis'],['../structSDL__ControllerAxisEvent.html#aba6543c143521aebce06a41a8cf79db0',1,'SDL_ControllerAxisEvent::axis'],['../structSDL__GameControllerButtonBind.html#a2ffbc482f5aadcbb8df97d406708f456',1,'SDL_GameControllerButtonBind::axis']]],

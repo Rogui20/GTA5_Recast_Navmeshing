@@ -83,6 +83,7 @@ var hierarchy =
     [ "duFileIO", "structduFileIO.html", [
       [ "FileIO", "classFileIO.html", null ]
     ] ],
+    [ "DynObstacleDescFFI", "structDynObstacleDescFFI.html", null ],
     [ "ExampleAppConsole", "structExampleAppConsole.html", null ],
     [ "ExampleAppDocuments", "structExampleAppDocuments.html", null ],
     [ "ExampleAppLog", "structExampleAppLog.html", null ],
@@ -429,6 +430,7 @@ var hierarchy =
     [ "OffmeshLink", "structOffmeshLink.html", null ],
     [ "OffMeshLinkInfo", "structOffMeshLinkInfo.html", null ],
     [ "MemoryHandler::OffmeshLinkSlot", "structMemoryHandler_1_1OffmeshLinkSlot.html", null ],
+    [ "PathAvoidParamsFFI", "structPathAvoidParamsFFI.html", null ],
     [ "PropInstance", "structPropInstance.html", null ],
     [ "RasterizationContext", "structRasterizationContext.html", null ],
     [ "Ray", "structRay.html", null ],

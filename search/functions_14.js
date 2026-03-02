@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['uleft_0',['uleft',['../RecastMesh_8cpp.html#a7779e8ce95da76bac3631db6b39436db',1,'uleft(const unsigned short *a, const unsigned short *b, const unsigned short *c):&#160;RecastMesh.cpp'],['../DetourTileCacheBuilder_8cpp.html#a7779e8ce95da76bac3631db6b39436db',1,'uleft(const unsigned short *a, const unsigned short *b, const unsigned short *c):&#160;DetourTileCacheBuilder.cpp']]],
+  ['uleft_0',['uleft',['../DetourTileCacheBuilder_8cpp.html#a7779e8ce95da76bac3631db6b39436db',1,'uleft(const unsigned short *a, const unsigned short *b, const unsigned short *c):&#160;DetourTileCacheBuilder.cpp'],['../RecastMesh_8cpp.html#a7779e8ce95da76bac3631db6b39436db',1,'uleft(const unsigned short *a, const unsigned short *b, const unsigned short *c):&#160;RecastMesh.cpp']]],
   ['unindent_1',['Unindent',['../namespaceImGui.html#ad577d36753634c9bbdc3750b0e5217f5',1,'ImGui']]],
   ['unlink_2',['Unlink',['../structImTriangulatorNode.html#aa41868655d868a7afb6ae38f20841ee6',1,'ImTriangulatorNode']]],
   ['unpackaccumulativeoffsetsintoranges_3',['UnpackAccumulativeOffsetsIntoRanges',['../imgui__draw_8cpp.html#ab5814a547146d0bc2c09e3b421abec63',1,'imgui_draw.cpp']]],
   ['unregisterfontatlas_4',['UnregisterFontAtlas',['../namespaceImGui.html#a260109a6a48e073938eadd3325791e2a',1,'ImGui']]],
   ['unregisterusertexture_5',['UnregisterUserTexture',['../namespaceImGui.html#a21f5b1868e4d85e94430fab8c978ca8b',1,'ImGui']]],
-  ['update_6',['update',['../classdtCrowd.html#ae3f041e335ca87c323e7340e73113919',1,'dtCrowd::update()'],['../classViewerCamera.html#aa22d282c1345165c44a058fe82bcc3a1',1,'ViewerCamera::Update()'],['../structImGuiMenuColumns.html#aae99240b9c8e9380f829921da5e337f2',1,'ImGuiMenuColumns::Update()'],['../classdtTileCache.html#a93f931ad563e5cadcc389acdffd4892e',1,'dtTileCache::update()'],['../classdtPathQueue.html#ab28e659d2db86d9f5d5246811cb08da0',1,'dtPathQueue::update()'],['../classdtLocalBoundary.html#a270ef7f2e72520df6bd5c3a0e6b9a869',1,'dtLocalBoundary::update()']]],
+  ['update_6',['update',['../structImGuiMenuColumns.html#aae99240b9c8e9380f829921da5e337f2',1,'ImGuiMenuColumns::Update()'],['../classdtTileCache.html#a93f931ad563e5cadcc389acdffd4892e',1,'dtTileCache::update()'],['../classdtPathQueue.html#ab28e659d2db86d9f5d5246811cb08da0',1,'dtPathQueue::update()'],['../classdtLocalBoundary.html#a270ef7f2e72520df6bd5c3a0e6b9a869',1,'dtLocalBoundary::update()'],['../classdtCrowd.html#ae3f041e335ca87c323e7340e73113919',1,'dtCrowd::update()'],['../classViewerCamera.html#aa22d282c1345165c44a058fe82bcc3a1',1,'ViewerCamera::Update()']]],
   ['updateagentparameters_7',['updateAgentParameters',['../classdtCrowd.html#a6ed4aa0026c21593daa9ea12c71f84c2',1,'dtCrowd']]],
   ['updateagentparams_8',['updateAgentParams',['../classCrowdToolState.html#a6054eb8441ec36876cbd2354b9c9957a',1,'CrowdToolState']]],
   ['updatealiaskey_9',['UpdateAliasKey',['../GtaNavViewer_2imgui_2imgui_8cpp.html#a316580ae3c05306701b597a0fe689c18',1,'imgui.cpp']]],
@@ -17,7 +17,7 @@ var searchData=
   ['updatedebugtoolitempicker_14',['UpdateDebugToolItemPicker',['../namespaceImGui.html#aafb35fd3d7d0a7baac8f0590487a2594',1,'ImGui']]],
   ['updatefontsendframe_15',['UpdateFontsEndFrame',['../namespaceImGui.html#a36e7f029907108b81ac85fe6b6c0457c',1,'ImGui']]],
   ['updatefontsnewframe_16',['UpdateFontsNewFrame',['../namespaceImGui.html#a90f16c53af3ba22af61a6e56dcbd7281',1,'ImGui']]],
-  ['updategeometry_17',['updategeometry',['../ExternC_8cpp.html#aa3194b4fb64ba867ccee52233e3a84e1',1,'UpdateGeometry(void *navMesh, const char *customID, const Vector3 *pos, const Vector3 *rot, bool updateNavMesh):&#160;ExternC.cpp'],['../ExternC_8h.html#aa3194b4fb64ba867ccee52233e3a84e1',1,'UpdateGeometry(void *navMesh, const char *customID, const Vector3 *pos, const Vector3 *rot, bool updateNavMesh):&#160;ExternC.cpp']]],
+  ['updategeometry_17',['updategeometry',['../ExternC_8h.html#aa3194b4fb64ba867ccee52233e3a84e1',1,'UpdateGeometry(void *navMesh, const char *customID, const Vector3 *pos, const Vector3 *rot, bool updateNavMesh):&#160;ExternC.cpp'],['../ExternC_8cpp.html#aa3194b4fb64ba867ccee52233e3a84e1',1,'UpdateGeometry(void *navMesh, const char *customID, const Vector3 *pos, const Vector3 *rot, bool updateNavMesh):&#160;ExternC.cpp']]],
   ['updatehoveredwindowandcaptureflags_18',['UpdateHoveredWindowAndCaptureFlags',['../namespaceImGui.html#af71965abbaa7a787cf6a7d8f1fdafb18',1,'ImGui']]],
   ['updateinput_19',['updateInput',['../RecastDemo_2Source_2imgui_8cpp.html#a5cd0710bb09b88cad4cb053553d5bc24',1,'imgui.cpp']]],
   ['updateinputevents_20',['UpdateInputEvents',['../namespaceImGui.html#aafed9b47752723162308368c01eeffad',1,'ImGui']]],
@@ -49,5 +49,6 @@ var searchData=
   ['updatewindowskiprefresh_46',['UpdateWindowSkipRefresh',['../namespaceImGui.html#aad7414728bad964a8a6282f3b0ee11be',1,'ImGui']]],
   ['updateworkrect_47',['UpdateWorkRect',['../structImGuiViewportP.html#a00cd6261263e9637c819908d93580e0c',1,'ImGuiViewportP']]],
   ['uploadtogpu_48',['UploadToGPU',['../classMesh.html#ad2eaffde4decce1cc2045b124a27b981',1,'Mesh']]],
-  ['upsertsimagents_49',['upsertsimagents',['../ExternC_8cpp.html#a84987266ecb0fa39aec1785afce31e57',1,'UpsertSimAgents(void *navMesh, const SimAgentDescFFI *agents, int count):&#160;ExternC.cpp'],['../ExternC_8h.html#a84987266ecb0fa39aec1785afce31e57',1,'UpsertSimAgents(void *navMesh, const SimAgentDescFFI *agents, int count):&#160;ExternC.cpp']]]
+  ['upsertdynamicobstacles_49',['upsertdynamicobstacles',['../ExternC_8cpp.html#a2ed5728e789cc10e4b467bbc3c7033cf',1,'UpsertDynamicObstacles(void *navMesh, const DynObstacleDescFFI *obs, int count):&#160;ExternC.cpp'],['../ExternC_8h.html#a2ed5728e789cc10e4b467bbc3c7033cf',1,'UpsertDynamicObstacles(void *navMesh, const DynObstacleDescFFI *obs, int count):&#160;ExternC.cpp']]],
+  ['upsertsimagents_50',['upsertsimagents',['../ExternC_8cpp.html#a84987266ecb0fa39aec1785afce31e57',1,'UpsertSimAgents(void *navMesh, const SimAgentDescFFI *agents, int count):&#160;ExternC.cpp'],['../ExternC_8h.html#a84987266ecb0fa39aec1785afce31e57',1,'UpsertSimAgents(void *navMesh, const SimAgentDescFFI *agents, int count):&#160;ExternC.cpp']]]
 ];

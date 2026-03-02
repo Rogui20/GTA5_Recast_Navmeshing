@@ -5,10 +5,16 @@ var ExternC_8h =
     [ "NavMeshPolygonInfo", "structNavMeshPolygonInfo.html", "structNavMeshPolygonInfo" ],
     [ "NavMeshGeometryInfo", "structNavMeshGeometryInfo.html", "structNavMeshGeometryInfo" ],
     [ "OffMeshLinkInfo", "structOffMeshLinkInfo.html", "structOffMeshLinkInfo" ],
+    [ "DynObstacleDescFFI", "structDynObstacleDescFFI.html", "structDynObstacleDescFFI" ],
+    [ "PathAvoidParamsFFI", "structPathAvoidParamsFFI.html", "structPathAvoidParamsFFI" ],
     [ "SimAgentDescFFI", "structSimAgentDescFFI.html", "structSimAgentDescFFI" ],
     [ "SimParamsFFI", "structSimParamsFFI.html", "structSimParamsFFI" ],
     [ "SimEventFFI", "structSimEventFFI.html", "structSimEventFFI" ],
     [ "GTANAVVIEWER_API", "ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec", null ],
+    [ "DynObsShapeType", "ExternC_8h.html#ab322559fb5fd796ee0559ffb06161e61", [
+      [ "DYNOBS_CYLINDER", "ExternC_8h.html#ab322559fb5fd796ee0559ffb06161e61a63d5862275060d1a10b8bdbc43f6fce7", null ],
+      [ "DYNOBS_BOX_AABB", "ExternC_8h.html#ab322559fb5fd796ee0559ffb06161e61afdd7728fd9517b3205ac25850f0f0c6c", null ]
+    ] ],
     [ "SimAgentFlags", "ExternC_8h.html#aeb23778775ea59335727e2b508440241", [
       [ "AGENT_ENABLED", "ExternC_8h.html#aeb23778775ea59335727e2b508440241ae04f7ab346f9800825fa23c6b42c7955", null ],
       [ "AGENT_VEHICLE", "ExternC_8h.html#aeb23778775ea59335727e2b508440241a427c6e673754c46c61ce7654a6479f94", null ],
@@ -34,6 +40,7 @@ var ExternC_8h =
     [ "BuildHeightSamplerForCurrentGeometry", "ExternC_8h.html#a7125f125e4a8a88ce2ae20b52447c900", null ],
     [ "BuildNavMesh", "ExternC_8h.html#acdcdde7a6aa314427c97c0a2e0743321", null ],
     [ "ClearAllLoadedTiles", "ExternC_8h.html#a12ac65d1ff6547c4bd97f25b1a1ecd7e", null ],
+    [ "ClearDynamicObstacles", "ExternC_8h.html#a139d83f0e663c8dd70f8197dd190566d", null ],
     [ "ClearOffMeshLinks", "ExternC_8h.html#a6b32e777a9f5e87992d4cc3bf2fd947c", null ],
     [ "ClearSimAgents", "ExternC_8h.html#a2220a45cd0107eb61b7106fc27b68420", null ],
     [ "ComputeAgentPath", "ExternC_8h.html#a7b494c9ea8640a0c2849b35ac8555d77", null ],
@@ -42,6 +49,7 @@ var ExternC_8h =
     [ "EnableHeightSampling", "ExternC_8h.html#a946e5d323ca20456aa6922a4976fb148", null ],
     [ "ExportMergedGeometriesObj", "ExternC_8h.html#a018403d7757d15f55ea268bdf830769e", null ],
     [ "FindPath", "ExternC_8h.html#a462e8adf4796b96d81b1563df6e9a8ee", null ],
+    [ "FindPathAvoidingDynamicObstacles", "ExternC_8h.html#a45f277cffd5e7b678e3e4378242ceafd", null ],
     [ "FindPathWithMinEdge", "ExternC_8h.html#a0a609079f4645ccec18a5cefc10f79c8", null ],
     [ "FindPathWithNodeMetadata", "ExternC_8h.html#ac5a45a3f337c3d8bbd8eac5d61df60ec", null ],
     [ "GenerateAutomaticOffmeshLinks", "ExternC_8h.html#a8de7660c9f47651d86ef386ecbe3f6cf", null ],
@@ -53,6 +61,7 @@ var ExternC_8h =
     [ "InitTiledGrid", "ExternC_8h.html#a4353b158bd5129b3ebdbd9ce84537a6b", null ],
     [ "LoadNavMeshRuntimeCache", "ExternC_8h.html#aa6b75b9a45387ec8f8de483be1d4748a", null ],
     [ "RemoveAllGeometries", "ExternC_8h.html#abd12c10fe11219e74c416d3df583dfde", null ],
+    [ "RemoveDynamicObstacles", "ExternC_8h.html#a72ced45ba6bc180e9772a6388db167b7", null ],
     [ "RemoveGeometry", "ExternC_8h.html#a077d4b40564957c7c4d253dea4a48886", null ],
     [ "RemoveNavMeshBoundingBox", "ExternC_8h.html#aae230be1b4147bf49c6d7d386c442ae5", null ],
     [ "RemoveOffMeshLinkById", "ExternC_8h.html#a1a0f9d943504aca125a94cb69c3a106a", null ],
@@ -70,5 +79,6 @@ var ExternC_8h =
     [ "StreamTilesAround", "ExternC_8h.html#ab32e95f2f92eecf32a69f6249f2845fd", null ],
     [ "UpdateGeometry", "ExternC_8h.html#aa3194b4fb64ba867ccee52233e3a84e1", null ],
     [ "UpdateNavMesh", "ExternC_8h.html#af58c6b0d37352974167fecd9270e033a", null ],
+    [ "UpsertDynamicObstacles", "ExternC_8h.html#a2ed5728e789cc10e4b467bbc3c7033cf", null ],
     [ "UpsertSimAgents", "ExternC_8h.html#a84987266ecb0fa39aec1785afce31e57", null ]
 ];

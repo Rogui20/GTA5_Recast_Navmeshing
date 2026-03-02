@@ -119,6 +119,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOffMeshLinkInfo.html">OffMeshLinkInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDynObstacleDescFFI.html">DynObstacleDescFFI</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPathAvoidParamsFFI.html">PathAvoidParamsFFI</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSimAgentDescFFI.html">SimAgentDescFFI</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSimParamsFFI.html">SimParamsFFI</a></td></tr>
@@ -137,6 +141,10 @@ Enumerations</h2></td></tr>
 , <a class="el" href="ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9cacd064d47d06a6cf0cb539ae3335d26b5">SHAPE_BOX</a> = 1
  }</td></tr>
 <tr class="separator:a8b31fd1888d13beda99ef8fc42324c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab322559fb5fd796ee0559ffb06161e61" id="r_ab322559fb5fd796ee0559ffb06161e61"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#ab322559fb5fd796ee0559ffb06161e61">DynObsShapeType</a> : std::uint8_t { <a class="el" href="ExternC_8h.html#ab322559fb5fd796ee0559ffb06161e61a63d5862275060d1a10b8bdbc43f6fce7">DYNOBS_CYLINDER</a> = 0
+, <a class="el" href="ExternC_8h.html#ab322559fb5fd796ee0559ffb06161e61afdd7728fd9517b3205ac25850f0f0c6c">DYNOBS_BOX_AABB</a> = 1
+ }</td></tr>
+<tr class="separator:ab322559fb5fd796ee0559ffb06161e61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb23778775ea59335727e2b508440241" id="r_aeb23778775ea59335727e2b508440241"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#aeb23778775ea59335727e2b508440241">SimAgentFlags</a> : std::uint32_t { <br />
 &#160;&#160;<a class="el" href="ExternC_8h.html#aeb23778775ea59335727e2b508440241ae04f7ab346f9800825fa23c6b42c7955">AGENT_ENABLED</a> = 1u &lt;&lt; 0
 , <a class="el" href="ExternC_8h.html#aeb23778775ea59335727e2b508440241a427c6e673754c46c61ce7654a6479f94">AGENT_VEHICLE</a> = 1u &lt;&lt; 1
@@ -205,6 +213,8 @@ Functions</h2></td></tr>
 <tr class="separator:a0a609079f4645ccec18a5cefc10f79c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5a45a3f337c3d8bbd8eac5d61df60ec" id="r_ac5a45a3f337c3d8bbd8eac5d61df60ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#ac5a45a3f337c3d8bbd8eac5d61df60ec">FindPathWithNodeMetadata</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa">target</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float minEdgeDist, float *outPath, bool *outIsOffMeshLinkNode, bool *outIsNextOffMeshLinkNodeHigher, int options)</td></tr>
 <tr class="separator:ac5a45a3f337c3d8bbd8eac5d61df60ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45f277cffd5e7b678e3e4378242ceafd" id="r_a45f277cffd5e7b678e3e4378242ceafd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#a45f277cffd5e7b678e3e4378242ceafd">FindPathAvoidingDynamicObstacles</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa">target</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float minEdgeDist, int options, const <a class="el" href="structPathAvoidParamsFFI.html">PathAvoidParamsFFI</a> *avoidParams, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a> selfTeamMask, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a> selfAvoidMask, float *outPathXYZ, <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">std::uint8_t</a> *outUsedDetour)</td></tr>
+<tr class="separator:a45f277cffd5e7b678e3e4378242ceafd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad18438b5de833265f1d5fea2ecd0213e" id="r_ad18438b5de833265f1d5fea2ecd0213e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#ad18438b5de833265f1d5fea2ecd0213e">GetNavMeshPolygons</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structNavMeshPolygonInfo.html">NavMeshPolygonInfo</a> *polygons, int maxPolygons, <a class="el" href="structVector3.html">Vector3</a> *vertices, int maxVertices, <a class="el" href="structNavMeshEdgeInfo.html">NavMeshEdgeInfo</a> *edges, int maxEdges, int *outVertexCount, int *outEdgeCount)</td></tr>
 <tr class="separator:ad18438b5de833265f1d5fea2ecd0213e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7789da0cef77d265747015c018eae1f" id="r_af7789da0cef77d265747015c018eae1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#af7789da0cef77d265747015c018eae1f">GetNavMeshBorderEdges</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structNavMeshEdgeInfo.html">NavMeshEdgeInfo</a> *edges, int maxEdges, int *outEdgeCount)</td></tr>
@@ -229,6 +239,12 @@ Functions</h2></td></tr>
 <tr class="separator:a13bde80dcb8d2370adfb1fdc782f016f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2220a45cd0107eb61b7106fc27b68420" id="r_a2220a45cd0107eb61b7106fc27b68420"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#a2220a45cd0107eb61b7106fc27b68420">ClearSimAgents</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
 <tr class="separator:a2220a45cd0107eb61b7106fc27b68420"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ed5728e789cc10e4b467bbc3c7033cf" id="r_a2ed5728e789cc10e4b467bbc3c7033cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#a2ed5728e789cc10e4b467bbc3c7033cf">UpsertDynamicObstacles</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const <a class="el" href="structDynObstacleDescFFI.html">DynObstacleDescFFI</a> *obs, int <a class="el" href="glad_8h.html#a619bc20e8198de3bd3f3d7fc34de66b2">count</a>)</td></tr>
+<tr class="separator:a2ed5728e789cc10e4b467bbc3c7033cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72ced45ba6bc180e9772a6388db167b7" id="r_a72ced45ba6bc180e9772a6388db167b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#a72ced45ba6bc180e9772a6388db167b7">RemoveDynamicObstacles</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a> *obstacleIds, int <a class="el" href="glad_8h.html#a619bc20e8198de3bd3f3d7fc34de66b2">count</a>)</td></tr>
+<tr class="separator:a72ced45ba6bc180e9772a6388db167b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a139d83f0e663c8dd70f8197dd190566d" id="r_a139d83f0e663c8dd70f8197dd190566d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#a139d83f0e663c8dd70f8197dd190566d">ClearDynamicObstacles</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
+<tr class="separator:a139d83f0e663c8dd70f8197dd190566d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b494c9ea8640a0c2849b35ac8555d77" id="r_a7b494c9ea8640a0c2849b35ac8555d77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#a7b494c9ea8640a0c2849b35ac8555d77">ComputeAgentPath</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a> agentId, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa">target</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxCorners, float minEdgeDist, int options)</td></tr>
 <tr class="separator:a7b494c9ea8640a0c2849b35ac8555d77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21290aeb5a365eb898b0abbc862a5548" id="r_a21290aeb5a365eb898b0abbc862a5548"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8h.html#a21290aeb5a365eb898b0abbc862a5548">ComputeAgentPathEx</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a> agentId, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, <a class="el" href="structVector3.html">Vector3</a> <a class="el" href="glad_8h.html#a22973b5f7dd6741d669b5ba44f0417fa">target</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxCorners, float minEdgeDist, int options, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a> pathModeFlags)</td></tr>
@@ -262,6 +278,24 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ab322559fb5fd796ee0559ffb06161e61" name="ab322559fb5fd796ee0559ffb06161e61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab322559fb5fd796ee0559ffb06161e61">&#9670;&#160;</a></span>DynObsShapeType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="ExternC_8h.html#ab322559fb5fd796ee0559ffb06161e61">DynObsShapeType</a> : <a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">std::uint8_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab322559fb5fd796ee0559ffb06161e61a63d5862275060d1a10b8bdbc43f6fce7" name="ab322559fb5fd796ee0559ffb06161e61a63d5862275060d1a10b8bdbc43f6fce7"></a>DYNOBS_CYLINDER&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab322559fb5fd796ee0559ffb06161e61afdd7728fd9517b3205ac25850f0f0c6c" name="ab322559fb5fd796ee0559ffb06161e61afdd7728fd9517b3205ac25850f0f0c6c"></a>DYNOBS_BOX_AABB&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <a id="aeb23778775ea59335727e2b508440241" name="aeb23778775ea59335727e2b508440241"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeb23778775ea59335727e2b508440241">&#9670;&#160;</a></span>SimAgentFlags</h2>
 
@@ -561,6 +595,24 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> ClearAllLoadedTiles </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a139d83f0e663c8dd70f8197dd190566d" name="a139d83f0e663c8dd70f8197dd190566d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a139d83f0e663c8dd70f8197dd190566d">&#9670;&#160;</a></span>ClearDynamicObstacles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> ClearDynamicObstacles </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
           <td class="paramname"><em>navMesh</em></td><td>)</td>
@@ -872,6 +924,94 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>options</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a45f277cffd5e7b678e3e4378242ceafd" name="a45f277cffd5e7b678e3e4378242ceafd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45f277cffd5e7b678e3e4378242ceafd">&#9670;&#160;</a></span>FindPathAvoidingDynamicObstacles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int FindPathAvoidingDynamicObstacles </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVector3.html">Vector3</a>&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVector3.html">Vector3</a>&#160;</td>
+          <td class="paramname"><em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>flags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>minEdgeDist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>options</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structPathAvoidParamsFFI.html">PathAvoidParamsFFI</a> *&#160;</td>
+          <td class="paramname"><em>avoidParams</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a>&#160;</td>
+          <td class="paramname"><em>selfTeamMask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a>&#160;</td>
+          <td class="paramname"><em>selfAvoidMask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>outPathXYZ</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#aba7bc1797add20fe3efdf37ced1182c5">std::uint8_t</a> *&#160;</td>
+          <td class="paramname"><em>outUsedDetour</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1322,6 +1462,40 @@ Functions</h2></td></tr>
           <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
           <td class="paramname"><em>navMesh</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a72ced45ba6bc180e9772a6388db167b7" name="a72ced45ba6bc180e9772a6388db167b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72ced45ba6bc180e9772a6388db167b7">&#9670;&#160;</a></span>RemoveDynamicObstacles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int RemoveDynamicObstacles </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a> *&#160;</td>
+          <td class="paramname"><em>obstacleIds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1964,6 +2138,40 @@ Functions</h2></td></tr>
           <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
           <td class="paramname"><em>navMesh</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2ed5728e789cc10e4b467bbc3c7033cf" name="a2ed5728e789cc10e4b467bbc3c7033cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ed5728e789cc10e4b467bbc3c7033cf">&#9670;&#160;</a></span>UpsertDynamicObstacles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int UpsertDynamicObstacles </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structDynObstacleDescFFI.html">DynObstacleDescFFI</a> *&#160;</td>
+          <td class="paramname"><em>obs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

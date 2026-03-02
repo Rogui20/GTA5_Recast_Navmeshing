@@ -61,5 +61,6 @@ var searchData=
   ['dttilestate_58',['dtTileState',['../structdtTileState.html',1,'']]],
   ['dudebugdraw_59',['duDebugDraw',['../structduDebugDraw.html',1,'']]],
   ['dudisplaylist_60',['duDisplayList',['../classduDisplayList.html',1,'']]],
-  ['dufileio_61',['duFileIO',['../structduFileIO.html',1,'']]]
+  ['dufileio_61',['duFileIO',['../structduFileIO.html',1,'']]],
+  ['dynobstacledescffi_62',['DynObstacleDescFFI',['../structDynObstacleDescFFI.html',1,'']]]
 ];
