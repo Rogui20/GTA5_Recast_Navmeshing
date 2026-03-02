@@ -60,6 +60,40 @@ enum SimShapeType : std::uint8_t
     SHAPE_BOX = 1,
 };
 
+enum DynObsShapeType : std::uint8_t
+{
+    DYNOBS_CYLINDER = 0,
+    DYNOBS_BOX_AABB = 1,
+};
+
+struct DynObstacleDescFFI
+{
+    std::uint32_t obstacleId = 0;
+    std::uint32_t teamMask = 0;
+    std::uint32_t avoidMask = 0;
+
+    std::uint8_t shapeType = 0;
+    std::uint8_t _pad[3]{};
+
+    float pos[3]{};
+    float radius = 0.0f;
+    float halfX = 0.0f;
+    float halfZ = 0.0f;
+    float height = 0.0f;
+};
+
+struct PathAvoidParamsFFI
+{
+    float inflate = 0.0f;
+    float detourSideStep = 2.0f;
+    int maxDetourCandidates = 6;
+    int maxObstaclesToCheck = 64;
+    int maxFixIterations = 8;
+    std::uint8_t useHeightFilter = 1;
+    float heightTolerance = 2.5f;
+    std::uint8_t _pad[3]{};
+};
+
 enum SimAgentFlags : std::uint32_t
 {
     AGENT_ENABLED = 1u << 0,
@@ -156,6 +190,8 @@ struct SimEventFFI
 
 static_assert(sizeof(SimAgentDescFFI) == 64, "Unexpected SimAgentDescFFI ABI size");
 static_assert(sizeof(SimParamsFFI) == 104, "Unexpected SimParamsFFI ABI size");
+static_assert(sizeof(DynObstacleDescFFI) == 44, "Unexpected DynObstacleDescFFI ABI size");
+static_assert(sizeof(PathAvoidParamsFFI) == 32, "Unexpected PathAvoidParamsFFI ABI size");
 
 #ifdef _WIN32
   #ifdef GTANAVVIEWER_BUILD_DLL
@@ -232,6 +268,18 @@ GTANAVVIEWER_API int FindPathWithNodeMetadata(void* navMesh,
                                               bool* outIsOffMeshLinkNode,
                                               bool* outIsNextOffMeshLinkNodeHigher,
                                               int options);
+GTANAVVIEWER_API int FindPathAvoidingDynamicObstacles(void* navMesh,
+                                                      Vector3 start,
+                                                      Vector3 target,
+                                                      int flags,
+                                                      int maxPoints,
+                                                      float minEdgeDist,
+                                                      int options,
+                                                      const PathAvoidParamsFFI* avoidParams,
+                                                      std::uint32_t selfTeamMask,
+                                                      std::uint32_t selfAvoidMask,
+                                                      float* outPathXYZ,
+                                                      std::uint8_t* outUsedDetour);
 
 // Consulta da malha
 GTANAVVIEWER_API int GetNavMeshPolygons(void* navMesh,
@@ -276,6 +324,9 @@ GTANAVVIEWER_API bool GenerateAutomaticOffmeshLinks(void* navMesh);
 GTANAVVIEWER_API int UpsertSimAgents(void* navMesh, const SimAgentDescFFI* agents, int count);
 GTANAVVIEWER_API int RemoveSimAgents(void* navMesh, const std::uint32_t* agentIds, int count);
 GTANAVVIEWER_API void ClearSimAgents(void* navMesh);
+GTANAVVIEWER_API int UpsertDynamicObstacles(void* navMesh, const DynObstacleDescFFI* obs, int count);
+GTANAVVIEWER_API int RemoveDynamicObstacles(void* navMesh, const std::uint32_t* obstacleIds, int count);
+GTANAVVIEWER_API void ClearDynamicObstacles(void* navMesh);
 GTANAVVIEWER_API int ComputeAgentPath(void* navMesh,
                                       std::uint32_t agentId,
                                       Vector3 start,
