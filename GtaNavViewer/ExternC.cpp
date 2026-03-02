@@ -99,6 +99,19 @@ namespace
         int offmeshStartCornerIndex = -1;
     };
 
+    struct DynObstacleState
+    {
+        uint32_t id = 0;
+        uint32_t teamMask = 0;
+        uint32_t avoidMask = 0;
+        uint8_t shapeType = 0;
+        glm::vec3 pos{0.0f};
+        float radius = 0.0f;
+        float halfX = 0.0f;
+        float halfZ = 0.0f;
+        float height = 0.0f;
+    };
+
     struct ExternNavmeshContext
     {
         NavmeshGenerationSettings genSettings{};
@@ -125,6 +138,8 @@ namespace
         std::filesystem::file_time_type dbMTime{};
         std::unordered_map<std::uint32_t, SimAgentState> simAgents;
         std::vector<std::uint32_t> simAgentIds;
+        std::unordered_map<std::uint32_t, DynObstacleState> dynObstacles;
+        std::vector<std::uint32_t> dynObstacleIds;
         HeightSampler heightSampler;
         SimParamsFFI lastSimParams{};
         bool hasLastSimParams = false;
@@ -2425,6 +2440,140 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
         agent.eulerRPYDeg = glm::vec3(agent.rollDeg, agent.pitchDeg, agent.headingDeg);
         return true;
     }
+
+    PathAvoidParamsFFI GetDefaultAvoidParams()
+    {
+        PathAvoidParamsFFI p{};
+        p.inflate = 0.3f;
+        p.detourSideStep = 2.0f;
+        p.maxDetourCandidates = 6;
+        p.maxObstaclesToCheck = 64;
+        p.maxFixIterations = 8;
+        p.useHeightFilter = true;
+        p.heightTolerance = 2.5f;
+        return p;
+    }
+
+    float Dist2PointSegmentXZ(const glm::vec3& a, const glm::vec3& b, const glm::vec2& p, float* outT = nullptr)
+    {
+        const glm::vec2 ab(b.x - a.x, b.z - a.z);
+        const glm::vec2 ap(p.x - a.x, p.y - a.z);
+        const float denom = glm::dot(ab, ab);
+        float t = 0.0f;
+        if (denom > 1e-6f)
+            t = std::clamp(glm::dot(ap, ab) / denom, 0.0f, 1.0f);
+        const glm::vec2 c(a.x + ab.x * t, a.z + ab.y * t);
+        const glm::vec2 d = p - c;
+        if (outT)
+            *outT = t;
+        return glm::dot(d, d);
+    }
+
+    bool SegmentIntersectsCircleXZ(const glm::vec3& a, const glm::vec3& b, const DynObstacleState& o, float inflate, float* outT)
+    {
+        const float r = std::max(0.01f, o.radius + inflate);
+        const float d2 = Dist2PointSegmentXZ(a, b, glm::vec2(o.pos.x, o.pos.z), outT);
+        return d2 <= r * r;
+    }
+
+    bool SegmentIntersectsAabbXZ(const glm::vec3& a, const glm::vec3& b, const DynObstacleState& o, float inflate)
+    {
+        const float minX = o.pos.x - (o.halfX + inflate);
+        const float maxX = o.pos.x + (o.halfX + inflate);
+        const float minZ = o.pos.z - (o.halfZ + inflate);
+        const float maxZ = o.pos.z + (o.halfZ + inflate);
+
+        float tmin = 0.0f;
+        float tmax = 1.0f;
+        const float dx = b.x - a.x;
+        const float dz = b.z - a.z;
+
+        auto axisSlab = [&](float p0, float d, float mn, float mx) -> bool
+        {
+            if (std::abs(d) < 1e-6f)
+                return p0 >= mn && p0 <= mx;
+            float ood = 1.0f / d;
+            float t1 = (mn - p0) * ood;
+            float t2 = (mx - p0) * ood;
+            if (t1 > t2)
+                std::swap(t1, t2);
+            tmin = std::max(tmin, t1);
+            tmax = std::min(tmax, t2);
+            return tmin <= tmax;
+        };
+
+        return axisSlab(a.x, dx, minX, maxX) && axisSlab(a.z, dz, minZ, maxZ);
+    }
+
+    bool IsObstacleRelevant(const DynObstacleState& o, uint32_t selfAvoidMask)
+    {
+        return (o.teamMask & selfAvoidMask) != 0;
+    }
+
+    bool SegmentHitsObstacle(const glm::vec3& a,
+                            const glm::vec3& b,
+                            const DynObstacleState& o,
+                            const PathAvoidParamsFFI& params,
+                            float* outT)
+    {
+        if (params.useHeightFilter)
+        {
+            const float yMid = (a.y + b.y) * 0.5f;
+            if (std::abs(yMid - o.pos.y) > std::max(0.0f, params.heightTolerance))
+                return false;
+        }
+
+        if (o.shapeType == DYNOBS_BOX_AABB)
+            return SegmentIntersectsAabbXZ(a, b, o, std::max(0.0f, params.inflate));
+
+        return SegmentIntersectsCircleXZ(a, b, o, std::max(0.0f, params.inflate), outT);
+    }
+
+    bool BuildBasePath(ExternNavmeshContext& ctx,
+                       const glm::vec3& start,
+                       const glm::vec3& end,
+                       int flags,
+                       int maxPoints,
+                       float minEdgeDist,
+                       int options,
+                       std::vector<glm::vec3>& outCorners)
+    {
+        std::vector<float> tmp(static_cast<size_t>(maxPoints) * 3);
+        const int count = RunPathfindInternal(ctx, start, end, flags, maxPoints, minEdgeDist, tmp.data(), nullptr, nullptr, options);
+        if (count <= 0)
+            return false;
+        outCorners.clear();
+        outCorners.reserve(static_cast<size_t>(count));
+        for (int i = 0; i < count; ++i)
+            outCorners.emplace_back(tmp[i * 3 + 0], tmp[i * 3 + 1], tmp[i * 3 + 2]);
+        return true;
+    }
+
+    bool IsWalkableSegment(ExternNavmeshContext& ctx, const glm::vec3& from, const glm::vec3& to, int flags)
+    {
+        if (!EnsureNavQuery(ctx))
+            return false;
+        dtQueryFilter filter{};
+        filter.setIncludeFlags(static_cast<unsigned short>(flags));
+        filter.setExcludeFlags(0);
+        const float ext[3]{2.0f, 4.0f, 2.0f};
+        dtPolyRef fromRef = 0;
+        dtPolyRef toRef = 0;
+        float fromNearest[3]{};
+        float toNearest[3]{};
+        const float a[3]{from.x, from.y, from.z};
+        const float b[3]{to.x, to.y, to.z};
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(a, ext, &filter, &fromRef, fromNearest)) || fromRef == 0)
+            return false;
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(b, ext, &filter, &toRef, toNearest)) || toRef == 0)
+            return false;
+        float t = 0.0f;
+        float hitNormal[3]{};
+        dtPolyRef path[16]{};
+        int npath = 0;
+        const dtStatus st = ctx.navQuery->raycast(fromRef, fromNearest, toNearest, &filter, &t, hitNormal, path, &npath, 16);
+        return dtStatusSucceed(st) && t >= 0.999f;
+    }
 GTANAVVIEWER_API int FindPath(void* navMesh,
                               Vector3 start,
                               Vector3 target,
@@ -2709,6 +2858,226 @@ GTANAVVIEWER_API void RemoveNavMeshBoundingBox(void* navMesh)
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->hasBoundingBox = false;
     ctx->rebuildAll = true;
+}
+
+
+GTANAVVIEWER_API int UpsertDynamicObstacles(void* navMesh, const DynObstacleDescFFI* obs, int count)
+{
+    if (!navMesh || !obs || count <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    static bool sLoggedAbi = false;
+    if (!sLoggedAbi)
+    {
+        sLoggedAbi = true;
+        std::printf("[ExternC] ABI: sizeof(DynObstacleDescFFI)=%zu sizeof(PathAvoidParamsFFI)=%zu\n",
+                    sizeof(DynObstacleDescFFI), sizeof(PathAvoidParamsFFI));
+    }
+
+    int upserted = 0;
+    for (int i = 0; i < count; ++i)
+    {
+        const DynObstacleDescFFI& d = obs[i];
+        if (d.obstacleId == 0)
+            continue;
+
+        const bool exists = ctx->dynObstacles.find(d.obstacleId) != ctx->dynObstacles.end();
+        DynObstacleState& st = ctx->dynObstacles[d.obstacleId];
+        st.id = d.obstacleId;
+        st.teamMask = d.teamMask;
+        st.avoidMask = d.avoidMask;
+        st.shapeType = (d.shapeType == DYNOBS_BOX_AABB) ? DYNOBS_BOX_AABB : DYNOBS_CYLINDER;
+        st.pos = glm::vec3(d.pos[0], d.pos[1], d.pos[2]);
+        st.radius = std::max(0.0f, d.radius);
+        st.halfX = std::max(0.0f, d.halfX);
+        st.halfZ = std::max(0.0f, d.halfZ);
+        st.height = std::max(0.0f, d.height);
+        if (!exists)
+            ctx->dynObstacleIds.push_back(d.obstacleId);
+        ++upserted;
+    }
+    return upserted;
+}
+
+GTANAVVIEWER_API int RemoveDynamicObstacles(void* navMesh, const std::uint32_t* obstacleIds, int count)
+{
+    if (!navMesh || !obstacleIds || count <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    int removed = 0;
+    for (int i = 0; i < count; ++i)
+    {
+        if (ctx->dynObstacles.erase(obstacleIds[i]) > 0)
+            ++removed;
+    }
+
+    if (removed > 0)
+    {
+        auto& ids = ctx->dynObstacleIds;
+        ids.erase(std::remove_if(ids.begin(), ids.end(), [&](uint32_t id)
+        {
+            return ctx->dynObstacles.find(id) == ctx->dynObstacles.end();
+        }), ids.end());
+    }
+
+    return removed;
+}
+
+GTANAVVIEWER_API void ClearDynamicObstacles(void* navMesh)
+{
+    if (!navMesh)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->dynObstacles.clear();
+    ctx->dynObstacleIds.clear();
+}
+
+GTANAVVIEWER_API int FindPathAvoidingDynamicObstacles(void* navMesh,
+                                                      Vector3 start,
+                                                      Vector3 target,
+                                                      int flags,
+                                                      int maxPoints,
+                                                      float minEdgeDist,
+                                                      int options,
+                                                      const PathAvoidParamsFFI* avoidParams,
+                                                      std::uint32_t selfTeamMask,
+                                                      std::uint32_t selfAvoidMask,
+                                                      float* outPathXYZ,
+                                                      std::uint8_t* outUsedDetour)
+{
+    (void)selfTeamMask;
+    if (!navMesh || !outPathXYZ || maxPoints <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    PathAvoidParamsFFI params = avoidParams ? *avoidParams : GetDefaultAvoidParams();
+    params.maxObstaclesToCheck = std::max(0, params.maxObstaclesToCheck);
+    params.maxFixIterations = std::max(0, params.maxFixIterations);
+    params.maxDetourCandidates = std::max(2, params.maxDetourCandidates);
+
+    std::vector<glm::vec3> corners;
+    if (!BuildBasePath(*ctx,
+                       glm::vec3(start.x, start.y, start.z),
+                       glm::vec3(target.x, target.y, target.z),
+                       flags,
+                       maxPoints,
+                       minEdgeDist,
+                       options,
+                       corners))
+        return 0;
+
+    bool usedDetour = false;
+    int iterations = 0;
+    while (iterations < params.maxFixIterations)
+    {
+        bool changed = false;
+        for (size_t i = 0; i + 1 < corners.size(); ++i)
+        {
+            const glm::vec3 a = corners[i];
+            const glm::vec3 b = corners[i + 1];
+            const DynObstacleState* blocker = nullptr;
+            float bestScore = std::numeric_limits<float>::max();
+            int checked = 0;
+
+            for (uint32_t id : ctx->dynObstacleIds)
+            {
+                auto it = ctx->dynObstacles.find(id);
+                if (it == ctx->dynObstacles.end())
+                    continue;
+                const DynObstacleState& o = it->second;
+                if (!IsObstacleRelevant(o, selfAvoidMask))
+                    continue;
+                if (checked++ >= params.maxObstaclesToCheck)
+                    break;
+                float hitT = 0.0f;
+                if (!SegmentHitsObstacle(a, b, o, params, &hitT))
+                    continue;
+                const float score = hitT;
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    blocker = &o;
+                }
+            }
+
+            if (!blocker)
+                continue;
+
+            std::vector<glm::vec3> candidates;
+            const float sideBase = std::max(0.5f, params.detourSideStep);
+            if (blocker->shapeType == DYNOBS_BOX_AABB)
+            {
+                const float x0 = blocker->pos.x - blocker->halfX - params.inflate - sideBase;
+                const float x1 = blocker->pos.x + blocker->halfX + params.inflate + sideBase;
+                const float z0 = blocker->pos.z - blocker->halfZ - params.inflate - sideBase;
+                const float z1 = blocker->pos.z + blocker->halfZ + params.inflate + sideBase;
+                candidates.emplace_back(x0, a.y, z0);
+                candidates.emplace_back(x0, a.y, z1);
+                candidates.emplace_back(x1, a.y, z0);
+                candidates.emplace_back(x1, a.y, z1);
+            }
+            else
+            {
+                float t = 0.5f;
+                Dist2PointSegmentXZ(a, b, glm::vec2(blocker->pos.x, blocker->pos.z), &t);
+                const glm::vec3 closest = a + (b - a) * t;
+                glm::vec2 dir(b.x - a.x, b.z - a.z);
+                if (glm::length2(dir) < 1e-6f)
+                    dir = glm::vec2(1.0f, 0.0f);
+                dir = glm::normalize(dir);
+                const glm::vec2 left(-dir.y, dir.x);
+                for (int k = 0; k < std::max(1, params.maxDetourCandidates / 2); ++k)
+                {
+                    const float m = blocker->radius + params.inflate + sideBase + static_cast<float>(k) * sideBase * 0.5f;
+                    candidates.emplace_back(closest.x + left.x * m, a.y, closest.z + left.y * m);
+                    candidates.emplace_back(closest.x - left.x * m, a.y, closest.z - left.y * m);
+                }
+            }
+
+            if (static_cast<int>(candidates.size()) > params.maxDetourCandidates)
+                candidates.resize(static_cast<size_t>(params.maxDetourCandidates));
+
+            for (const glm::vec3& candRaw : candidates)
+            {
+                dtQueryFilter filter{};
+                filter.setIncludeFlags(static_cast<unsigned short>(flags));
+                filter.setExcludeFlags(0);
+                dtPolyRef candRef = 0;
+                float nearPos[3]{};
+                const float ext[3]{3.0f, 6.0f, 3.0f};
+                const float candP[3]{candRaw.x, candRaw.y, candRaw.z};
+                if (!EnsureNavQuery(*ctx) || dtStatusFailed(ctx->navQuery->findNearestPoly(candP, ext, &filter, &candRef, nearPos)) || candRef == 0)
+                    continue;
+                glm::vec3 cand(nearPos[0], nearPos[1], nearPos[2]);
+                if (!IsWalkableSegment(*ctx, a, cand, flags) || !IsWalkableSegment(*ctx, cand, b, flags))
+                    continue;
+                corners.insert(corners.begin() + static_cast<long>(i + 1), cand);
+                usedDetour = true;
+                changed = true;
+                break;
+            }
+
+            if (changed)
+                break;
+        }
+
+        if (!changed)
+            break;
+        ++iterations;
+    }
+
+    const int writeCount = std::min(maxPoints, static_cast<int>(corners.size()));
+    for (int i = 0; i < writeCount; ++i)
+    {
+        outPathXYZ[i * 3 + 0] = corners[i].x;
+        outPathXYZ[i * 3 + 1] = corners[i].y;
+        outPathXYZ[i * 3 + 2] = corners[i].z;
+    }
+    if (outUsedDetour)
+        *outUsedDetour = usedDetour ? 1 : 0;
+    return writeCount;
 }
 
 GTANAVVIEWER_API int UpsertSimAgents(void* navMesh, const SimAgentDescFFI* agents, int count)

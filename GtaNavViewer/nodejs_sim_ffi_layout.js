@@ -16,6 +16,12 @@ const SimAgentFlags = Object.freeze({
   AGENT_ANCHOR_VELOCITY: 1 << 5,
 });
 
+
+const DynObsShapeType = Object.freeze({
+  DYNOBS_CYLINDER: 0,
+  DYNOBS_BOX_AABB: 1,
+});
+
 const Structs = Object.freeze({
   SimAgentDescFFI: {
     size: 64,
@@ -46,10 +52,37 @@ const Structs = Object.freeze({
   SimEventFFI: {
     size: 36,
   },
+  DynObstacleDescFFI: {
+    size: 48,
+    offsets: {
+      obstacleId: 0,
+      teamMask: 4,
+      avoidMask: 8,
+      shapeType: 12,
+      pos: 16,
+      radius: 28,
+      halfX: 32,
+      halfZ: 36,
+      height: 40,
+    },
+  },
+  PathAvoidParamsFFI: {
+    size: 28,
+    offsets: {
+      inflate: 0,
+      detourSideStep: 4,
+      maxDetourCandidates: 8,
+      maxObstaclesToCheck: 12,
+      maxFixIterations: 16,
+      useHeightFilter: 20,
+      heightTolerance: 24,
+    },
+  },
 });
 
 module.exports = {
   SimShapeType,
   SimAgentFlags,
+  DynObsShapeType,
   Structs,
 };
