@@ -116,7 +116,7 @@ var searchData=
   ['usedchars_113',['UsedChars',['../structImFontGlyphRangesBuilder.html#af83d63600e78e2454a78f0d736ba8ee4',1,'ImFontGlyphRangesBuilder']]],
   ['usedrect_114',['UsedRect',['../structImTextureData.html#a1aead7291732f48cb9823d54dc391bfe',1,'ImTextureData']]],
   ['usedynamicrendering_115',['usedynamicrendering',['../structImGui__ImplVulkanH__Window.html#ac78d8e8eb73c149e8e28e1abca0abb2d',1,'ImGui_ImplVulkanH_Window::UseDynamicRendering'],['../structImGui__ImplVulkan__InitInfo.html#a0a9a0a08571e832b4cdf800be51f9ee7',1,'ImGui_ImplVulkan_InitInfo::UseDynamicRendering']]],
-  ['useheightfilter_116',['useHeightFilter',['../structPathAvoidParamsFFI.html#a9431ac7c4848888cd748b8b373b2bedd',1,'PathAvoidParamsFFI']]],
+  ['useheightfilter_116',['useHeightFilter',['../structPathAvoidParamsFFI.html#a2ff147fee216b5f3626fa5025e17ffb1',1,'PathAvoidParamsFFI']]],
   ['useprogram_117',['UseProgram',['../unionImGL3WProcs.html#a3ff636f93be8c25e0c8690a90a739e23',1,'ImGL3WProcs']]],
   ['user_118',['user',['../unionSDL__Event.html#ab7c394e3ce7bf1e4f8d68bc0e9f1b042',1,'SDL_Event']]],
   ['user_20has_20already_20installed_20an_20unpackaged_20version_20of_20this_20app_20a_20packaged_20version_20cannot_20replace_20this_20error_20when_20installing_119',['&quot;The current user has already installed an unpackaged version of this app. A packaged version cannot replace this.&quot; error when installing',['../gdk.html#the-current-user-has-already-installed-an-unpackaged-version-of-this-app-a-packaged-version-cannot-replace-this-error-when-installing',1,'']]],

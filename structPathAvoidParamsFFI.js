@@ -7,5 +7,5 @@ var structPathAvoidParamsFFI =
     [ "maxDetourCandidates", "structPathAvoidParamsFFI.html#ac9ca9eb547876860410115d8f5357c63", null ],
     [ "maxFixIterations", "structPathAvoidParamsFFI.html#a10f5e9585f8168fb32a1e7dfedb32d7a", null ],
     [ "maxObstaclesToCheck", "structPathAvoidParamsFFI.html#a9cca9b7b52ac5e255c165be77f19da3f", null ],
-    [ "useHeightFilter", "structPathAvoidParamsFFI.html#a9431ac7c4848888cd748b8b373b2bedd", null ]
+    [ "useHeightFilter", "structPathAvoidParamsFFI.html#a2ff147fee216b5f3626fa5025e17ffb1", null ]
 ];
