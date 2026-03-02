@@ -3024,7 +3024,7 @@ GTANAVVIEWER_API int FindPathAvoidingDynamicObstacles(void* navMesh,
                 Dist2PointSegmentXZ(a, b, glm::vec2(blocker->pos.x, blocker->pos.z), &t);
                 const glm::vec3 closest = a + (b - a) * t;
                 glm::vec2 dir(b.x - a.x, b.z - a.z);
-                if (glm::length2(dir) < 1e-6f)
+                if (glm::dot(dir, dir) < 1e-6f)
                     dir = glm::vec2(1.0f, 0.0f);
                 dir = glm::normalize(dir);
                 const glm::vec2 left(-dir.y, dir.x);

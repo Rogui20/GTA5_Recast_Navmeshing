@@ -67,7 +67,7 @@ const Structs = Object.freeze({
     },
   },
   PathAvoidParamsFFI: {
-    size: 28,
+    size: 32,
     offsets: {
       inflate: 0,
       detourSideStep: 4,

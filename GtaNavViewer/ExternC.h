@@ -89,7 +89,7 @@ struct PathAvoidParamsFFI
     int maxDetourCandidates = 6;
     int maxObstaclesToCheck = 64;
     int maxFixIterations = 8;
-    bool useHeightFilter = true;
+    std::uint8_t useHeightFilter = 1;
     float heightTolerance = 2.5f;
     std::uint8_t _pad[3]{};
 };
@@ -190,8 +190,8 @@ struct SimEventFFI
 
 static_assert(sizeof(SimAgentDescFFI) == 64, "Unexpected SimAgentDescFFI ABI size");
 static_assert(sizeof(SimParamsFFI) == 104, "Unexpected SimParamsFFI ABI size");
-static_assert(sizeof(DynObstacleDescFFI) == 48, "Unexpected DynObstacleDescFFI ABI size");
-static_assert(sizeof(PathAvoidParamsFFI) == 28, "Unexpected PathAvoidParamsFFI ABI size");
+static_assert(sizeof(DynObstacleDescFFI) == 44, "Unexpected DynObstacleDescFFI ABI size");
+static_assert(sizeof(PathAvoidParamsFFI) == 32, "Unexpected PathAvoidParamsFFI ABI size");
 
 #ifdef _WIN32
   #ifdef GTANAVVIEWER_BUILD_DLL
