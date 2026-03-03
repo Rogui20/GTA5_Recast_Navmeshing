@@ -118,6 +118,7 @@ namespace
         std::vector<GeometryInstance> geometries;
         std::vector<OffmeshLink> offmeshLinks;
         AutoOffmeshGenerationParams autoOffmeshParams{};
+        AutoOffmeshGenerationParamsV2 autoOffmeshParamsV2{};
         NavMeshData navData;
         dtNavMeshQuery* navQuery = nullptr;
         bool hasBoundingBox = false;
@@ -1154,6 +1155,12 @@ GTANAVVIEWER_API void SetNavMeshGenSettings(void* navMesh, const NavmeshGenerati
     ctx->autoOffmeshParams.agentRadius = settings->agentRadius;
     ctx->autoOffmeshParams.agentHeight = settings->agentHeight;
     ctx->autoOffmeshParams.maxSlopeDegrees = settings->agentMaxSlope;
+    ctx->autoOffmeshParamsV2.agentRadius = settings->agentRadius;
+    ctx->autoOffmeshParamsV2.agentHeight = settings->agentHeight;
+    ctx->autoOffmeshParamsV2.maxSlopeDegrees = settings->agentMaxSlope;
+    ctx->autoOffmeshParamsV2.outwardOffset = std::max(ctx->autoOffmeshParamsV2.outwardOffset, settings->agentRadius + 0.05f);
+    ctx->autoOffmeshParamsV2.sweepSideOffset = std::max(0.05f, settings->agentRadius * 0.6f);
+    ctx->autoOffmeshParamsV2.sweepUp = std::max(0.1f, settings->agentHeight * 0.5f);
     ctx->rebuildAll = true;
 }
 
@@ -1166,6 +1173,31 @@ GTANAVVIEWER_API void SetAutoOffMeshGenerationParams(void* navMesh, const AutoOf
     ctx->autoOffmeshParams.agentRadius = ctx->genSettings.agentRadius;
     ctx->autoOffmeshParams.agentHeight = ctx->genSettings.agentHeight;
     ctx->autoOffmeshParams.maxSlopeDegrees = ctx->genSettings.agentMaxSlope;
+
+    AutoOffmeshGenerationParamsV2 v2 = ctx->autoOffmeshParamsV2;
+    const bool oldDropJump = (params->linksGenFlags & 1) != 0;
+    const bool oldFacing = (params->linksGenFlags & 2) != 0;
+    v2.genFlags = 0;
+    if (oldDropJump)
+        v2.genFlags |= AUTO_OFFMESH_V2_INCLUDE_DROP | AUTO_OFFMESH_V2_INCLUDE_JUMP;
+    if (oldFacing)
+        v2.genFlags |= AUTO_OFFMESH_V2_INCLUDE_JUMP;
+    v2.genFlags |= AUTO_OFFMESH_V2_ENABLE_SWEEP_RAYS;
+    v2.agentRadius = ctx->genSettings.agentRadius;
+    v2.agentHeight = ctx->genSettings.agentHeight;
+    v2.maxSlopeDegrees = ctx->genSettings.agentMaxSlope;
+    v2.maxDropHeight = params->maxDropHeight;
+    v2.minDropThreshold = params->minDropThreshold;
+    v2.maxJumpUp = std::max(params->jumpHeight, 0.2f);
+    v2.maxJumpDown = std::max(params->maxHeightDiff, 0.5f);
+    v2.minDist = std::max(params->minDistance, 0.1f);
+    v2.maxDist = std::max(v2.minDist, params->maxDistance);
+    v2.outwardOffset = std::max(params->edgeOutset, v2.agentRadius + 0.05f);
+    v2.upOffset = params->upOffset;
+    v2.raycastExtraHeight = params->raycastExtraHeight;
+    v2.userIdBase = params->userIdBase;
+    v2.dropArea = params->dropArea;
+    ctx->autoOffmeshParamsV2 = v2;
 }
 
 GTANAVVIEWER_API void SetNavMeshCacheRoot(void* navMesh, const char* cacheRoot)
@@ -2814,24 +2846,23 @@ GTANAVVIEWER_API bool GenerateAutomaticOffmeshLinks(void* navMesh)
         return false;
 
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
-    AutoOffmeshGenerationParams params = ctx->autoOffmeshParams;
+    AutoOffmeshGenerationParamsV2 params = ctx->autoOffmeshParamsV2;
     params.agentRadius = ctx->genSettings.agentRadius;
     params.agentHeight = ctx->genSettings.agentHeight;
     params.maxSlopeDegrees = ctx->genSettings.agentMaxSlope;
+    params.outwardOffset = std::max(params.outwardOffset, params.agentRadius + 0.05f);
+    params.sweepSideOffset = std::max(0.05f, params.agentRadius * 0.6f);
+    params.sweepUp = std::max(0.1f, params.agentHeight * 0.5f);
 
     std::vector<OffmeshLink> generated;
-    if (!ctx->navData.GenerateAutomaticOffmeshLinks(params, generated))
+    if (!ctx->navData.GenerateAutomaticOffmeshLinksV2(params, generated))
         return false;
 
-    const unsigned int autoMask = 0xffff0000u;
     std::vector<OffmeshLink> merged;
     const auto& existing = ctx->navData.GetOffmeshLinks();
     merged.reserve(existing.size() + generated.size());
     for (const auto& link : existing)
-    {
-        //if ( (link.userId & autoMask) != (params.userIdBase & autoMask) )
-            merged.push_back(link);
-    }
+        merged.push_back(link);
     merged.insert(merged.end(), generated.begin(), generated.end());
 
     ctx->navData.SetOffmeshLinks(std::move(merged));

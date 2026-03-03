@@ -80,6 +80,50 @@ struct AutoOffmeshGenerationParams
     float zOffset = 0.05f;
 };
 
+enum AutoOffmeshGenerationFlagsV2 : uint32_t
+{
+    AUTO_OFFMESH_V2_INCLUDE_DROP       = 1u << 0,
+    AUTO_OFFMESH_V2_INCLUDE_JUMP       = 1u << 1,
+    AUTO_OFFMESH_V2_INCLUDE_CLIMB      = 1u << 2,
+    AUTO_OFFMESH_V2_ENABLE_SWEEP_RAYS  = 1u << 3,
+};
+
+struct AutoOffmeshGenerationParamsV2
+{
+    uint32_t genFlags = AUTO_OFFMESH_V2_INCLUDE_DROP | AUTO_OFFMESH_V2_INCLUDE_JUMP;
+
+    float agentRadius = 0.6f;
+    float agentHeight = 2.0f;
+
+    int samplesPerEdge = 3;
+    float outwardOffset = 0.8f;
+    float startInset = 0.05f;
+    float upOffset = 0.10f;
+
+    float minDist = 0.5f;
+    float maxDist = 6.0f;
+    float distStep = 0.5f;
+
+    float maxDropHeight = 3.0f;
+    float minDropThreshold = 0.2f;
+    float maxJumpUp = 1.2f;
+    float maxJumpDown = 1.5f;
+
+    float maxSlopeDegrees = 60.0f;
+
+    float raycastExtraHeight = 0.5f;
+    float sweepSideOffset = 0.36f;
+    float sweepUp = 1.0f;
+
+    int maxLinksPerTile = 64;
+    float quantizePos = 0.25f;
+
+    uint32_t userIdBase = 0xAFAF0000u;
+    uint8_t dropArea = 4;
+    uint8_t jumpArea = 3;
+    uint8_t climbArea = 2;
+};
+
 struct IslandOffmeshLinkParams
 {
     glm::vec3 targetPosition;
@@ -181,6 +225,8 @@ public:
     void ClearOffmeshLinks();
     bool GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParams& params,
                                        std::vector<OffmeshLink>& outLinks) const;
+    bool GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationParamsV2& params,
+                                         std::vector<OffmeshLink>& outLinks) const;
     bool AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& params,
                                         std::vector<OffmeshLink>& outLinks);
 
