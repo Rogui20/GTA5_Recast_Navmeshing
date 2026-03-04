@@ -219,6 +219,7 @@ var menudata={children:[
 {text:"y",url:"globals_type_y.html#index_y"},
 {text:"z",url:"globals_type_z.html#index_z"}]},
 {text:"Enumerations",url:"globals_enum.html",children:[
+{text:"a",url:"globals_enum.html#index_a"},
 {text:"c",url:"globals_enum.html#index_c"},
 {text:"d",url:"globals_enum.html#index_d"},
 {text:"e",url:"globals_enum.html#index_e"},

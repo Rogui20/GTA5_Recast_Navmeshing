@@ -6,6 +6,7 @@ var searchData=
   ['jbutton_3',['jbutton',['../unionSDL__Event.html#a591104d64903ae1cf70874fb5d3124ff',1,'SDL_Event']]],
   ['jdevice_4',['jdevice',['../unionSDL__Event.html#a17514dc19a846ea1b5fbe44123700c4c',1,'SDL_Event']]],
   ['jhat_5',['jhat',['../unionSDL__Event.html#a421b40e0f8e01f181c8d5548cff1dd1d',1,'SDL_Event']]],
-  ['jumpheight_6',['jumpHeight',['../structAutoOffmeshGenerationParams.html#a456cea994e8ba6daaaee2c1f05d33280',1,'AutoOffmeshGenerationParams']]],
-  ['jumptype_7',['jumpType',['../structSimEventFFI.html#a337d45342a42263366de5120b7f745ad',1,'SimEventFFI']]]
+  ['jumparea_6',['jumpArea',['../structAutoOffmeshGenerationParamsV2.html#af703a3e04e94601f4e8d131fe0d1e074',1,'AutoOffmeshGenerationParamsV2']]],
+  ['jumpheight_7',['jumpHeight',['../structAutoOffmeshGenerationParams.html#a456cea994e8ba6daaaee2c1f05d33280',1,'AutoOffmeshGenerationParams']]],
+  ['jumptype_8',['jumpType',['../structSimEventFFI.html#a337d45342a42263366de5120b7f745ad',1,'SimEventFFI']]]
 ];

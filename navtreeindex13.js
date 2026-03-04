@@ -1,5 +1,10 @@
 var NAVTREEINDEX13 =
 {
+"SDL__config__android_8h.html#a030066bd0c2eb97accdf90f152eb18dd":[44,0,5,2,1,10,34],
+"SDL__config__android_8h.html#a0302094a0ee567c610a36c63104ebda5":[44,0,5,2,1,10,55],
+"SDL__config__android_8h.html#a04f983617a16d562f9a6df2e34a6a41c":[44,0,5,2,1,10,67],
+"SDL__config__android_8h.html#a069eb269b08ea1dfd2fbd9cdd60569a2":[44,0,5,2,1,10,58],
+"SDL__config__android_8h.html#a074c8b477744a81b81f35ac25fcf9430":[44,0,5,2,1,10,80],
 "SDL__config__android_8h.html#a0988bbde3989f4ccf22e10ae1287ec48":[44,0,5,2,1,10,7],
 "SDL__config__android_8h.html#a0b830653d87b785e984b25f922e14cee":[44,0,5,2,1,10,99],
 "SDL__config__android_8h.html#a0f08977476bc5b181092cf8b3ddaf368":[44,0,5,2,1,10,87],
@@ -33,8 +38,8 @@ var NAVTREEINDEX13 =
 "SDL__config__android_8h.html#a494d1ecf5a4567ccbf7901e3be337bc7":[44,0,5,2,1,10,64],
 "SDL__config__android_8h.html#a49afaaefcf9868c6d3a9fb43706af4db":[44,0,5,2,1,10,92],
 "SDL__config__android_8h.html#a4ac6a60cb19181437136206238f16497":[44,0,5,2,1,10,96],
-"SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,60],
 "SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,61],
+"SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,60],
 "SDL__config__android_8h.html#a4e31ef0be24f881a3a13e42723db7095":[44,0,5,2,1,10,31],
 "SDL__config__android_8h.html#a4f6ff4162269254c4c4b86bc9892ecce":[44,0,5,2,1,10,42],
 "SDL__config__android_8h.html#a51924e273a5b8653a28e005108ab7ae6":[44,0,5,2,1,10,101],
@@ -244,10 +249,5 @@ var NAVTREEINDEX13 =
 "SDL__config__emscripten_8h.html#ae4a04ebc256919da1ad32f7aa36042d1":[44,0,5,2,1,11,117],
 "SDL__config__emscripten_8h.html#ae8cb3218a402409a6dcbf7e9c5b3a5f3":[44,0,5,2,1,11,19],
 "SDL__config__emscripten_8h.html#ae91f4e5a39dc5d860202b397c9aaa37c":[44,0,5,2,1,11,11],
-"SDL__config__emscripten_8h.html#ae93a78f9d076138897af441c9f86f285":[44,0,5,2,1,11,55],
-"SDL__config__emscripten_8h.html#aebc308e17ca187e22a415060b0d3817d":[44,0,5,2,1,11,1],
-"SDL__config__emscripten_8h.html#aedb06b9a9fb649d9218d46247085c02c":[44,0,5,2,1,11,13],
-"SDL__config__emscripten_8h.html#af12ab17c63aca5c37153de42489318f6":[44,0,5,2,1,11,129],
-"SDL__config__emscripten_8h.html#af187d71ae8983ddad9530d5c031f48fe":[44,0,5,2,1,11,106],
-"SDL__config__emscripten_8h.html#af5e1c674bb7ab42ee349e48b33705a04":[44,0,5,2,1,11,89]
+"SDL__config__emscripten_8h.html#ae93a78f9d076138897af441c9f86f285":[44,0,5,2,1,11,55]
 };

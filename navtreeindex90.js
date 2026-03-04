@@ -1,5 +1,11 @@
 var NAVTREEINDEX90 =
 {
+"imstb__truetype_8h.html#adfc8faff4ebfbad1ce0bff9b4ebc691c":[44,0,7,0,11,70],
+"imstb__truetype_8h.html#ae402c69747eee588a5fc18d8ea506b42":[44,0,7,0,11,61],
+"imstb__truetype_8h.html#ae70e9e09a74359133d5f282e032d5aa7":[44,0,7,0,11,39],
+"imstb__truetype_8h.html#aeec3933fdb14884b7c2919e6ddc44259":[44,0,7,0,11,75],
+"imstb__truetype_8h.html#af7ee37667bd84fee4c1fcf640fe8a672":[44,0,7,0,11,59],
+"imstb__truetype_8h_source.html":[44,0,7,0,11],
 "index.html":[],
 "index.html#autotoc_md-community":[4],
 "index.html#autotoc_md-documentation--links":[3],
@@ -243,11 +249,5 @@ var NAVTREEINDEX90 =
 "raspberry-pi.html#text-input-api-support":[30,7],
 "readme-hg.html":[16],
 "risc-os.html":[31],
-"risc-os.html#compiling-2":[31,0],
-"risc-os.html#current-level-of-implementation-1":[31,1],
-"simple-directmedia-layer-2-for-os2--ecomstation.html":[24],
-"simple-directmedia-layer-2-for-os2--ecomstation.html#compiling-1":[24,0],
-"simple-directmedia-layer-2-for-os2--ecomstation.html#installing":[24,1],
-"simple-directmedia-layer-2-for-os2--ecomstation.html#joysticks-in-sdl2":[24,2],
-"structAutoOffmeshGenerationParams.html":[43,0,1]
+"risc-os.html#compiling-2":[31,0]
 };

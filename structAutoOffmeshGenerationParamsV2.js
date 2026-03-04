@@ -1,0 +1,27 @@
+var structAutoOffmeshGenerationParamsV2 =
+[
+    [ "agentHeight", "structAutoOffmeshGenerationParamsV2.html#ab56b4789529e35755d0df0914864394d", null ],
+    [ "agentRadius", "structAutoOffmeshGenerationParamsV2.html#a9cd772b68c337d1dd7a7fcd9099db718", null ],
+    [ "climbArea", "structAutoOffmeshGenerationParamsV2.html#a4d4bd7743cf68dc616414c46770d3e95", null ],
+    [ "distStep", "structAutoOffmeshGenerationParamsV2.html#a4266fb9377b983213f8f19e0f3c64b07", null ],
+    [ "dropArea", "structAutoOffmeshGenerationParamsV2.html#aa855e5af61b836a57cb37fcc56f83829", null ],
+    [ "genFlags", "structAutoOffmeshGenerationParamsV2.html#a04542fdb7622428e1a751d6f0028fa9a", null ],
+    [ "jumpArea", "structAutoOffmeshGenerationParamsV2.html#af703a3e04e94601f4e8d131fe0d1e074", null ],
+    [ "maxDist", "structAutoOffmeshGenerationParamsV2.html#a9d50462c02ba4f75918572d0637cb26b", null ],
+    [ "maxDropHeight", "structAutoOffmeshGenerationParamsV2.html#af7ac0e4e3aa62398c0f1a9e6cca1d3c1", null ],
+    [ "maxJumpDown", "structAutoOffmeshGenerationParamsV2.html#a43f42a9132880c4b50532f9d6446fff0", null ],
+    [ "maxJumpUp", "structAutoOffmeshGenerationParamsV2.html#ad2722c6c062ff921cd0a7a3da318e46f", null ],
+    [ "maxLinksPerTile", "structAutoOffmeshGenerationParamsV2.html#ab721f69c132a14ff81ab60734ce4d0cb", null ],
+    [ "maxSlopeDegrees", "structAutoOffmeshGenerationParamsV2.html#af4eba94adf780dc74262fc60d1c21c8b", null ],
+    [ "minDist", "structAutoOffmeshGenerationParamsV2.html#ab992fe72c8d0a1beb24b7996caee8aca", null ],
+    [ "minDropThreshold", "structAutoOffmeshGenerationParamsV2.html#ac77f74bf32ca09f92d75f54c135e65ae", null ],
+    [ "outwardOffset", "structAutoOffmeshGenerationParamsV2.html#a936240edbeea9c8d636f217998816ce6", null ],
+    [ "quantizePos", "structAutoOffmeshGenerationParamsV2.html#aff99da9fef04ac31e62627a4c63687ad", null ],
+    [ "raycastExtraHeight", "structAutoOffmeshGenerationParamsV2.html#a51ee711705fd00b35fa68f52a85111cd", null ],
+    [ "samplesPerEdge", "structAutoOffmeshGenerationParamsV2.html#affc3a73dd9f043d7a581c98b6e0abfad", null ],
+    [ "startInset", "structAutoOffmeshGenerationParamsV2.html#aa81c261baf98b125485bac7b1dc5fe5c", null ],
+    [ "sweepSideOffset", "structAutoOffmeshGenerationParamsV2.html#a3ba2dddcc342e495beb9fc9681771af9", null ],
+    [ "sweepUp", "structAutoOffmeshGenerationParamsV2.html#a882370a166604f0aa2ac766428aeafde", null ],
+    [ "upOffset", "structAutoOffmeshGenerationParamsV2.html#aad71f15f98d986119ad09a7f3231f47e", null ],
+    [ "userIdBase", "structAutoOffmeshGenerationParamsV2.html#a821c8528fec534d4579cde9660d1aa3b", null ]
+];

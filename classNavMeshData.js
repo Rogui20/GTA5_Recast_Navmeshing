@@ -13,6 +13,7 @@ var classNavMeshData =
     [ "EstimateTileGrid", "classNavMeshData.html#aae1d7865256039b880166cf0fc596461", null ],
     [ "ExtractDebugMesh", "classNavMeshData.html#a1e3a68693ca1bb2655cc9db37a6f111f", null ],
     [ "GenerateAutomaticOffmeshLinks", "classNavMeshData.html#a49c39740dd9a92dc1ddad39d864a0626", null ],
+    [ "GenerateAutomaticOffmeshLinksV2", "classNavMeshData.html#a55eceb66a0372302391470487d5d1eba", null ],
     [ "GetCachedBounds", "classNavMeshData.html#aaed3ebece63a796479fca8867e5dcef0", null ],
     [ "GetCachedTileHashes", "classNavMeshData.html#af4729db7f7d5aaed68a129c64a31d850", null ],
     [ "GetNavMesh", "classNavMeshData.html#a48c4d354d62d406decab6d32cecd7acb", null ],
