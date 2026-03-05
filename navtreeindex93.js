@@ -1,6 +1,5 @@
 var NAVTREEINDEX93 =
 {
-"structImFont.html#a1c2a7ed2d08e08465b884e1092798077":[43,0,113,15],
 "structImFont.html#a1d35b1eb7c2f6a3a648308531e88e7f1":[43,0,113,0],
 "structImFont.html#a377366ed7c5d076363ad4760aeff63ec":[43,0,113,1],
 "structImFont.html#a4374ffca4f2d9a23599aac21c57e2a66":[43,0,113,10],
@@ -249,5 +248,6 @@ var NAVTREEINDEX93 =
 "structImGuiBoxSelectState.html#a891d144d7129f111e9e0a2b5bfd40a29":[43,0,180,13],
 "structImGuiBoxSelectState.html#a9b9f96a2176602f72551270e3874fb3c":[43,0,180,3],
 "structImGuiBoxSelectState.html#a9eb71f0d6f2774714c260fc50218c7a5":[43,0,180,8],
-"structImGuiBoxSelectState.html#aa56a1f1ae26cb4d1c483c891de5715ec":[43,0,180,0]
+"structImGuiBoxSelectState.html#aa56a1f1ae26cb4d1c483c891de5715ec":[43,0,180,0],
+"structImGuiBoxSelectState.html#ab1cb436af8253dfa4f22bc86c777e355":[43,0,180,5]
 };

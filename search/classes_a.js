@@ -14,5 +14,6 @@ var searchData=
   ['navmeshtestertool_11',['NavMeshTesterTool',['../classNavMeshTesterTool.html',1,'']]],
   ['navmeshtilebuildcontext_12',['NavMeshTileBuildContext',['../structNavMeshTileBuildContext.html',1,'']]],
   ['navmeshtileheader_13',['NavMeshTileHeader',['../structNavMeshTileHeader.html',1,'']]],
-  ['navmeshtiletool_14',['NavMeshTileTool',['../classNavMeshTileTool.html',1,'']]]
+  ['navmeshtiletool_14',['NavMeshTileTool',['../classNavMeshTileTool.html',1,'']]],
+  ['nodeinfo_15',['NodeInfo',['../structNodeInfo.html',1,'']]]
 ];

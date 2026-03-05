@@ -1,6 +1,5 @@
 var NAVTREEINDEX90 =
 {
-"imstb__truetype_8h.html#adfc8faff4ebfbad1ce0bff9b4ebc691c":[44,0,7,0,11,70],
 "imstb__truetype_8h.html#ae402c69747eee588a5fc18d8ea506b42":[44,0,7,0,11,61],
 "imstb__truetype_8h.html#ae70e9e09a74359133d5f282e032d5aa7":[44,0,7,0,11,39],
 "imstb__truetype_8h.html#aeec3933fdb14884b7c2919e6ddc44259":[44,0,7,0,11,75],
@@ -249,5 +248,6 @@ var NAVTREEINDEX90 =
 "raspberry-pi.html#text-input-api-support":[30,7],
 "readme-hg.html":[16],
 "risc-os.html":[31],
-"risc-os.html#compiling-2":[31,0]
+"risc-os.html#compiling-2":[31,0],
+"risc-os.html#current-level-of-implementation-1":[31,1]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dadddc29cd1fbd017bfea5119eb9d3dd4d":[44,0,5,2,1,37,5,219],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dae0885c072dc8bfce02d4e01bfd53afc2":[44,0,5,2,1,37,5,173],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dae19150bda868459b26e2fed234e236d8":[44,0,5,2,1,37,5,206],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dae31581e04b70ee93fb938cc6f2be981b":[44,0,5,2,1,37,5,187],
@@ -249,5 +248,6 @@ var NAVTREEINDEX21 =
 "SDL__mutex_8h.html#aa57013f95a9c608cf24a5100b841e863":[44,0,5,2,1,46,31],
 "SDL__mutex_8h.html#aa7d56df841e98eed229d1d4b17327d29":[44,0,5,2,1,46,27],
 "SDL__mutex_8h.html#ab3c03b432fec86063d584f31fc810efb":[44,0,5,2,1,46,22],
-"SDL__mutex_8h.html#ab7575e7c87dcd570b4f1664bba24a24b":[44,0,5,2,1,46,38]
+"SDL__mutex_8h.html#ab7575e7c87dcd570b4f1664bba24a24b":[44,0,5,2,1,46,38],
+"SDL__mutex_8h.html#abd2bc8605242c50341362ada961dc914":[44,0,5,2,1,46,9]
 };

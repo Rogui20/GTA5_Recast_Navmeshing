@@ -1,6 +1,5 @@
 var NAVTREEINDEX91 =
 {
-"risc-os.html#current-level-of-implementation-1":[31,1],
 "simple-directmedia-layer-2-for-os2--ecomstation.html":[24],
 "simple-directmedia-layer-2-for-os2--ecomstation.html#compiling-1":[24,0],
 "simple-directmedia-layer-2-for-os2--ecomstation.html#installing":[24,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX91 =
 "structFastLZCompressor.html#ade3bcdfdf37fed48284a4a4d89e2d804":[43,0,87,1],
 "structFrameResources.html":[43,0,89],
 "structFrameResources.html#a2e11d2b6738b5641d3a3041be1a213a6":[43,0,89,4],
-"structFrameResources.html#a40399cf0ff9d5b63ec4b5a0ee57a9689":[43,0,89,2]
+"structFrameResources.html#a40399cf0ff9d5b63ec4b5a0ee57a9689":[43,0,89,2],
+"structFrameResources.html#a8d47cfe492e18a15f10722b9203f5b6c":[43,0,89,5]
 };

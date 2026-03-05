@@ -426,6 +426,7 @@ var hierarchy =
     [ "NavMeshSetHeader", "structNavMeshSetHeader.html", null ],
     [ "NavMeshTileBuildContext", "structNavMeshTileBuildContext.html", null ],
     [ "NavMeshTileHeader", "structNavMeshTileHeader.html", null ],
+    [ "NodeInfo", "structNodeInfo.html", null ],
     [ "ObjLoader", "classObjLoader.html", null ],
     [ "MemoryHandler::OffmeshControlSlot", "structMemoryHandler_1_1OffmeshControlSlot.html", null ],
     [ "OffmeshLink", "structOffmeshLink.html", null ],

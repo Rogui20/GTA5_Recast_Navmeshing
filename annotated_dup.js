@@ -330,6 +330,7 @@ var annotated_dup =
     [ "NavMeshTileBuildContext", "structNavMeshTileBuildContext.html", "structNavMeshTileBuildContext" ],
     [ "NavMeshTileHeader", "structNavMeshTileHeader.html", "structNavMeshTileHeader" ],
     [ "NavMeshTileTool", "classNavMeshTileTool.html", "classNavMeshTileTool" ],
+    [ "NodeInfo", "structNodeInfo.html", "structNodeInfo" ],
     [ "ObjLoader", "classObjLoader.html", "classObjLoader" ],
     [ "OffMeshConnectionTool", "classOffMeshConnectionTool.html", "classOffMeshConnectionTool" ],
     [ "OffmeshLink", "structOffmeshLink.html", "structOffmeshLink" ],

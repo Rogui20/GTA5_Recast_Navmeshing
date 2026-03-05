@@ -15,7 +15,7 @@ var searchData=
   ['filename_12',['filename',['../structSDL__AssertData.html#acf27f593e6a436386d2cbcf826cf1ef7',1,'SDL_AssertData']]],
   ['filter_13',['filter',['../structExampleAppConsole.html#a5526ec74c611e1152fb13162cd01e6da',1,'ExampleAppConsole::Filter'],['../structExampleAppLog.html#a4571947a6000e984ec8da9b7166e1e2b',1,'ExampleAppLog::Filter'],['../structExampleAppPropertyEditor.html#aaef7bc67e3ce058f21a1bec69bf8a424',1,'ExampleAppPropertyEditor::Filter']]],
   ['filter_5findex_14',['filter_index',['../structSDL__AudioCVT.html#a35093b3ad3331c17416c593a76012b63',1,'SDL_AudioCVT']]],
-  ['filters_15',['filters',['../structSDL__AudioCVT.html#afeb8dc60716644de3b681653442de1db',1,'SDL_AudioCVT::filters'],['../structImGuiTextFilter.html#a39ed87cfdf3cb0cdb8389b017bb00067',1,'ImGuiTextFilter::Filters']]],
+  ['filters_15',['filters',['../structImGuiTextFilter.html#a39ed87cfdf3cb0cdb8389b017bb00067',1,'ImGuiTextFilter::Filters'],['../structSDL__AudioCVT.html#afeb8dc60716644de3b681653442de1db',1,'SDL_AudioCVT::filters']]],
   ['finger_16',['finger',['../structSDL__ControllerTouchpadEvent.html#a0e88fa90ee264c841170cf199a4e57c9',1,'SDL_ControllerTouchpadEvent']]],
   ['fingerid_17',['fingerId',['../structSDL__TouchFingerEvent.html#a8616d46ed19906e3ee90a4d481d3a284',1,'SDL_TouchFingerEvent']]],
   ['first_5funicode_5fcodepoint_5fin_5frange_18',['first_unicode_codepoint_in_range',['../structstbtt__pack__range.html#a3b414cbee1e164c29dd138e0ae3d5759',1,'stbtt_pack_range']]],

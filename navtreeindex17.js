@@ -1,6 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"SDL__config__winrt_8h.html#af827060cbc139f790460a5ae252b4f4b":[44,0,5,2,1,20,86],
 "SDL__config__winrt_8h.html#afb1ce161af1df3c2c55a629ea0d4bb6c":[44,0,5,2,1,20,22],
 "SDL__config__winrt_8h.html#afb31c0ab32d51b7976adc41723b5b415":[44,0,5,2,1,20,11],
 "SDL__config__winrt_8h.html#afbc6197a413f7eec8834dd9270d11792":[44,0,5,2,1,20,63],
@@ -249,5 +248,6 @@ var NAVTREEINDEX17 =
 "SDL__gamecontroller_8h.html#a0bdcaf9e186ed7d66d41aae9978f08ef":[44,0,5,2,1,29,55],
 "SDL__gamecontroller_8h.html#a11fb78d9621b8d746510f08d00208349":[44,0,5,2,1,29,56],
 "SDL__gamecontroller_8h.html#a239bc88d4fd1f7488d2020100538a50f":[44,0,5,2,1,29,4],
-"SDL__gamecontroller_8h.html#a2879f90f77b4de4f73892aef4cf73d26":[44,0,5,2,1,29,62]
+"SDL__gamecontroller_8h.html#a2879f90f77b4de4f73892aef4cf73d26":[44,0,5,2,1,29,62],
+"SDL__gamecontroller_8h.html#a289122b9f72b3e89671fcbfaa6d61699":[44,0,5,2,1,29,50]
 };

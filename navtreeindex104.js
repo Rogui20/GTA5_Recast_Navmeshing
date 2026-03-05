@@ -1,6 +1,5 @@
 var NAVTREEINDEX104 =
 {
-"structImTriangulator.html#ada070a1b9bf5641714dfb4cf69200625":[43,0,297,13],
 "structImTriangulator.html#adf26cdf6f488de52f187d383cfbe87ec":[43,0,297,6],
 "structImTriangulatorNode.html":[43,0,298],
 "structImTriangulatorNode.html#a1d8eacc98ab67c7077b4c050d4dd7144":[43,0,298,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX104 =
 "structNavMeshTileHeader.html":[43,0,326],
 "structNavMeshTileHeader.html#a8e3d1a3dfbc6517021c1bc5c796ac1d1":[43,0,326,1],
 "structNavMeshTileHeader.html#ad1448da982f964635d4ec1cfa3239f3b":[43,0,326,0],
-"structNavmeshBuildInput.html":[43,0,313]
+"structNavmeshBuildInput.html":[43,0,313],
+"structNavmeshBuildInput.html#a165cf6e0f1ff8cd54c95ecede0ccb48d":[43,0,313,2]
 };

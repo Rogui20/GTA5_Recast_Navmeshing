@@ -1,6 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"SDL__config__android_8h.html#a030066bd0c2eb97accdf90f152eb18dd":[44,0,5,2,1,10,34],
 "SDL__config__android_8h.html#a0302094a0ee567c610a36c63104ebda5":[44,0,5,2,1,10,55],
 "SDL__config__android_8h.html#a04f983617a16d562f9a6df2e34a6a41c":[44,0,5,2,1,10,67],
 "SDL__config__android_8h.html#a069eb269b08ea1dfd2fbd9cdd60569a2":[44,0,5,2,1,10,58],
@@ -249,5 +248,6 @@ var NAVTREEINDEX13 =
 "SDL__config__emscripten_8h.html#ae4a04ebc256919da1ad32f7aa36042d1":[44,0,5,2,1,11,117],
 "SDL__config__emscripten_8h.html#ae8cb3218a402409a6dcbf7e9c5b3a5f3":[44,0,5,2,1,11,19],
 "SDL__config__emscripten_8h.html#ae91f4e5a39dc5d860202b397c9aaa37c":[44,0,5,2,1,11,11],
-"SDL__config__emscripten_8h.html#ae93a78f9d076138897af441c9f86f285":[44,0,5,2,1,11,55]
+"SDL__config__emscripten_8h.html#ae93a78f9d076138897af441c9f86f285":[44,0,5,2,1,11,55],
+"SDL__config__emscripten_8h.html#aebc308e17ca187e22a415060b0d3817d":[44,0,5,2,1,11,1]
 };
