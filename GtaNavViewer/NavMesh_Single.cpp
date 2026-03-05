@@ -302,7 +302,7 @@ bool BuildSingleNavMesh(const NavmeshBuildInput& input,
     navParams.tileWidth  = (params.bmax[0] - params.bmin[0]);
     navParams.tileHeight = (params.bmax[2] - params.bmin[2]);
     navParams.maxTiles   = 1;
-    navParams.maxPolys   = 1 << 16;
+    navParams.maxPolys   = 1 << 18;
 
     if (dtStatusFailed(nav->init(&navParams)))
     {

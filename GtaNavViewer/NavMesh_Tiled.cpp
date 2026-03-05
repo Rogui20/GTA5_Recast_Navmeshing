@@ -240,7 +240,7 @@ namespace
 
         rcFreeHeightField(solid);
         solid = nullptr;
-
+        printf("Erode: walkableRadius=%d", cfg.walkableRadius);
         rcErodeWalkableArea(&input.ctx, cfg.walkableRadius, *chf);
         rcBuildDistanceField(&input.ctx, *chf);
         rcBuildRegions(&input.ctx, *chf, cfg.borderSize,
@@ -587,7 +587,7 @@ bool BuildTiledNavMesh(const NavmeshBuildInput& input,
     navParams.tileHeight = cfg.tileSize * cfg.cs;
     navParams.maxTiles = tileCountTotal;
 
-    const unsigned int desiredMaxPolys = 1 << 16;
+    const unsigned int desiredMaxPolys = 1 << 18;
     const unsigned int tileBits = (unsigned int)dtIlog2(dtNextPow2((unsigned int)navParams.maxTiles));
     const unsigned int desiredPolyBits = (unsigned int)dtIlog2(dtNextPow2(desiredMaxPolys));
     const unsigned int maxPolyBitsAllowed = tileBits >= 22 ? 0u : (22u - tileBits);

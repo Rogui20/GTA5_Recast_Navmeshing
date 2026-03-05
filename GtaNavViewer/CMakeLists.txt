@@ -5,7 +5,7 @@ project(GtaNavViewer)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(GTANAVVIEWER_BUILD_SHARED "Build GtaNavViewer as a shared library (DLL)" OFF)
+option(GTANAVVIEWER_BUILD_SHARED "Build GtaNavViewer as a shared library (DLL)" ON)
 
 # ---------------------------------------
 # Diretórios base

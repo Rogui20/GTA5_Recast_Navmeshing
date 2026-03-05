@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <cfloat>
+#include <cstdio>
 #include <cmath>
 #include <cstring>
 #include <filesystem>
@@ -43,12 +44,81 @@ namespace
         glm::vec3 worldBMax{0.0f};
     };
 
+    enum : std::uint8_t
+    {
+        SIM_FRAMEFLAG_JUMP = 1u << 0,
+        SIM_FRAMEFLAG_OFFMESH_SOON = 1u << 1,
+        SIM_FRAMEFLAG_NEEDS_REPATH = 1u << 2,
+        SIM_FRAMEFLAG_STUCK = 1u << 3,
+        SIM_FRAMEFLAG_AIRBORNE = 1u << 4,
+        SIM_FRAMEFLAG_GROUND_FIT_OK = 1u << 5,
+        SIM_FRAMEFLAG_GROUND_FIT_PARTIAL = 1u << 6,
+        SIM_FRAMEFLAG_OFFMESH_TRAVERSAL = 1u << 7,
+    };
+
+    struct HeightSampler
+    {
+        bool enabled = false;
+        bool built = false;
+        int samplesPerTile = 64;
+        bool storeTwoLayers = true;
+    };
+
+    struct SimAgentState
+    {
+        std::uint32_t id = 0;
+        SimShapeType shape = SHAPE_CYLINDER;
+        std::uint32_t teamMask = 0;
+        std::uint32_t avoidMask = 0;
+        std::uint32_t flags = 0;
+        glm::vec3 pos{0.0f};
+        float headingDeg = 0.0f;
+        float radius = 0.5f;
+        float halfX = 0.5f;
+        float halfZ = 0.5f;
+        float height = 1.8f;
+        std::vector<float> cornersXYZ;
+        std::vector<unsigned char> cornerFlags;
+        int cornerCount = 0;
+        int cornerIndex = 0;
+        std::vector<dtPolyRef> pathPolys;
+        dtPolyRef currentRef = 0;
+        float verticalVel = 0.0f;
+        glm::vec3 lastVel{0.0f};
+        glm::vec3 eulerRPYDeg{0.0f};
+        float rollDeg = 0.0f;
+        float pitchDeg = 0.0f;
+        int moveSurfaceFailCount = 0;
+        bool inOffmesh = false;
+        glm::vec3 offStart{0.0f};
+        glm::vec3 offEnd{0.0f};
+        float offT = 0.0f;
+        float offDuration = 0.0f;
+        std::uint8_t offType = 0;
+        float offArcHeight = 0.0f;
+        int offmeshStartCornerIndex = -1;
+    };
+
+    struct DynObstacleState
+    {
+        uint32_t id = 0;
+        uint32_t teamMask = 0;
+        uint32_t avoidMask = 0;
+        uint8_t shapeType = 0;
+        glm::vec3 pos{0.0f};
+        float radius = 0.0f;
+        float halfX = 0.0f;
+        float halfZ = 0.0f;
+        float height = 0.0f;
+    };
+
     struct ExternNavmeshContext
     {
         NavmeshGenerationSettings genSettings{};
         std::vector<GeometryInstance> geometries;
         std::vector<OffmeshLink> offmeshLinks;
         AutoOffmeshGenerationParams autoOffmeshParams{};
+        AutoOffmeshGenerationParamsV2 autoOffmeshParamsV2{};
         NavMeshData navData;
         dtNavMeshQuery* navQuery = nullptr;
         bool hasBoundingBox = false;
@@ -67,7 +137,18 @@ namespace
         std::unordered_map<uint64_t, TileDbIndexEntry> dbIndexCache;
         bool dbIndexLoaded = false;
         std::filesystem::file_time_type dbMTime{};
+        std::unordered_map<std::uint32_t, SimAgentState> simAgents;
+        std::vector<std::uint32_t> simAgentIds;
+        std::unordered_map<std::uint32_t, DynObstacleState> dynObstacles;
+        std::vector<std::uint32_t> dynObstacleIds;
+        HeightSampler heightSampler;
+        SimParamsFFI lastSimParams{};
+        bool hasLastSimParams = false;
     };
+
+    std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx);
+    bool EnsureNavQuery(ExternNavmeshContext& ctx);
+    bool UpdateNavmeshState(ExternNavmeshContext& ctx, bool forceFullBuild);
 
     glm::mat3 GetRotationMatrix(const glm::vec3& eulerDegrees)
     {
@@ -376,6 +457,384 @@ namespace
         return !outVerts.empty() && !outIndices.empty();
     }
 
+
+    static constexpr uint32_t RUNTIME_CACHE_MAGIC = ('G' << 24) | ('N' << 16) | ('R' << 8) | 'C';
+    static constexpr uint32_t RUNTIME_CACHE_VERSION = 1;
+
+    struct RuntimeCacheHeader
+    {
+        uint32_t magic = RUNTIME_CACHE_MAGIC;
+        uint32_t version = RUNTIME_CACHE_VERSION;
+        uint32_t geometryCount = 0;
+        uint32_t offmeshCount = 0;
+        uint8_t hasBoundingBox = 0;
+        uint8_t hasTileDb = 0;
+        uint16_t reserved = 0;
+        int32_t maxResidentTiles = 0;
+    };
+
+    template <typename T>
+    bool WriteValue(std::ofstream& out, const T& value)
+    {
+        out.write(reinterpret_cast<const char*>(&value), sizeof(T));
+        return out.good();
+    }
+
+    template <typename T>
+    bool ReadValue(std::ifstream& in, T& value)
+    {
+        in.read(reinterpret_cast<char*>(&value), sizeof(T));
+        return in.good();
+    }
+
+    bool WriteString(std::ofstream& out, const std::string& text)
+    {
+        uint32_t len = static_cast<uint32_t>(text.size());
+        if (!WriteValue(out, len))
+            return false;
+        if (len == 0)
+            return true;
+        out.write(text.data(), len);
+        return out.good();
+    }
+
+    bool ReadString(std::ifstream& in, std::string& text)
+    {
+        uint32_t len = 0;
+        if (!ReadValue(in, len))
+            return false;
+        text.resize(len);
+        if (len == 0)
+            return true;
+        in.read(text.data(), len);
+        return in.good();
+    }
+
+    bool SaveRuntimeCacheFile(ExternNavmeshContext& ctx, const std::filesystem::path& cacheFilePath)
+    {
+        if (!ctx.navData.IsLoaded() || !ctx.navData.HasTiledCache())
+        {
+            printf("[ExternC] SaveRuntimeCacheFile: navmesh nao esta carregado em modo tiled.\n");
+            return false;
+        }
+
+        if ((ctx.rebuildAll || !ctx.dirtyBounds.empty()) && !UpdateNavmeshState(ctx, false))
+        {
+            printf("[ExternC] SaveRuntimeCacheFile: falha ao sincronizar navmesh antes de salvar cache.\n");
+            return false;
+        }
+
+        std::vector<char> tileDbBytes;
+        std::filesystem::path tileDbPath = GetSessionCachePath(ctx);
+        if (std::filesystem::exists(tileDbPath))
+        {
+            std::ifstream tileDbIn(tileDbPath, std::ios::binary);
+            if (tileDbIn.is_open())
+            {
+                tileDbIn.seekg(0, std::ios::end);
+                const auto tileDbSize = tileDbIn.tellg();
+                if (tileDbSize > 0)
+                {
+                    tileDbIn.seekg(0, std::ios::beg);
+                    tileDbBytes.resize(static_cast<size_t>(tileDbSize));
+                    tileDbIn.read(tileDbBytes.data(), tileDbBytes.size());
+                    if (!tileDbIn.good())
+                        tileDbBytes.clear();
+                }
+            }
+        }
+
+        if (tileDbBytes.empty())
+            printf("[ExternC] SaveRuntimeCacheFile: tile DB ausente/invalido; cache sera salvo sem snapshot de tiles (fallback por rebuild no load).\n");
+
+        if (cacheFilePath.has_parent_path())
+            std::filesystem::create_directories(cacheFilePath.parent_path());
+
+        std::ofstream out(cacheFilePath, std::ios::binary);
+        if (!out.is_open())
+            return false;
+
+        RuntimeCacheHeader header{};
+        header.geometryCount = static_cast<uint32_t>(ctx.geometries.size());
+        header.offmeshCount = static_cast<uint32_t>(ctx.offmeshLinks.size());
+        header.hasBoundingBox = ctx.hasBoundingBox ? 1 : 0;
+        header.hasTileDb = tileDbBytes.empty() ? 0 : 1;
+        header.maxResidentTiles = ctx.maxResidentTiles;
+
+        if (!WriteValue(out, header) ||
+            !WriteValue(out, ctx.genSettings) ||
+            !WriteValue(out, ctx.autoOffmeshParams) ||
+            !WriteValue(out, ctx.bboxMin) ||
+            !WriteValue(out, ctx.bboxMax) ||
+            !WriteValue(out, ctx.cachedExtents))
+        {
+            return false;
+        }
+
+        for (const auto& geom : ctx.geometries)
+        {
+            const uint64_t vertexCount = static_cast<uint64_t>(geom.source.vertices.size());
+            const uint64_t indexCount = static_cast<uint64_t>(geom.source.indices.size());
+            if (!WriteString(out, geom.id) ||
+                !WriteValue(out, geom.position) ||
+                !WriteValue(out, geom.rotation) ||
+                !WriteValue(out, geom.source.bmin) ||
+                !WriteValue(out, geom.source.bmax) ||
+                !WriteValue(out, vertexCount) ||
+                !WriteValue(out, indexCount))
+            {
+                return false;
+            }
+
+            if (vertexCount > 0)
+            {
+                out.write(reinterpret_cast<const char*>(geom.source.vertices.data()), sizeof(glm::vec3) * vertexCount);
+                if (!out.good())
+                    return false;
+            }
+
+            if (indexCount > 0)
+            {
+                out.write(reinterpret_cast<const char*>(geom.source.indices.data()), sizeof(unsigned int) * indexCount);
+                if (!out.good())
+                    return false;
+            }
+        }
+
+        for (const auto& link : ctx.offmeshLinks)
+        {
+            if (!WriteValue(out, link))
+                return false;
+        }
+
+        const uint64_t tileDbSizeU64 = static_cast<uint64_t>(tileDbBytes.size());
+        if (!WriteValue(out, tileDbSizeU64))
+            return false;
+        out.write(tileDbBytes.data(), tileDbBytes.size());
+        if (!out.good())
+            return false;
+
+        printf("[ExternC] SaveRuntimeCacheFile: cache salvo em %s (geoms=%u links=%u tileDbBytes=%llu).\n",
+               cacheFilePath.string().c_str(),
+               header.geometryCount,
+               header.offmeshCount,
+               static_cast<unsigned long long>(tileDbSizeU64));
+        return true;
+    }
+
+    bool BuildNavmeshInternal(ExternNavmeshContext& ctx)
+    {
+        std::vector<glm::vec3> verts;
+        std::vector<unsigned int> indices;
+        if (!CombineGeometry(ctx, verts, indices))
+            return false;
+
+        ctx.rebuildAll = false;
+        ctx.dirtyBounds.clear();
+        ctx.navData.SetOffmeshLinks(ctx.offmeshLinks);
+
+        const bool isTiled = ctx.genSettings.mode == NavmeshBuildMode::Tiled;
+        std::filesystem::path cachePath = GetSessionCachePath(ctx);
+        const float* forcedBMin = nullptr;
+        const float* forcedBMax = nullptr;
+        float forcedMin[3];
+        float forcedMax[3];
+        if (isTiled && ctx.hasBoundingBox)
+        {
+            forcedMin[0] = ctx.bboxMin.x;
+            forcedMin[1] = ctx.bboxMin.y;
+            forcedMin[2] = ctx.bboxMin.z;
+            forcedMax[0] = ctx.bboxMax.x;
+            forcedMax[1] = ctx.bboxMax.y;
+            forcedMax[2] = ctx.bboxMax.z;
+            forcedBMin = forcedMin;
+            forcedBMax = forcedMax;
+        }
+
+        if (!ctx.navData.BuildFromMesh(verts, indices, ctx.genSettings, isTiled, nullptr, true, cachePath.string().c_str(), forcedBMin, forcedBMax))
+            return false;
+
+        return EnsureNavQuery(ctx);
+    }
+
+    bool LoadRuntimeCacheFile(ExternNavmeshContext& ctx, const std::filesystem::path& cacheFilePath)
+    {
+        std::ifstream in(cacheFilePath, std::ios::binary);
+        if (!in.is_open())
+        {
+            printf("[ExternC] LoadRuntimeCacheFile: falha ao abrir cache %s\n", cacheFilePath.string().c_str());
+            return false;
+        }
+
+        RuntimeCacheHeader header{};
+        if (!ReadValue(in, header))
+            return false;
+        if (header.magic != RUNTIME_CACHE_MAGIC || header.version != RUNTIME_CACHE_VERSION)
+        {
+            printf("[ExternC] LoadRuntimeCacheFile: cabecalho invalido/incompativel em %s\n", cacheFilePath.string().c_str());
+            return false;
+        }
+
+        ExternNavmeshContext loaded{};
+        if (!ReadValue(in, loaded.genSettings) ||
+            !ReadValue(in, loaded.autoOffmeshParams) ||
+            !ReadValue(in, loaded.bboxMin) ||
+            !ReadValue(in, loaded.bboxMax) ||
+            !ReadValue(in, loaded.cachedExtents))
+        {
+            return false;
+        }
+
+        loaded.hasBoundingBox = header.hasBoundingBox != 0;
+        loaded.maxResidentTiles = std::max(1, header.maxResidentTiles);
+        loaded.cacheRoot = ctx.cacheRoot;
+        loaded.sessionId = ctx.sessionId;
+        loaded.streamingEnabled = loaded.genSettings.mode == NavmeshBuildMode::Tiled;
+
+        loaded.geometries.reserve(header.geometryCount);
+        for (uint32_t i = 0; i < header.geometryCount; ++i)
+        {
+            GeometryInstance geom{};
+            uint64_t vertexCount = 0;
+            uint64_t indexCount = 0;
+            if (!ReadString(in, geom.id) ||
+                !ReadValue(in, geom.position) ||
+                !ReadValue(in, geom.rotation) ||
+                !ReadValue(in, geom.source.bmin) ||
+                !ReadValue(in, geom.source.bmax) ||
+                !ReadValue(in, vertexCount) ||
+                !ReadValue(in, indexCount))
+            {
+                return false;
+            }
+
+            geom.source.vertices.resize(static_cast<size_t>(vertexCount));
+            geom.source.indices.resize(static_cast<size_t>(indexCount));
+            if (vertexCount > 0)
+            {
+                in.read(reinterpret_cast<char*>(geom.source.vertices.data()), sizeof(glm::vec3) * vertexCount);
+                if (!in.good())
+                    return false;
+            }
+            if (indexCount > 0)
+            {
+                in.read(reinterpret_cast<char*>(geom.source.indices.data()), sizeof(unsigned int) * indexCount);
+                if (!in.good())
+                    return false;
+            }
+            UpdateWorldBounds(geom);
+            loaded.geometries.push_back(std::move(geom));
+        }
+
+        loaded.offmeshLinks.resize(header.offmeshCount);
+        for (uint32_t i = 0; i < header.offmeshCount; ++i)
+        {
+            if (!ReadValue(in, loaded.offmeshLinks[i]))
+                return false;
+        }
+
+        uint64_t tileDbSize = 0;
+        if (!ReadValue(in, tileDbSize))
+            return false;
+        std::vector<char> tileDbBytes(static_cast<size_t>(tileDbSize));
+        if (tileDbSize > 0)
+        {
+            in.read(tileDbBytes.data(), static_cast<std::streamsize>(tileDbSize));
+            if (!in.good())
+                return false;
+        }
+
+        const float forcedMin[3] = { loaded.hasBoundingBox ? loaded.bboxMin.x : 0.0f,
+                                     loaded.hasBoundingBox ? loaded.bboxMin.y : 0.0f,
+                                     loaded.hasBoundingBox ? loaded.bboxMin.z : 0.0f };
+        const float forcedMax[3] = { loaded.hasBoundingBox ? loaded.bboxMax.x : 0.0f,
+                                     loaded.hasBoundingBox ? loaded.bboxMax.y : 0.0f,
+                                     loaded.hasBoundingBox ? loaded.bboxMax.z : 0.0f };
+
+        float runtimeMin[3] = { forcedMin[0], forcedMin[1], forcedMin[2] };
+        float runtimeMax[3] = { forcedMax[0], forcedMax[1], forcedMax[2] };
+
+        if (!loaded.hasBoundingBox)
+        {
+            glm::vec3 sceneMin(FLT_MAX);
+            glm::vec3 sceneMax(-FLT_MAX);
+            for (const auto& geom : loaded.geometries)
+            {
+                sceneMin = glm::min(sceneMin, geom.worldBMin);
+                sceneMax = glm::max(sceneMax, geom.worldBMax);
+            }
+            if (sceneMin.x <= sceneMax.x)
+            {
+                runtimeMin[0] = sceneMin.x;
+                runtimeMin[1] = sceneMin.y;
+                runtimeMin[2] = sceneMin.z;
+                runtimeMax[0] = sceneMax.x;
+                runtimeMax[1] = sceneMax.y;
+                runtimeMax[2] = sceneMax.z;
+            }
+        }
+
+        bool loadedFromTileDb = false;
+        if (header.hasTileDb != 0 && !tileDbBytes.empty())
+        {
+            loaded.navData.SetOffmeshLinks(loaded.offmeshLinks);
+            if (!loaded.navData.InitTiledGrid(loaded.genSettings, runtimeMin, runtimeMax))
+                return false;
+
+            std::filesystem::path tileDbPath = GetSessionCachePath(loaded);
+            if (tileDbPath.has_parent_path())
+                std::filesystem::create_directories(tileDbPath.parent_path());
+
+            {
+                std::ofstream tileDbOut(tileDbPath, std::ios::binary);
+                if (!tileDbOut.is_open())
+                {
+                    printf("[ExternC] LoadRuntimeCacheFile: falha ao escrever tile DB em %s\n", tileDbPath.string().c_str());
+                    return false;
+                }
+                tileDbOut.write(tileDbBytes.data(), static_cast<std::streamsize>(tileDbBytes.size()));
+                if (!tileDbOut.good())
+                {
+                    printf("[ExternC] LoadRuntimeCacheFile: escrita incompleta do tile DB em %s\n", tileDbPath.string().c_str());
+                    return false;
+                }
+            }
+
+            int loadedCount = 0;
+            if (LoadTilesInBoundsFromDb(tileDbPath.string().c_str(), loaded.navData.GetNavMesh(), runtimeMin, runtimeMax, loadedCount))
+            {
+                printf("[ExternC] LoadRuntimeCacheFile: %d tiles carregados do DB.\n", loadedCount);
+                loadedFromTileDb = true;
+            }
+            else
+            {
+                printf("[ExternC] LoadRuntimeCacheFile: falha ao carregar tiles do DB %s; fallback para rebuild completo.\n", tileDbPath.string().c_str());
+            }
+        }
+
+        if (!loadedFromTileDb)
+        {
+            printf("[ExternC] LoadRuntimeCacheFile: reconstruindo navmesh a partir das geometrias/offmesh links salvos.\n");
+            if (!BuildNavmeshInternal(loaded))
+                return false;
+        }
+
+        loaded.dbIndexCache.clear();
+        loaded.dbIndexLoaded = false;
+        loaded.dbMTime = {};
+        loaded.rebuildAll = false;
+        loaded.dirtyBounds.clear();
+
+        if (!EnsureNavQuery(loaded))
+            return false;
+
+        if (ctx.navQuery)
+            dtFreeNavMeshQuery(ctx.navQuery);
+
+        ctx = std::move(loaded);
+        return true;
+    }
+
     std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx)
     {
         const char* defaultSessionId = "Navmesh_01";
@@ -505,41 +964,6 @@ namespace
         return ok;
     }
 
-    bool BuildNavmeshInternal(ExternNavmeshContext& ctx)
-    {
-        std::vector<glm::vec3> verts;
-        std::vector<unsigned int> indices;
-        if (!CombineGeometry(ctx, verts, indices))
-            return false;
-
-        ctx.rebuildAll = false;
-        ctx.dirtyBounds.clear();
-        ctx.navData.SetOffmeshLinks(ctx.offmeshLinks);
-
-        const bool isTiled = ctx.genSettings.mode == NavmeshBuildMode::Tiled;
-        std::filesystem::path cachePath = GetSessionCachePath(ctx);
-        const float* forcedBMin = nullptr;
-        const float* forcedBMax = nullptr;
-        float forcedMin[3];
-        float forcedMax[3];
-        if (isTiled && ctx.hasBoundingBox)
-        {
-            forcedMin[0] = ctx.bboxMin.x;
-            forcedMin[1] = ctx.bboxMin.y;
-            forcedMin[2] = ctx.bboxMin.z;
-            forcedMax[0] = ctx.bboxMax.x;
-            forcedMax[1] = ctx.bboxMax.y;
-            forcedMax[2] = ctx.bboxMax.z;
-            forcedBMin = forcedMin;
-            forcedBMax = forcedMax;
-        }
-
-        if (!ctx.navData.BuildFromMesh(verts, indices, ctx.genSettings, isTiled, nullptr, true, cachePath.string().c_str(), forcedBMin, forcedBMax))
-            return false;
-
-        return EnsureNavQuery(ctx);
-    }
-
     bool UpdateNavmeshState(ExternNavmeshContext& ctx, bool forceFullBuild)
     {
         if (ctx.streamingEnabled)
@@ -558,6 +982,9 @@ namespace
                 if (!ctx.navData.InitTiledGrid(ctx.genSettings, forcedMin, forcedMax))
                     return false;
             }
+
+            if (forceFullBuild || ctx.rebuildAll)
+                return BuildNavmeshInternal(ctx);
 
             if (!ctx.dirtyBounds.empty())
             {
@@ -623,14 +1050,43 @@ namespace
 
     glm::vec3 ComputeEdgeOutwardNormal(const glm::vec3& a,
                                        const glm::vec3& b,
-                                       const glm::vec3& polyCenter)
+                                       const glm::vec3& polyCenter,
+                                       const glm::vec3& polyNormal)
     {
-        const glm::vec3 edgeDir = glm::normalize(b - a);
-        glm::vec3 outward = glm::normalize(glm::vec3(-edgeDir.z, 0.0f, edgeDir.x));
+        const glm::vec3 edge = b - a;
+        const float edgeLenSq = glm::dot(edge, edge);
+        if (edgeLenSq <= std::numeric_limits<float>::epsilon())
+            return glm::vec3(0.0f);
+
+        const glm::vec3 edgeDir = edge / std::sqrt(edgeLenSq);
+        glm::vec3 surfaceNormal = polyNormal;
+        const float surfaceNormalLenSq = glm::dot(surfaceNormal, surfaceNormal);
+        if (surfaceNormalLenSq <= std::numeric_limits<float>::epsilon())
+            surfaceNormal = glm::vec3(0.0f, 1.0f, 0.0f);
+        else
+            surfaceNormal /= std::sqrt(surfaceNormalLenSq);
+
+        // Em um polígono orientado, cross(edge, normal) aponta para o lado externo.
+        glm::vec3 outward = glm::cross(edgeDir, surfaceNormal);
+        const float outwardLenSq = glm::dot(outward, outward);
+        if (outwardLenSq <= std::numeric_limits<float>::epsilon())
+            return glm::vec3(0.0f);
+        outward /= std::sqrt(outwardLenSq);
+
         const glm::vec3 edgeCenter = (a + b) * 0.5f;
-        const glm::vec3 toCenter = glm::normalize(edgeCenter - polyCenter);
-        if (glm::dot(outward, toCenter) > 0.0f)
+        const glm::vec3 centerToEdge = edgeCenter - polyCenter;
+        const float centerToEdgeLenSq = glm::dot(centerToEdge, centerToEdge);
+        if (centerToEdgeLenSq > std::numeric_limits<float>::epsilon() &&
+            glm::dot(outward, centerToEdge / std::sqrt(centerToEdgeLenSq)) < 0.0f)
             outward = -outward;
+
+        // Mantém o normal no plano XZ, como esperado pelo consumidor atual.
+        outward.y = 0.0f;
+        const float horizontalLenSq = outward.x * outward.x + outward.z * outward.z;
+        if (horizontalLenSq <= std::numeric_limits<float>::epsilon())
+            return glm::vec3(0.0f);
+        outward /= std::sqrt(horizontalLenSq);
+
         if (!std::isfinite(outward.x) || !std::isfinite(outward.y) || !std::isfinite(outward.z))
             outward = glm::vec3(0.0f, 0.0f, 0.0f);
         return outward;
@@ -698,18 +1154,23 @@ GTANAVVIEWER_API void SetNavMeshGenSettings(void* navMesh, const NavmeshGenerati
     ctx->autoOffmeshParams.agentRadius = settings->agentRadius;
     ctx->autoOffmeshParams.agentHeight = settings->agentHeight;
     ctx->autoOffmeshParams.maxSlopeDegrees = settings->agentMaxSlope;
+    ctx->autoOffmeshParamsV2.agentRadius = settings->agentRadius;
+    ctx->autoOffmeshParamsV2.agentHeight = settings->agentHeight;
+    ctx->autoOffmeshParamsV2.maxSlopeDegrees = settings->agentMaxSlope;
+    ctx->autoOffmeshParamsV2.outwardOffset = std::max(ctx->autoOffmeshParamsV2.outwardOffset, settings->agentRadius + 0.05f);
+    ctx->autoOffmeshParamsV2.sweepSideOffset = std::max(0.05f, settings->agentRadius * 0.6f);
+    ctx->autoOffmeshParamsV2.sweepUp = std::max(0.1f, settings->agentHeight * 0.5f);
     ctx->rebuildAll = true;
 }
 
-GTANAVVIEWER_API void SetAutoOffMeshGenerationParams(void* navMesh, const AutoOffmeshGenerationParams* params)
+GTANAVVIEWER_API void SetAutoOffMeshGenerationParams(void* navMesh, const AutoOffmeshGenerationParamsV2* params)
 {
-    if (!navMesh || !params)
+    if (!navMesh || !params) {
+        printf("[ExternC] params ou navMesh inválidos.\n");
         return;
+    }
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
-    ctx->autoOffmeshParams = *params;
-    ctx->autoOffmeshParams.agentRadius = ctx->genSettings.agentRadius;
-    ctx->autoOffmeshParams.agentHeight = ctx->genSettings.agentHeight;
-    ctx->autoOffmeshParams.maxSlopeDegrees = ctx->genSettings.agentMaxSlope;
+    ctx->autoOffmeshParamsV2 = *params;
 }
 
 GTANAVVIEWER_API void SetNavMeshCacheRoot(void* navMesh, const char* cacheRoot)
@@ -740,6 +1201,22 @@ GTANAVVIEWER_API void SetMaxResidentTiles(void* navMesh, int maxTiles)
         return;
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->maxResidentTiles = std::max(1, maxTiles);
+}
+
+GTANAVVIEWER_API bool SaveNavMeshRuntimeCache(void* navMesh, const char* cacheFilePath)
+{
+    if (!navMesh || !cacheFilePath)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    return SaveRuntimeCacheFile(*ctx, std::filesystem::path(cacheFilePath));
+}
+
+GTANAVVIEWER_API bool LoadNavMeshRuntimeCache(void* navMesh, const char* cacheFilePath)
+{
+    if (!navMesh || !cacheFilePath)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    return LoadRuntimeCacheFile(*ctx, std::filesystem::path(cacheFilePath));
 }
 
 GTANAVVIEWER_API bool AddGeometry(void* navMesh,
@@ -842,6 +1319,97 @@ GTANAVVIEWER_API void RemoveAllGeometries(void* navMesh)
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->geometries.clear();
     ctx->rebuildAll = true;
+}
+
+GTANAVVIEWER_API int GetAllGeometries(void* navMesh,
+                                      NavMeshGeometryInfo* geometries,
+                                      int maxGeometries,
+                                      int* outGeometryCount)
+{
+    if (outGeometryCount)
+        *outGeometryCount = 0;
+
+    if (!navMesh)
+        return 0;
+
+    const auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    const int total = static_cast<int>(ctx->geometries.size());
+
+    if (!geometries || maxGeometries <= 0)
+    {
+        if (outGeometryCount)
+            *outGeometryCount = total;
+        return 0;
+    }
+
+    const int count = std::min(total, maxGeometries);
+    for (int i = 0; i < count; ++i)
+    {
+        const auto& src = ctx->geometries[static_cast<size_t>(i)];
+        NavMeshGeometryInfo info{};
+        std::snprintf(info.customID, sizeof(info.customID), "%s", src.id.c_str());
+        info.position = Vector3{src.position.x, src.position.y, src.position.z};
+        info.rotation = Vector3{src.rotation.x, src.rotation.y, src.rotation.z};
+        info.vertexCount = static_cast<int>(src.source.vertices.size());
+        info.indexCount = static_cast<int>(src.source.indices.size());
+        geometries[i] = info;
+    }
+
+    if (outGeometryCount)
+        *outGeometryCount = total;
+
+    return count;
+}
+
+GTANAVVIEWER_API bool ExportMergedGeometriesObj(void* navMesh, const char* outputObjPath)
+{
+    if (!navMesh || !outputObjPath)
+        return false;
+
+    const auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    if (ctx->geometries.empty())
+        return false;
+
+    std::filesystem::path outPath(outputObjPath);
+    if (outPath.has_parent_path())
+        std::filesystem::create_directories(outPath.parent_path());
+
+    std::ofstream out(outPath);
+    if (!out.is_open())
+        return false;
+
+    out << "# Merged navmesh geometries\n";
+
+    std::size_t globalVertexOffset = 1;
+    for (const auto& geom : ctx->geometries)
+    {
+        if (!geom.source.Valid())
+            continue;
+
+        const glm::mat3 rotation = GetRotationMatrix(geom.rotation);
+
+        out << "\no geometry_" << geom.id << "\n";
+        out << "# position " << geom.position.x << " " << geom.position.y << " " << geom.position.z << "\n";
+        out << "# rotationDeg " << geom.rotation.x << " " << geom.rotation.y << " " << geom.rotation.z << "\n";
+
+        for (const auto& v : geom.source.vertices)
+        {
+            const glm::vec3 transformed = rotation * v + geom.position;
+            out << "v " << transformed.x << " " << transformed.y << " " << transformed.z << "\n";
+        }
+
+        for (size_t i = 0; i + 2 < geom.source.indices.size(); i += 3)
+        {
+            const std::size_t i0 = globalVertexOffset + geom.source.indices[i];
+            const std::size_t i1 = globalVertexOffset + geom.source.indices[i + 1];
+            const std::size_t i2 = globalVertexOffset + geom.source.indices[i + 2];
+            out << "f " << i0 << " " << i1 << " " << i2 << "\n";
+        }
+
+        globalVertexOffset += geom.source.vertices.size();
+    }
+
+    return out.good();
 }
 
 GTANAVVIEWER_API bool BuildNavMesh(void* navMesh)
@@ -1171,8 +1739,7 @@ GTANAVVIEWER_API int GetNavMeshPolygons(void* navMesh,
                 e.vertexB = ToVector3(pb);
                 const glm::vec3 mid = (pa + pb) * 0.5f;
                 e.center = ToVector3(mid);
-                const dtPolyRef neighbour = GetNeighbourRef(tile, poly, edge, nav);
-                const glm::vec3 outward = ComputeEdgeOutwardNormal(pa, pb, center);
+                const glm::vec3 outward = ComputeEdgeOutwardNormal(pa, pb, center, normal);
                 e.normal = ToVector3(outward);
                 e.polygonId = polyId;
                 edges[writtenEdges + edge] = e;
@@ -1270,6 +1837,7 @@ GTANAVVIEWER_API int GetNavMeshBorderEdges(void* navMesh,
 
             const dtPolyRef pref = nav->getPolyRefBase(tile) | static_cast<unsigned int>(polyIndex);
             const glm::vec3 center = ComputePolyCentroid(tile, poly);
+            const glm::vec3 normal = ComputePolyNormal(tile, poly);
 
             for (int edge = 0; edge < poly->vertCount && written < maxEdges; ++edge)
             {
@@ -1294,7 +1862,7 @@ GTANAVVIEWER_API int GetNavMeshBorderEdges(void* navMesh,
                 const glm::vec3 mid = (pa + pb) * 0.5f;
                 e.center = ToVector3(mid);
 
-                e.normal = ToVector3(ComputeEdgeOutwardNormal(pa, pb, center));
+                e.normal = ToVector3(ComputeEdgeOutwardNormal(pa, pb, center, normal));
                 e.polygonId = pref != 0 ? static_cast<std::uint64_t>(pref) : 0;
 
                 edges[written++] = e;
@@ -1308,13 +1876,24 @@ GTANAVVIEWER_API int GetNavMeshBorderEdges(void* navMesh,
     return written;
 }
 
+static float HeadingDegXZ(const glm::vec3& from, const glm::vec3& to)
+{
+    const float dx = to.x - from.x;
+    const float dz = to.z - from.z;
+    if (!std::isfinite(dx) || !std::isfinite(dz) || (dx*dx + dz*dz) < 1e-8f)
+        return 0.0f;
+    return glm::degrees(std::atan2(dx, dz)); // yaw em graus
+}
+
 static int RunPathfindInternal(ExternNavmeshContext& ctx,
                                const glm::vec3& start,
                                const glm::vec3& end,
                                int flags,
                                int maxPoints,
                                float minEdge,
-                               float* outPath, int options)
+                               float* outPath,
+                               NodeInfo* outNodeInfo,
+                               int options)
 {
     if (!EnsureNavQuery(ctx))
         return 0;
@@ -1361,14 +1940,686 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
 
     for (int i = 0; i < straightCount; ++i)
     {
-        outPath[i * 3 + 0] = straight[i * 3 + 0];
-        outPath[i * 3 + 1] = straight[i * 3 + 1];
-        outPath[i * 3 + 2] = straight[i * 3 + 2];
+        const float px = straight[i * 3 + 0];
+        const float py = straight[i * 3 + 1];
+        const float pz = straight[i * 3 + 2];
+
+        outPath[i * 3 + 0] = px;
+        outPath[i * 3 + 1] = py;
+        outPath[i * 3 + 2] = pz;
+
+        if (outNodeInfo)
+        {
+            NodeInfo ni{};
+            const unsigned char nodeFlags = straightFlags[static_cast<size_t>(i)];
+            ni.isOffmeshLink = (nodeFlags & DT_STRAIGHTPATH_OFFMESH_CONNECTION) != 0;
+
+            // zDifference: diferença de altura pro próximo nó (Y do Detour)
+            if (i + 1 < straightCount)
+            {
+                const float ny = straight[(i + 1) * 3 + 1];
+                ni.zDifference = (ny - py);
+                ni.nextNodeIsAbove = (ni.zDifference > 0.0f);
+            }
+            else
+            {
+                ni.zDifference = 0.0f;
+                ni.nextNodeIsAbove = false;
+            }
+
+            // lookAtHeading: heading sugerido pro próximo nó (ou 0 se não tiver próximo)
+            if (i + 1 < straightCount)
+            {
+                glm::vec3 cur(px, py, pz);
+                glm::vec3 nxt(straight[(i + 1) * 3 + 0],
+                            straight[(i + 1) * 3 + 1],
+                            straight[(i + 1) * 3 + 2]);
+                ni.lookAtHeading = HeadingDegXZ(cur, nxt);
+            }
+            else
+            {
+                ni.lookAtHeading = 0.0f;
+            }
+
+            outNodeInfo[i] = ni;
+        }
     }
 
     return straightCount;
 }
 
+
+
+    constexpr float kSoftRepathMaxSnapDist = 3.0f;
+
+    float WrapAngleDeg(float angle)
+    {
+        while (angle > 180.0f) angle -= 360.0f;
+        while (angle < -180.0f) angle += 360.0f;
+        return angle;
+    }
+
+    float Distance2DSq(const glm::vec3& a, const glm::vec3& b)
+    {
+        const float dx = a.x - b.x;
+        const float dz = a.z - b.z;
+        return dx * dx + dz * dz;
+    }
+
+    glm::vec3 CornerAt(const std::vector<float>& cornersXYZ, int idx)
+    {
+        return glm::vec3(cornersXYZ[static_cast<size_t>(idx) * 3 + 0],
+                         cornersXYZ[static_cast<size_t>(idx) * 3 + 1],
+                         cornersXYZ[static_cast<size_t>(idx) * 3 + 2]);
+    }
+
+    int FindBestCornerIndexByCorner(const glm::vec3& pos,
+                                    const std::vector<float>& cornersXYZ,
+                                    int cornerCount,
+                                    float maxSnapDist)
+    {
+        if (cornerCount <= 0)
+            return 0;
+
+        int bestIndex = 0;
+        float bestDistSq = std::numeric_limits<float>::max();
+        for (int i = 0; i < cornerCount; ++i)
+        {
+            const float distSq = Distance2DSq(pos, CornerAt(cornersXYZ, i));
+            if (distSq < bestDistSq)
+            {
+                bestDistSq = distSq;
+                bestIndex = i;
+            }
+        }
+
+        if (maxSnapDist > 0.0f && bestDistSq > maxSnapDist * maxSnapDist)
+            return 0;
+
+        return std::clamp(bestIndex, 0, cornerCount - 1);
+    }
+
+    int FindBestCornerIndexBySegment(const glm::vec3& pos,
+                                     const std::vector<float>& cornersXYZ,
+                                     int cornerCount,
+                                     float maxSnapDist)
+    {
+        if (cornerCount <= 1)
+            return FindBestCornerIndexByCorner(pos, cornersXYZ, cornerCount, maxSnapDist);
+
+        int bestIndex = 1;
+        float bestDistSq = std::numeric_limits<float>::max();
+
+        for (int i = 0; i + 1 < cornerCount; ++i)
+        {
+            const glm::vec3 a = CornerAt(cornersXYZ, i);
+            const glm::vec3 b = CornerAt(cornersXYZ, i + 1);
+            glm::vec2 ab(b.x - a.x, b.z - a.z);
+            const float abLenSq = glm::dot(ab, ab);
+
+            float t = 0.0f;
+            if (abLenSq > 1e-6f)
+            {
+                const glm::vec2 ap(pos.x - a.x, pos.z - a.z);
+                t = std::clamp(glm::dot(ap, ab) / abLenSq, 0.0f, 1.0f);
+            }
+
+            const glm::vec3 p(a.x + (b.x - a.x) * t,
+                              a.y + (b.y - a.y) * t,
+                              a.z + (b.z - a.z) * t);
+            const float distSq = Distance2DSq(pos, p);
+            if (distSq < bestDistSq)
+            {
+                bestDistSq = distSq;
+                bestIndex = (t >= 0.5f) ? (i + 1) : i;
+            }
+        }
+
+        if (maxSnapDist > 0.0f && bestDistSq > maxSnapDist * maxSnapDist)
+            return 0;
+
+        return std::clamp(bestIndex, 0, cornerCount - 1);
+    }
+
+    float LerpAngleDeg(float fromDeg, float toDeg, float alpha)
+    {
+        const float t = std::clamp(alpha, 0.0f, 1.0f);
+        const float delta = WrapAngleDeg(toDeg - fromDeg);
+        return WrapAngleDeg(fromDeg + delta * t);
+    }
+
+    void ResetAgentPathState(SimAgentState& st)
+    {
+        st.cornerIndex = 0;
+        st.cornerCount = 0;
+        st.cornersXYZ.clear();
+        st.cornerFlags.clear();
+        st.pathPolys.clear();
+        st.currentRef = 0;
+        st.inOffmesh = false;
+        st.offStart = glm::vec3(0.0f);
+        st.offEnd = glm::vec3(0.0f);
+        st.offT = 0.0f;
+        st.offDuration = 0.0f;
+        st.offType = 0;
+        st.offArcHeight = 0.0f;
+        st.offmeshStartCornerIndex = -1;
+    }
+
+    void ClampAgentHorizontalSpeed(const SimParamsFFI& params, SimAgentState& st)
+    {
+        const float maxSpeed = std::max(0.0f, (st.flags & AGENT_VEHICLE) != 0 ? params.maxSpeedForward : params.agentSpeed);
+        glm::vec2 v2(st.lastVel.x, st.lastVel.z);
+        const float len = glm::length(v2);
+        if (len > maxSpeed && len > 1e-4f)
+        {
+            const float k = maxSpeed / len;
+            st.lastVel.x *= k;
+            st.lastVel.z *= k;
+        }
+    }
+
+    bool RefreshAgentNearestPoly(ExternNavmeshContext& ctx, SimAgentState& st, int includeFlags = 0xFFFF)
+    {
+        if (!EnsureNavQuery(ctx))
+            return false;
+
+        dtQueryFilter filter{};
+        filter.setIncludeFlags(static_cast<unsigned short>(includeFlags));
+        filter.setExcludeFlags(0);
+
+        const float p[3] = { st.pos.x, st.pos.y, st.pos.z };
+        float nearest[3]{};
+        dtPolyRef ref = 0;
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(p, ctx.cachedExtents, &filter, &ref, nearest)) || ref == 0)
+            return false;
+
+        st.currentRef = ref;
+        st.pos = glm::vec3(nearest[0], nearest[1], nearest[2]);
+        return true;
+    }
+
+    float ShapeAvoidRadius(const SimAgentState& a)
+    {
+        if (a.shape == SHAPE_BOX)
+            return std::sqrt(a.halfX * a.halfX + a.halfZ * a.halfZ);
+        return a.radius;
+    }
+
+    bool ComputePathData(ExternNavmeshContext& ctx,
+                         const glm::vec3& start,
+                         const glm::vec3& end,
+                         int flags,
+                         int maxPoints,
+                         float minEdge,
+                         int options,
+                         std::vector<float>& outCorners,
+                         std::vector<unsigned char>& outCornerFlags,
+                         std::vector<dtPolyRef>& outPathPolys,
+                         dtPolyRef* outStartRef,
+                         float outStartNearest[3])
+    {
+        if (!EnsureNavQuery(ctx) || maxPoints <= 0)
+            return false;
+
+        const float startPos[3] = { start.x, start.y, start.z };
+        const float endPos[3] = { end.x, end.y, end.z };
+
+        dtQueryFilter filter{};
+        filter.setIncludeFlags(static_cast<unsigned short>(flags));
+        filter.setExcludeFlags(0);
+        filter.setAreaCost(AREA_JUMP, 4.0f);
+        filter.setAreaCost(AREA_DROP, 1.5f);
+        filter.setAreaCost(AREA_OFFMESH, 2.0f);
+
+        dtPolyRef startRef = 0, endRef = 0;
+        float startNearest[3]{};
+        float endNearest[3]{};
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(startPos, ctx.cachedExtents, &filter, &startRef, startNearest)) || startRef == 0)
+            return false;
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(endPos, ctx.cachedExtents, &filter, &endRef, endNearest)) || endRef == 0)
+            return false;
+
+        dtPolyRef polys[256]{};
+        int polyCount = 0;
+        const dtStatus pathStatus = ctx.navQuery->findPath(startRef, endRef, startNearest, endNearest, &filter, polys, &polyCount, 256);
+        if (dtStatusFailed(pathStatus) || polyCount == 0)
+            return false;
+
+        outPathPolys.assign(polys, polys + polyCount);
+
+        outCorners.resize(static_cast<size_t>(maxPoints) * 3);
+        outCornerFlags.resize(static_cast<size_t>(maxPoints));
+        std::vector<dtPolyRef> straightRefs(static_cast<size_t>(maxPoints));
+        int straightCount = 0;
+        dtStatus straightStatus = DT_FAILURE;
+        if (std::isfinite(minEdge) && minEdge > 0.0f)
+            straightStatus = ctx.navQuery->findStraightPathMinEdgePrecise(startNearest, endNearest, polys, polyCount, outCorners.data(), outCornerFlags.data(), straightRefs.data(), &straightCount, maxPoints, options, minEdge);
+        else
+            straightStatus = ctx.navQuery->findStraightPath(startNearest, endNearest, polys, polyCount, outCorners.data(), outCornerFlags.data(), straightRefs.data(), &straightCount, maxPoints, options);
+
+        if (dtStatusFailed(straightStatus) || straightCount <= 0)
+            return false;
+
+        outCorners.resize(static_cast<size_t>(straightCount) * 3);
+        outCornerFlags.resize(static_cast<size_t>(straightCount));
+        if (outStartRef)
+            *outStartRef = startRef;
+        if (outStartNearest)
+        {
+            outStartNearest[0] = startNearest[0];
+            outStartNearest[1] = startNearest[1];
+            outStartNearest[2] = startNearest[2];
+        }
+        return true;
+    }
+
+    float SampleAgentHeight(ExternNavmeshContext& ctx, SimAgentState& agent, const glm::vec3& pos)
+    {
+        if (!EnsureNavQuery(ctx))
+            return pos.y;
+
+        dtQueryFilter filter{};
+        filter.setIncludeFlags(0xFFFF);
+        const float p[3] = { pos.x, pos.y, pos.z };
+        dtPolyRef ref = agent.currentRef;
+        float nearest[3]{};
+        if (ref == 0)
+        {
+            if (dtStatusFailed(ctx.navQuery->findNearestPoly(p, ctx.cachedExtents, &filter, &ref, nearest)) || ref == 0)
+                return pos.y;
+            agent.currentRef = ref;
+        }
+
+        float navY = pos.y;
+        if (dtStatusSucceed(ctx.navQuery->getPolyHeight(ref, p, &navY)))
+            return navY;
+        return pos.y;
+    }
+
+    glm::vec3 ComputeAvoidanceForce(const SimAgentState& self,
+                                    const std::vector<const SimAgentState*>& neighbors,
+                                    float avoidRange,
+                                    float avoidWeight)
+    {
+        glm::vec3 force(0.0f);
+        if (avoidRange <= 0.0f || avoidWeight <= 0.0f)
+            return force;
+
+        const float selfRadius = ShapeAvoidRadius(self);
+        for (const SimAgentState* other : neighbors)
+        {
+            if (!other || other->id == self.id)
+                continue;
+            if ((other->teamMask & self.avoidMask) == 0)
+                continue;
+
+            glm::vec3 delta = self.pos - other->pos;
+            delta.y = 0.0f;
+            const float distSq = glm::dot(delta, delta);
+            const float r = selfRadius + ShapeAvoidRadius(*other);
+            const float range = std::max(avoidRange, r);
+            if (distSq <= 1e-6f || distSq > range * range)
+                continue;
+
+            const float dist = std::sqrt(distSq);
+            const float strength = (1.0f - dist / range) * avoidWeight;
+            force += (delta / dist) * strength;
+        }
+
+        return force;
+    }
+
+    int AppendJumpEvent(const SimAgentState& agent,
+                        int frameIndex,
+                        const glm::vec3& start,
+                        const glm::vec3& end,
+                        SimEventFFI* outEvents,
+                        int maxEvents,
+                        int eventCount,
+                        float speed,
+                        float durationOverride = -1.0f)
+    {
+        if (!outEvents || eventCount >= maxEvents)
+            return eventCount;
+
+        const glm::vec2 d2(end.x - start.x, end.z - start.z);
+        const float dist2d = glm::length(d2);
+        const float dy = end.y - start.y;
+        std::uint8_t jumpType = 2;
+        if (dy > 0.75f)
+            jumpType = 0;
+        else if (dy < -0.75f)
+            jumpType = 1;
+
+        SimEventFFI ev{};
+        ev.agentId = agent.id;
+        ev.frameIndex = static_cast<std::uint16_t>(std::max(0, frameIndex));
+        ev.type = 1;
+        ev.jumpType = jumpType;
+        ev.start[0] = start.x; ev.start[1] = start.y; ev.start[2] = start.z;
+        ev.end[0] = end.x; ev.end[1] = end.y; ev.end[2] = end.z;
+        if (durationOverride > 0.0f)
+        {
+            ev.duration = durationOverride;
+        }
+        else
+        {
+            const float denom = std::max(speed, 0.5f);
+            ev.duration = std::clamp(dist2d / denom, 0.2f, 1.5f);
+        }
+        outEvents[eventCount++] = ev;
+        return eventCount;
+    }
+
+
+    bool SampleGroundAtXZ(ExternNavmeshContext& ctx,
+                          SimAgentState& agent,
+                          float x,
+                          float z,
+                          float baseY,
+                          float up,
+                          float down,
+                          float& outY)
+    {
+        if (!EnsureNavQuery(ctx))
+            return false;
+
+        dtQueryFilter filter{};
+        filter.setIncludeFlags(0xFFFF);
+        filter.setExcludeFlags(0);
+
+        const float halfHeight = std::max(0.5f, (up + down) * 0.5f);
+        const float ext[3] = { std::max(0.25f, ctx.cachedExtents[0] * 0.1f), halfHeight, std::max(0.25f, ctx.cachedExtents[2] * 0.1f) };
+        const float query[3] = { x, baseY, z };
+
+        dtPolyRef ref = 0;
+        float nearest[3]{};
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(query, ext, &filter, &ref, nearest)) || ref == 0)
+            return false;
+
+        const float topY = baseY + std::max(0.0f, up);
+        const float bottomY = baseY - std::max(0.0f, down);
+
+        float y = nearest[1];
+        if (dtStatusFailed(ctx.navQuery->getPolyHeight(ref, query, &y)))
+            y = nearest[1];
+
+        if (y > topY + 1e-3f || y < bottomY - 1e-3f)
+            return false;
+
+        outY = y;
+        agent.currentRef = ref;
+        return true;
+    }
+
+    void ComputeYawBasis(float yawDeg, glm::vec3& outForward, glm::vec3& outRight)
+    {
+        const float yawRad = glm::radians(yawDeg);
+        outForward = glm::normalize(glm::vec3(std::sin(yawRad), 0.0f, std::cos(yawRad)));
+        outRight = glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), outForward));
+    }
+
+    bool FitVehicleToGround(ExternNavmeshContext& ctx,
+                            SimAgentState& agent,
+                            const SimParamsFFI& params,
+                            float dt,
+                            uint8_t& frameFlags)
+    {
+        (void)dt;
+        const float wheelInset = std::max(0.0f, params.vehicleWheelInset);
+        const float hx = std::max(0.05f, agent.halfX - wheelInset);
+        const float hz = std::max(0.05f, agent.halfZ - wheelInset);
+
+        glm::vec3 fYaw;
+        glm::vec3 rYaw;
+        ComputeYawBasis(agent.headingDeg, fYaw, rYaw);
+
+        const glm::vec2 offsets[4] = {
+            { +hx, +hz },
+            { +hx, -hz },
+            { -hx, +hz },
+            { -hx, -hz }
+        };
+
+        glm::vec3 wheelPos[4]{};
+        float wheelY[4]{};
+        bool hits[4]{};
+        int hitCount = 0;
+        const float up = std::max(0.0f, params.vehicleSampleUp);
+        const float down = std::max(0.0f, params.vehicleSampleDown);
+        const float baseY = agent.pos.y + up;
+
+        for (int i = 0; i < 4; ++i)
+        {
+            const glm::vec3 worldOffset = rYaw * offsets[i].x + fYaw * offsets[i].y;
+            const float wx = agent.pos.x + worldOffset.x;
+            const float wz = agent.pos.z + worldOffset.z;
+            wheelPos[i] = glm::vec3(wx, agent.pos.y, wz);
+            hits[i] = SampleGroundAtXZ(ctx, agent, wx, wz, baseY, up, down, wheelY[i]);
+            if (hits[i])
+            {
+                wheelPos[i].y = wheelY[i];
+                ++hitCount;
+            }
+        }
+
+        if (hitCount < 2)
+        {
+            frameFlags |= SIM_FRAMEFLAG_AIRBORNE;
+            return false;
+        }
+
+        if (hitCount == 4)
+            frameFlags |= SIM_FRAMEFLAG_GROUND_FIT_OK;
+        else
+            frameFlags |= SIM_FRAMEFLAG_GROUND_FIT_PARTIAL;
+
+        auto fallbackY = [&](int a, int b, int c) {
+            int n = 0;
+            float sum = 0.0f;
+            if (hits[a]) { sum += wheelPos[a].y; ++n; }
+            if (hits[b]) { sum += wheelPos[b].y; ++n; }
+            if (hits[c]) { sum += wheelPos[c].y; ++n; }
+            return n > 0 ? (sum / static_cast<float>(n)) : agent.pos.y;
+        };
+
+        if (!hits[0]) wheelPos[0].y = fallbackY(1,2,3);
+        if (!hits[1]) wheelPos[1].y = fallbackY(0,2,3);
+        if (!hits[2]) wheelPos[2].y = fallbackY(0,1,3);
+        if (!hits[3]) wheelPos[3].y = fallbackY(0,1,2);
+
+        const glm::vec3 frontMid = (wheelPos[0] + wheelPos[1]) * 0.5f;
+        const glm::vec3 rearMid = (wheelPos[2] + wheelPos[3]) * 0.5f;
+        const glm::vec3 leftMid = (wheelPos[0] + wheelPos[2]) * 0.5f;
+        const glm::vec3 rightMid = (wheelPos[1] + wheelPos[3]) * 0.5f;
+
+        glm::vec3 vf = frontMid - rearMid;
+        glm::vec3 vr = rightMid - leftMid;
+        if (glm::dot(vf, vf) < 1e-6f)
+            vf = fYaw;
+        else
+            vf = glm::normalize(vf);
+        if (glm::dot(vr, vr) < 1e-6f)
+            vr = rYaw;
+        else
+            vr = glm::normalize(vr);
+
+        glm::vec3 upVec = glm::cross(vr, vf);
+        if (glm::dot(upVec, upVec) < 1e-6f)
+            upVec = glm::vec3(0.0f, 1.0f, 0.0f);
+        else
+            upVec = glm::normalize(upVec);
+        if (upVec.y < 0.0f)
+            upVec = -upVec;
+
+        float targetPitch = glm::degrees(std::atan2(glm::dot(fYaw, upVec), glm::dot(glm::vec3(0.0f, 1.0f, 0.0f), upVec)));
+        float targetRoll = -glm::degrees(std::atan2(glm::dot(rYaw, upVec), glm::dot(glm::vec3(0.0f, 1.0f, 0.0f), upVec)));
+        targetPitch = std::clamp(targetPitch, -std::max(0.0f, params.vehicleMaxPitchDeg), std::max(0.0f, params.vehicleMaxPitchDeg));
+        targetRoll = std::clamp(targetRoll, -std::max(0.0f, params.vehicleMaxRollDeg), std::max(0.0f, params.vehicleMaxRollDeg));
+
+        const float rotAlpha = std::clamp(params.vehicleRotAlpha, 0.0f, 1.0f);
+        agent.pitchDeg = agent.pitchDeg + (targetPitch - agent.pitchDeg) * rotAlpha;
+        agent.rollDeg = agent.rollDeg + (targetRoll - agent.rollDeg) * rotAlpha;
+
+        const float minY = std::min(std::min(wheelPos[0].y, wheelPos[1].y), std::min(wheelPos[2].y, wheelPos[3].y));
+        const float targetY = minY + params.vehicleGroundUpOffset;
+        const float suspAlpha = std::clamp(params.vehicleSuspensionAlpha, 0.0f, 1.0f);
+        agent.pos.y = agent.pos.y + (targetY - agent.pos.y) * suspAlpha;
+        agent.verticalVel = 0.0f;
+
+        agent.eulerRPYDeg = glm::vec3(agent.rollDeg, agent.pitchDeg, agent.headingDeg);
+        return true;
+    }
+
+    PathAvoidParamsFFI GetDefaultAvoidParams()
+    {
+        PathAvoidParamsFFI p{};
+        p.inflate = 0.3f;
+        p.detourSideStep = 2.0f;
+        p.maxDetourCandidates = 6;
+        p.maxObstaclesToCheck = 64;
+        p.maxFixIterations = 8;
+        p.useHeightFilter = true;
+        p.heightTolerance = 2.5f;
+        return p;
+    }
+
+    float Dist2PointSegmentXZ(const glm::vec3& a, const glm::vec3& b, const glm::vec2& p, float* outT = nullptr)
+    {
+        const glm::vec2 ab(b.x - a.x, b.z - a.z);
+        const glm::vec2 ap(p.x - a.x, p.y - a.z);
+        const float denom = glm::dot(ab, ab);
+        float t = 0.0f;
+        if (denom > 1e-6f)
+            t = std::clamp(glm::dot(ap, ab) / denom, 0.0f, 1.0f);
+        const glm::vec2 c(a.x + ab.x * t, a.z + ab.y * t);
+        const glm::vec2 d = p - c;
+        if (outT)
+            *outT = t;
+        return glm::dot(d, d);
+    }
+
+    bool SegmentIntersectsCircleXZ(const glm::vec3& a, const glm::vec3& b, const DynObstacleState& o, float inflate, float* outT)
+    {
+        const float r = std::max(0.01f, o.radius + inflate);
+        const float d2 = Dist2PointSegmentXZ(a, b, glm::vec2(o.pos.x, o.pos.z), outT);
+        return d2 <= r * r;
+    }
+
+    bool SegmentIntersectsAabbXZ(const glm::vec3& a, const glm::vec3& b, const DynObstacleState& o, float inflate)
+    {
+        const float minX = o.pos.x - (o.halfX + inflate);
+        const float maxX = o.pos.x + (o.halfX + inflate);
+        const float minZ = o.pos.z - (o.halfZ + inflate);
+        const float maxZ = o.pos.z + (o.halfZ + inflate);
+
+        float tmin = 0.0f;
+        float tmax = 1.0f;
+        const float dx = b.x - a.x;
+        const float dz = b.z - a.z;
+
+        auto axisSlab = [&](float p0, float d, float mn, float mx) -> bool
+        {
+            if (std::abs(d) < 1e-6f)
+                return p0 >= mn && p0 <= mx;
+            float ood = 1.0f / d;
+            float t1 = (mn - p0) * ood;
+            float t2 = (mx - p0) * ood;
+            if (t1 > t2)
+                std::swap(t1, t2);
+            tmin = std::max(tmin, t1);
+            tmax = std::min(tmax, t2);
+            return tmin <= tmax;
+        };
+
+        return axisSlab(a.x, dx, minX, maxX) && axisSlab(a.z, dz, minZ, maxZ);
+    }
+
+    bool IsObstacleRelevant(const DynObstacleState& o, uint32_t selfAvoidMask)
+    {
+        return (o.teamMask & selfAvoidMask) != 0;
+    }
+
+    bool SegmentHitsObstacle(const glm::vec3& a,
+                            const glm::vec3& b,
+                            const DynObstacleState& o,
+                            const PathAvoidParamsFFI& params,
+                            float* outT)
+    {
+        if (params.useHeightFilter)
+        {
+            const float yMid = (a.y + b.y) * 0.5f;
+            if (std::abs(yMid - o.pos.y) > std::max(0.0f, params.heightTolerance))
+                return false;
+        }
+
+        if (o.shapeType == DYNOBS_BOX_AABB)
+            return SegmentIntersectsAabbXZ(a, b, o, std::max(0.0f, params.inflate));
+
+        return SegmentIntersectsCircleXZ(a, b, o, std::max(0.0f, params.inflate), outT);
+    }
+
+    bool BuildBasePath(ExternNavmeshContext& ctx,
+                       const glm::vec3& start,
+                       const glm::vec3& end,
+                       int flags,
+                       int maxPoints,
+                       float minEdgeDist,
+                       int options,
+                       std::vector<glm::vec3>& outCorners,
+                       std::vector<NodeInfo>* outInfo)
+    {
+        std::vector<float> tmp(static_cast<size_t>(maxPoints) * 3);
+        std::vector<NodeInfo> info;
+        NodeInfo* infoPtr = nullptr;
+
+        if (outInfo)
+        {
+            info.resize(static_cast<size_t>(maxPoints));
+            infoPtr = info.data();
+        }
+
+        const int count = RunPathfindInternal(ctx, start, end, flags, maxPoints, minEdgeDist, tmp.data(), infoPtr, options);
+        if (count <= 0)
+            return false;
+        outCorners.clear();
+        outCorners.reserve(static_cast<size_t>(count));
+        for (int i = 0; i < count; ++i)
+            outCorners.emplace_back(tmp[i * 3 + 0], tmp[i * 3 + 1], tmp[i * 3 + 2]);
+
+        if (outInfo)
+        {
+            outInfo->assign(info.begin(), info.begin() + count);
+        }
+        return true;
+    }
+
+    bool IsWalkableSegment(ExternNavmeshContext& ctx, const glm::vec3& from, const glm::vec3& to, int flags)
+    {
+        if (!EnsureNavQuery(ctx))
+            return false;
+        dtQueryFilter filter{};
+        filter.setIncludeFlags(static_cast<unsigned short>(flags));
+        filter.setExcludeFlags(0);
+        const float ext[3]{2.0f, 4.0f, 2.0f};
+        dtPolyRef fromRef = 0;
+        dtPolyRef toRef = 0;
+        float fromNearest[3]{};
+        float toNearest[3]{};
+        const float a[3]{from.x, from.y, from.z};
+        const float b[3]{to.x, to.y, to.z};
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(a, ext, &filter, &fromRef, fromNearest)) || fromRef == 0)
+            return false;
+        if (dtStatusFailed(ctx.navQuery->findNearestPoly(b, ext, &filter, &toRef, toNearest)) || toRef == 0)
+            return false;
+        float t = 0.0f;
+        float hitNormal[3]{};
+        dtPolyRef path[16]{};
+        int npath = 0;
+        const dtStatus st = ctx.navQuery->raycast(fromRef, fromNearest, toNearest, &filter, &t, hitNormal, path, &npath, 16);
+        return dtStatusSucceed(st) && t >= 0.999f;
+    }
 GTANAVVIEWER_API int FindPath(void* navMesh,
                               Vector3 start,
                               Vector3 target,
@@ -1385,7 +2636,9 @@ GTANAVVIEWER_API int FindPath(void* navMesh,
                                flags,
                                maxPoints,
                                -1.0f,
-                               outPath, options);
+                               outPath,
+                               nullptr,
+                               options);
 }
 
 GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
@@ -1405,7 +2658,9 @@ GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
                                flags,
                                maxPoints,
                                minEdge,
-                               outPath, options);
+                               outPath,
+                               nullptr,
+                               options);
 }
 
 GTANAVVIEWER_API bool AddOffMeshLink(void* navMesh,
@@ -1464,30 +2719,136 @@ GTANAVVIEWER_API void ClearOffMeshLinks(void* navMesh, bool updateNavMesh)
         UpdateNavmeshState(*ctx, false);
 }
 
+GTANAVVIEWER_API int GetOffMeshLinks(void* navMesh,
+                                     OffMeshLinkInfo* outLinks,
+                                     int maxLinks,
+                                     int* outLinkCount)
+{
+    if (outLinkCount)
+        *outLinkCount = 0;
+
+    if (!navMesh)
+        return 0;
+
+    const auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    const int total = static_cast<int>(ctx->offmeshLinks.size());
+
+    if (!outLinks || maxLinks <= 0)
+    {
+        if (outLinkCount)
+            *outLinkCount = total;
+        return 0;
+    }
+
+    const int count = std::min(total, maxLinks);
+    for (int i = 0; i < count; ++i)
+    {
+        const auto& src = ctx->offmeshLinks[static_cast<size_t>(i)];
+        OffMeshLinkInfo info{};
+        info.start = ToVector3(src.start);
+        info.end = ToVector3(src.end);
+        info.radius = src.radius;
+        info.biDir = src.bidirectional;
+        info.area = src.area;
+        info.flags = src.flags;
+        info.userId = src.userId;
+        info.ownerTx = src.ownerTx;
+        info.ownerTy = src.ownerTy;
+        outLinks[i] = info;
+    }
+
+    if (outLinkCount)
+        *outLinkCount = total;
+
+    return count;
+}
+
+GTANAVVIEWER_API int RemoveOffMeshLinksInRadius(void* navMesh,
+                                                Vector3 center,
+                                                float radius,
+                                                bool updateNavMesh)
+{
+    if (!navMesh || radius < 0.0f)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    const glm::vec3 c(center.x, center.y, center.z);
+    const float radiusSq = radius * radius;
+
+    const auto oldSize = ctx->offmeshLinks.size();
+    auto& links = ctx->offmeshLinks;
+    links.erase(std::remove_if(links.begin(), links.end(), [&](const OffmeshLink& link)
+    {
+        const float distStart = glm::dot(link.start - c, link.start - c);
+        if (distStart <= radiusSq)
+            return true;
+
+        const float distEnd = glm::dot(link.end - c, link.end - c);
+        return distEnd <= radiusSq;
+    }), links.end());
+
+    const int removedCount = static_cast<int>(oldSize - links.size());
+    if (removedCount <= 0)
+        return 0;
+
+    ctx->navData.SetOffmeshLinks(ctx->offmeshLinks);
+    ctx->rebuildAll = true;
+    if (updateNavMesh)
+        UpdateNavmeshState(*ctx, false);
+
+    return removedCount;
+}
+
+GTANAVVIEWER_API bool RemoveOffMeshLinkById(void* navMesh,
+                                            unsigned int userId,
+                                            bool updateNavMesh)
+{
+    if (!navMesh)
+        return false;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    auto& links = ctx->offmeshLinks;
+    const auto it = std::find_if(links.begin(), links.end(), [&](const OffmeshLink& link)
+    {
+        return link.userId == userId;
+    });
+
+    if (it == links.end())
+        return false;
+
+    links.erase(it);
+    ctx->navData.SetOffmeshLinks(ctx->offmeshLinks);
+    ctx->rebuildAll = true;
+    if (updateNavMesh)
+        UpdateNavmeshState(*ctx, false);
+
+    return true;
+}
+
 GTANAVVIEWER_API bool GenerateAutomaticOffmeshLinks(void* navMesh)
 {
     if (!navMesh)
         return false;
 
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
-    AutoOffmeshGenerationParams params = ctx->autoOffmeshParams;
+    AutoOffmeshGenerationParamsV2 params = ctx->autoOffmeshParamsV2;
     params.agentRadius = ctx->genSettings.agentRadius;
     params.agentHeight = ctx->genSettings.agentHeight;
     params.maxSlopeDegrees = ctx->genSettings.agentMaxSlope;
-
+    params.outwardOffset = std::max(params.outwardOffset, params.agentRadius + 0.05f);
+    params.sweepSideOffset = std::max(0.05f, params.agentRadius * 0.6f);
+    params.sweepUp = std::max(0.1f, params.agentHeight * 0.5f);
+    
+    printf("[ExternC] Gerando offmesh links, genFlags: %d\n", params.genFlags);
     std::vector<OffmeshLink> generated;
-    if (!ctx->navData.GenerateAutomaticOffmeshLinks(params, generated))
+    if (!ctx->navData.GenerateAutomaticOffmeshLinksV2(params, generated))
         return false;
 
-    const unsigned int autoMask = 0xffff0000u;
     std::vector<OffmeshLink> merged;
     const auto& existing = ctx->navData.GetOffmeshLinks();
     merged.reserve(existing.size() + generated.size());
     for (const auto& link : existing)
-    {
-        //if ( (link.userId & autoMask) != (params.userIdBase & autoMask) )
-            merged.push_back(link);
-    }
+        merged.push_back(link);
     merged.insert(merged.end(), generated.begin(), generated.end());
 
     ctx->navData.SetOffmeshLinks(std::move(merged));
@@ -1514,4 +2875,1012 @@ GTANAVVIEWER_API void RemoveNavMeshBoundingBox(void* navMesh)
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->hasBoundingBox = false;
     ctx->rebuildAll = true;
+}
+
+
+GTANAVVIEWER_API int UpsertDynamicObstacles(void* navMesh, const DynObstacleDescFFI* obs, int count)
+{
+    if (!navMesh || !obs || count <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    static bool sLoggedAbi = false;
+    if (!sLoggedAbi)
+    {
+        sLoggedAbi = true;
+        std::printf("[ExternC] ABI: sizeof(DynObstacleDescFFI)=%zu sizeof(PathAvoidParamsFFI)=%zu\n",
+                    sizeof(DynObstacleDescFFI), sizeof(PathAvoidParamsFFI));
+    }
+
+    int upserted = 0;
+    for (int i = 0; i < count; ++i)
+    {
+        const DynObstacleDescFFI& d = obs[i];
+        if (d.obstacleId == 0)
+            continue;
+
+        const bool exists = ctx->dynObstacles.find(d.obstacleId) != ctx->dynObstacles.end();
+        DynObstacleState& st = ctx->dynObstacles[d.obstacleId];
+        st.id = d.obstacleId;
+        st.teamMask = d.teamMask;
+        st.avoidMask = d.avoidMask;
+        st.shapeType = (d.shapeType == DYNOBS_BOX_AABB) ? DYNOBS_BOX_AABB : DYNOBS_CYLINDER;
+        st.pos = glm::vec3(d.pos[0], d.pos[1], d.pos[2]);
+        st.radius = std::max(0.0f, d.radius);
+        st.halfX = std::max(0.0f, d.halfX);
+        st.halfZ = std::max(0.0f, d.halfZ);
+        st.height = std::max(0.0f, d.height);
+        if (!exists)
+            ctx->dynObstacleIds.push_back(d.obstacleId);
+        ++upserted;
+    }
+    return upserted;
+}
+
+GTANAVVIEWER_API int RemoveDynamicObstacles(void* navMesh, const std::uint32_t* obstacleIds, int count)
+{
+    if (!navMesh || !obstacleIds || count <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    int removed = 0;
+    for (int i = 0; i < count; ++i)
+    {
+        if (ctx->dynObstacles.erase(obstacleIds[i]) > 0)
+            ++removed;
+    }
+
+    if (removed > 0)
+    {
+        auto& ids = ctx->dynObstacleIds;
+        ids.erase(std::remove_if(ids.begin(), ids.end(), [&](uint32_t id)
+        {
+            return ctx->dynObstacles.find(id) == ctx->dynObstacles.end();
+        }), ids.end());
+    }
+
+    return removed;
+}
+
+GTANAVVIEWER_API void ClearDynamicObstacles(void* navMesh)
+{
+    if (!navMesh)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->dynObstacles.clear();
+    ctx->dynObstacleIds.clear();
+}
+
+GTANAVVIEWER_API int FindPathAvoidingDynamicObstacles(
+    void* navMesh,
+    Vector3 start,
+    Vector3 target,
+    int flags,
+    int maxPoints,
+    float minEdgeDist,
+    int options,
+    const PathAvoidParamsFFI* avoidParams,
+    std::uint32_t selfAvoidMask,
+    std::uint32_t ignoreObstacleId,
+    float* outPathXYZ,
+    NodeInfo* outNodeInfo)
+{
+    if (!navMesh || !outPathXYZ)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+
+    PathAvoidParamsFFI params = avoidParams ? *avoidParams : GetDefaultAvoidParams();
+
+    glm::vec3 curStart(start.x, start.y, start.z);
+    glm::vec3 finalTarget(target.x, target.y, target.z);
+
+    std::vector<float> path(maxPoints * 3);
+    std::vector<NodeInfo> nodeInfo(maxPoints);
+
+    int pathCount = 0;
+
+    for (int iter = 0; iter < params.maxFixIterations; ++iter)
+    {
+        pathCount = RunPathfindInternal(
+            *ctx,
+            curStart,
+            finalTarget,
+            flags,
+            maxPoints,
+            minEdgeDist,
+            path.data(),
+            nodeInfo.data(),
+            options);
+
+        if (pathCount == 1)
+        {
+            outPathXYZ[0] = start.x;
+            outPathXYZ[1] = start.y;
+            outPathXYZ[2] = start.z;
+
+            outPathXYZ[3] = target.x;
+            outPathXYZ[4] = target.y;
+            outPathXYZ[5] = target.z;
+
+            return 2;
+        }
+
+        bool foundObstacle = false;
+
+        for (int i = 0; i + 1 < pathCount; ++i)
+        {
+            glm::vec3 a(path[i*3+0], path[i*3+1], path[i*3+2]);
+            glm::vec3 b(path[(i+1)*3+0], path[(i+1)*3+1], path[(i+1)*3+2]);
+
+            const DynObstacleState* blocker = nullptr;
+            float bestScore = std::numeric_limits<float>::max();
+            int checked = 0;
+
+            for (uint32_t id : ctx->dynObstacleIds)
+            {
+                if (id == ignoreObstacleId)
+                    continue;
+
+                auto it = ctx->dynObstacles.find(id);
+                if (it == ctx->dynObstacles.end())
+                    continue;
+
+                const DynObstacleState& o = it->second;
+
+                if (!IsObstacleRelevant(o, selfAvoidMask))
+                    continue;
+
+                if (checked++ >= params.maxObstaclesToCheck)
+                    break;
+
+                float hitT = 0.0f;
+
+                if (!SegmentHitsObstacle(a, b, o, params, &hitT))
+                    continue;
+
+                if (hitT < bestScore)
+                {
+                    bestScore = hitT;
+                    blocker = &o;
+                }
+            }
+
+            if (!blocker)
+                continue;
+
+            foundObstacle = true;
+
+            // gerar candidato lateral
+            glm::vec2 dir(b.x - a.x, b.z - a.z);
+            if (glm::dot(dir, dir) < 1e-6f)
+                dir = glm::vec2(1,0);
+
+            dir = glm::normalize(dir);
+
+            glm::vec2 left(-dir.y, dir.x);
+
+            float step = blocker->radius + params.inflate + params.detourSideStep;
+
+            glm::vec3 cand1(
+                blocker->pos.x + left.x * step,
+                a.y,
+                blocker->pos.z + left.y * step);
+
+            glm::vec3 cand2(
+                blocker->pos.x - left.x * step,
+                a.y,
+                blocker->pos.z - left.y * step);
+
+            glm::vec3 candidate = cand1;
+
+            if (!IsWalkableSegment(*ctx, a, cand1, flags))
+                candidate = cand2;
+
+            // próximo path começa no candidato
+            curStart = candidate;
+
+            break;
+        }
+
+        if (!foundObstacle)
+            break;
+    }
+
+    if (pathCount <= 0)
+        return 0;
+
+    int writeCount = std::min(maxPoints, pathCount);
+
+    for (int i = 0; i < writeCount; ++i)
+    {
+        outPathXYZ[i*3+0] = path[i*3+0];
+        outPathXYZ[i*3+1] = path[i*3+1];
+        outPathXYZ[i*3+2] = path[i*3+2];
+
+        if (outNodeInfo)
+            outNodeInfo[i] = nodeInfo[i];
+    }
+
+    return writeCount;
+}
+
+GTANAVVIEWER_API int UpsertSimAgents(void* navMesh, const SimAgentDescFFI* agents, int count)
+{
+    if (!navMesh || !agents || count <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    int upserted = 0;
+
+    static bool sLoggedAbi = false;
+    if (!sLoggedAbi)
+    {
+        sLoggedAbi = true;
+        std::printf("[ExternC] ABI: sizeof(SimAgentDescFFI)=%zu sizeof(SimParamsFFI)=%zu\n",
+                    sizeof(SimAgentDescFFI), sizeof(SimParamsFFI));
+    }
+
+    const SimParamsFFI params = ctx->hasLastSimParams ? ctx->lastSimParams : SimParamsFFI{};
+    const float anchorHeadingAlpha = std::clamp(params.anchorHeadingAlpha, 0.0f, 1.0f);
+    const float anchorVelAlpha = std::clamp(params.anchorVelAlpha, 0.0f, 1.0f);
+
+    for (int i = 0; i < count; ++i)
+    {
+        const SimAgentDescFFI& d = agents[i];
+        SimAgentState& st = ctx->simAgents[d.agentId];
+        const bool isNew = st.id == 0;
+        st.id = d.agentId;
+
+        // Sempre atualiza descritores.
+        st.teamMask = d.teamMask;
+        st.avoidMask = d.avoidMask;
+        st.flags = d.flags;
+        st.shape = (d.shapeType == SHAPE_BOX) ? SHAPE_BOX : SHAPE_CYLINDER;
+        st.radius = std::max(0.05f, d.radius);
+        st.halfX = std::max(0.05f, d.halfX);
+        st.halfZ = std::max(0.05f, d.halfZ);
+        st.height = std::max(0.1f, d.height);
+
+        const glm::vec3 inPos(d.pos[0], d.pos[1], d.pos[2]);
+        const glm::vec3 inVel(d.vel[0], d.vel[1], d.vel[2]);
+        const float inHeading = WrapAngleDeg(d.headingDeg);
+
+        const bool wantsTeleport = (d.flags & AGENT_TELEPORT) != 0;
+        const bool wantsAnchor = !wantsTeleport && (d.flags & AGENT_ANCHOR) != 0;
+        const bool anchorHeading = wantsAnchor && ((d.flags & AGENT_ANCHOR_HEADING) != 0);
+        const bool anchorVelocity = wantsAnchor && ((d.flags & AGENT_ANCHOR_VELOCITY) != 0);
+
+        auto teleportReset = [&]()
+        {
+            st.pos = inPos;
+            st.headingDeg = inHeading;
+            st.lastVel = inVel;
+            st.verticalVel = 0.0f;
+            st.moveSurfaceFailCount = 0;
+            ResetAgentPathState(st);
+            if (!RefreshAgentNearestPoly(*ctx, st))
+                st.currentRef = 0;
+        };
+
+        if (isNew)
+        {
+            teleportReset();
+            st.lastVel = glm::vec3(0.0f);
+            if (!RefreshAgentNearestPoly(*ctx, st))
+                st.currentRef = 0;
+            ctx->simAgentIds.push_back(d.agentId);
+#ifdef GTANAVVIEWER_SIM_DEBUG_UPSERT
+            std::printf("[Sim] Upsert NEW id=%u\n", d.agentId);
+#endif
+        }
+        else if (wantsTeleport)
+        {
+            teleportReset();
+#ifdef GTANAVVIEWER_SIM_DEBUG_UPSERT
+            std::printf("[Sim] Upsert TELEPORT id=%u\n", d.agentId);
+#endif
+        }
+        else if (wantsAnchor)
+        {
+            const glm::vec3 oldPos = st.pos;
+            st.pos = inPos;
+
+            const float yawDelta = std::abs(WrapAngleDeg(inHeading - st.headingDeg));
+            const bool headingSnap = params.anchorMaxSnapYawDeg > 0.0f && yawDelta > params.anchorMaxSnapYawDeg;
+            if (anchorHeading)
+            {
+                st.headingDeg = headingSnap ? inHeading : LerpAngleDeg(st.headingDeg, inHeading, anchorHeadingAlpha);
+            }
+
+            if (anchorVelocity)
+            {
+                st.lastVel = st.lastVel + (inVel - st.lastVel) * anchorVelAlpha;
+            }
+            else
+            {
+                ClampAgentHorizontalSpeed(params, st);
+            }
+
+            const float anchorDist = glm::length(glm::vec2(inPos.x - oldPos.x, inPos.z - oldPos.z));
+            const bool shouldSnapTeleport = params.anchorMaxSnapDist > 0.0f && anchorDist > params.anchorMaxSnapDist;
+            if (shouldSnapTeleport)
+            {
+                teleportReset();
+            }
+            else
+            {
+                if (!RefreshAgentNearestPoly(*ctx, st))
+                {
+                    st.currentRef = 0;
+                    ResetAgentPathState(st);
+                }
+            }
+#ifdef GTANAVVIEWER_SIM_DEBUG_UPSERT
+            std::printf("[Sim] Upsert ANCHOR id=%u\n", d.agentId);
+#endif
+        }
+#ifdef GTANAVVIEWER_SIM_DEBUG_UPSERT
+        else
+        {
+            std::printf("[Sim] Upsert PARAMS_ONLY id=%u\n", d.agentId);
+        }
+#endif
+
+        ++upserted;
+    }
+    return upserted;
+}
+
+GTANAVVIEWER_API int RemoveSimAgents(void* navMesh, const uint32_t* agentIds, int count)
+{
+    if (!navMesh || !agentIds || count <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    int removed = 0;
+    for (int i = 0; i < count; ++i)
+    {
+        auto it = ctx->simAgents.find(agentIds[i]);
+        if (it == ctx->simAgents.end())
+            continue;
+        ctx->simAgents.erase(it);
+        ++removed;
+    }
+
+    if (removed > 0)
+    {
+        auto& ids = ctx->simAgentIds;
+        ids.erase(std::remove_if(ids.begin(), ids.end(), [&](uint32_t id)
+        {
+            return ctx->simAgents.find(id) == ctx->simAgents.end();
+        }), ids.end());
+    }
+    return removed;
+}
+
+GTANAVVIEWER_API void ClearSimAgents(void* navMesh)
+{
+    if (!navMesh)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->simAgents.clear();
+    ctx->simAgentIds.clear();
+}
+
+GTANAVVIEWER_API int ComputeAgentPathEx(void* navMesh,
+                                        uint32_t agentId,
+                                        Vector3 start,
+                                        Vector3 target,
+                                        int flags,
+                                        int maxCorners,
+                                        float minEdgeDist,
+                                        int options,
+                                        std::uint32_t pathModeFlags)
+{
+    if (!navMesh || maxCorners <= 0)
+        return 0;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    auto it = ctx->simAgents.find(agentId);
+    if (it == ctx->simAgents.end())
+        return 0;
+
+    SimAgentState& agent = it->second;
+    const bool hardReset = (pathModeFlags & SIM_PATH_HARD_RESET) != 0;
+    const bool keepCornerIfValid = (pathModeFlags & SIM_PATH_KEEP_CORNER_INDEX_IF_VALID) != 0;
+    const bool findBySegment = (pathModeFlags & SIM_PATH_FIND_CORNER_BY_SEGMENT) != 0;
+
+    const glm::vec3 requestedStart(start.x, start.y, start.z);
+    const glm::vec3 usedStart = hardReset ? requestedStart : agent.pos;
+
+#ifdef GTANAVVIEWER_SIM_DEBUG_PATH
+    std::printf("[Sim] ComputeAgentPath id=%u mode=0x%08X hard=%d start=(%.3f,%.3f,%.3f) usedStart=(%.3f,%.3f,%.3f) target=(%.3f,%.3f,%.3f)\n",
+                agentId,
+                pathModeFlags,
+                hardReset ? 1 : 0,
+                requestedStart.x, requestedStart.y, requestedStart.z,
+                usedStart.x, usedStart.y, usedStart.z,
+                target.x, target.y, target.z);
+#endif
+
+    std::vector<float> corners;
+    std::vector<unsigned char> cornerFlags;
+    std::vector<dtPolyRef> pathPolys;
+    dtPolyRef startRef = 0;
+    float startNearest[3]{};
+    if (!ComputePathData(*ctx,
+                         usedStart,
+                         glm::vec3(target.x, target.y, target.z),
+                         flags,
+                         maxCorners,
+                         minEdgeDist,
+                         options,
+                         corners,
+                         cornerFlags,
+                         pathPolys,
+                         &startRef,
+                         startNearest))
+    {
+        return 0;
+    }
+
+    const int oldCornerIndex = agent.cornerIndex;
+    const int oldCornerCount = agent.cornerCount;
+
+    agent.cornersXYZ = std::move(corners);
+    agent.cornerFlags = std::move(cornerFlags);
+    agent.cornerCount = static_cast<int>(agent.cornerFlags.size());
+    agent.pathPolys = std::move(pathPolys);
+    agent.currentRef = startRef;
+
+    if (hardReset)
+    {
+        agent.cornerIndex = 0;
+        agent.pos = glm::vec3(startNearest[0], startNearest[1], startNearest[2]);
+        agent.lastVel = glm::vec3(0.0f);
+        agent.verticalVel = 0.0f;
+        agent.moveSurfaceFailCount = 0;
+        if (agent.cornerCount <= 0)
+            ResetAgentPathState(agent);
+        else if (!RefreshAgentNearestPoly(*ctx, agent, flags))
+            agent.currentRef = startRef;
+#ifdef GTANAVVIEWER_SIM_DEBUG_PATH
+        std::printf("[Sim] ComputeAgentPath hard-reset id=%u corners=%d idx=%d\n", agentId, agent.cornerCount, agent.cornerIndex);
+#endif
+        return agent.cornerCount;
+    }
+
+    int selectedCornerIndex = 0;
+    bool usedFallbackCorner0 = false;
+    if (agent.cornerCount > 0)
+    {
+        if (keepCornerIfValid && oldCornerCount > 0 && oldCornerIndex >= 0 && oldCornerIndex < agent.cornerCount)
+        {
+            selectedCornerIndex = oldCornerIndex;
+        }
+        else
+        {
+            selectedCornerIndex = findBySegment
+                ? FindBestCornerIndexBySegment(agent.pos, agent.cornersXYZ, agent.cornerCount, kSoftRepathMaxSnapDist)
+                : FindBestCornerIndexByCorner(agent.pos, agent.cornersXYZ, agent.cornerCount, kSoftRepathMaxSnapDist);
+
+            const glm::vec3 selectedCorner = CornerAt(agent.cornersXYZ, selectedCornerIndex);
+            usedFallbackCorner0 = (selectedCornerIndex == 0) &&
+                                  (Distance2DSq(agent.pos, selectedCorner) > kSoftRepathMaxSnapDist * kSoftRepathMaxSnapDist);
+        }
+
+        if (oldCornerCount > 0)
+            selectedCornerIndex = std::max(selectedCornerIndex, std::max(0, oldCornerIndex - 2));
+
+        agent.cornerIndex = std::clamp(selectedCornerIndex, 0, agent.cornerCount - 1);
+    }
+    else
+    {
+        agent.cornerIndex = 0;
+    }
+
+#ifdef GTANAVVIEWER_SIM_DEBUG_PATH
+    std::printf("[Sim] ComputeAgentPath soft-repath id=%u corners=%d idx=%d fallback0=%d\n",
+                agentId,
+                agent.cornerCount,
+                agent.cornerIndex,
+                usedFallbackCorner0 ? 1 : 0);
+#endif
+
+    return agent.cornerCount;
+}
+
+GTANAVVIEWER_API int ComputeAgentPath(void* navMesh,
+                                      uint32_t agentId,
+                                      Vector3 start,
+                                      Vector3 target,
+                                      int flags,
+                                      int maxCorners,
+                                      float minEdgeDist,
+                                      int options)
+{
+    return ComputeAgentPathEx(navMesh,
+                              agentId,
+                              start,
+                              target,
+                              flags,
+                              maxCorners,
+                              minEdgeDist,
+                              options,
+                              SIM_PATH_SOFT_REPATH);
+}
+
+GTANAVVIEWER_API void EnableHeightSampling(void* navMesh, bool enabled)
+{
+    if (!navMesh)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->heightSampler.enabled = enabled;
+}
+
+GTANAVVIEWER_API bool BuildHeightSamplerForCurrentGeometry(void* navMesh, int samplesPerTile, bool storeTwoLayers)
+{
+    if (!navMesh)
+        return false;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->heightSampler.samplesPerTile = std::max(8, samplesPerTile);
+    ctx->heightSampler.storeTwoLayers = storeTwoLayers;
+    ctx->heightSampler.built = true;
+    return true;
+}
+
+static int SimulateAgentsInternal(ExternNavmeshContext& ctx,
+                                  const uint32_t* agentIds,
+                                  int agentCount,
+                                  float dt,
+                                  int maxSimulationFrames,
+                                  const SimParamsFFI* params,
+                                  float* outPosXYZ,
+                                  float* outHeadingDeg,
+                                  float* outVelXYZ,
+                                  uint8_t* outFrameFlags,
+                                  float* outEulerRPYDeg,
+                                  SimEventFFI* outEvents,
+                                  int maxEvents)
+{
+    if (!params || !outPosXYZ || !outHeadingDeg || !outVelXYZ || !outFrameFlags || !agentIds || agentCount <= 0 || maxSimulationFrames <= 0 || dt <= 0.0f)
+        return 0;
+    if (!EnsureNavQuery(ctx))
+        return 0;
+
+    ctx.lastSimParams = *params;
+    ctx.hasLastSimParams = true;
+
+    std::vector<SimAgentState*> agents;
+    agents.reserve(static_cast<size_t>(agentCount));
+    for (int i = 0; i < agentCount; ++i)
+    {
+        auto it = ctx.simAgents.find(agentIds[i]);
+        if (it == ctx.simAgents.end())
+            continue;
+        agents.push_back(&it->second);
+    }
+    if (agents.empty())
+        return 0;
+
+    int eventCount = 0;
+    for (int frame = 0; frame < maxSimulationFrames; ++frame)
+    {
+        for (size_t ai = 0; ai < agents.size(); ++ai)
+        {
+            SimAgentState& agent = *agents[ai];
+            const size_t basePos = (ai * static_cast<size_t>(maxSimulationFrames) + static_cast<size_t>(frame)) * 3;
+            const size_t baseScalar = ai * static_cast<size_t>(maxSimulationFrames) + static_cast<size_t>(frame);
+            uint8_t frameFlags = 0;
+
+            if ((agent.flags & AGENT_ENABLED) == 0 || agent.cornerCount <= 0 || agent.cornerIndex >= agent.cornerCount)
+            {
+                frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+                outPosXYZ[basePos + 0] = agent.pos.x;
+                outPosXYZ[basePos + 1] = agent.pos.y;
+                outPosXYZ[basePos + 2] = agent.pos.z;
+                outHeadingDeg[baseScalar] = agent.headingDeg;
+                outVelXYZ[basePos + 0] = 0.0f;
+                outVelXYZ[basePos + 1] = 0.0f;
+                outVelXYZ[basePos + 2] = 0.0f;
+                outFrameFlags[baseScalar] = frameFlags;
+                if ((agent.flags & AGENT_VEHICLE) == 0 || agent.shape != SHAPE_BOX)
+                {
+                    agent.rollDeg = 0.0f;
+                    agent.pitchDeg = 0.0f;
+                    agent.eulerRPYDeg = glm::vec3(0.0f, 0.0f, agent.headingDeg);
+                }
+                if (outEulerRPYDeg)
+                {
+                    const size_t baseEuler = baseScalar * 3;
+                    const bool isVehicleBoxOut = ((agent.flags & AGENT_VEHICLE) != 0) && agent.shape == SHAPE_BOX;
+                    outEulerRPYDeg[baseEuler + 0] = isVehicleBoxOut ? agent.rollDeg : 0.0f;
+                    outEulerRPYDeg[baseEuler + 1] = isVehicleBoxOut ? agent.pitchDeg : 0.0f;
+                    outEulerRPYDeg[baseEuler + 2] = agent.headingDeg;
+                }
+                continue;
+            }
+
+            const bool isVehicleBox = ((agent.flags & AGENT_VEHICLE) != 0) && agent.shape == SHAPE_BOX;
+            auto emitOffmeshFrame = [&]()
+            {
+                agent.offT += dt;
+                float u = (agent.offDuration > 1e-4f) ? (agent.offT / agent.offDuration) : 1.0f;
+                u = std::clamp(u, 0.0f, 1.0f);
+
+                glm::vec3 p = glm::mix(agent.offStart, agent.offEnd, u);
+                if (agent.offArcHeight > 0.0f)
+                {
+                    const float arc = 4.0f * u * (1.0f - u);
+                    p.y += arc * agent.offArcHeight;
+                }
+
+                glm::vec3 d = agent.offEnd - agent.pos;
+                d.y = 0.0f;
+                if (glm::dot(d, d) > 1e-6f)
+                {
+                    d = glm::normalize(d);
+                    const float targetHeading = std::atan2(d.x, d.z) * 180.0f / 3.1415926535f;
+                    float deltaYaw = WrapAngleDeg(targetHeading - agent.headingDeg);
+                    const float maxTurn = std::max(0.0f, params->agentTurnSpeedDeg) * dt;
+                    deltaYaw = std::clamp(deltaYaw, -maxTurn, maxTurn);
+                    if (std::isfinite(deltaYaw))
+                        agent.headingDeg = WrapAngleDeg(agent.headingDeg + deltaYaw);
+                }
+
+                if (dt > 1e-6f)
+                    agent.lastVel = (p - agent.pos) / dt;
+                else
+                    agent.lastVel = glm::vec3(0.0f);
+                agent.pos = p;
+
+                frameFlags |= SIM_FRAMEFLAG_JUMP;
+                frameFlags |= SIM_FRAMEFLAG_OFFMESH_TRAVERSAL;
+
+                if (u >= 1.0f)
+                {
+                    agent.inOffmesh = false;
+                    agent.pos = agent.offEnd;
+                    agent.verticalVel = 0.0f;
+                    agent.offT = 0.0f;
+                    agent.offDuration = 0.0f;
+                    agent.offArcHeight = 0.0f;
+                    agent.offType = 0;
+                    agent.offmeshStartCornerIndex = -1;
+                    agent.cornerIndex += 2;
+                    if (agent.cornerIndex >= agent.cornerCount)
+                    {
+                        frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+                    }
+                    else if (!RefreshAgentNearestPoly(ctx, agent))
+                    {
+                        agent.currentRef = 0;
+                        frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+                    }
+                }
+
+                outPosXYZ[basePos + 0] = agent.pos.x;
+                outPosXYZ[basePos + 1] = agent.pos.y;
+                outPosXYZ[basePos + 2] = agent.pos.z;
+                outHeadingDeg[baseScalar] = agent.headingDeg;
+                outVelXYZ[basePos + 0] = agent.lastVel.x;
+                outVelXYZ[basePos + 1] = agent.lastVel.y;
+                outVelXYZ[basePos + 2] = agent.lastVel.z;
+                outFrameFlags[baseScalar] = frameFlags;
+                if (!isVehicleBox)
+                {
+                    agent.rollDeg = 0.0f;
+                    agent.pitchDeg = 0.0f;
+                    agent.eulerRPYDeg = glm::vec3(0.0f, 0.0f, agent.headingDeg);
+                }
+                if (outEulerRPYDeg)
+                {
+                    const size_t baseEuler = baseScalar * 3;
+                    outEulerRPYDeg[baseEuler + 0] = isVehicleBox ? agent.rollDeg : 0.0f;
+                    outEulerRPYDeg[baseEuler + 1] = isVehicleBox ? agent.pitchDeg : 0.0f;
+                    outEulerRPYDeg[baseEuler + 2] = agent.headingDeg;
+                }
+            };
+
+            if (agent.inOffmesh)
+            {
+                emitOffmeshFrame();
+                continue;
+            }
+
+            glm::vec3 target(agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 0],
+                             agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 1],
+                             agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 2]);
+            glm::vec3 toTarget = target - agent.pos;
+            toTarget.y = 0.0f;
+            const float dist = glm::length(toTarget);
+            if (dist <= std::max(params->reachRadius, 0.1f))
+            {
+                const bool wasOffmesh = (agent.cornerFlags[static_cast<size_t>(agent.cornerIndex)] & DT_STRAIGHTPATH_OFFMESH_CONNECTION) != 0;
+                if (wasOffmesh && agent.cornerIndex + 1 < agent.cornerCount)
+                {
+                    const glm::vec3 end(agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex + 1) * 3 + 0],
+                                        agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex + 1) * 3 + 1],
+                                        agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex + 1) * 3 + 2]);
+                    agent.inOffmesh = true;
+                    agent.offStart = agent.pos;
+                    agent.offEnd = end;
+                    agent.offT = 0.0f;
+                    const float distToEnd = glm::length(agent.offEnd - agent.offStart);
+                    const float baseSpeed = std::max((agent.flags & AGENT_VEHICLE) != 0 ? params->maxSpeedForward : params->agentSpeed, 0.1f);
+                    agent.offDuration = std::clamp(distToEnd / baseSpeed, 0.15f, 1.25f);
+                    if (agent.offDuration <= 1e-4f)
+                        agent.offDuration = 0.2f;
+                    agent.offType = 2;
+                    agent.offArcHeight = ((agent.flags & AGENT_VEHICLE) != 0) ? 0.0f : std::clamp(distToEnd * 0.15f, 0.0f, 1.2f);
+                    agent.offmeshStartCornerIndex = agent.cornerIndex;
+
+                    eventCount = AppendJumpEvent(agent, frame, target, end, outEvents, maxEvents, eventCount, params->agentSpeed, agent.offDuration);
+                    emitOffmeshFrame();
+                    continue;
+                }
+                if (wasOffmesh)
+                {
+                    frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+                    agent.cornerIndex = agent.cornerCount;
+                }
+                else
+                {
+                    ++agent.cornerIndex;
+                    if (agent.cornerIndex >= agent.cornerCount)
+                        frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+                }
+            }
+
+            glm::vec3 desiredDir(0.0f);
+            if (agent.cornerIndex < agent.cornerCount)
+            {
+                target = glm::vec3(agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 0],
+                                   agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 1],
+                                   agent.cornersXYZ[static_cast<size_t>(agent.cornerIndex) * 3 + 2]);
+                toTarget = target - agent.pos;
+                toTarget.y = 0.0f;
+                const float d = glm::length(toTarget);
+                if (d > 1e-4f)
+                    desiredDir = toTarget / d;
+            }
+
+            std::vector<const SimAgentState*> neighbors;
+            neighbors.reserve(16);
+            const float avoidRangeSq = params->avoidRange * params->avoidRange;
+            for (size_t oi = 0; oi < agents.size(); ++oi)
+            {
+                if (oi == ai)
+                    continue;
+                const SimAgentState& other = *agents[oi];
+                glm::vec3 diff = other.pos - agent.pos;
+                diff.y = 0.0f;
+                if (glm::dot(diff, diff) <= avoidRangeSq)
+                    neighbors.push_back(&other);
+            }
+
+            glm::vec3 avoid = ComputeAvoidanceForce(agent, neighbors, params->avoidRange, params->avoidWeight);
+            glm::vec3 moveDir(0.0f);
+            if (isVehicleBox)
+            {
+                float targetHeading = agent.headingDeg;
+                if (glm::dot(desiredDir, desiredDir) > 1e-6f)
+                    targetHeading = std::atan2(desiredDir.x, desiredDir.z) * 180.0f / 3.1415926535f;
+                float deltaYaw = WrapAngleDeg(targetHeading - agent.headingDeg);
+                const float maxTurn = std::max(0.0f, params->agentTurnSpeedDeg) * dt;
+                deltaYaw = std::clamp(deltaYaw, -maxTurn, maxTurn);
+                if (std::isfinite(deltaYaw))
+                    agent.headingDeg = WrapAngleDeg(agent.headingDeg + deltaYaw);
+
+                const float yawRad = glm::radians(agent.headingDeg);
+                moveDir = glm::vec3(std::sin(yawRad), 0.0f, std::cos(yawRad));
+            }
+            else
+            {
+                moveDir = desiredDir + avoid;
+                moveDir.y = 0.0f;
+                const float moveLen = glm::length(moveDir);
+                if (moveLen > 1e-4f)
+                    moveDir /= moveLen;
+            }
+
+            float speed = std::max(0.0f, params->agentSpeed);
+            if ((agent.flags & AGENT_VEHICLE) != 0)
+                speed = std::max(0.0f, params->maxSpeedForward);
+            glm::vec3 desiredVel = moveDir * speed;
+            glm::vec3 velDelta = desiredVel - agent.lastVel;
+            const float maxDelta = std::max(0.0f, params->agentAccel) * dt;
+            const float velDeltaLen = glm::length(velDelta);
+            if (velDeltaLen > maxDelta && maxDelta > 0.0f)
+                velDelta = velDelta / velDeltaLen * maxDelta;
+            agent.lastVel += velDelta;
+            if (isVehicleBox)
+                agent.lastVel.y = 0.0f;
+
+            glm::vec3 candidate = agent.pos + agent.lastVel * dt;
+            float startPos[3] = { agent.pos.x, agent.pos.y, agent.pos.z };
+            float endPos[3] = { candidate.x, candidate.y, candidate.z };
+            float result[3] = { agent.pos.x, agent.pos.y, agent.pos.z };
+            dtPolyRef visited[32]{};
+            int visitedCount = 0;
+            dtQueryFilter filter{};
+            filter.setIncludeFlags(0xFFFF);
+            if (agent.currentRef != 0)
+            {
+                if (dtStatusSucceed(ctx.navQuery->moveAlongSurface(agent.currentRef, startPos, endPos, &filter, result, visited, &visitedCount, 32)))
+                {
+                    agent.moveSurfaceFailCount = 0;
+                    if (visitedCount > 0)
+                        agent.currentRef = visited[visitedCount - 1];
+                    candidate = glm::vec3(result[0], result[1], result[2]);
+                }
+                else
+                {
+                    ++agent.moveSurfaceFailCount;
+                }
+            }
+            else
+            {
+                ++agent.moveSurfaceFailCount;
+            }
+
+            if (agent.currentRef == 0 || agent.moveSurfaceFailCount >= 3)
+            {
+                if (RefreshAgentNearestPoly(ctx, agent))
+                    agent.moveSurfaceFailCount = 0;
+                else
+                    frameFlags |= SIM_FRAMEFLAG_NEEDS_REPATH;
+            }
+
+            float h = candidate.y;
+            if (ctx.heightSampler.enabled)
+                h = SampleAgentHeight(ctx, agent, candidate);
+            if (isVehicleBox)
+            {
+                const bool fitOk = FitVehicleToGround(ctx, agent, *params, dt, frameFlags);
+                if (!fitOk)
+                {
+                    if (params->gravity > 0.0f)
+                    {
+                        agent.verticalVel = std::max(agent.verticalVel - params->gravity * dt, -std::max(params->maxFallSpeed, 0.0f));
+                        const float targetY = h;
+                        agent.pos.y += agent.verticalVel * dt;
+                        if (agent.pos.y < targetY)
+                        {
+                            agent.pos.y = targetY;
+                            agent.verticalVel = 0.0f;
+                        }
+                    }
+                }
+            }
+            else if (params->gravity > 0.0f)
+            {
+                agent.verticalVel = std::max(agent.verticalVel - params->gravity * dt, -std::max(params->maxFallSpeed, 0.0f));
+                const float targetY = h;
+                agent.pos.y += agent.verticalVel * dt;
+                if (agent.pos.y < targetY)
+                {
+                    agent.pos.y = targetY;
+                    agent.verticalVel = 0.0f;
+                }
+            }
+            else
+            {
+                agent.pos.y = h;
+            }
+
+            const float moved = glm::length(glm::vec2(candidate.x - agent.pos.x, candidate.z - agent.pos.z));
+            agent.pos.x = candidate.x;
+            agent.pos.z = candidate.z;
+            if (moved < 0.001f)
+                frameFlags |= SIM_FRAMEFLAG_STUCK;
+
+            if (!isVehicleBox)
+            {
+                const float targetHeading = std::atan2(moveDir.x, moveDir.z) * 180.0f / 3.1415926535f;
+                float deltaYaw = WrapAngleDeg(targetHeading - agent.headingDeg);
+                const float maxTurn = std::max(0.0f, params->agentTurnSpeedDeg) * dt;
+                deltaYaw = std::clamp(deltaYaw, -maxTurn, maxTurn);
+                if (std::isfinite(deltaYaw))
+                    agent.headingDeg = WrapAngleDeg(agent.headingDeg + deltaYaw);
+            }
+
+            if (agent.cornerIndex < agent.cornerCount)
+            {
+                const bool offmeshSoon = (agent.cornerFlags[static_cast<size_t>(agent.cornerIndex)] & DT_STRAIGHTPATH_OFFMESH_CONNECTION) != 0;
+                if (offmeshSoon)
+                    frameFlags |= SIM_FRAMEFLAG_OFFMESH_SOON;
+            }
+
+            outPosXYZ[basePos + 0] = agent.pos.x;
+            outPosXYZ[basePos + 1] = agent.pos.y;
+            outPosXYZ[basePos + 2] = agent.pos.z;
+            outHeadingDeg[baseScalar] = agent.headingDeg;
+            outVelXYZ[basePos + 0] = agent.lastVel.x;
+            outVelXYZ[basePos + 1] = agent.lastVel.y;
+            outVelXYZ[basePos + 2] = agent.lastVel.z;
+            outFrameFlags[baseScalar] = frameFlags;
+            if (!isVehicleBox)
+            {
+                agent.rollDeg = 0.0f;
+                agent.pitchDeg = 0.0f;
+                agent.eulerRPYDeg = glm::vec3(0.0f, 0.0f, agent.headingDeg);
+            }
+            if (outEulerRPYDeg)
+            {
+                const size_t baseEuler = baseScalar * 3;
+                outEulerRPYDeg[baseEuler + 0] = isVehicleBox ? agent.rollDeg : 0.0f;
+                outEulerRPYDeg[baseEuler + 1] = isVehicleBox ? agent.pitchDeg : 0.0f;
+                outEulerRPYDeg[baseEuler + 2] = agent.headingDeg;
+            }
+        }
+    }
+
+    return maxSimulationFrames;
+}
+
+GTANAVVIEWER_API int SimulateAgentFrames(void* navMesh,
+                                         uint32_t agentId,
+                                         float dt,
+                                         int maxSimulationFrames,
+                                         const SimParamsFFI* params,
+                                         float* outPosXYZ,
+                                         float* outHeadingDeg,
+                                         float* outVelXYZ,
+                                         uint8_t* outFrameFlags,
+                                         float* outEulerRPYDeg,
+                                         SimEventFFI* outEvents,
+                                         int maxEvents)
+{
+    if (!navMesh)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    const uint32_t ids[1] = { agentId };
+    return SimulateAgentsInternal(*ctx,
+                                  ids,
+                                  1,
+                                  dt,
+                                  maxSimulationFrames,
+                                  params,
+                                  outPosXYZ,
+                                  outHeadingDeg,
+                                  outVelXYZ,
+                                  outFrameFlags,
+                                  outEulerRPYDeg,
+                                  outEvents,
+                                  maxEvents);
+}
+
+GTANAVVIEWER_API int SimulateAgentsFramesBatch(void* navMesh,
+                                               const uint32_t* agentIds,
+                                               int agentCount,
+                                               float dt,
+                                               int maxSimulationFrames,
+                                               const SimParamsFFI* params,
+                                               float* outPosXYZ,
+                                               float* outHeadingDeg,
+                                               float* outVelXYZ,
+                                               uint8_t* outFrameFlags,
+                                               float* outEulerRPYDeg,
+                                               SimEventFFI* outEvents,
+                                               int maxEvents)
+{
+    if (!navMesh)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    return SimulateAgentsInternal(*ctx,
+                                  agentIds,
+                                  agentCount,
+                                  dt,
+                                  maxSimulationFrames,
+                                  params,
+                                  outPosXYZ,
+                                  outHeadingDeg,
+                                  outVelXYZ,
+                                  outFrameFlags,
+                                  outEulerRPYDeg,
+                                  outEvents,
+                                  maxEvents);
 }

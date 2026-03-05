@@ -25,6 +25,29 @@ namespace
         }
         return true;
     }
+    bool AreNavParamsCompatible(const dtNavMeshParams& expected, const dtNavMeshParams& current)
+    {
+        constexpr float eps = 1e-3f;
+        for (int i = 0; i < 3; ++i)
+        {
+            if (std::fabs(expected.orig[i] - current.orig[i]) > eps)
+                return false;
+        }
+
+        if (std::fabs(expected.tileWidth - current.tileWidth) > eps)
+            return false;
+        if (std::fabs(expected.tileHeight - current.tileHeight) > eps)
+            return false;
+
+        // Permit current navmesh to allocate equal-or-greater capacity.
+        if (current.maxTiles < expected.maxTiles)
+            return false;
+        if (current.maxPolys < expected.maxPolys)
+            return false;
+
+        return true;
+    }
+
 }
 
 bool TileDbLoadIndex(const char* dbPath,
@@ -46,10 +69,21 @@ bool TileDbLoadIndex(const char* dbPath,
         return false;
     }
 
-    if (memcmp(&header.navParams, nav->getParams(), sizeof(dtNavMeshParams)) != 0)
+    const dtNavMeshParams* currentParams = nav->getParams();
+    if (!currentParams || !AreNavParamsCompatible(header.navParams, *currentParams))
     {
         fclose(fp);
-        printf("[NavMeshData] Tile DB incompatível com parametros atuais.\n");
+        printf("[NavMeshData] Tile DB incompatível com parametros atuais. esperado(orig=%.3f %.3f %.3f tile=%.3f x %.3f maxTiles=%d maxPolys=%d) atual(orig=%.3f %.3f %.3f tile=%.3f x %.3f maxTiles=%d maxPolys=%d).\n",
+               header.navParams.orig[0], header.navParams.orig[1], header.navParams.orig[2],
+               header.navParams.tileWidth, header.navParams.tileHeight,
+               header.navParams.maxTiles, header.navParams.maxPolys,
+               currentParams ? currentParams->orig[0] : 0.0f,
+               currentParams ? currentParams->orig[1] : 0.0f,
+               currentParams ? currentParams->orig[2] : 0.0f,
+               currentParams ? currentParams->tileWidth : 0.0f,
+               currentParams ? currentParams->tileHeight : 0.0f,
+               currentParams ? currentParams->maxTiles : 0,
+               currentParams ? currentParams->maxPolys : 0);
         return false;
     }
 
