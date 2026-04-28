@@ -101,6 +101,7 @@ $(document).ready(function(){initNavTree('ExternC_8cpp.html',''); initResizable(
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="ExternC_8h_source.html">ExternC.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="NavMesh__TileCacheDB_8h_source.html">NavMesh_TileCacheDB.h</a>&quot;</code><br />
+<code>#include &quot;json.hpp&quot;</code><br />
 <code>#include &lt;<a class="el" href="DetourNavMesh_8h_source.html">DetourNavMesh.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="DetourNavMeshQuery_8h_source.html">DetourNavMeshQuery.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="DetourCommon_8h_source.html">DetourCommon.h</a>&gt;</code><br />
@@ -183,6 +184,16 @@ Functions</h2></td></tr>
 <tr class="separator:aede39e8bc9e5fe1ffaf9a4797b88d488"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92ea1d6158e37bee56bab355da676c99" id="r_a92ea1d6158e37bee56bab355da676c99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a92ea1d6158e37bee56bab355da676c99">GetWorldTileStreamingStats</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, int *outQueuedGeometries, int *outIndexedGeometries, int *outDirtyTiles, int *outPendingBuildTiles, int *outResidentTiles)</td></tr>
 <tr class="separator:a92ea1d6158e37bee56bab355da676c99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7a3c0224d7accc9aea654ea51226c5c" id="r_aa7a3c0224d7accc9aea654ea51226c5c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aa7a3c0224d7accc9aea654ea51226c5c">GetWorldTileStreamingStatsEx</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, int *outQueuedGeometries, int *outIndexedGeometries, int *outDirtyTiles, int *outPendingBuildTiles, int *outResidentTiles, int *outManifestLoaded, int *outTileDbIndexLoaded)</td></tr>
+<tr class="separator:aa7a3c0224d7accc9aea654ea51226c5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e51ea2c8b9dcfb3dce91ecac14baa34" id="r_a4e51ea2c8b9dcfb3dce91ecac14baa34"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a4e51ea2c8b9dcfb3dce91ecac14baa34">SaveWorldTileManifest</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
+<tr class="separator:a4e51ea2c8b9dcfb3dce91ecac14baa34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae711b9f1b563ad8eabed016b09001334" id="r_ae711b9f1b563ad8eabed016b09001334"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ae711b9f1b563ad8eabed016b09001334">LoadWorldTileManifest</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
+<tr class="separator:ae711b9f1b563ad8eabed016b09001334"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea35414ca81ef765465196dbcd5ed1d5" id="r_aea35414ca81ef765465196dbcd5ed1d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aea35414ca81ef765465196dbcd5ed1d5">HasWorldTileManifest</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
+<tr class="separator:aea35414ca81ef765465196dbcd5ed1d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2995bb91df6e316e4e25c5208f26f713" id="r_a2995bb91df6e316e4e25c5208f26f713"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a2995bb91df6e316e4e25c5208f26f713">SetWorldTileAutoSaveManifest</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, bool <a class="el" href="SDL__opengl__glext_8h.html#a0455a397ab5468d21c3021f2efa6dd3c">enabled</a>)</td></tr>
+<tr class="separator:a2995bb91df6e316e4e25c5208f26f713"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad18438b5de833265f1d5fea2ecd0213e" id="r_ad18438b5de833265f1d5fea2ecd0213e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ad18438b5de833265f1d5fea2ecd0213e">GetNavMeshPolygons</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, <a class="el" href="structNavMeshPolygonInfo.html">NavMeshPolygonInfo</a> *polygons, int maxPolygons, <a class="el" href="structVector3.html">Vector3</a> *vertices, int maxVertices, <a class="el" href="structNavMeshEdgeInfo.html">NavMeshEdgeInfo</a> *edges, int maxEdges, int *outVertexCount, int *outEdgeCount)</td></tr>
 <tr class="separator:ad18438b5de833265f1d5fea2ecd0213e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae52f298093380d607a5cf860c3b186ae" id="r_ae52f298093380d607a5cf860c3b186ae"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ae52f298093380d607a5cf860c3b186ae">HasGroundNeighbourOnEdge</a> (const <a class="el" href="structdtMeshTile.html">dtMeshTile</a> *tile, const <a class="el" href="structdtPoly.html">dtPoly</a> *poly, int edge, const <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav)</td></tr>
@@ -1979,6 +1990,70 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="aa7a3c0224d7accc9aea654ea51226c5c" name="aa7a3c0224d7accc9aea654ea51226c5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7a3c0224d7accc9aea654ea51226c5c">&#9670;&#160;</a></span>GetWorldTileStreamingStatsEx()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int GetWorldTileStreamingStatsEx </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>outQueuedGeometries</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>outIndexedGeometries</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>outDirtyTiles</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>outPendingBuildTiles</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>outResidentTiles</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>outManifestLoaded</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>outTileDbIndexLoaded</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ae52f298093380d607a5cf860c3b186ae" name="ae52f298093380d607a5cf860c3b186ae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae52f298093380d607a5cf860c3b186ae">&#9670;&#160;</a></span>HasGroundNeighbourOnEdge()</h2>
 
@@ -2023,6 +2098,24 @@ Variables</h2></td></tr>
 <span class="mlabels"><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aea35414ca81ef765465196dbcd5ed1d5" name="aea35414ca81ef765465196dbcd5ed1d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea35414ca81ef765465196dbcd5ed1d5">&#9670;&#160;</a></span>HasWorldTileManifest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool HasWorldTileManifest </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>
@@ -2238,6 +2331,24 @@ Variables</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae711b9f1b563ad8eabed016b09001334" name="ae711b9f1b563ad8eabed016b09001334"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae711b9f1b563ad8eabed016b09001334">&#9670;&#160;</a></span>LoadWorldTileManifest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool LoadWorldTileManifest </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2792,6 +2903,24 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a4e51ea2c8b9dcfb3dce91ecac14baa34" name="a4e51ea2c8b9dcfb3dce91ecac14baa34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e51ea2c8b9dcfb3dce91ecac14baa34">&#9670;&#160;</a></span>SaveWorldTileManifest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool SaveWorldTileManifest </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab74c0fc972e842c51c249561bc9d598b" name="ab74c0fc972e842c51c249561bc9d598b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab74c0fc972e842c51c249561bc9d598b">&#9670;&#160;</a></span>SegmentHitsObstacle()</h2>
 
@@ -3087,6 +3216,34 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>sessionId</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2995bb91df6e316e4e25c5208f26f713" name="a2995bb91df6e316e4e25c5208f26f713"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2995bb91df6e316e4e25c5208f26f713">&#9670;&#160;</a></span>SetWorldTileAutoSaveManifest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool SetWorldTileAutoSaveManifest </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

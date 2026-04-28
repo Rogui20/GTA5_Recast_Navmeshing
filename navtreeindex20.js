@@ -1,5 +1,15 @@
 var NAVTREEINDEX20 =
 {
+"SDL__joystick_8h.html#a69452f7f7e11db54292f64db9a629029":[44,0,5,2,1,35,63],
+"SDL__joystick_8h.html#a6c46ea976c7a65d49b38d31b42d11652":[44,0,5,2,1,35,35],
+"SDL__joystick_8h.html#a6d7988b43c09ced08ec318a2556f1858":[44,0,5,2,1,35,5],
+"SDL__joystick_8h.html#a6e7c149b0a067b5e1272bc6f4bbd14bc":[44,0,5,2,1,35,65],
+"SDL__joystick_8h.html#a6f3a290c0367a7607d6ebbaa50721eec":[44,0,5,2,1,35,57],
+"SDL__joystick_8h.html#a718be0fe686e838f1d0db00d523ff47a":[44,0,5,2,1,35,56],
+"SDL__joystick_8h.html#a755d087bb16270087bfced7501656a6d":[44,0,5,2,1,35,60],
+"SDL__joystick_8h.html#a7a5a92f4eb93dde4e58d5155ce22b7a7":[44,0,5,2,1,35,52],
+"SDL__joystick_8h.html#a7b146627cc69693b6ab6acd9b39a94c9":[44,0,5,2,1,35,58],
+"SDL__joystick_8h.html#a7f615ef8040e7e9de3af6482d8d9908c":[44,0,5,2,1,35,44],
 "SDL__joystick_8h.html#a815f02f2cbced249cb4b0018dfd3a777":[44,0,5,2,1,35,54],
 "SDL__joystick_8h.html#a865c2e087fe69a3a30c87243729ecdea":[44,0,5,2,1,35,59],
 "SDL__joystick_8h.html#aa1764e3e49e4d89e9e2680d42ebec213":[44,0,5,2,1,35,15],
@@ -239,15 +249,5 @@ var NAVTREEINDEX20 =
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dabf1f57519d3856237a044772a91e0e3d":[44,0,5,2,1,37,5,221],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dabf4996aa2b79791c8080d62b0bc264c9":[44,0,5,2,1,37,5,89],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dabfa4a40d8187f641afcdc1c29af3d93b":[44,0,5,2,1,37,5,232],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dac0f725479acb15dbba79c7cf9e84029f":[44,0,5,2,1,37,5,203],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dac1fb88798aae24fefcbaf4e0d9869393":[44,0,5,2,1,37,5,133],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dac3e18ac934b9664c0f794c23a0436867":[44,0,5,2,1,37,5,152],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dac79d1b9fd74f464da4bb65d788385e1d":[44,0,5,2,1,37,5,115],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dac7b66c9c41e8566f3ca491aa9b7970ff":[44,0,5,2,1,37,5,189],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dac810e97c72ae302ad074424bbb473a0e":[44,0,5,2,1,37,5,160],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dac833999c7ac54588f6f52891e1b88340":[44,0,5,2,1,37,5,70],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dac97cc52299426a76f2a0372e727cb334":[44,0,5,2,1,37,5,39],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dacc6e09d8fbcd102b97af24219ed079ad":[44,0,5,2,1,37,5,88],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dacd7fd6e8551f78ec52b29abfa8782805":[44,0,5,2,1,37,5,104],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dacf2bffd9ea773816e295b38596d42c9d":[44,0,5,2,1,37,5,142]
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dac0f725479acb15dbba79c7cf9e84029f":[44,0,5,2,1,37,5,203]
 };

@@ -1,5 +1,17 @@
 var NAVTREEINDEX92 =
 {
+"structExampleMemberInfo.html":[43,0,84],
+"structExampleMemberInfo.html#a365e93f5224b16f0dd20076d54459820":[43,0,84,2],
+"structExampleMemberInfo.html#a3845899815bd6272d3143597d1d98af6":[43,0,84,0],
+"structExampleMemberInfo.html#a3cc8d0fb5e4fd5db16fcbea82e408c2a":[43,0,84,3],
+"structExampleMemberInfo.html#ada03c104ec93f7041719ed91b3f060d7":[43,0,84,1],
+"structExampleSelectionWithDeletion.html":[43,0,85],
+"structExampleSelectionWithDeletion.html#a741d9367a06463991c3171a06c0924c8":[43,0,85,1],
+"structExampleSelectionWithDeletion.html#aa040ee356abd37ae15d34eaae8b53822":[43,0,85,0],
+"structExampleTreeNode.html":[43,0,86],
+"structExampleTreeNode.html#a0777a6fd0d833e19360aa061207dc64d":[43,0,86,4],
+"structExampleTreeNode.html#a09940aea3cbc20b6dd8c1295dd4b2c48":[43,0,86,7],
+"structExampleTreeNode.html#a0b35475b9d044a3105f971936eac69c8":[43,0,86,6],
 "structExampleTreeNode.html#a49b1eea89bac79cae4c3413307442a10":[43,0,86,8],
 "structExampleTreeNode.html#a6b33514362507e7478dd829a41965d52":[43,0,86,1],
 "structExampleTreeNode.html#a8e6a5c6f89097f96ebc67299ba698775":[43,0,86,5],
@@ -237,17 +249,5 @@ var NAVTREEINDEX92 =
 "structImDrawListSharedData.html#a5b5bb46f5fd714b43e4b73a131b7f6f7":[43,0,109,9],
 "structImDrawListSharedData.html#a7e00a317793f4ed3ff592b050dfee450":[43,0,109,15],
 "structImDrawListSharedData.html#a8dff5fc643cab17128012383d75d9ad8":[43,0,109,19],
-"structImDrawListSharedData.html#ab0c46ef010a2a9d20c0995def13abfe8":[43,0,109,4],
-"structImDrawListSharedData.html#abea5e99407cb10ae45f6c14b4c6b21ca":[43,0,109,12],
-"structImDrawListSharedData.html#ac8737a7aae92c55d75998a6c9f6f3882":[43,0,109,7],
-"structImDrawListSharedData.html#adc947304370a6d5ee55a44190e923c8d":[43,0,109,2],
-"structImDrawListSharedData.html#addb4f657df1c707b878e90e86ac776e0":[43,0,109,5],
-"structImDrawListSharedData.html#aed11fc6c558c07c48dd8c6d6874f710c":[43,0,109,10],
-"structImDrawListSharedData.html#aef9a6fbf913823bd0b22aafb7f797c05":[43,0,109,3],
-"structImDrawListSplitter.html":[43,0,110],
-"structImDrawListSplitter.html#a2f832d1adedde7663c991af366847c75":[43,0,110,0],
-"structImDrawListSplitter.html#a712b8ba85de1e4095db67a86a3b80e21":[43,0,110,1],
-"structImDrawListSplitter.html#a95dbdaa7ea2a0328a85732ed210a549b":[43,0,110,3],
-"structImDrawListSplitter.html#a99a46d62e09810f31d0a6efd4a0d2b09":[43,0,110,9],
-"structImDrawListSplitter.html#aa491c5b1e10b2f5340e7db4949d31255":[43,0,110,6]
+"structImDrawListSharedData.html#ab0c46ef010a2a9d20c0995def13abfe8":[43,0,109,4]
 };

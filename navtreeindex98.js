@@ -1,5 +1,17 @@
 var NAVTREEINDEX98 =
 {
+"structImGuiNextWindowData.html#af399c9c679b8f9c315af8583bf63aa68":[43,0,236,21],
+"structImGuiOldColumnData.html":[43,0,237],
+"structImGuiOldColumnData.html#a2eef22c9f568b9020ee0f6ec682b1415":[43,0,237,1],
+"structImGuiOldColumnData.html#a6fd70ab5181a2615ac83ffb7813b31e3":[43,0,237,0],
+"structImGuiOldColumnData.html#a87f711016d4006d7fb9fa21815fe6f8f":[43,0,237,3],
+"structImGuiOldColumnData.html#aacf1574d1907c9afaadd5a702d6803ef":[43,0,237,4],
+"structImGuiOldColumnData.html#ac31f2d6cf8d454163d2d5c46b7cb16ad":[43,0,237,2],
+"structImGuiOldColumns.html":[43,0,238],
+"structImGuiOldColumns.html#a0bbefb48400e92ca8245dd62bdea7de3":[43,0,238,17],
+"structImGuiOldColumns.html#a19f636d31c2c93d1afe01d9484936b28":[43,0,238,15],
+"structImGuiOldColumns.html#a32cc845e4100c21a9cd197d7627a3dd5":[43,0,238,11],
+"structImGuiOldColumns.html#a3b9c843a034e82543a7936e30442704c":[43,0,238,14],
 "structImGuiOldColumns.html#a7ba6bbc0231a94ba8c2edcc5029f0d53":[43,0,238,13],
 "structImGuiOldColumns.html#a7cbfefcc82a7ca3271c8c0c05cfe9ed4":[43,0,238,16],
 "structImGuiOldColumns.html#a82502dcabe70b52e0e89cbb0b55e7087":[43,0,238,7],
@@ -237,17 +249,5 @@ var NAVTREEINDEX98 =
 "structImGuiStyle.html#a7e522a0be6df5271f0da530708d7f4fc":[43,0,258,56],
 "structImGuiStyle.html#a848650199d21b9d6824169771ad497cf":[43,0,258,38],
 "structImGuiStyle.html#a8dd02a6a031ec8667e76aab1e28755bd":[43,0,258,18],
-"structImGuiStyle.html#a8fed04481e1d75bb95c97819f545e2ba":[43,0,258,15],
-"structImGuiStyle.html#a9530483cce8901a2394df15bcbb64fcc":[43,0,258,65],
-"structImGuiStyle.html#a96623380e624d2f2ec207449e700a226":[43,0,258,48],
-"structImGuiStyle.html#a993312606e9dcb7ca165245150a4da72":[43,0,258,4],
-"structImGuiStyle.html#a9b463b2145c1fc619e3fd6dab4786e5a":[43,0,258,35],
-"structImGuiStyle.html#aa4fce75908e229801cc51a8ee58de9ee":[43,0,258,33],
-"structImGuiStyle.html#aa6e825b3d25d658bb3914907a71287d1":[43,0,258,64],
-"structImGuiStyle.html#aada9069c237335c78e2efadca98c74ca":[43,0,258,9],
-"structImGuiStyle.html#aaf983a3d56e5f44e24c02c6937cb0824":[43,0,258,66],
-"structImGuiStyle.html#ab06d6f0c6c5f36ab0c14688448de66f6":[43,0,258,19],
-"structImGuiStyle.html#ab0a3ffb3aeec3e6b09b9bde812b28369":[43,0,258,0],
-"structImGuiStyle.html#ab1d9f91937648409a59c27b1a2463408":[43,0,258,50],
-"structImGuiStyle.html#ab518a0a67df8f14765acc491d7b460f4":[43,0,258,63]
+"structImGuiStyle.html#a8fed04481e1d75bb95c97819f545e2ba":[43,0,258,15]
 };

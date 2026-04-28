@@ -1,5 +1,15 @@
 var NAVTREEINDEX61 =
 {
+"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78af186084b057632bf806c5c67c47c60cc":[44,0,5,2,1,56,24,2],
+"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78afe5ef9aa7d0b94f110ba64e30b9988f3":[44,0,5,2,1,56,24,7],
+"SDL__pixels_8h.html#a59d2ee19b4701f488577d065629a4f19":[44,0,5,2,1,56,23],
+"SDL__pixels_8h.html#a59d2ee19b4701f488577d065629a4f19a07ac5a0b70f2f74124b25e33d553502d":[44,0,5,2,1,56,23,2],
+"SDL__pixels_8h.html#a59d2ee19b4701f488577d065629a4f19ad6c8e0e291f2fe47506415ec225bb729":[44,0,5,2,1,56,23,0],
+"SDL__pixels_8h.html#a59d2ee19b4701f488577d065629a4f19aeae245974c9a0639e4df3dfffe5f8501":[44,0,5,2,1,56,23,1],
+"SDL__pixels_8h.html#a5d933eb0233ca33d598800f33ef43376":[44,0,5,2,1,56,3],
+"SDL__pixels_8h.html#a604d4b3b28add80eb4824ffd083d3ef4":[44,0,5,2,1,56,4],
+"SDL__pixels_8h.html#a60fede85fba7bdca549f46b3f6372593":[44,0,5,2,1,56,38],
+"SDL__pixels_8h.html#a6b40e44d9a48dfecde34428a78648f8a":[44,0,5,2,1,56,31],
 "SDL__pixels_8h.html#a768b7ed72549e36a26a36267772906fb":[44,0,5,2,1,56,30],
 "SDL__pixels_8h.html#a7dc1903b18ca972a3676628782873f71":[44,0,5,2,1,56,9],
 "SDL__pixels_8h.html#a7e63896f019e17267a4c30ac3abdfd68":[44,0,5,2,1,56,22],
@@ -239,15 +249,5 @@ var NAVTREEINDEX61 =
 "SDL__render_8h.html#aeb5644ee43c35ed27e54e312a1cd954b":[44,0,5,2,1,61,17],
 "SDL__render_8h.html#af1f12f5baf50ec8c86235dd4528a4e0c":[44,0,5,2,1,61,39],
 "SDL__render_8h.html#af64adcd12e4e9d41d48031fd3da7b913":[44,0,5,2,1,61,38],
-"SDL__render_8h.html#af8b9cb77ca18f76c18f39d29ed960de8":[44,0,5,2,1,61,89],
-"SDL__render_8h.html#af91e64e2b473a5eb7e93caf253fb760c":[44,0,5,2,1,61,65],
-"SDL__render_8h.html#afc08075c669fffd2ab7808ffedad3edc":[44,0,5,2,1,61,59],
-"SDL__render_8h.html#afdc8a35ce033f5111843ac9518dc47a4":[44,0,5,2,1,61,28],
-"SDL__render_8h.html#afe68207df287bda5b85a4bb84e720522":[44,0,5,2,1,61,82],
-"SDL__render_8h_source.html":[44,0,5,2,1,61],
-"SDL__revision_8h.html":[44,0,5,2,1,62],
-"SDL__revision_8h.html#a5e746cf8185451b8993186376bde93a5":[44,0,5,2,1,62,1],
-"SDL__revision_8h.html#a639972626210bef78ef9f23e7392d037":[44,0,5,2,1,62,0],
-"SDL__revision_8h_source.html":[44,0,5,2,1,62],
-"SDL__rwops_8h.html":[44,0,5,2,1,63]
+"SDL__render_8h.html#af8b9cb77ca18f76c18f39d29ed960de8":[44,0,5,2,1,61,89]
 };

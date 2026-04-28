@@ -1,5 +1,17 @@
 var NAVTREEINDEX97 =
 {
+"structImGuiInputTextCallbackData.html#a616bf3a1f0c2d73b9133931f22ab44a7":[43,0,216,16],
+"structImGuiInputTextCallbackData.html#a6ad2f8e385c68e56e6682fc0c4e79949":[43,0,216,13],
+"structImGuiInputTextCallbackData.html#a72642ac2ce877eaade95386cad70ee8a":[43,0,216,17],
+"structImGuiInputTextCallbackData.html#a7a6e9a43c5db8f236cde912b913fe707":[43,0,216,12],
+"structImGuiInputTextCallbackData.html#a9963937f48aba00466c2af404dad1e25":[43,0,216,4],
+"structImGuiInputTextCallbackData.html#aa2d91cca2b46de3f2b218573579f122b":[43,0,216,7],
+"structImGuiInputTextCallbackData.html#aa4db7629a772cfc3286a5a3fd1e5f1ab":[43,0,216,9],
+"structImGuiInputTextCallbackData.html#aabbc96c73ebcec89f06811dba531bc56":[43,0,216,5],
+"structImGuiInputTextCallbackData.html#aac3133cf2c9d194142481e54192d8fa1":[43,0,216,15],
+"structImGuiInputTextCallbackData.html#aae1b69a904053961be171d7f47ef430e":[43,0,216,3],
+"structImGuiInputTextCallbackData.html#ab5dc30d7edcf60efbd5bb8e677dab8bf":[43,0,216,2],
+"structImGuiInputTextCallbackData.html#aba08927f2b128153e5544ec662a32a5f":[43,0,216,10],
 "structImGuiInputTextCallbackData.html#ac8cd46c3473851c2822aae8240289069":[43,0,216,6],
 "structImGuiInputTextCallbackData.html#ae19641bad15c1a163928d121075ca09c":[43,0,216,0],
 "structImGuiInputTextCallbackData.html#ae8358ea4135032204fcba6c9ada7c49f":[43,0,216,18],
@@ -237,17 +249,5 @@ var NAVTREEINDEX97 =
 "structImGuiNextWindowData.html#acab3905da227922b52f03943b355b27a":[43,0,236,17],
 "structImGuiNextWindowData.html#adb6dfd7cba17293b0610afa0d16d9491":[43,0,236,11],
 "structImGuiNextWindowData.html#ae6b6651b219549de2844261363be5d75":[43,0,236,16],
-"structImGuiNextWindowData.html#af1a646d2540a1aaac96466e3690768f2":[43,0,236,8],
-"structImGuiNextWindowData.html#af399c9c679b8f9c315af8583bf63aa68":[43,0,236,21],
-"structImGuiOldColumnData.html":[43,0,237],
-"structImGuiOldColumnData.html#a2eef22c9f568b9020ee0f6ec682b1415":[43,0,237,1],
-"structImGuiOldColumnData.html#a6fd70ab5181a2615ac83ffb7813b31e3":[43,0,237,0],
-"structImGuiOldColumnData.html#a87f711016d4006d7fb9fa21815fe6f8f":[43,0,237,3],
-"structImGuiOldColumnData.html#aacf1574d1907c9afaadd5a702d6803ef":[43,0,237,4],
-"structImGuiOldColumnData.html#ac31f2d6cf8d454163d2d5c46b7cb16ad":[43,0,237,2],
-"structImGuiOldColumns.html":[43,0,238],
-"structImGuiOldColumns.html#a0bbefb48400e92ca8245dd62bdea7de3":[43,0,238,17],
-"structImGuiOldColumns.html#a19f636d31c2c93d1afe01d9484936b28":[43,0,238,15],
-"structImGuiOldColumns.html#a32cc845e4100c21a9cd197d7627a3dd5":[43,0,238,11],
-"structImGuiOldColumns.html#a3b9c843a034e82543a7936e30442704c":[43,0,238,14]
+"structImGuiNextWindowData.html#af1a646d2540a1aaac96466e3690768f2":[43,0,236,8]
 };

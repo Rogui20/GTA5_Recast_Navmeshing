@@ -1,5 +1,15 @@
 var NAVTREEINDEX19 =
 {
+"SDL__hints_8h.html#a16ebada763406cdce7eef85d63b0902d":[44,0,5,2,1,34,75],
+"SDL__hints_8h.html#a17c7ae7e0cbbdb6a5049f559a58228ad":[44,0,5,2,1,34,39],
+"SDL__hints_8h.html#a194d77a4d56c852c7156733622d20dd3":[44,0,5,2,1,34,23],
+"SDL__hints_8h.html#a1a5034b3e1f390aed827bd627ebdd555":[44,0,5,2,1,34,110],
+"SDL__hints_8h.html#a1abf971bf456c82d8cc06868b75fd564":[44,0,5,2,1,34,125],
+"SDL__hints_8h.html#a1b75df316decc7aae5bc31b0595c1b01":[44,0,5,2,1,34,103],
+"SDL__hints_8h.html#a1dd9dddd7db2fb38cd9be60b8c06c24d":[44,0,5,2,1,34,70],
+"SDL__hints_8h.html#a1e2eef18b43aa15121d8250a408421ce":[44,0,5,2,1,34,121],
+"SDL__hints_8h.html#a1e91c63c1b9c4afd7c0349b4392270fd":[44,0,5,2,1,34,164],
+"SDL__hints_8h.html#a1ecf7a77582e3af7938b2f7c8d900aee":[44,0,5,2,1,34,131],
 "SDL__hints_8h.html#a1f5d48c45afbdcf3aa339a304ca92bb5":[44,0,5,2,1,34,156],
 "SDL__hints_8h.html#a1f7207eda7098e1aa816c6923beddbc4":[44,0,5,2,1,34,6],
 "SDL__hints_8h.html#a20190b85bd5693892603b2ff38575729":[44,0,5,2,1,34,77],
@@ -239,15 +249,5 @@ var NAVTREEINDEX19 =
 "SDL__joystick_8h.html#a5d1844afaf2ceaf58c689a8bd480a543":[44,0,5,2,1,35,6],
 "SDL__joystick_8h.html#a6330470720659333e6ef60994942a855":[44,0,5,2,1,35,37],
 "SDL__joystick_8h.html#a65fde978b4ab9c269c215d1922ae7755":[44,0,5,2,1,35,8],
-"SDL__joystick_8h.html#a68d808bc0054c5cd068b0d0ff7c5ef7d":[44,0,5,2,1,35,71],
-"SDL__joystick_8h.html#a69452f7f7e11db54292f64db9a629029":[44,0,5,2,1,35,63],
-"SDL__joystick_8h.html#a6c46ea976c7a65d49b38d31b42d11652":[44,0,5,2,1,35,35],
-"SDL__joystick_8h.html#a6d7988b43c09ced08ec318a2556f1858":[44,0,5,2,1,35,5],
-"SDL__joystick_8h.html#a6e7c149b0a067b5e1272bc6f4bbd14bc":[44,0,5,2,1,35,65],
-"SDL__joystick_8h.html#a6f3a290c0367a7607d6ebbaa50721eec":[44,0,5,2,1,35,57],
-"SDL__joystick_8h.html#a718be0fe686e838f1d0db00d523ff47a":[44,0,5,2,1,35,56],
-"SDL__joystick_8h.html#a755d087bb16270087bfced7501656a6d":[44,0,5,2,1,35,60],
-"SDL__joystick_8h.html#a7a5a92f4eb93dde4e58d5155ce22b7a7":[44,0,5,2,1,35,52],
-"SDL__joystick_8h.html#a7b146627cc69693b6ab6acd9b39a94c9":[44,0,5,2,1,35,58],
-"SDL__joystick_8h.html#a7f615ef8040e7e9de3af6482d8d9908c":[44,0,5,2,1,35,44]
+"SDL__joystick_8h.html#a68d808bc0054c5cd068b0d0ff7c5ef7d":[44,0,5,2,1,35,71]
 };

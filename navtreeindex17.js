@@ -1,5 +1,15 @@
 var NAVTREEINDEX17 =
 {
+"SDL__config__winrt_8h.html#ac4ba2a512288888728cd29b0f1e47e2d":[44,0,5,2,1,20,45],
+"SDL__config__winrt_8h.html#ac5b2d1a2ecbfae9e762a4e419b091eb2":[44,0,5,2,1,20,30],
+"SDL__config__winrt_8h.html#ac5d002420ef5a309454cc6c81128850a":[44,0,5,2,1,20,48],
+"SDL__config__winrt_8h.html#ac5f71bfd69698a6db1ae54177fcac7ea":[44,0,5,2,1,20,40],
+"SDL__config__winrt_8h.html#ac70f0930238c8d095d7cc2ee8b522c77":[44,0,5,2,1,20,39],
+"SDL__config__winrt_8h.html#acc846ee66f8204abe4f81092f05e2161":[44,0,5,2,1,20,96],
+"SDL__config__winrt_8h.html#acfc3d942b527a33172ad5c771b7a9bbd":[44,0,5,2,1,20,16],
+"SDL__config__winrt_8h.html#ad4c234dd1625255dc626a15886306e7d":[44,0,5,2,1,20,70],
+"SDL__config__winrt_8h.html#ad766185b04c40f7883b19d7715c36207":[44,0,5,2,1,20,2],
+"SDL__config__winrt_8h.html#ad7a8f73dd3b2bca5a62edfc381e9b643":[44,0,5,2,1,20,0],
 "SDL__config__winrt_8h.html#adca0e8e7c3827189abcd6ceae6f60c32":[44,0,5,2,1,20,76],
 "SDL__config__winrt_8h.html#adf617f5d9c7c0af184ccc8bc2cc368e8":[44,0,5,2,1,20,19],
 "SDL__config__winrt_8h.html#ae021ce4fe74984428cc97427b7358fda":[44,0,5,2,1,20,67],
@@ -239,15 +249,5 @@ var NAVTREEINDEX17 =
 "SDL__events_8h.html#acfa517963c25f8b71acc6b56721c5d9b":[44,0,5,2,1,27,88],
 "SDL__events_8h.html#ad680a069f9fcab80de91b3eefdf29c3c":[44,0,5,2,1,27,37],
 "SDL__events_8h.html#ad81eba7df9eae4fd0acd046b7f983202":[44,0,5,2,1,27,77],
-"SDL__events_8h.html#adced45c8816620846a6fde2a7d54b446":[44,0,5,2,1,27,90],
-"SDL__events_8h.html#adf06d9167ed17ff913e20ef7cdacba34":[44,0,5,2,1,27,48],
-"SDL__events_8h.html#ae8ffaa5d3d65f4dd75dcf1563e1cc8a9":[44,0,5,2,1,27,32],
-"SDL__events_8h.html#aee81bbffbc8489bdea8fecd1232c4bd1":[44,0,5,2,1,27,35],
-"SDL__events_8h.html#af028372f0833c630b96a1472899a0369":[44,0,5,2,1,27,67],
-"SDL__events_8h.html#af1ff071ae5e1576d6de5663d68391ac5":[44,0,5,2,1,27,34],
-"SDL__events_8h.html#af37c266ea979ba39b82079d9eb401003":[44,0,5,2,1,27,93],
-"SDL__events_8h.html#af99e29fafb9e4773b70f68cec08681fc":[44,0,5,2,1,27,91],
-"SDL__events_8h.html#afb772893e1c46f186fa39a4defe76df3":[44,0,5,2,1,27,80],
-"SDL__events_8h_source.html":[44,0,5,2,1,27],
-"SDL__filesystem_8h.html":[44,0,5,2,1,28]
+"SDL__events_8h.html#adced45c8816620846a6fde2a7d54b446":[44,0,5,2,1,27,90]
 };

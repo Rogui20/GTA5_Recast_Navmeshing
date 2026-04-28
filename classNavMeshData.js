@@ -15,6 +15,7 @@ var classNavMeshData =
     [ "GenerateAutomaticOffmeshLinks", "classNavMeshData.html#a49c39740dd9a92dc1ddad39d864a0626", null ],
     [ "GenerateAutomaticOffmeshLinksV2", "classNavMeshData.html#a55eceb66a0372302391470487d5d1eba", null ],
     [ "GetCachedBounds", "classNavMeshData.html#aaed3ebece63a796479fca8867e5dcef0", null ],
+    [ "GetCachedTileHash", "classNavMeshData.html#a40f8571051398e2c64fde296d8ef2b57", null ],
     [ "GetCachedTileHashes", "classNavMeshData.html#af4729db7f7d5aaed68a129c64a31d850", null ],
     [ "GetNavMesh", "classNavMeshData.html#a48c4d354d62d406decab6d32cecd7acb", null ],
     [ "GetOffmeshLinks", "classNavMeshData.html#a787c10580f7e4def333d8f271ef95da4", null ],
@@ -28,6 +29,7 @@ var classNavMeshData =
     [ "RebuildTilesInBounds", "classNavMeshData.html#af793fd5a445cc980578e652d3158447d", null ],
     [ "RemoveNearestOffmeshLink", "classNavMeshData.html#a8b8e05f3d60b19f63cb29260a3218ca3", null ],
     [ "RemoveTileAt", "classNavMeshData.html#a44c1dfa99e290e495f2e0acbf5888942", null ],
+    [ "SetCachedTileHash", "classNavMeshData.html#afdd84f9d161d2f889cdbf72b96498725", null ],
     [ "SetOffmeshLinks", "classNavMeshData.html#adf147bf8231f15a083cc8544479797e5", null ],
     [ "UpdateCachedGeometry", "classNavMeshData.html#a05d23e3170de5a3bc8852e35e5777131", null ]
 ];
