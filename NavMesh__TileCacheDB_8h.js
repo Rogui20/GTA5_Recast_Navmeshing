@@ -6,6 +6,7 @@ var NavMesh__TileCacheDB_8h =
     [ "LoadTilesInBoundsFromDb", "NavMesh__TileCacheDB_8h.html#a3b9e5dc7fcce5b8221c89612b95f541f", null ],
     [ "MakeTileKey", "NavMesh__TileCacheDB_8h.html#a0c35bf644d6b3b33ad30bcfa88092ce1", null ],
     [ "TileDbLoadIndex", "NavMesh__TileCacheDB_8h.html#a69e2241ad03fb8171bd43a997e59ca3f", null ],
+    [ "TileDbMergeWriteOrUpdateTiles", "NavMesh__TileCacheDB_8h.html#a97db8f4d3c319f50adfd29db2364c9c1", null ],
     [ "TileDbReadTile", "NavMesh__TileCacheDB_8h.html#a9bb03ee1a76d76aba6e7185226064301", null ],
     [ "TileDbWriteOrUpdateTiles", "NavMesh__TileCacheDB_8h.html#a1aae2540cef232bbf5875b3b6d68d1cd", null ],
     [ "TILE_DB_MAGIC", "NavMesh__TileCacheDB_8h.html#a8876a410d87b0e88d5bf05122d46bbd1", null ],

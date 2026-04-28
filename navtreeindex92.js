@@ -1,5 +1,7 @@
 var NAVTREEINDEX92 =
 {
+"structExampleDualListBox.html#ad6cacee15ae085f2074e346c542ec820":[43,0,83,2],
+"structExampleDualListBox.html#ae6048700aec5415cb69ce620513896d6":[43,0,83,7],
 "structExampleDualListBox.html#af021293bbed8d3dbe7337b93acf05b91":[43,0,83,8],
 "structExampleMemberInfo.html":[43,0,84],
 "structExampleMemberInfo.html#a365e93f5224b16f0dd20076d54459820":[43,0,84,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX92 =
 "structImDrawListSharedData.html#a3fe9d30c0df68cce4db9d2033ba9a589":[43,0,109,0],
 "structImDrawListSharedData.html#a4542431d4afe5320a965fbe52a3cc39f":[43,0,109,11],
 "structImDrawListSharedData.html#a57a4e16ebe7a1896e798f1360f21b397":[43,0,109,1],
-"structImDrawListSharedData.html#a5b5bb46f5fd714b43e4b73a131b7f6f7":[43,0,109,9],
-"structImDrawListSharedData.html#a7e00a317793f4ed3ff592b050dfee450":[43,0,109,15],
-"structImDrawListSharedData.html#a8dff5fc643cab17128012383d75d9ad8":[43,0,109,19]
+"structImDrawListSharedData.html#a5b5bb46f5fd714b43e4b73a131b7f6f7":[43,0,109,9]
 };

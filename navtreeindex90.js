@@ -1,5 +1,7 @@
 var NAVTREEINDEX90 =
 {
+"imstb__truetype_8h.html#a83703ede616bacefc0312ef2803774a1":[44,0,7,0,11,38],
+"imstb__truetype_8h.html#a86f324094c416b920f5a4df75b3abe97":[44,0,7,0,11,54],
 "imstb__truetype_8h.html#a8aa85852fbc25667bf0438e29e128c93":[44,0,7,0,11,30],
 "imstb__truetype_8h.html#a8cf20362ceefc78d4df2e1703de3da50":[44,0,7,0,11,74],
 "imstb__truetype_8h.html#a9064e582d96dcbaf2f573896cccd5ef7":[44,0,7,0,11,16],
@@ -247,7 +249,5 @@ var NAVTREEINDEX90 =
 "pandora.html":[25],
 "platforms.html":[26],
 "porting.html":[27],
-"ps-vita.html":[35],
-"ps-vita.html#building-3":[35,0],
-"ps-vita.html#notes-5":[35,1]
+"ps-vita.html":[35]
 };
