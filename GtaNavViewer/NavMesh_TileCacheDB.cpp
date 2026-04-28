@@ -248,6 +248,178 @@ bool TileDbWriteOrUpdateTiles(const char* dbPath,
     return ok;
 }
 
+bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
+                                   dtNavMesh* nav,
+                                   const std::unordered_map<uint64_t, uint64_t>& tileHashes,
+                                   const std::unordered_set<uint64_t>* onlyTileKeysToUpdate)
+{
+    if (!dbPath || !nav)
+        return false;
+
+    struct StoredTile
+    {
+        TileDbIndexEntry entry{};
+        std::vector<unsigned char> data;
+    };
+
+    std::filesystem::path path(dbPath);
+    if (path.has_parent_path())
+        std::filesystem::create_directories(path.parent_path());
+
+    std::unordered_map<uint64_t, StoredTile> mergedTiles;
+
+    // 1) Preserve old DB tiles (when compatible) unless explicitly updated.
+    if (std::filesystem::exists(path))
+    {
+        std::unordered_map<uint64_t, TileDbIndexEntry> oldIndex;
+        if (TileDbLoadIndex(dbPath, nav, oldIndex))
+        {
+            for (const auto& kv : oldIndex)
+            {
+                const uint64_t key = kv.first;
+                if (onlyTileKeysToUpdate && onlyTileKeysToUpdate->find(key) != onlyTileKeysToUpdate->end())
+                    continue;
+
+                unsigned char* raw = nullptr;
+                int rawSize = 0;
+                if (!TileDbReadTile(dbPath, kv.second, raw, rawSize))
+                    continue;
+
+                StoredTile st{};
+                st.entry = kv.second;
+                st.data.assign(raw, raw + rawSize);
+                dtFree(raw);
+                st.entry.dataSize = static_cast<uint32_t>(st.data.size());
+                mergedTiles[key] = std::move(st);
+            }
+        }
+        else
+        {
+            printf("[NavMeshData] TileDbMergeWriteOrUpdateTiles: DB antigo incompativel/invalido, iniciando merge sem preservar entradas antigas.\n");
+        }
+    }
+
+    // 2) Inject current nav loaded tiles according to update policy.
+    for (int i = 0; i < nav->getMaxTiles(); ++i)
+    {
+        const dtMeshTile* tile = nav->getTile(i);
+        if (!tile || !tile->header || !tile->data || tile->dataSize <= 0)
+            continue;
+
+        const uint64_t key = MakeTileKey(tile->header->x, tile->header->y);
+        if (onlyTileKeysToUpdate && onlyTileKeysToUpdate->find(key) == onlyTileKeysToUpdate->end())
+            continue;
+
+        StoredTile st{};
+        st.entry.tx = tile->header->x;
+        st.entry.ty = tile->header->y;
+        st.entry.dataSize = static_cast<uint32_t>(tile->dataSize);
+        auto itHash = tileHashes.find(key);
+        st.entry.geomHash = itHash != tileHashes.end() ? itHash->second : 0;
+        st.data.assign(tile->data, tile->data + tile->dataSize);
+        mergedTiles[key] = std::move(st);
+    }
+
+    // 3) Explicit updates for missing tiles mean removal (tile empty/removed).
+    if (onlyTileKeysToUpdate)
+    {
+        for (uint64_t key : *onlyTileKeysToUpdate)
+        {
+            const int tx = static_cast<int>(key >> 32);
+            const int ty = static_cast<int>(key & 0xffffffffu);
+            if (nav->getTileRefAt(tx, ty, 0) == 0)
+                mergedTiles.erase(key);
+        }
+    }
+
+    // 4) Serialize final DB to temp then rename.
+    std::vector<StoredTile> ordered;
+    ordered.reserve(mergedTiles.size());
+    for (auto& kv : mergedTiles)
+        ordered.push_back(std::move(kv.second));
+    std::sort(ordered.begin(), ordered.end(), [](const StoredTile& a, const StoredTile& b)
+    {
+        if (a.entry.tx != b.entry.tx) return a.entry.tx < b.entry.tx;
+        return a.entry.ty < b.entry.ty;
+    });
+
+    TileDbHeader header{};
+    header.magic = TILE_DB_MAGIC;
+    header.version = TILE_DB_VERSION;
+    header.tileCount = static_cast<uint32_t>(ordered.size());
+    header.indexOffset = 0;
+    memcpy(&header.navParams, nav->getParams(), sizeof(dtNavMeshParams));
+
+    const std::filesystem::path tmpPath = path.string() + ".tmp";
+    FILE* fp = fopen(tmpPath.string().c_str(), "wb");
+    if (!fp)
+        return false;
+
+    bool ok = fwrite(&header, sizeof(TileDbHeader), 1, fp) == 1;
+    for (auto& t : ordered)
+    {
+        if (!ok)
+            break;
+        const long offset = ftell(fp);
+        if (offset < 0)
+        {
+            ok = false;
+            break;
+        }
+        t.entry.dataOffset = static_cast<uint32_t>(offset);
+        ok = fwrite(t.data.data(), t.entry.dataSize, 1, fp) == 1;
+    }
+
+    if (ok)
+    {
+        const long idxOff = ftell(fp);
+        if (idxOff < 0 || static_cast<uint64_t>(idxOff) > std::numeric_limits<uint32_t>::max())
+            ok = false;
+        else
+        {
+            header.indexOffset = static_cast<uint32_t>(idxOff);
+            for (const auto& t : ordered)
+            {
+                if (fwrite(&t.entry, sizeof(TileDbIndexEntry), 1, fp) != 1)
+                {
+                    ok = false;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (ok)
+    {
+        if (fseek(fp, 0, SEEK_SET) != 0)
+            ok = false;
+        else
+            ok = fwrite(&header, sizeof(TileDbHeader), 1, fp) == 1;
+    }
+
+    fclose(fp);
+
+    if (!ok)
+    {
+        std::error_code ec;
+        std::filesystem::remove(tmpPath, ec);
+        return false;
+    }
+
+    std::error_code ec;
+    std::filesystem::remove(path, ec);
+    ec.clear();
+    std::filesystem::rename(tmpPath, path, ec);
+    if (ec)
+    {
+        std::filesystem::remove(tmpPath, ec);
+        return false;
+    }
+
+    printf("[NavMeshData] Tile DB merge salvo em %s (%zu tiles)\n", dbPath, ordered.size());
+    return true;
+}
+
 bool LoadTileFromDb(const char* dbPath,
                     dtNavMesh* nav,
                     int tx,
