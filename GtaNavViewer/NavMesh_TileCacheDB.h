@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <unordered_map>
+#include <unordered_set>
 
 #include <DetourNavMesh.h>
 
@@ -43,6 +44,10 @@ bool TileDbReadTile(const char* dbPath,
 bool TileDbWriteOrUpdateTiles(const char* dbPath,
                               dtNavMesh* nav,
                               const std::unordered_map<uint64_t, uint64_t>& tileHashes);
+bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
+                                   dtNavMesh* nav,
+                                   const std::unordered_map<uint64_t, uint64_t>& tileHashes,
+                                   const std::unordered_set<uint64_t>* onlyTileKeysToUpdate = nullptr);
 
 bool LoadTileFromDb(const char* dbPath,
                     dtNavMesh* nav,

@@ -2620,6 +2620,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
     int built = 0;
     int emptied = 0;
     int failed = 0;
+    std::unordered_set<uint64_t> processedTileKeys;
 
     while (!ctx->pendingTileBuildQueue.empty() && built < maxCount)
     {
@@ -2634,6 +2635,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         ctx->pendingTileBuildQueue.pop_front();
         ctx->pendingTileBuildSet.erase(tileKey);
         ctx->dirtyWorldTiles.erase(tileKey);
+        processedTileKeys.insert(tileKey);
 
         const int tx = static_cast<int>(tileKey >> 32);
         const int ty = static_cast<int>(tileKey & 0xffffffffu);
@@ -2678,11 +2680,19 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
     {
         std::filesystem::path cachePath = GetSessionCachePath(*ctx);
         const auto& hashes = ctx->navData.GetCachedTileHashes();
-        printf("[WorldTile] TileDb write full db: %s\n", cachePath.string().c_str());
-        TileDbWriteOrUpdateTiles(cachePath.string().c_str(), ctx->navData.GetNavMesh(), hashes);
+        if (ctx->worldTileStreamingEnabled)
+        {
+            printf("[WorldTile] TileDb merge write: %s (tiles=%zu)\n", cachePath.string().c_str(), processedTileKeys.size());
+            TileDbMergeWriteOrUpdateTiles(cachePath.string().c_str(), ctx->navData.GetNavMesh(), hashes, &processedTileKeys);
+        }
+        else
+        {
+            printf("[WorldTile] TileDb write full db: %s\n", cachePath.string().c_str());
+            TileDbWriteOrUpdateTiles(cachePath.string().c_str(), ctx->navData.GetNavMesh(), hashes);
+        }
         ctx->dbIndexCache.clear();
         ctx->dbIndexLoaded = false;
-        printf("[ExternC] BuildQueuedWorldTiles: write full db em %s\n", cachePath.string().c_str());
+        printf("[ExternC] BuildQueuedWorldTiles: cache salvo em %s\n", cachePath.string().c_str());
     }
 
     EnsureNavQuery(*ctx);
