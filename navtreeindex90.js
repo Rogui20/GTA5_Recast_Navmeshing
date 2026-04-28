@@ -1,5 +1,6 @@
 var NAVTREEINDEX90 =
 {
+"imstb__truetype_8h.html#a8aa85852fbc25667bf0438e29e128c93":[44,0,7,0,11,30],
 "imstb__truetype_8h.html#a8cf20362ceefc78d4df2e1703de3da50":[44,0,7,0,11,74],
 "imstb__truetype_8h.html#a9064e582d96dcbaf2f573896cccd5ef7":[44,0,7,0,11,16],
 "imstb__truetype_8h.html#a915acab7676b20098f4d480376c5b589":[44,0,7,0,11,67],
@@ -248,6 +249,5 @@ var NAVTREEINDEX90 =
 "porting.html":[27],
 "ps-vita.html":[35],
 "ps-vita.html#building-3":[35,0],
-"ps-vita.html#notes-5":[35,1],
-"ps2.html":[28]
+"ps-vita.html#notes-5":[35,1]
 };

@@ -133,6 +133,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af793fd5a445cc980578e652d3158447d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45dd6cd6c7451cd69d01757fc18765f8" id="r_a45dd6cd6c7451cd69d01757fc18765f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a45dd6cd6c7451cd69d01757fc18765f8">RebuildSpecificTiles</a> (const std::vector&lt; std::pair&lt; int, int &gt; &gt; &amp;tiles, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, bool onlyExistingTiles, std::vector&lt; std::pair&lt; int, int &gt; &gt; *outTiles=nullptr)</td></tr>
 <tr class="separator:a45dd6cd6c7451cd69d01757fc18765f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8209306bd91ef0fb0f74f6eeff5d67cc" id="r_a8209306bd91ef0fb0f74f6eeff5d67cc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a8209306bd91ef0fb0f74f6eeff5d67cc">RebuildSingleTileFromGeometry</a> (int tx, int <a class="el" href="SDL__opengl__glext_8h.html#ae09063918284e24e3265a007fd1cc983">ty</a>, const std::vector&lt; glm::vec3 &gt; &amp;verts, const std::vector&lt; unsigned int &gt; &amp;<a class="el" href="glad_8h.html#a94ae715eebfc1eb65456c0ab9b97f1e9">indices</a>, const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;settings, <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> tileHash, bool *outBuilt, bool *outEmpty)</td></tr>
+<tr class="separator:a8209306bd91ef0fb0f74f6eeff5d67cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a45cea84241aa5c00016b16ffee26d1" id="r_a5a45cea84241aa5c00016b16ffee26d1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#a5a45cea84241aa5c00016b16ffee26d1">HasTiledCache</a> () const</td></tr>
 <tr class="separator:a5a45cea84241aa5c00016b16ffee26d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaed3ebece63a796479fca8867e5dcef0" id="r_aaed3ebece63a796479fca8867e5dcef0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavMeshData.html#aaed3ebece63a796479fca8867e5dcef0">GetCachedBounds</a> (float *outBMin, float *outBMax) const</td></tr>
@@ -925,6 +927,70 @@ Static Public Member Functions</h2></td></tr>
 <span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8209306bd91ef0fb0f74f6eeff5d67cc" name="a8209306bd91ef0fb0f74f6eeff5d67cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8209306bd91ef0fb0f74f6eeff5d67cc">&#9670;&#160;</a></span>RebuildSingleTileFromGeometry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NavMeshData::RebuildSingleTileFromGeometry </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ty</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; glm::vec3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>verts</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; unsigned int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>indices</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structNavmeshGenerationSettings.html">NavmeshGenerationSettings</a> &amp;&#160;</td>
+          <td class="paramname"><em>settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a>&#160;</td>
+          <td class="paramname"><em>tileHash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool *&#160;</td>
+          <td class="paramname"><em>outBuilt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool *&#160;</td>
+          <td class="paramname"><em>outEmpty</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>

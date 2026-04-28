@@ -1,5 +1,6 @@
 var NAVTREEINDEX109 =
 {
+"structdtTileCacheAlloc.html#a8507c465095ee62fed991ba5a3781c0c":[43,0,62,0],
 "structdtTileCacheAlloc.html#aeb9afcb80b4e923d173b2c1706c56130":[43,0,62,2],
 "structdtTileCacheAlloc.html#afc894a69df9f38eee8431762983f571d":[43,0,62,1],
 "structdtTileCacheCompressor.html":[43,0,63],
@@ -248,6 +249,5 @@ var NAVTREEINDEX109 =
 "structstbrp__node.html#a45ab31a88025db27d08040d715b129ea":[43,0,465,1],
 "structstbrp__node.html#a933cb2dd6cddc4fcaf10e3b40634bed4":[43,0,465,0],
 "structstbrp__node.html#ad0415cb102a4f37aa45073653307e67e":[43,0,465,2],
-"structstbrp__rect.html":[43,0,466],
-"structstbrp__rect.html#a248d43f1eb979c1e7b92ba6df431dec5":[43,0,466,2]
+"structstbrp__rect.html":[43,0,466]
 };

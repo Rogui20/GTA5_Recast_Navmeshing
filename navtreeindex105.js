@@ -1,5 +1,6 @@
 var NAVTREEINDEX105 =
 {
+"structNavMeshGeometryInfo.html#aaee408f281eee68469f4397a5aa73770":[43,0,320,4],
 "structNavMeshGeometryInfo.html#abc7c0109cc27d0c0c217b05b1f87dcd2":[43,0,320,2],
 "structNavMeshPolygonInfo.html":[43,0,321],
 "structNavMeshPolygonInfo.html#a63665ff6e1f5cada10fd26d41772de3f":[43,0,321,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__ControllerAxisEvent.html#aa904b61e4763d28d887cf8afcc3cbb7c":[43,0,387,6],
 "structSDL__ControllerAxisEvent.html#ab82598fe5621dca9b1a41f7b2ca1e9a0":[43,0,387,3],
 "structSDL__ControllerAxisEvent.html#aba6543c143521aebce06a41a8cf79db0":[43,0,387,0],
-"structSDL__ControllerAxisEvent.html#ae0ad0f279b9978bbbac9f5b22ae8020b":[43,0,387,4],
-"structSDL__ControllerAxisEvent.html#af980495b1e24f9a868f2ccb25ce9629b":[43,0,387,1]
+"structSDL__ControllerAxisEvent.html#ae0ad0f279b9978bbbac9f5b22ae8020b":[43,0,387,4]
 };
