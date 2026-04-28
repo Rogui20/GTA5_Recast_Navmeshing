@@ -91,7 +91,7 @@ var searchData=
   ['sdl_5fjoystickguid_88',['SDL_JoystickGUID',['../SDL__joystick_8h.html#aa1764e3e49e4d89e9e2680d42ebec213',1,'SDL_joystick.h']]],
   ['sdl_5fjoystickid_89',['SDL_JoystickID',['../SDL__joystick_8h.html#a3c3d32500cb08f76ee8077983912c0bd',1,'SDL_joystick.h']]],
   ['sdl_5fkeyboardevent_90',['SDL_KeyboardEvent',['../SDL__events_8h.html#a0ac4af376ea5f04b1c099923b17aabcc',1,'SDL_events.h']]],
-  ['sdl_5fkeycode_91',['sdl_keycode',['../SDL__keycode_8h.html#a732cf1d0b1da46a2b3cb89255e5ea109',1,'SDL_KeyCode:&#160;SDL_keycode.h'],['../SDL__keycode_8h.html#ae9265f064f13f0f74dfca26a67875171',1,'SDL_Keycode:&#160;SDL_keycode.h']]],
+  ['sdl_5fkeycode_91',['sdl_keycode',['../SDL__keycode_8h.html#ae9265f064f13f0f74dfca26a67875171',1,'SDL_Keycode:&#160;SDL_keycode.h'],['../SDL__keycode_8h.html#a732cf1d0b1da46a2b3cb89255e5ea109',1,'SDL_KeyCode:&#160;SDL_keycode.h']]],
   ['sdl_5fkeymod_92',['SDL_Keymod',['../SDL__keycode_8h.html#aadd1a74ebca2eb807caae35589f9b179',1,'SDL_keycode.h']]],
   ['sdl_5fkeysym_93',['SDL_Keysym',['../SDL__keyboard_8h.html#a074ae08acbe79dba712775b95267f4d2',1,'SDL_keyboard.h']]],
   ['sdl_5flocale_94',['SDL_Locale',['../SDL__locale_8h.html#a5c754f8e118f475987824610010a53ed',1,'SDL_locale.h']]],
