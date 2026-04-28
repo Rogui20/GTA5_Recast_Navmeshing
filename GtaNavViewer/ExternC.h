@@ -278,6 +278,18 @@ GTANAVVIEWER_API int GetWorldTileStreamingStats(void* navMesh,
                                                 int* outDirtyTiles,
                                                 int* outPendingBuildTiles,
                                                 int* outResidentTiles);
+GTANAVVIEWER_API int GetWorldTileStreamingStatsEx(void* navMesh,
+                                                  int* outQueuedGeometries,
+                                                  int* outIndexedGeometries,
+                                                  int* outDirtyTiles,
+                                                  int* outPendingBuildTiles,
+                                                  int* outResidentTiles,
+                                                  int* outManifestLoaded,
+                                                  int* outTileDbIndexLoaded);
+GTANAVVIEWER_API bool SaveWorldTileManifest(void* navMesh);
+GTANAVVIEWER_API bool LoadWorldTileManifest(void* navMesh);
+GTANAVVIEWER_API bool HasWorldTileManifest(void* navMesh);
+GTANAVVIEWER_API bool SetWorldTileAutoSaveManifest(void* navMesh, bool enabled);
 
 // Pathfind
 GTANAVVIEWER_API int FindPath(void* navMesh,
