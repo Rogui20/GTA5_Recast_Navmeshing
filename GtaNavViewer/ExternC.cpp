@@ -199,13 +199,13 @@ namespace
     bool IsWorldGeometryRecordUpToDate(const ExternNavmeshContext::WorldGeomRecord& record);
     void EnqueueTileBuild(ExternNavmeshContext& ctx, uint64_t tileKey);
 
-    uint64_t HashCombine64(uint64_t seed, uint64_t v)
+    uint64_t WorldHashCombine64(uint64_t seed, uint64_t v)
     {
         seed ^= v + 0x9e3779b97f4a7c15ull + (seed << 6) + (seed >> 2);
         return seed;
     }
 
-    uint64_t ComputeWorldGeomHash(const std::string& path,
+    uint64_t ComputeWorldGeometryHash(const std::string& path,
                                   const glm::vec3& pos,
                                   const glm::vec3& rot,
                                   const glm::vec3& bmin,
@@ -219,25 +219,25 @@ namespace
             return static_cast<uint64_t>(bits);
         };
 
-        h = HashCombine64(h, hashFloat(pos.x));
-        h = HashCombine64(h, hashFloat(pos.y));
-        h = HashCombine64(h, hashFloat(pos.z));
-        h = HashCombine64(h, hashFloat(rot.x));
-        h = HashCombine64(h, hashFloat(rot.y));
-        h = HashCombine64(h, hashFloat(rot.z));
-        h = HashCombine64(h, hashFloat(bmin.x));
-        h = HashCombine64(h, hashFloat(bmin.y));
-        h = HashCombine64(h, hashFloat(bmin.z));
-        h = HashCombine64(h, hashFloat(bmax.x));
-        h = HashCombine64(h, hashFloat(bmax.y));
-        h = HashCombine64(h, hashFloat(bmax.z));
+        h = WorldHashCombine64(h, hashFloat(pos.x));
+        h = WorldHashCombine64(h, hashFloat(pos.y));
+        h = WorldHashCombine64(h, hashFloat(pos.z));
+        h = WorldHashCombine64(h, hashFloat(rot.x));
+        h = WorldHashCombine64(h, hashFloat(rot.y));
+        h = WorldHashCombine64(h, hashFloat(rot.z));
+        h = WorldHashCombine64(h, hashFloat(bmin.x));
+        h = WorldHashCombine64(h, hashFloat(bmin.y));
+        h = WorldHashCombine64(h, hashFloat(bmin.z));
+        h = WorldHashCombine64(h, hashFloat(bmax.x));
+        h = WorldHashCombine64(h, hashFloat(bmax.y));
+        h = WorldHashCombine64(h, hashFloat(bmax.z));
 
         std::error_code ec;
         const auto mtime = std::filesystem::last_write_time(path, ec);
         if (!ec)
         {
             const auto mt = mtime.time_since_epoch().count();
-            h = HashCombine64(h, static_cast<uint64_t>(mt));
+            h = WorldHashCombine64(h, static_cast<uint64_t>(mt));
         }
         return h;
     }
@@ -276,9 +276,9 @@ namespace
         {
             uint32_t bits = 0;
             std::memcpy(&bits, &v, sizeof(bits));
-            h = HashCombine64(h, static_cast<uint64_t>(bits));
+            h = WorldHashCombine64(h, static_cast<uint64_t>(bits));
         };
-        h = HashCombine64(h, static_cast<uint64_t>(s.mode));
+        h = WorldHashCombine64(h, static_cast<uint64_t>(s.mode));
         mixf(s.cellSize);
         mixf(s.cellHeight);
         mixf(s.agentHeight);
@@ -289,53 +289,10 @@ namespace
         mixf(s.maxSimplificationError);
         mixf(s.minRegionSize);
         mixf(s.mergeRegionSize);
-        h = HashCombine64(h, static_cast<uint64_t>(s.maxVertsPerPoly));
+        h = WorldHashCombine64(h, static_cast<uint64_t>(s.maxVertsPerPoly));
         mixf(s.detailSampleDist);
         mixf(s.detailSampleMaxError);
-        h = HashCombine64(h, static_cast<uint64_t>(s.tileSize));
-        return h;
-    }
-
-    uint64_t HashCombine64(uint64_t seed, uint64_t v)
-    {
-        seed ^= v + 0x9e3779b97f4a7c15ull + (seed << 6) + (seed >> 2);
-        return seed;
-    }
-
-    uint64_t ComputeWorldGeomHash(const std::string& path,
-                                  const glm::vec3& pos,
-                                  const glm::vec3& rot,
-                                  const glm::vec3& bmin,
-                                  const glm::vec3& bmax)
-    {
-        uint64_t h = std::hash<std::string>{}(path);
-        auto hashFloat = [](float value) -> uint64_t
-        {
-            uint32_t bits = 0;
-            std::memcpy(&bits, &value, sizeof(bits));
-            return static_cast<uint64_t>(bits);
-        };
-
-        h = HashCombine64(h, hashFloat(pos.x));
-        h = HashCombine64(h, hashFloat(pos.y));
-        h = HashCombine64(h, hashFloat(pos.z));
-        h = HashCombine64(h, hashFloat(rot.x));
-        h = HashCombine64(h, hashFloat(rot.y));
-        h = HashCombine64(h, hashFloat(rot.z));
-        h = HashCombine64(h, hashFloat(bmin.x));
-        h = HashCombine64(h, hashFloat(bmin.y));
-        h = HashCombine64(h, hashFloat(bmin.z));
-        h = HashCombine64(h, hashFloat(bmax.x));
-        h = HashCombine64(h, hashFloat(bmax.y));
-        h = HashCombine64(h, hashFloat(bmax.z));
-
-        std::error_code ec;
-        const auto mtime = std::filesystem::last_write_time(path, ec);
-        if (!ec)
-        {
-            const auto mt = mtime.time_since_epoch().count();
-            h = HashCombine64(h, static_cast<uint64_t>(mt));
-        }
+        h = WorldHashCombine64(h, static_cast<uint64_t>(s.tileSize));
         return h;
     }
 
@@ -1476,8 +1433,8 @@ namespace
     uint64_t ComputeWorldTileHash(ExternNavmeshContext& ctx, int tx, int ty)
     {
         uint64_t h = ComputeSettingsHash(ctx.genSettings);
-        h = HashCombine64(h, static_cast<uint64_t>(static_cast<uint32_t>(tx)));
-        h = HashCombine64(h, static_cast<uint64_t>(static_cast<uint32_t>(ty)));
+        h = WorldHashCombine64(h, static_cast<uint64_t>(static_cast<uint32_t>(tx)));
+        h = WorldHashCombine64(h, static_cast<uint64_t>(static_cast<uint32_t>(ty)));
 
         const uint64_t key = MakeTileKey(tx, ty);
         auto it = ctx.tileToGeometryIds.find(key);
@@ -1491,8 +1448,8 @@ namespace
                 if (gIt == ctx.worldGeometry.end())
                     continue;
                 const auto& rec = gIt->second;
-                h = HashCombine64(h, rec.geomHash);
-                h = HashCombine64(h, std::hash<std::string>{}(rec.id));
+                h = WorldHashCombine64(h, rec.geomHash);
+                h = WorldHashCombine64(h, std::hash<std::string>{}(rec.id));
             }
         }
 
@@ -1511,7 +1468,7 @@ namespace
             const float tileMaxZ = tileMinZ + params->tileHeight;
             if (minX > tileMaxX || maxX < tileMinX || minZ > tileMaxZ || maxZ < tileMinZ)
                 continue;
-            h = HashCombine64(h, static_cast<uint64_t>(link.userId));
+            h = WorldHashCombine64(h, static_cast<uint64_t>(link.userId));
         }
 
         return h;
@@ -2581,7 +2538,7 @@ GTANAVVIEWER_API int ProcessQueuedWorldGeometry(void* navMesh, int maxItems, int
         rec.worldBMax = temp.worldBMax;
         rec.fileMTime = GetFileMTimeHash(rec.path);
         rec.fileSize = GetFileSizeBytes(rec.path);
-        rec.geomHash = ComputeWorldGeomHash(rec.path, rec.position, rec.rotation, rec.worldBMin, rec.worldBMax);
+        rec.geomHash = ComputeWorldGeometryHash(rec.path, rec.position, rec.rotation, rec.worldBMin, rec.worldBMax);
         rec.indexed = false;
         rec.touchedTileKeys.clear();
 
