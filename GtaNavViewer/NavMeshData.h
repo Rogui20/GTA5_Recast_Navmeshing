@@ -202,6 +202,14 @@ public:
                               const NavmeshGenerationSettings& settings,
                               bool onlyExistingTiles,
                               std::vector<std::pair<int, int>>* outTiles = nullptr);
+    bool RebuildSingleTileFromGeometry(int tx,
+                                       int ty,
+                                       const std::vector<glm::vec3>& verts,
+                                       const std::vector<unsigned int>& indices,
+                                       const NavmeshGenerationSettings& settings,
+                                       uint64_t tileHash,
+                                       bool* outBuilt,
+                                       bool* outEmpty);
 
     bool HasTiledCache() const { return m_hasTiledCache; }
     bool GetCachedBounds(float* outBMin, float* outBMax) const;

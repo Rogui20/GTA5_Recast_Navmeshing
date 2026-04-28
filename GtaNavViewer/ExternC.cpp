@@ -1492,7 +1492,10 @@ namespace
         if (!params)
             return false;
 
-        const float border = std::max(ctx.genSettings.agentRadius * 2.0f, ctx.genSettings.cellSize * 3.0f);
+        const float cs = std::max(0.01f, ctx.genSettings.cellSize);
+        const int walkableRadius = static_cast<int>(std::ceil(ctx.genSettings.agentRadius / cs));
+        const int borderSize = walkableRadius + 3;
+        const float border = borderSize * cs;
         const glm::vec3 tileMin(params->orig[0] + tx * params->tileWidth - border,
                                 ctx.bboxMin.y - border,
                                 params->orig[2] + ty * params->tileHeight - border);
@@ -1507,7 +1510,36 @@ namespace
                 continue;
             auto& rec = it->second;
             if (!rec.loaded || !rec.source.Valid())
-                continue;
+            {
+                const uint64_t mtime = GetFileMTimeHash(rec.path);
+                const uint64_t fsize = GetFileSizeBytes(rec.path);
+                if (mtime == 0 || fsize == 0)
+                {
+                    for (uint64_t k : rec.touchedTileKeys)
+                    {
+                        ctx.dirtyWorldTiles.insert(k);
+                        EnqueueTileBuild(ctx, k);
+                    }
+                    continue;
+                }
+
+                if ((rec.fileMTime != 0 && rec.fileMTime != mtime) ||
+                    (rec.fileSize != 0 && rec.fileSize != fsize))
+                {
+                    for (uint64_t k : rec.touchedTileKeys)
+                    {
+                        ctx.dirtyWorldTiles.insert(k);
+                        EnqueueTileBuild(ctx, k);
+                    }
+                }
+
+                rec.source = LoadGeometry(rec.path.c_str(), rec.preferBin);
+                rec.loaded = rec.source.Valid();
+                if (!rec.loaded)
+                    continue;
+                rec.fileMTime = mtime;
+                rec.fileSize = fsize;
+            }
 
             if (rec.worldBMin.x > tileMax.x || rec.worldBMax.x < tileMin.x ||
                 rec.worldBMin.y > tileMax.y || rec.worldBMax.y < tileMin.y ||
@@ -2627,27 +2659,18 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
             continue;
         }
 
-        if (!ctx->navData.UpdateCachedGeometry(verts, indices))
-        {
+        bool builtTile = false;
+        bool emptyTile = false;
+        if (!ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings, worldHash, &builtTile, &emptyTile))
             ++failed;
-            ++built;
-            continue;
-        }
-
-        std::vector<std::pair<int, int>> oneTile;
-        oneTile.emplace_back(tx, ty);
-        if (!ctx->navData.RebuildSpecificTiles(oneTile, ctx->genSettings, false, nullptr))
-            ++failed;
-        else
-            ctx->navData.SetCachedTileHash(tileKey, worldHash);
 
         ++built;
         printf("[WorldTile] Build tile %d,%d geomCount=%zu triCount=%zu built=%d failed=%d hash=%llu\n",
                tx, ty,
                ctx->tileToGeometryIds[tileKey].size(),
                indices.size() / 3,
-               failed == 0 ? 1 : 0,
-               failed > 0 ? 1 : 0,
+               builtTile ? 1 : 0,
+               (!builtTile && !emptyTile) ? 1 : 0,
                static_cast<unsigned long long>(worldHash));
     }
 
@@ -2720,12 +2743,11 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
             bool loaded = false;
             if (hasCacheFile && indexReady)
             {
-                uint64_t expectedHash = 0;
                 const uint64_t computedHash = ComputeWorldTileHash(*ctx, tx, ty);
-                if (ctx->navData.GetCachedTileHash(key, expectedHash) && expectedHash != 0)
+                auto itDb = ctx->dbIndexCache.find(key);
+                if (itDb != ctx->dbIndexCache.end())
                 {
-                    auto itDb = ctx->dbIndexCache.find(key);
-                    if (itDb != ctx->dbIndexCache.end() && itDb->second.geomHash != 0 && itDb->second.geomHash != expectedHash)
+                    if (itDb->second.geomHash != 0 && itDb->second.geomHash != computedHash)
                     {
                         EnqueueTileBuild(*ctx, key);
                     }
@@ -2736,15 +2758,7 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
                 }
                 else
                 {
-                    auto itDb = ctx->dbIndexCache.find(key);
-                    if (itDb != ctx->dbIndexCache.end() && itDb->second.geomHash != 0 && itDb->second.geomHash != computedHash)
-                    {
-                        EnqueueTileBuild(*ctx, key);
-                    }
-                    else
-                    {
-                        LoadTileFromDb(cachePath.string().c_str(), nav, tx, ty, loaded, &ctx->dbIndexCache);
-                    }
+                    EnqueueTileBuild(*ctx, key);
                 }
             }
             if (loaded)
