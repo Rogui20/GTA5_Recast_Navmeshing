@@ -251,6 +251,33 @@ GTANAVVIEWER_API bool InitTiledGrid(void* navMesh, Vector3 bmin, Vector3 bmax);
 GTANAVVIEWER_API int  StreamTilesAround(void* navMesh, Vector3 center, float radius, bool allowBuildIfMissing);
 GTANAVVIEWER_API void ClearAllLoadedTiles(void* navMesh);
 GTANAVVIEWER_API bool BakeTilesInBounds(void* navMesh, Vector3 bmin, Vector3 bmax, bool saveToCache);
+GTANAVVIEWER_API bool EnableWorldTileStreaming(void* navMesh, bool enabled);
+GTANAVVIEWER_API bool BeginWorldTileSession(void* navMesh,
+                                            Vector3 worldBMin,
+                                            Vector3 worldBMax,
+                                            const char* cacheRoot,
+                                            const char* sessionId,
+                                            int maxResidentTiles);
+GTANAVVIEWER_API int QueueWorldGeometry(void* navMesh,
+                                        const char* pathToGeometry,
+                                        Vector3 pos,
+                                        Vector3 rot,
+                                        const char* customID,
+                                        bool preferBIN);
+GTANAVVIEWER_API int ProcessQueuedWorldGeometry(void* navMesh, int maxItems, int maxMilliseconds);
+GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxMilliseconds, bool saveToCache);
+GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
+                                          const Vector3* positions,
+                                          const std::uint32_t* agentIds,
+                                          int agentCount,
+                                          float radius,
+                                          bool allowBuildIfMissing);
+GTANAVVIEWER_API int GetWorldTileStreamingStats(void* navMesh,
+                                                int* outQueuedGeometries,
+                                                int* outIndexedGeometries,
+                                                int* outDirtyTiles,
+                                                int* outPendingBuildTiles,
+                                                int* outResidentTiles);
 
 // Pathfind
 GTANAVVIEWER_API int FindPath(void* navMesh,
