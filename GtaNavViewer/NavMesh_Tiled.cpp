@@ -168,6 +168,18 @@ namespace
         Error,
     };
 
+    static int countHeightfieldSpans(const rcHeightfield& hf)
+    {
+        int spans = 0;
+        const int cellCount = hf.width * hf.height;
+        for (int i = 0; i < cellCount; ++i)
+        {
+            for (rcSpan* s = hf.spans[i]; s; s = s->next)
+                ++spans;
+        }
+        return spans;
+    }
+
     NavTileBuildResult createNavDataForConfig(const NavmeshBuildInput& input,
                                               const rcConfig& cfg,
                                               const std::vector<int>& triSource,
@@ -226,6 +238,8 @@ namespace
             rcFreeHeightField(solid);
             return NavTileBuildResult::Error;
         }
+        const int solidSpanCount = countHeightfieldSpans(*solid);
+        printf("[NavMeshData] Tile %d,%d solidSpans=%d apos rasterize\n", tileX, tileY, solidSpanCount);
 
         rcFilterLowHangingWalkableObstacles(&input.ctx, cfg.walkableClimb, *solid);
         rcFilterLedgeSpans(&input.ctx, cfg.walkableHeight, cfg.walkableClimb, *solid);
@@ -247,14 +261,35 @@ namespace
             rcFreeHeightField(solid);
             return NavTileBuildResult::Error;
         }
+        printf("[NavMeshData] Tile %d,%d chfSpanCount=%d apos compact\n", tileX, tileY, chf->spanCount);
+        int walkableCompactSpans = 0;
+        for (int i = 0; i < chf->spanCount; ++i)
+        {
+            if (chf->areas[i] != RC_NULL_AREA)
+                ++walkableCompactSpans;
+        }
+        printf("[NavMeshData] Tile %d,%d compactWalkableSpans=%d/%d apos filtros\n",
+               tileX, tileY, walkableCompactSpans, chf->spanCount);
 
         rcFreeHeightField(solid);
         solid = nullptr;
-        printf("Erode: walkableRadius=%d", cfg.walkableRadius);
+        printf("[NavMeshData] Tile %d,%d Erode walkableRadius=%d\n", tileX, tileY, cfg.walkableRadius);
         rcErodeWalkableArea(&input.ctx, cfg.walkableRadius, *chf);
-        rcBuildDistanceField(&input.ctx, *chf);
-        rcBuildRegions(&input.ctx, *chf, cfg.borderSize,
-                       cfg.minRegionArea, cfg.mergeRegionArea);
+        const bool distanceOk = rcBuildDistanceField(&input.ctx, *chf);
+        printf("[NavMeshData] Tile %d,%d rcBuildDistanceField=%s\n", tileX, tileY, distanceOk ? "ok" : "falhou");
+        if (!distanceOk)
+        {
+            rcFreeCompactHeightfield(chf);
+            return NavTileBuildResult::Error;
+        }
+        const bool regionsOk = rcBuildRegions(&input.ctx, *chf, cfg.borderSize,
+                                              cfg.minRegionArea, cfg.mergeRegionArea);
+        printf("[NavMeshData] Tile %d,%d rcBuildRegions=%s\n", tileX, tileY, regionsOk ? "ok" : "falhou");
+        if (!regionsOk)
+        {
+            rcFreeCompactHeightfield(chf);
+            return NavTileBuildResult::Error;
+        }
 
         rcContourSet* cset = rcAllocContourSet();
         if (!cset)
@@ -273,6 +308,7 @@ namespace
             rcFreeCompactHeightfield(chf);
             return NavTileBuildResult::Error;
         }
+        printf("[NavMeshData] Tile %d,%d contours=%d apos rcBuildContours\n", tileX, tileY, cset->nconts);
 
         rcPolyMesh* pmesh = rcAllocPolyMesh();
         if (!pmesh)
@@ -290,6 +326,7 @@ namespace
             rcFreeCompactHeightfield(chf);
             return NavTileBuildResult::Error;
         }
+        printf("[NavMeshData] Tile %d,%d polys=%d apos rcBuildPolyMesh\n", tileX, tileY, pmesh->npolys);
 
         if (pmesh->npolys == 0)
         {
@@ -856,16 +893,16 @@ bool BuildSingleTile(const NavmeshBuildInput& input,
     dtNavMeshParams params = *nav->getParams();
     const unsigned int maxPolys = params.maxPolys;
 
-    dtStatus removeStatus = DT_SUCCESS;
     const dtTileRef existing = nav->getTileRefAt(tileX, tileY, 0);
-    if (existing)
-    {
-        removeStatus = nav->removeTile(existing, nullptr, nullptr);
-        DEBUG_LOG("[NavMeshData] removeTile existente (%d,%d) status=0x%x\n", tileX, tileY, removeStatus);
-    }
 
     if (tileTris.empty())
     {
+        dtStatus removeStatus = DT_SUCCESS;
+        if (existing)
+        {
+            removeStatus = nav->removeTile(existing, nullptr, nullptr);
+            DEBUG_LOG("[NavMeshData] removeTile existente (%d,%d) status=0x%x\n", tileX, tileY, removeStatus);
+        }
         printf("[NavMeshData] BuildSingleTile: tile %d,%d nao possui geometria. Removido=%s\n",
                tileX, tileY, dtStatusSucceed(removeStatus) ? "sim" : "nao");
         outEmpty = true;
@@ -879,6 +916,7 @@ bool BuildSingleTile(const NavmeshBuildInput& input,
     if (result == NavTileBuildResult::Empty)
     {
         outEmpty = true;
+        printf("[NavMeshData] BuildSingleTile: tile %d,%d resultou Empty; tile anterior mantido.\n", tileX, tileY);
         return true;
     }
     if (result == NavTileBuildResult::Error)
@@ -892,6 +930,19 @@ bool BuildSingleTile(const NavmeshBuildInput& input,
                tileX, tileY, createParams.polyCount, maxPolys);
         dtFree(navMeshData);
         return false;
+    }
+
+    if (existing)
+    {
+        const dtStatus removeStatus = nav->removeTile(existing, nullptr, nullptr);
+        DEBUG_LOG("[NavMeshData] removeTile existente (%d,%d) status=0x%x\n", tileX, tileY, removeStatus);
+        if (dtStatusFailed(removeStatus))
+        {
+            printf("[NavMeshData] BuildSingleTile: falha ao remover tile antigo %d,%d status=0x%x\n",
+                   tileX, tileY, removeStatus);
+            dtFree(navMeshData);
+            return false;
+        }
     }
 
     dtStatus addStatus = nav->addTile(navMeshData, navMeshDataSize, DT_TILE_FREE_DATA, 0, nullptr);
