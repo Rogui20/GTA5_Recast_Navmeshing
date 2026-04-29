@@ -31,6 +31,8 @@ struct NavmeshGenerationSettings
     float detailSampleDist = 6.0f;
     float detailSampleMaxError = 1.0f;
     int tileSize = 48;
+    int maxTilesOverride = 0; // 0 = auto
+    int desiredMaxPolysPerTile = 4096; // minimo recomendado para ilhas densas
 };
 
 struct TileGridStats

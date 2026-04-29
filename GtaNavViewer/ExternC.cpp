@@ -310,6 +310,8 @@ namespace
         mixf(s.detailSampleDist);
         mixf(s.detailSampleMaxError);
         h = WorldHashCombine64(h, static_cast<uint64_t>(s.tileSize));
+        h = WorldHashCombine64(h, static_cast<uint64_t>(s.maxTilesOverride));
+        h = WorldHashCombine64(h, static_cast<uint64_t>(s.desiredMaxPolysPerTile));
         return h;
     }
 
@@ -1035,7 +1037,9 @@ namespace
             {"maxVertsPerPoly", ctx.genSettings.maxVertsPerPoly},
             {"detailSampleDist", ctx.genSettings.detailSampleDist},
             {"detailSampleMaxError", ctx.genSettings.detailSampleMaxError},
-            {"tileSize", ctx.genSettings.tileSize}
+            {"tileSize", ctx.genSettings.tileSize},
+            {"maxTilesOverride", ctx.genSettings.maxTilesOverride},
+            {"desiredMaxPolysPerTile", ctx.genSettings.desiredMaxPolysPerTile}
         };
 
         j["geometries"] = nlohmann::json::array();

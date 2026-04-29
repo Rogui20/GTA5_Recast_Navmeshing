@@ -1846,15 +1846,19 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
     rcVcopy(navParams.orig, forcedBMin);
     navParams.tileWidth = settings.tileSize * baseCfg.cs;
     navParams.tileHeight = settings.tileSize * baseCfg.cs;
-    navParams.maxTiles = tileWidthCount * tileHeightCount;
 
-    const unsigned int desiredMaxPolys = 1 << 16;
+    const int computedMaxTiles = tileWidthCount * tileHeightCount;
+    navParams.maxTiles = settings.maxTilesOverride > 0
+        ? std::min(settings.maxTilesOverride, computedMaxTiles)
+        : computedMaxTiles;
+
+    const unsigned int desiredMaxPolys = static_cast<unsigned int>(std::max(16, settings.desiredMaxPolysPerTile));
     const unsigned int tileBits = static_cast<unsigned int>(dtIlog2(dtNextPow2(static_cast<unsigned int>(navParams.maxTiles))));
     const unsigned int desiredPolyBits = static_cast<unsigned int>(dtIlog2(dtNextPow2(desiredMaxPolys)));
     const unsigned int maxPolyBitsAllowed = tileBits >= 22 ? 0u : (22u - tileBits);
     if (maxPolyBitsAllowed == 0)
     {
-        printf("[NavMeshData] InitTiledGrid: maxTiles=%u consome todos os bits de ref (tileBits=%u). Ajuste tileSize ou reduza a area.\n",
+        printf("[NavMeshData] InitTiledGrid: maxTiles=%u consome todos os bits de ref (tileBits=%u). Ajuste tileSize maior ou reduza os bounds.\n",
                static_cast<unsigned int>(navParams.maxTiles), tileBits);
         dtFreeNavMesh(nav);
         return false;
@@ -1862,10 +1866,30 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
 
     const unsigned int chosenPolyBits = std::min(desiredPolyBits, maxPolyBitsAllowed);
     navParams.maxPolys = 1u << chosenPolyBits;
+
+    printf("[NavMeshData] InitTiledGrid: pre-init tileBits=%u polyBits=%u maxTiles=%d (computed=%d) maxPolys=%d desiredMaxPolys=%u tileSize=%d boundsTiles=%dx%d\n",
+           tileBits,
+           chosenPolyBits,
+           navParams.maxTiles,
+           computedMaxTiles,
+           navParams.maxPolys,
+           desiredMaxPolys,
+           settings.tileSize,
+           tileWidthCount,
+           tileHeightCount);
+
     if (navParams.maxPolys != desiredMaxPolys)
     {
-        printf("[NavMeshData] InitTiledGrid: Clamp maxPolys para %u (tileBits=%u polyBits=%u). Numero de tiles=%u\n",
+        printf("[NavMeshData] InitTiledGrid: Clamp maxPolys para %u (tileBits=%u polyBits=%u). Numero de tiles=%u.\n",
                static_cast<unsigned int>(navParams.maxPolys), tileBits, chosenPolyBits, static_cast<unsigned int>(navParams.maxTiles));
+    }
+
+    if (navParams.maxPolys < 4096)
+    {
+        printf("[NavMeshData] InitTiledGrid: ERRO de configuracao: maxPolys=%d (<4096). Ajuste tileSize maior, bounds menores, ou reduza maxTilesOverride.\n",
+               navParams.maxPolys);
+        dtFreeNavMesh(nav);
+        return false;
     }
 
     const dtStatus initStatus = nav->init(&navParams);
