@@ -1,5 +1,7 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__version.html#ad7d7674532073eed237b90f546c97cd0":[43,0,445,0],
+"structSTB__TexteditState.html":[43,0,462],
 "structSTB__TexteditState.html#a0e7ba5f610f5dc2d643bef0f223ada9c":[43,0,462,1],
 "structSTB__TexteditState.html#a11a63150e95225aacd204d6ef160c0c0":[43,0,462,3],
 "structSTB__TexteditState.html#a1e43e8ac88a8c7f2bba645b333a8bdc7":[43,0,462,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX108 =
 "structdtPolyDetail.html#a2b1473cb6f856126db05a2955fbb2a61":[43,0,53,3],
 "structdtPolyDetail.html#aaccd8de89ab39454558ce4bfe6230c98":[43,0,53,0],
 "structdtPolyDetail.html#ae3f408c9c8974ccd058a98f781c58801":[43,0,53,2],
-"structdtPolyDetail.html#aef53174e1c31d4304bc07da5d677528c":[43,0,53,1],
-"structdtPolyState.html":[43,0,55],
-"structdtPolyState.html#a8e3a8a1c15338bbe761ef4d9ca2b4949":[43,0,55,1]
+"structdtPolyDetail.html#aef53174e1c31d4304bc07da5d677528c":[43,0,53,1]
 };

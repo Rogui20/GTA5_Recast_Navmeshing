@@ -47,7 +47,7 @@ var searchData=
   ['getcachedtilehashes_44',['GetCachedTileHashes',['../classNavMeshData.html#af4729db7f7d5aaed68a129c64a31d850',1,'NavMeshData']]],
   ['getcapacity_45',['getCapacity',['../classdtNodeQueue.html#a3bd1e5d3450e90384d8d8ce7f59080de',1,'dtNodeQueue']]],
   ['getcellsize_46',['getCellSize',['../classdtProximityGrid.html#aca646eb6926a096bb8062e7bf3a09945',1,'dtProximityGrid']]],
-  ['getcenter_47',['getcenter',['../structImGuiViewport.html#aecb8b050853aae709f64b82319699bf8',1,'ImGuiViewport::GetCenter()'],['../structImRect.html#aae13f8003184fd84f29d27c3c074cf43',1,'ImRect::GetCenter()'],['../classdtLocalBoundary.html#a41584b7104508fa7331cc00a709a590d',1,'dtLocalBoundary::getCenter()']]],
+  ['getcenter_47',['getcenter',['../classdtLocalBoundary.html#a41584b7104508fa7331cc00a709a590d',1,'dtLocalBoundary::getCenter()'],['../structImGuiViewport.html#aecb8b050853aae709f64b82319699bf8',1,'ImGuiViewport::GetCenter()'],['../structImRect.html#aae13f8003184fd84f29d27c3c074cf43',1,'ImRect::GetCenter()']]],
   ['getcharadvance_48',['GetCharAdvance',['../structImFontBaked.html#a4aa1c5f921bd4c0c90458b8613f6a51c',1,'ImFontBaked']]],
   ['getchunkymesh_49',['getchunkymesh',['../classInputGeom.html#a6c6fea33ddaff00ddd0d2f3e622637b8',1,'InputGeom::getChunkyMesh() const'],['../classInputGeom.html#a6c6fea33ddaff00ddd0d2f3e622637b8',1,'InputGeom::getChunkyMesh() const']]],
   ['getclipboardtext_50',['GetClipboardText',['../namespaceImGui.html#a11837daee819fd90e17d80ab1eef1f99',1,'ImGui']]],

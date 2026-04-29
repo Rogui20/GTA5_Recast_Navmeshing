@@ -508,11 +508,11 @@ var NAVTREEINDEX =
 "structImGui__ImplVulkanH__Window.html#a22de46dc435ae4cc3b198b0416bbb84b",
 "structImTextureData.html#a53c8b68ff755253224efe18cdc43c996",
 "structNavMeshDefinition.html#ace4801ba29d7fa0e80593d523e9b857a",
-"structSDL__Color.html#a0bb975b6829524133fdd3c6060cfa63d",
-"structSDL__MessageBoxData.html#a5c333bc93705c66068e140bc28daedcb",
-"structSTB__TexteditState.html#a0e7ba5f610f5dc2d643bef0f223ada9c",
-"structdtPolyState.html#afd684e7c95d1048ace6dc198457b7c69",
-"structstbrp__context.html#a0b80e1fbdac125427526f3500d4e7624"
+"structSDL__AudioSpec.html#aeec9481666f5f0982c98d3878f175d9b",
+"structSDL__MessageBoxData.html#a18744865a3e89e260db5f01aee579e35",
+"structSDL__version.html#ad7d7674532073eed237b90f546c97cd0",
+"structdtPolyState.html",
+"structstbrp__context.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

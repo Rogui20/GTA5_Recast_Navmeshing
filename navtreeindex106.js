@@ -1,5 +1,7 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__AudioSpec.html#aeec9481666f5f0982c98d3878f175d9b":[43,0,384,8],
+"structSDL__Color.html":[43,0,385],
 "structSDL__Color.html#a0bb975b6829524133fdd3c6060cfa63d":[43,0,385,3],
 "structSDL__Color.html#a3b79a27e0414049559aa5bcf241dedd3":[43,0,385,1],
 "structSDL__Color.html#ac497ba67af6ecb4d51bdd0945b314526":[43,0,385,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX106 =
 "structSDL__MessageBoxColorScheme.html#ae3712ec81e41b63b781b7d49d3b3b8f6":[43,0,422,0],
 "structSDL__MessageBoxData.html":[43,0,423],
 "structSDL__MessageBoxData.html#a113d016f760bf4e4156b0f376358d6a0":[43,0,423,2],
-"structSDL__MessageBoxData.html#a133f4fef549cc0cb14b799af35f3dc5a":[43,0,423,4],
-"structSDL__MessageBoxData.html#a18744865a3e89e260db5f01aee579e35":[43,0,423,1],
-"structSDL__MessageBoxData.html#a265e47aab749e384661ae91d3e11e0db":[43,0,423,0]
+"structSDL__MessageBoxData.html#a133f4fef549cc0cb14b799af35f3dc5a":[43,0,423,4]
 };

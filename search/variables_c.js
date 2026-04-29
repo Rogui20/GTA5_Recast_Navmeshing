@@ -103,7 +103,7 @@ var searchData=
   ['localflagsinwindows_100',['LocalFlagsInWindows',['../structImGuiDockNode.html#a87ec1cfa96a01d459b5e6e719eaf14aa',1,'ImGuiDockNode']]],
   ['localizationtable_101',['LocalizationTable',['../structImGuiContext.html#a2cf1146eb06a9a6c9f982b5d17a13c71',1,'ImGuiContext']]],
   ['lockdisableresize_102',['LockDisableResize',['../structImFontAtlasBuilder.html#a94c30248204c48b5c152e320f45856ee',1,'ImFontAtlasBuilder']]],
-  ['locked_103',['locked',['../structImFontAtlas.html#a2222ff64ba974a8ee7a286617f879f9b',1,'ImFontAtlas::Locked'],['../structSDL__Surface.html#a5022edaeea1c0a055fa5d6dccba41de2',1,'SDL_Surface::locked']]],
+  ['locked_103',['locked',['../structSDL__Surface.html#a5022edaeea1c0a055fa5d6dccba41de2',1,'SDL_Surface::locked'],['../structImFontAtlas.html#a2222ff64ba974a8ee7a286617f879f9b',1,'ImFontAtlas::Locked']]],
   ['lockthisframe_104',['LockThisFrame',['../structImGuiKeyOwnerData.html#a7b1257efe2131c10ba983abcb68f78d4',1,'ImGuiKeyOwnerData']]],
   ['lockuntilrelease_105',['LockUntilRelease',['../structImGuiKeyOwnerData.html#a8f730afbcce2f74be5870967ff5d97ab',1,'ImGuiKeyOwnerData']]],
   ['logbuffer_106',['LogBuffer',['../structImGuiContext.html#a7ee6cc4eb7d913073f7f65245f74b44b',1,'ImGuiContext']]],

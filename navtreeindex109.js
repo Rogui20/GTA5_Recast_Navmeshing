@@ -1,5 +1,7 @@
 var NAVTREEINDEX109 =
 {
+"structdtPolyState.html":[43,0,55],
+"structdtPolyState.html#a8e3a8a1c15338bbe761ef4d9ca2b4949":[43,0,55,1],
 "structdtPolyState.html#afd684e7c95d1048ace6dc198457b7c69":[43,0,55,0],
 "structdtSegInterval.html":[43,0,59],
 "structdtSegInterval.html#a4463687b08087da04f076ec79beb5c03":[43,0,59,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX109 =
 "structrcSweepSpan.html#a4d7da0d9409cf1124f8fed63783da60e":[43,0,366,1],
 "structrcSweepSpan.html#ab92de3221c19c2c9a2d716ea7680146f":[43,0,366,3],
 "structrcSweepSpan.html#ac1a82c65b0a40920eab883fc2b0aa706":[43,0,366,0],
-"structrcSweepSpan.html#afa7aea20a3d345b6663799f60d846737":[43,0,366,2],
-"structstbrp__context.html":[43,0,463],
-"structstbrp__context.html#a007509feee322404083034e4c2d3dc5d":[43,0,463,6]
+"structrcSweepSpan.html#afa7aea20a3d345b6663799f60d846737":[43,0,366,2]
 };
