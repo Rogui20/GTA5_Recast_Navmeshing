@@ -1,5 +1,6 @@
 var NAVTREEINDEX105 =
 {
+"structNavMeshDefinition.html#a8d0c65bfc454c84cfb871adacb9e3e45":[43,0,316,11],
 "structNavMeshDefinition.html#ac4a5a0ddf6c19a72dff5fde21eeea2b6":[43,0,316,10],
 "structNavMeshDefinition.html#ac54fca5c0b3bad449ca134752e4c87be":[43,0,316,9],
 "structNavMeshDefinition.html#ace4801ba29d7fa0e80593d523e9b857a":[43,0,316,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__AudioSpec.html#a1f8d05139f1679dcf359f49251233eac":[43,0,384,0],
 "structSDL__AudioSpec.html#a2cdf5e885808c10bfa2810b706e69f95":[43,0,384,5],
 "structSDL__AudioSpec.html#a31fe8b3710cf23bbef24be8a1749fe46":[43,0,384,1],
-"structSDL__AudioSpec.html#a738371fc13b54cefef4db16994abeeb6":[43,0,384,4],
-"structSDL__AudioSpec.html#a8b823ce46fc2e448cf7e6fc141aff6b2":[43,0,384,3]
+"structSDL__AudioSpec.html#a738371fc13b54cefef4db16994abeeb6":[43,0,384,4]
 };

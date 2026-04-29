@@ -1,5 +1,6 @@
 var NAVTREEINDEX102 =
 {
+"structImGui__ImplDX11__ViewportData.html#ad0f0ee5a9d4741fda426cc5ae751d0b6":[43,0,134,0],
 "structImGui__ImplDX11__ViewportData.html#af9bd806a6b19ac70ad14a89d6cf83a62":[43,0,134,3],
 "structImGui__ImplDX12__Data.html":[43,0,135],
 "structImGui__ImplDX12__Data.html#a18255be10fad1dbe043f05a3bb8251c3":[43,0,135,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX102 =
 "structImGui__ImplVulkanH__Frame.html#a9319c32a4da6914a275336f6097f2f23":[43,0,170,0],
 "structImGui__ImplVulkanH__FrameSemaphores.html":[43,0,171],
 "structImGui__ImplVulkanH__FrameSemaphores.html#aa5dad94e9e02ef1cfd2ef171bb72f3e8":[43,0,171,1],
-"structImGui__ImplVulkanH__FrameSemaphores.html#ad396afd28149848364513e2015c992d1":[43,0,171,0],
-"structImGui__ImplVulkanH__Window.html":[43,0,172]
+"structImGui__ImplVulkanH__FrameSemaphores.html#ad396afd28149848364513e2015c992d1":[43,0,171,0]
 };

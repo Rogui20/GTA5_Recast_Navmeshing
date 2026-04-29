@@ -1,5 +1,6 @@
 var NAVTREEINDEX107 =
 {
+"structSDL__MessageBoxData.html":[43,0,423],
 "structSDL__MessageBoxData.html#a113d016f760bf4e4156b0f376358d6a0":[43,0,423,2],
 "structSDL__MessageBoxData.html#a133f4fef549cc0cb14b799af35f3dc5a":[43,0,423,4],
 "structSDL__MessageBoxData.html#a18744865a3e89e260db5f01aee579e35":[43,0,423,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX107 =
 "structSDL__hid__device__info.html#ace00a62000be5a947106f04d0dd5efc4":[43,0,410,12],
 "structSDL__hid__device__info.html#ad6eb1e9cafd756ef89cd427cccc89da8":[43,0,410,9],
 "structSDL__hid__device__info.html#ae1450dccd0f426357f6b95422645a0e3":[43,0,410,1],
-"structSDL__hid__device__info.html#af60f9bc8de63c26113cca7e60158b91d":[43,0,410,10],
-"structSDL__version.html":[43,0,445]
+"structSDL__hid__device__info.html#af60f9bc8de63c26113cca7e60158b91d":[43,0,410,10]
 };

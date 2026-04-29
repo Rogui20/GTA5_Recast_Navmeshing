@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"SDL__blendmode_8h.html#a27a782fb535e9c4c87202402ee1c652f":[44,0,5,2,1,7,1],
 "SDL__blendmode_8h.html#a54ae8d3f832db7354f4fda522835f502":[44,0,5,2,1,7,5],
 "SDL__blendmode_8h.html#a54ae8d3f832db7354f4fda522835f502a236541634d3e80b4932b6c8a6b278f2a":[44,0,5,2,1,7,5,4],
 "SDL__blendmode_8h.html#a54ae8d3f832db7354f4fda522835f502a49762d60e4bf6edcf42c7f7aa3c51fbd":[44,0,5,2,1,7,5,3],
@@ -77,8 +78,8 @@ var NAVTREEINDEX13 =
 "SDL__config__android_8h.html#a494d1ecf5a4567ccbf7901e3be337bc7":[44,0,5,2,1,10,64],
 "SDL__config__android_8h.html#a49afaaefcf9868c6d3a9fb43706af4db":[44,0,5,2,1,10,92],
 "SDL__config__android_8h.html#a4ac6a60cb19181437136206238f16497":[44,0,5,2,1,10,96],
-"SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,61],
 "SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,60],
+"SDL__config__android_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,10,61],
 "SDL__config__android_8h.html#a4e31ef0be24f881a3a13e42723db7095":[44,0,5,2,1,10,31],
 "SDL__config__android_8h.html#a4f6ff4162269254c4c4b86bc9892ecce":[44,0,5,2,1,10,42],
 "SDL__config__android_8h.html#a51924e273a5b8653a28e005108ab7ae6":[44,0,5,2,1,10,101],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "SDL__config__emscripten_8h.html#a9d17c48138de7e59ce0ef00b33ed05cb":[44,0,5,2,1,11,59],
 "SDL__config__emscripten_8h.html#a9e0e434ec1a6ddbd97db12b5a32905e0":[44,0,5,2,1,11,81],
 "SDL__config__emscripten_8h.html#a9e3788ffe53c7301b1d808d1d1756d53":[44,0,5,2,1,11,45],
-"SDL__config__emscripten_8h.html#a9fa2c451911eb9ffcb45e44c550b2fd5":[44,0,5,2,1,11,76],
-"SDL__config__emscripten_8h.html#aa529e9cf346b2519fcbc5f9e02815cf3":[44,0,5,2,1,11,24]
+"SDL__config__emscripten_8h.html#a9fa2c451911eb9ffcb45e44c550b2fd5":[44,0,5,2,1,11,76]
 };

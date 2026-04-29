@@ -1,5 +1,6 @@
 var NAVTREEINDEX97 =
 {
+"structImGuiInputEventMouseButton.html#a9a669f2168a719da17c26dc3ad154d65":[43,0,211,1],
 "structImGuiInputEventMouseButton.html#accf7f8b2b5e686537cbc1959a36631a6":[43,0,211,2],
 "structImGuiInputEventMousePos.html":[43,0,212],
 "structImGuiInputEventMousePos.html#a515eb4e5c6cb604fabdb26dc99d14c6f":[43,0,212,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX97 =
 "structImGuiNextWindowData.html#a050058f58709d637bc6a0468ee48548f":[43,0,236,6],
 "structImGuiNextWindowData.html#a0937e1b171826a367e95f75895a4aa5b":[43,0,236,9],
 "structImGuiNextWindowData.html#a0c4c81bf78a6ac094f794d2cf318037a":[43,0,236,5],
-"structImGuiNextWindowData.html#a15ce41b929016ba6b448203e1f3df97e":[43,0,236,7],
-"structImGuiNextWindowData.html#a2a34b7d39111d51f8309eb886575d47d":[43,0,236,19]
+"structImGuiNextWindowData.html#a15ce41b929016ba6b448203e1f3df97e":[43,0,236,7]
 };
