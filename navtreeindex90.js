@@ -1,5 +1,7 @@
 var NAVTREEINDEX90 =
 {
+"imstb__truetype_8h.html#a597ef6b92ab0b5800c74478548b4782f":[44,0,7,0,11,49],
+"imstb__truetype_8h.html#a5b868ef9a9f92e0cc8b6bc0dd52087db":[44,0,7,0,11,79],
 "imstb__truetype_8h.html#a5ba17159df62ca39649e6f2231ac6e89":[44,0,7,0,11,44],
 "imstb__truetype_8h.html#a5d290c4aa81bf0f7b933ea290d123a3a":[44,0,7,0,11,41],
 "imstb__truetype_8h.html#a6206e92bc06993ba26b8e7c7671f8aaa":[44,0,7,0,11,32],
@@ -247,7 +249,5 @@ var NAVTREEINDEX90 =
 "md_external_2SDL2_2docs_2release__checklist.html":[40],
 "md_external_2SDL2_2docs_2release__checklist.html#after-a-feature-release":[40,2],
 "md_external_2SDL2_2docs_2release__checklist.html#new-bugfix-release":[40,1],
-"md_external_2SDL2_2docs_2release__checklist.html#new-development-prerelease":[40,3],
-"md_external_2SDL2_2docs_2release__checklist.html#new-feature-release":[40,0],
-"native-client.html":[22]
+"md_external_2SDL2_2docs_2release__checklist.html#new-development-prerelease":[40,3]
 };

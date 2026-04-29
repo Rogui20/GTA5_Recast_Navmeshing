@@ -1,5 +1,7 @@
 var NAVTREEINDEX91 =
 {
+"md_external_2SDL2_2docs_2release__checklist.html#new-feature-release":[40,0],
+"native-client.html":[22],
 "native-client.html#building-sdl-for-nacl":[22,0],
 "native-client.html#running-tests":[22,1],
 "native-client.html#rwops-and-nacl_io":[22,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX91 =
 "structExampleAssetsBrowser.html#a8b569f2534ae0781f548c70498f2e58c":[43,0,82,20],
 "structExampleAssetsBrowser.html#a9912a8ca82ed1a8e2cddc277b0e46217":[43,0,82,9],
 "structExampleAssetsBrowser.html#a9a20d664c5e923e41f088b916bb0706c":[43,0,82,7],
-"structExampleAssetsBrowser.html#aa01e4382d22d421953d108cb35ea1c6b":[43,0,82,15],
-"structExampleAssetsBrowser.html#aa9edf321cf93321b4dd8ee0581fd5a7f":[43,0,82,0],
-"structExampleAssetsBrowser.html#aacdb282937b70764d61b4cf0bfc6b742":[43,0,82,1]
+"structExampleAssetsBrowser.html#aa01e4382d22d421953d108cb35ea1c6b":[43,0,82,15]
 };

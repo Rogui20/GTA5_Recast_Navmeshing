@@ -182,6 +182,10 @@ Functions</h2></td></tr>
 <tr class="separator:ae4c999904b1134d6e61e2086a1513b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecfe9b39a546ef8cf6b2e185bb5f5599" id="r_aecfe9b39a546ef8cf6b2e185bb5f5599"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aecfe9b39a546ef8cf6b2e185bb5f5599">ProcessQueuedWorldGeometry</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, int maxItems, int maxMilliseconds)</td></tr>
 <tr class="separator:aecfe9b39a546ef8cf6b2e185bb5f5599"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbfb1b0a46a468a525e325c5b7995728" id="r_adbfb1b0a46a468a525e325c5b7995728"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#adbfb1b0a46a468a525e325c5b7995728">UnloadProcessedNonResidentTiles</a> (ExternNavmeshContext &amp;ctx, const std::unordered_set&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> &gt; &amp;tileKeys)</td></tr>
+<tr class="separator:adbfb1b0a46a468a525e325c5b7995728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a145b4649f5f2d2cf518095e2bd201b83" id="r_a145b4649f5f2d2cf518095e2bd201b83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a145b4649f5f2d2cf518095e2bd201b83">SetWorldUnloadBuiltTilesAfterSave</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, bool <a class="el" href="SDL__opengl__glext_8h.html#a0455a397ab5468d21c3021f2efa6dd3c">enabled</a>)</td></tr>
+<tr class="separator:a145b4649f5f2d2cf518095e2bd201b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5c6066cf12da9718835c3122efebdf8" id="r_ad5c6066cf12da9718835c3122efebdf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ad5c6066cf12da9718835c3122efebdf8">BuildQueuedWorldTiles</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, int maxTiles, int maxMilliseconds, bool saveToCache)</td></tr>
 <tr class="separator:ad5c6066cf12da9718835c3122efebdf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72ff617c0e75e23d2fd13aa6e0259231" id="r_a72ff617c0e75e23d2fd13aa6e0259231"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a72ff617c0e75e23d2fd13aa6e0259231">StreamTilesForAgents</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const <a class="el" href="structVector3.html">Vector3</a> *positions, const <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">std::uint32_t</a> *agentIds, int agentCount, float radius, bool allowBuildIfMissing)</td></tr>
@@ -3407,6 +3411,34 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a145b4649f5f2d2cf518095e2bd201b83" name="a145b4649f5f2d2cf518095e2bd201b83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a145b4649f5f2d2cf518095e2bd201b83">&#9670;&#160;</a></span>SetWorldUnloadBuiltTilesAfterSave()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> SetWorldUnloadBuiltTilesAfterSave </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9c0207a16f3387d3cec9bdad432340eb" name="a9c0207a16f3387d3cec9bdad432340eb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9c0207a16f3387d3cec9bdad432340eb">&#9670;&#160;</a></span>ShapeAvoidRadius()</h2>
 
@@ -3797,6 +3829,42 @@ Variables</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adbfb1b0a46a468a525e325c5b7995728" name="adbfb1b0a46a468a525e325c5b7995728"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbfb1b0a46a468a525e325c5b7995728">&#9670;&#160;</a></span>UnloadProcessedNonResidentTiles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> UnloadProcessedNonResidentTiles </td>
+          <td>(</td>
+          <td class="paramtype">ExternNavmeshContext &amp;&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::unordered_set&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tileKeys</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

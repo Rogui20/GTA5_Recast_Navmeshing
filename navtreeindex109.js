@@ -1,5 +1,7 @@
 var NAVTREEINDEX109 =
 {
+"structdtPolyDetail.html#ae3f408c9c8974ccd058a98f781c58801":[43,0,53,2],
+"structdtPolyDetail.html#aef53174e1c31d4304bc07da5d677528c":[43,0,53,1],
 "structdtPolyState.html":[43,0,55],
 "structdtPolyState.html#a8e3a8a1c15338bbe761ef4d9ca2b4949":[43,0,55,1],
 "structdtPolyState.html#afd684e7c95d1048ace6dc198457b7c69":[43,0,55,0],
@@ -141,15 +143,15 @@ var NAVTREEINDEX109 =
 "structimguiGfxText.html#ad7bf3cc0e24e63d997c335b7a5e15d25":[43,0,205,2],
 "structimguiGfxText.html#aeed4f7559be7abbfa0b5a49adaedbd0f":[43,0,205,0],
 "structrcChunkyTriMesh.html":[43,0,337],
-"structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,337,0],
 "structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,337,2],
+"structrcChunkyTriMesh.html#a11e03f096c8d3bcd8a249e6b64fb0502":[43,0,337,0],
 "structrcChunkyTriMesh.html#a3a942f046287998abef40650d3b590f4":[43,0,337,6],
 "structrcChunkyTriMesh.html#a6ae1d3f004dd90ddf9a60e55095592a0":[43,0,337,8],
 "structrcChunkyTriMesh.html#a72fed74ea56cac960cd9eb282e312d87":[43,0,337,7],
 "structrcChunkyTriMesh.html#a93638e22b53882b6bdc700b8c35ecd05":[43,0,337,4],
 "structrcChunkyTriMesh.html#aaf4b64877b4d7e95d037e5c8e7480420":[43,0,337,5],
-"structrcChunkyTriMesh.html#abd0bad171797ff8785f0483fc95e260f":[43,0,337,1],
 "structrcChunkyTriMesh.html#abd0bad171797ff8785f0483fc95e260f":[43,0,337,3],
+"structrcChunkyTriMesh.html#abd0bad171797ff8785f0483fc95e260f":[43,0,337,1],
 "structrcChunkyTriMeshNode.html":[43,0,338],
 "structrcChunkyTriMeshNode.html#a21461e9717fa41aede9a197e82c2fab8":[43,0,338,3],
 "structrcChunkyTriMeshNode.html#a21ef3b8a9cf348497ed1c6a9c01c403e":[43,0,338,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX109 =
 "structrcSpanPool.html#aaa72cbbf0abb73bfaa8fefc55ef37f2f":[43,0,365,1],
 "structrcSweepSpan.html":[43,0,366],
 "structrcSweepSpan.html#a4d7da0d9409cf1124f8fed63783da60e":[43,0,366,1],
-"structrcSweepSpan.html#ab92de3221c19c2c9a2d716ea7680146f":[43,0,366,3],
-"structrcSweepSpan.html#ac1a82c65b0a40920eab883fc2b0aa706":[43,0,366,0],
-"structrcSweepSpan.html#afa7aea20a3d345b6663799f60d846737":[43,0,366,2]
+"structrcSweepSpan.html#ab92de3221c19c2c9a2d716ea7680146f":[43,0,366,3]
 };
