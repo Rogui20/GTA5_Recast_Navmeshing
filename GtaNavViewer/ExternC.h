@@ -12,6 +12,13 @@ struct Vector3
     float z = 0.0f;
 };
 
+enum WorldGeomFlags : std::uint32_t
+{
+    WORLD_GEOM_PERSISTENT = 1u << 0,
+    WORLD_GEOM_DYNAMIC = 1u << 1,
+    WORLD_GEOM_RUNTIME = 1u << 2
+};
+
 struct NavMeshEdgeInfo
 {
     Vector3 vertexA;
@@ -264,8 +271,17 @@ GTANAVVIEWER_API int QueueWorldGeometry(void* navMesh,
                                         Vector3 rot,
                                         const char* customID,
                                         bool preferBIN);
+GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
+                                          const char* pathToGeometry,
+                                          Vector3 pos,
+                                          Vector3 rot,
+                                          const char* customID,
+                                          bool preferBIN,
+                                          std::uint32_t flags,
+                                          const char* groupId);
 GTANAVVIEWER_API int ProcessQueuedWorldGeometry(void* navMesh, int maxItems, int maxMilliseconds);
 GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxMilliseconds, bool saveToCache);
+GTANAVVIEWER_API bool RemoveWorldGeometryGroup(void* navMesh, const char* groupId, bool rebuildOrQueue);
 GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
                                           const Vector3* positions,
                                           const std::uint32_t* agentIds,
