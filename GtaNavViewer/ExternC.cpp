@@ -1670,7 +1670,8 @@ namespace
                            tx, ty, rec.id.c_str(), rec.path.c_str(), added);
                 if (totalFilteredTris > MAX_INPUT_TRIS_PER_TILE)
                 {
-                    printf("[WorldTile][erro] tile %d,%d excedeu limite de tris (%llu > %llu). Abortando build.\n",
+                    printf("[WorldTile][erro] tile %d,%d excedeu limite de tris (%llu > %llu). "
+                           "Marcando como failed; reduza tileSize ou simplifique geometria.\n",
                            tx, ty,
                            static_cast<unsigned long long>(totalFilteredTris),
                            static_cast<unsigned long long>(MAX_INPUT_TRIS_PER_TILE));
