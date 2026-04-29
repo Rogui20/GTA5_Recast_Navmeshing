@@ -1609,7 +1609,7 @@ namespace
         uint64_t totalRawTris = 0;
         uint64_t totalFilteredTris = 0;
         std::vector<std::pair<std::string, size_t>> perGeomAdded;
-        static constexpr uint64_t MAX_INPUT_TRIS_PER_TILE = 2000000ull;
+        static constexpr uint64_t MAX_INPUT_TRIS_PER_TILE = 20000000ull;
 
         for (const std::string& geomId : itGeoms->second)
         {
@@ -3075,6 +3075,43 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
         }
     }
 
+    // 1) descarrega tudo que nenhum agent precisa mais
+    int unloaded = 0;
+    std::vector<uint64_t> toUnload;
+    for (uint64_t key : ctx->residentTiles)
+    {
+        if (neededGlobal.find(key) == neededGlobal.end())
+            toUnload.push_back(key);
+    }
+
+    for (uint64_t key : toUnload)
+    {
+        const int tx = static_cast<int>(key >> 32);
+        const int ty = static_cast<int>(key & 0xffffffffu);
+
+        const dtTileRef ref = nav->getTileRefAt(tx, ty, 0);
+        if (ref != 0)
+        {
+            unsigned char* tileData = nullptr;
+            int tileDataSize = 0;
+            const dtStatus status = nav->removeTile(ref, &tileData, &tileDataSize);
+
+            if (dtStatusSucceed(status))
+            {
+                unloaded++; // conta sempre que removeu com sucesso
+                if (tileData)
+                    dtFree(tileData);
+            } else
+            {
+                printf("[StreamTiles] Falha ao remover tile (%d,%d) status=0x%x\n", tx, ty, status);
+            }
+        }
+
+        ctx->residentTiles.erase(key);
+        ctx->residentStamp.erase(key);
+    }
+
+    // 2) depois, LRU só como limite de segurança
     while (ctx->residentTiles.size() > static_cast<size_t>(ctx->maxResidentTiles))
     {
         uint64_t lruKey = 0;
@@ -3111,8 +3148,8 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
     }
 
     EnsureNavQuery(*ctx);
-    printf("[ExternC] StreamTilesForAgents: agents=%d neededTiles=%zu loadedFromDb=%d enqueuedBuild=%d alreadyResident=%d residentTiles=%zu\n",
-           agentCount, needed.size(), loadedFromDb, enqueuedBuild, updatedResident, ctx->residentTiles.size());
+    printf("[ExternC] StreamTilesForAgents: agents=%d neededCurrent=%zu neededGlobal=%zu loadedFromDb=%d enqueuedBuild=%d alreadyResident=%d unloaded=%d residentTiles=%zu\n",
+       agentCount, needed.size(), neededGlobal.size(), loadedFromDb, enqueuedBuild, updatedResident, unloaded, ctx->residentTiles.size());
     return static_cast<int>(needed.size());
 }
 
