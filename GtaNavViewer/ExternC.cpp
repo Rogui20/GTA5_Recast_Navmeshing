@@ -1046,7 +1046,7 @@ namespace
         for (const auto& kv : ctx.worldGeometry)
         {
             const auto& rec = kv.second;
-            if ((rec.flags & WORLD_GEOM_PERSISTENT) == 0)
+            if ((rec.flags & WORLD_GEOM_PERSISTENT) == 0 || (rec.flags & WORLD_GEOM_DYNAMIC) != 0)
                 continue;
             nlohmann::json g;
             g["customID"] = rec.id;
@@ -1334,21 +1334,31 @@ namespace
     void RemoveGeometryFromWorldIndex(ExternNavmeshContext& ctx, const std::string& geomId)
     {
         auto itTiles = ctx.geomToTiles.find(geomId);
-        if (itTiles == ctx.geomToTiles.end())
-            return;
-
-        for (uint64_t tileKey : itTiles->second)
+        if (itTiles != ctx.geomToTiles.end())
         {
-            auto itVec = ctx.tileToGeometryIds.find(tileKey);
-            if (itVec == ctx.tileToGeometryIds.end())
-                continue;
+            for (uint64_t tileKey : itTiles->second)
+            {
+                auto itVec = ctx.tileToGeometryIds.find(tileKey);
+                if (itVec == ctx.tileToGeometryIds.end())
+                    continue;
 
+                auto& ids = itVec->second;
+                ids.erase(std::remove(ids.begin(), ids.end(), geomId), ids.end());
+                if (ids.empty())
+                    ctx.tileToGeometryIds.erase(itVec);
+            }
+            ctx.geomToTiles.erase(itTiles);
+        }
+
+        for (auto itVec = ctx.tileToGeometryIds.begin(); itVec != ctx.tileToGeometryIds.end();)
+        {
             auto& ids = itVec->second;
             ids.erase(std::remove(ids.begin(), ids.end(), geomId), ids.end());
             if (ids.empty())
-                ctx.tileToGeometryIds.erase(itVec);
+                itVec = ctx.tileToGeometryIds.erase(itVec);
+            else
+                ++itVec;
         }
-        ctx.geomToTiles.erase(itTiles);
     }
 
     bool IsWorldGeometryRecordUpToDate(const ExternNavmeshContext::WorldGeomRecord& record)
@@ -2738,9 +2748,22 @@ GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
     auto it = ctx->worldGeometry.find(id);
     if (it != ctx->worldGeometry.end())
     {
+        std::unordered_set<uint64_t> oldTiles;
         auto prevIt = ctx->geomToTiles.find(id);
         if (prevIt != ctx->geomToTiles.end())
-            MarkTilesDirty(*ctx, prevIt->second);
+            oldTiles = prevIt->second;
+        else
+        {
+            oldTiles.insert(it->second.touchedTileKeys.begin(), it->second.touchedTileKeys.end());
+        }
+
+        RemoveGeometryFromWorldIndex(*ctx, id);
+        MarkTilesDirty(*ctx, oldTiles);
+
+        auto& oldRec = it->second;
+        oldRec.touchedTileKeys.clear();
+        oldRec.indexed = false;
+        oldRec.loaded = false;
     }
 
     ExternNavmeshContext::WorldGeomRecord rec{};
@@ -2750,6 +2773,8 @@ GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
     rec.rotation = glm::vec3(rot.x, rot.y, rot.z);
     rec.preferBin = preferBIN;
     rec.flags = flags == 0 ? WORLD_GEOM_PERSISTENT : flags;
+    if ((rec.flags & WORLD_GEOM_DYNAMIC) != 0)
+        rec.flags &= ~WORLD_GEOM_PERSISTENT;
     rec.groupId = (groupId && groupId[0] != '\0') ? std::string(groupId) : "default";
     ctx->worldGeometry[id] = std::move(rec);
     if (ctx->pendingWorldGeometrySet.insert(id).second)
