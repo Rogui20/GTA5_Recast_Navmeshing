@@ -168,6 +168,8 @@ namespace
             uint64_t fileMTime = 0;
             uint64_t fileSize = 0;
             bool preferBin = false;
+            uint32_t flags = WORLD_GEOM_PERSISTENT;
+            std::string groupId = "default";
             bool loaded = false;
             bool indexed = false;
             bool spatialCacheBuilt = false;
@@ -1006,7 +1008,7 @@ namespace
             return false;
 
         nlohmann::json j;
-        j["version"] = 1;
+        j["version"] = 2;
         j["cacheRoot"] = ctx.cacheRoot;
         j["sessionId"] = ctx.sessionId;
         j["bboxMin"] = { ctx.bboxMin.x, ctx.bboxMin.y, ctx.bboxMin.z };
@@ -1034,6 +1036,8 @@ namespace
         for (const auto& kv : ctx.worldGeometry)
         {
             const auto& rec = kv.second;
+            if ((rec.flags & WORLD_GEOM_PERSISTENT) == 0)
+                continue;
             nlohmann::json g;
             g["customID"] = rec.id;
             g["path"] = rec.path;
@@ -1045,6 +1049,8 @@ namespace
             g["geomHash"] = rec.geomHash;
             g["fileMTime"] = rec.fileMTime;
             g["fileSize"] = rec.fileSize;
+            g["flags"] = rec.flags;
+            g["groupId"] = rec.groupId;
             g["loaded"] = rec.loaded;
             g["indexed"] = rec.indexed;
             g["tileKeys"] = rec.touchedTileKeys;
@@ -1143,6 +1149,8 @@ namespace
             rec.id = g.value("customID", "");
             rec.path = g.value("path", "");
             rec.preferBin = g.value("preferBIN", false);
+            rec.flags = g.value("flags", static_cast<uint32_t>(WORLD_GEOM_PERSISTENT));
+            rec.groupId = g.value("groupId", std::string("default"));
             const auto p = g.value("position", nlohmann::json::array());
             const auto r = g.value("rotation", nlohmann::json::array());
             const auto bmin = g.value("worldBMin", nlohmann::json::array());
@@ -2642,6 +2650,18 @@ GTANAVVIEWER_API int QueueWorldGeometry(void* navMesh,
                                         const char* customID,
                                         bool preferBIN)
 {
+    return QueueWorldGeometryEx(navMesh, pathToGeometry, pos, rot, customID, preferBIN, WORLD_GEOM_PERSISTENT, "default");
+}
+
+GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
+                                          const char* pathToGeometry,
+                                          Vector3 pos,
+                                          Vector3 rot,
+                                          const char* customID,
+                                          bool preferBIN,
+                                          uint32_t flags,
+                                          const char* groupId)
+{
     if (!navMesh || !pathToGeometry)
         return 0;
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
@@ -2666,6 +2686,8 @@ GTANAVVIEWER_API int QueueWorldGeometry(void* navMesh,
     rec.position = glm::vec3(pos.x, pos.y, pos.z);
     rec.rotation = glm::vec3(rot.x, rot.y, rot.z);
     rec.preferBin = preferBIN;
+    rec.flags = flags == 0 ? WORLD_GEOM_PERSISTENT : flags;
+    rec.groupId = (groupId && groupId[0] != '\0') ? std::string(groupId) : "default";
     ctx->worldGeometry[id] = std::move(rec);
     if (ctx->pendingWorldGeometrySet.insert(id).second)
         ctx->pendingWorldGeometryQueue.push_back(id);
@@ -2673,6 +2695,49 @@ GTANAVVIEWER_API int QueueWorldGeometry(void* navMesh,
         SaveWorldTileManifestInternal(*ctx);
 
     return static_cast<int>(ctx->pendingWorldGeometryQueue.size());
+}
+
+GTANAVVIEWER_API bool RemoveWorldGeometryGroup(void* navMesh, const char* groupId, bool rebuildOrQueue)
+{
+    if (!navMesh || !groupId)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    if (!ctx->worldTileStreamingEnabled)
+        return false;
+
+    const std::string targetGroup(groupId);
+    std::vector<std::string> ids;
+    std::unordered_set<uint64_t> affectedTiles;
+    for (const auto& kv : ctx->worldGeometry)
+    {
+        if (kv.second.groupId == targetGroup)
+        {
+            ids.push_back(kv.first);
+            auto itTiles = ctx->geomToTiles.find(kv.first);
+            if (itTiles != ctx->geomToTiles.end())
+                affectedTiles.insert(itTiles->second.begin(), itTiles->second.end());
+        }
+    }
+    if (ids.empty())
+        return false;
+
+    for (const auto& id : ids)
+    {
+        RemoveGeometryFromWorldIndex(*ctx, id);
+        ctx->worldGeometry.erase(id);
+        ctx->pendingWorldGeometrySet.erase(id);
+        ctx->pendingWorldGeometryQueue.erase(
+            std::remove(ctx->pendingWorldGeometryQueue.begin(), ctx->pendingWorldGeometryQueue.end(), id),
+            ctx->pendingWorldGeometryQueue.end());
+    }
+
+    MarkTilesDirty(*ctx, affectedTiles);
+    if (rebuildOrQueue)
+        BuildQueuedWorldTiles(navMesh, static_cast<int>(affectedTiles.size()), 0, true);
+
+    if (ctx->worldAutoSaveManifest)
+        SaveWorldTileManifestInternal(*ctx);
+    return true;
 }
 
 GTANAVVIEWER_API int ProcessQueuedWorldGeometry(void* navMesh, int maxItems, int maxMilliseconds)
