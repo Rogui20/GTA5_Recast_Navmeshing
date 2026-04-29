@@ -202,10 +202,27 @@ public:
                               const NavmeshGenerationSettings& settings,
                               bool onlyExistingTiles,
                               std::vector<std::pair<int, int>>* outTiles = nullptr);
+    bool RebuildSingleTileFromGeometry(int tx,
+                                       int ty,
+                                       const std::vector<glm::vec3>& verts,
+                                       const std::vector<unsigned int>& indices,
+                                       const NavmeshGenerationSettings& settings,
+                                       uint64_t tileHash,
+                                       bool* outBuilt,
+                                       bool* outEmpty);
 
     bool HasTiledCache() const { return m_hasTiledCache; }
     bool GetCachedBounds(float* outBMin, float* outBMax) const;
     const std::unordered_map<uint64_t, uint64_t>& GetCachedTileHashes() const { return m_cachedTileHashes; }
+    void SetCachedTileHash(uint64_t tileKey, uint64_t hash) { m_cachedTileHashes[tileKey] = hash; }
+    bool GetCachedTileHash(uint64_t tileKey, uint64_t& outHash) const
+    {
+        auto it = m_cachedTileHashes.find(tileKey);
+        if (it == m_cachedTileHashes.end())
+            return false;
+        outHash = it->second;
+        return true;
+    }
     bool UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
                               const std::vector<unsigned int>& indices);
 
