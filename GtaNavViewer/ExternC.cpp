@@ -137,6 +137,7 @@ namespace
         bool worldTileStreamingEnabled = false;
         std::unordered_map<uint64_t, uint32_t> residentStamp;
         std::unordered_set<uint64_t> residentTiles;
+        std::unordered_map<uint32_t, std::unordered_set<uint64_t>> agentResidentTiles;
         uint32_t stampCounter = 0;
         std::unordered_map<uint64_t, TileDbIndexEntry> dbIndexCache;
         bool dbIndexLoaded = false;
@@ -2492,6 +2493,7 @@ GTANAVVIEWER_API void ClearAllLoadedTiles(void* navMesh)
 
     ctx->residentTiles.clear();
     ctx->residentStamp.clear();
+    ctx->agentResidentTiles.clear();
     ctx->stampCounter = 0;
     EnsureNavQuery(*ctx);
 }
@@ -2614,6 +2616,7 @@ GTANAVVIEWER_API bool BeginWorldTileSession(void* navMesh,
     ctx->worldGeometry.clear();
     ctx->residentTiles.clear();
     ctx->residentStamp.clear();
+    ctx->agentResidentTiles.clear();
     ctx->stampCounter = 0;
     ctx->dbIndexCache.clear();
     ctx->dbIndexLoaded = false;
@@ -2954,7 +2957,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
 
 GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
                                           const Vector3* positions,
-                                          const std::uint32_t* /*agentIds*/,
+                                          const std::uint32_t* agentIds,
                                           int agentCount,
                                           float radius,
                                           bool allowBuildIfMissing)
@@ -2976,12 +2979,14 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
         return 0;
 
     std::unordered_set<uint64_t> needed;
+    std::unordered_set<uint64_t> neededGlobal;
     int loadedFromDb = 0;
     int updatedResident = 0;
     int enqueuedBuild = 0;
 
     for (int i = 0; i < agentCount; ++i)
     {
+        std::unordered_set<uint64_t> neededForAgent;
         const glm::vec3 center(positions[i].x, positions[i].y, positions[i].z);
         const glm::vec3 bmin(center.x - radius, cachedBMin[1], center.z - radius);
         const glm::vec3 bmax(center.x + radius, cachedBMax[1], center.z + radius);
@@ -2989,10 +2994,27 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
         if (!ctx->navData.CollectTilesInBounds(bmin, bmax, false, tiles))
             continue;
         for (const auto& t : tiles)
-            needed.insert(MakeTileKey(t.first, t.second));
+        {
+            const uint64_t key = MakeTileKey(t.first, t.second);
+            needed.insert(key);
+            neededForAgent.insert(key);
+        }
+
+        if (agentIds)
+            ctx->agentResidentTiles[agentIds[i]] = std::move(neededForAgent);
     }
 
-    for (uint64_t key : needed)
+    if (agentIds)
+    {
+        for (const auto& entry : ctx->agentResidentTiles)
+            neededGlobal.insert(entry.second.begin(), entry.second.end());
+    }
+    else
+    {
+        neededGlobal = needed;
+    }
+
+    for (uint64_t key : neededGlobal)
     {
         const int tx = static_cast<int>(key >> 32);
         const int ty = static_cast<int>(key & 0xffffffffu);
@@ -3060,7 +3082,7 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
         bool found = false;
         for (uint64_t entry : ctx->residentTiles)
         {
-            if (needed.find(entry) != needed.end())
+            if (neededGlobal.find(entry) != neededGlobal.end())
                 continue;
             const auto itStamp = ctx->residentStamp.find(entry);
             const uint32_t stamp = itStamp != ctx->residentStamp.end() ? itStamp->second : 0;
@@ -3092,6 +3114,57 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
     printf("[ExternC] StreamTilesForAgents: agents=%d neededTiles=%zu loadedFromDb=%d enqueuedBuild=%d alreadyResident=%d residentTiles=%zu\n",
            agentCount, needed.size(), loadedFromDb, enqueuedBuild, updatedResident, ctx->residentTiles.size());
     return static_cast<int>(needed.size());
+}
+
+GTANAVVIEWER_API void RemoveStreamingAgent(void* navMesh, std::uint32_t agentId)
+{
+    if (!navMesh)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    dtNavMesh* nav = ctx->navData.GetNavMesh();
+    if (!nav)
+        return;
+
+    ctx->agentResidentTiles.erase(agentId);
+    std::unordered_set<uint64_t> neededGlobal;
+    for (const auto& entry : ctx->agentResidentTiles)
+        neededGlobal.insert(entry.second.begin(), entry.second.end());
+
+    std::vector<uint64_t> toUnload;
+    toUnload.reserve(ctx->residentTiles.size());
+    for (uint64_t key : ctx->residentTiles)
+    {
+        if (neededGlobal.find(key) == neededGlobal.end())
+            toUnload.push_back(key);
+    }
+
+    for (uint64_t key : toUnload)
+    {
+        const int tx = static_cast<int>(key >> 32);
+        const int ty = static_cast<int>(key & 0xffffffffu);
+        const dtTileRef ref = nav->getTileRefAt(tx, ty, 0);
+        if (ref != 0)
+        {
+            unsigned char* tileData = nullptr;
+            int tileDataSize = 0;
+            const dtStatus status = nav->removeTile(ref, &tileData, &tileDataSize);
+            if (dtStatusSucceed(status) && tileData)
+                dtFree(tileData);
+        }
+        ctx->residentTiles.erase(key);
+        ctx->residentStamp.erase(key);
+    }
+
+    EnsureNavQuery(*ctx);
+}
+
+GTANAVVIEWER_API void ClearStreamingAgents(void* navMesh)
+{
+    if (!navMesh)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->agentResidentTiles.clear();
+    ClearAllLoadedTiles(navMesh);
 }
 
 GTANAVVIEWER_API int GetWorldTileStreamingStats(void* navMesh,

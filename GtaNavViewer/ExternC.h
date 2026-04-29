@@ -288,6 +288,8 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
                                           int agentCount,
                                           float radius,
                                           bool allowBuildIfMissing);
+GTANAVVIEWER_API void RemoveStreamingAgent(void* navMesh, std::uint32_t agentId);
+GTANAVVIEWER_API void ClearStreamingAgents(void* navMesh);
 GTANAVVIEWER_API int GetWorldTileStreamingStats(void* navMesh,
                                                 int* outQueuedGeometries,
                                                 int* outIndexedGeometries,
