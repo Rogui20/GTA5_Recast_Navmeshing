@@ -2164,14 +2164,35 @@ GTANAVVIEWER_API bool UpdateGeometry(void* navMesh,
         auto it = ctx->worldGeometry.find(customID);
         if (it == ctx->worldGeometry.end())
             return false;
+
         auto& rec = it->second;
+        std::unordered_set<uint64_t> oldTiles;
+        auto prevIt = ctx->geomToTiles.find(customID);
+        if (prevIt != ctx->geomToTiles.end())
+            oldTiles = prevIt->second;
+        else
+            oldTiles.insert(rec.touchedTileKeys.begin(), rec.touchedTileKeys.end());
+
+        if (!oldTiles.empty())
+            MarkTilesDirty(*ctx, oldTiles);
+
+        RemoveGeometryFromWorldIndex(*ctx, customID);
+
         if (pos)
             rec.position = glm::vec3(pos->x, pos->y, pos->z);
         if (rot)
             rec.rotation = glm::vec3(rot->x, rot->y, rot->z);
-        auto prevIt = ctx->geomToTiles.find(customID);
-        if (prevIt != ctx->geomToTiles.end())
-            MarkTilesDirty(*ctx, prevIt->second);
+
+        rec.touchedTileKeys.clear();
+        rec.indexed = false;
+        rec.loaded = false;
+        rec.spatialCacheBuilt = false;
+        rec.transformedVertices.clear();
+        rec.transformedHash = 0;
+        rec.spatialCache.sourceHash = 0;
+        rec.spatialCache.chunks.clear();
+        rec.spatialCache.cellToChunks.clear();
+
         if (ctx->pendingWorldGeometrySet.insert(customID).second)
             ctx->pendingWorldGeometryQueue.push_back(customID);
         if (ctx->worldAutoSaveManifest)
@@ -2212,9 +2233,18 @@ GTANAVVIEWER_API bool RemoveGeometry(void* navMesh, const char* customID)
     if (ctx->worldTileStreamingEnabled)
     {
         const std::string id(customID);
+        std::unordered_set<uint64_t> oldTiles;
         auto itTiles = ctx->geomToTiles.find(id);
         if (itTiles != ctx->geomToTiles.end())
-            MarkTilesDirty(*ctx, itTiles->second);
+            oldTiles = itTiles->second;
+        else
+        {
+            auto itGeom = ctx->worldGeometry.find(id);
+            if (itGeom != ctx->worldGeometry.end())
+                oldTiles.insert(itGeom->second.touchedTileKeys.begin(), itGeom->second.touchedTileKeys.end());
+        }
+        if (!oldTiles.empty())
+            MarkTilesDirty(*ctx, oldTiles);
         RemoveGeometryFromWorldIndex(*ctx, id);
         ctx->worldGeometry.erase(id);
         ctx->pendingWorldGeometrySet.erase(id);
