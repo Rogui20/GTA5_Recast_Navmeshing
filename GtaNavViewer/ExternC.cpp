@@ -2934,12 +2934,21 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
         if (!alreadyLoaded)
         {
             bool loaded = false;
+            bool shouldBuild = false;
+
             const uint64_t computedHash = ComputeWorldTileHash(*ctx, tx, ty);
+
             const auto itEmpty = ctx->emptyWorldTileHashes.find(key);
-            const bool knownEmpty = itEmpty != ctx->emptyWorldTileHashes.end() &&
-                                    ctx->emptyWorldTiles.find(key) != ctx->emptyWorldTiles.end() &&
-                                    itEmpty->second == computedHash;
-            const bool knownFailed = ctx->failedWorldTiles.find(key) != ctx->failedWorldTiles.end();
+            const bool knownEmpty =
+                ctx->emptyWorldTiles.find(key) != ctx->emptyWorldTiles.end() &&
+                itEmpty != ctx->emptyWorldTileHashes.end() &&
+                itEmpty->second == computedHash;
+
+            const bool knownFailed =
+                ctx->failedWorldTiles.find(key) != ctx->failedWorldTiles.end();
+
+            if (knownEmpty || knownFailed)
+                continue;
 
             if (hasCacheFile && indexReady)
             {
@@ -2947,22 +2956,23 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
                 if (itDb != ctx->dbIndexCache.end())
                 {
                     if (itDb->second.geomHash != 0 && itDb->second.geomHash != computedHash)
-                    {
-                        EnqueueTileBuild(*ctx, key);
-                    }
+                        shouldBuild = true;
                     else
-                    {
                         LoadTileFromDb(cachePath.string().c_str(), nav, tx, ty, loaded, &ctx->dbIndexCache);
-                    }
                 }
                 else
                 {
-                    EnqueueTileBuild(*ctx, key);
+                    shouldBuild = true;
                 }
             }
+            else
+            {
+                shouldBuild = true;
+            }
+
             if (loaded)
                 ++loadedFromDb;
-            else if (allowBuildIfMissing && ctx->worldTileStreamingEnabled && !knownEmpty && !knownFailed)
+            else if (shouldBuild && allowBuildIfMissing && ctx->worldTileStreamingEnabled)
             {
                 EnqueueTileBuild(*ctx, key);
                 ++enqueuedBuild;
