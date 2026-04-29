@@ -1711,6 +1711,66 @@ bool NavMeshData::RebuildSpecificTiles(const std::vector<std::pair<int, int>>& t
     return true;
 }
 
+bool NavMeshData::RebuildSingleTileFromGeometry(int tx,
+                                                int ty,
+                                                const std::vector<glm::vec3>& verts,
+                                                const std::vector<unsigned int>& indices,
+                                                const NavmeshGenerationSettings& settings,
+                                                uint64_t tileHash,
+                                                bool* outBuilt,
+                                                bool* outEmpty)
+{
+    if (outBuilt) *outBuilt = false;
+    if (outEmpty) *outEmpty = false;
+
+    if (!m_nav || !m_hasTiledCache)
+        return false;
+    if (tx < 0 || ty < 0 || tx >= m_cachedTileWidthCount || ty >= m_cachedTileHeightCount)
+        return false;
+
+    if (settings.mode != NavmeshBuildMode::Tiled ||
+        fabsf(settings.cellSize - m_cachedSettings.cellSize) > 1e-3f ||
+        fabsf(settings.cellHeight - m_cachedSettings.cellHeight) > 1e-3f ||
+        settings.tileSize != m_cachedSettings.tileSize)
+    {
+        printf("[NavMeshData] RebuildSingleTileFromGeometry: configuracao atual difere da cacheada.\n");
+    }
+
+    std::vector<float> localVerts;
+    std::vector<int> localTris;
+    localVerts.reserve(verts.size() * 3);
+    for (const auto& v : verts)
+    {
+        localVerts.push_back(v.x);
+        localVerts.push_back(v.y);
+        localVerts.push_back(v.z);
+    }
+    localTris.reserve(indices.size());
+    for (unsigned int i : indices)
+        localTris.push_back(static_cast<int>(i));
+
+    LoggingRcContext ctx;
+    NavmeshBuildInput input{ctx, localVerts, localTris};
+    input.nverts = static_cast<int>(localVerts.size() / 3);
+    input.ntris = static_cast<int>(localTris.size() / 3);
+    rcVcopy(input.meshBMin, m_gridBMin);
+    rcVcopy(input.meshBMax, m_gridBMax);
+    input.baseCfg = m_cachedBaseCfg;
+    input.offmeshLinks = &m_offmeshLinks;
+
+    bool built = false;
+    bool empty = false;
+    const bool ok = BuildSingleTile(input, m_cachedSettings, tx, ty, m_nav, built, empty);
+    if (!ok)
+        return false;
+
+    const uint64_t tileKey = (static_cast<uint64_t>(static_cast<uint32_t>(tx)) << 32) | static_cast<uint32_t>(ty);
+    m_cachedTileHashes[tileKey] = tileHash;
+    if (outBuilt) *outBuilt = built;
+    if (outEmpty) *outEmpty = empty;
+    return true;
+}
+
 bool NavMeshData::EstimateTileGrid(const NavmeshGenerationSettings& settings,
                                    const float* bmin,
                                    const float* bmax,
