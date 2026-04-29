@@ -179,6 +179,9 @@ namespace
         std::unordered_set<uint64_t> dirtyWorldTiles;
         std::deque<uint64_t> pendingTileBuildQueue;
         std::unordered_set<uint64_t> pendingTileBuildSet;
+        std::unordered_set<uint64_t> emptyWorldTiles;
+        std::unordered_map<uint64_t, uint64_t> emptyWorldTileHashes;
+        std::unordered_set<uint64_t> failedWorldTiles;
         bool worldManifestLoaded = false;
         bool worldAutoSaveManifest = false;
         std::unordered_map<std::uint32_t, SimAgentState> simAgents;
@@ -1045,6 +1048,12 @@ namespace
         j["pendingWorldGeometryQueue"] = ctx.pendingWorldGeometryQueue;
         j["dirtyWorldTiles"] = std::vector<uint64_t>(ctx.dirtyWorldTiles.begin(), ctx.dirtyWorldTiles.end());
         j["pendingTileBuildQueue"] = std::vector<uint64_t>(ctx.pendingTileBuildQueue.begin(), ctx.pendingTileBuildQueue.end());
+        j["emptyWorldTiles"] = std::vector<uint64_t>(ctx.emptyWorldTiles.begin(), ctx.emptyWorldTiles.end());
+        j["failedWorldTiles"] = std::vector<uint64_t>(ctx.failedWorldTiles.begin(), ctx.failedWorldTiles.end());
+        nlohmann::json emptyHash = nlohmann::json::object();
+        for (const auto& kv : ctx.emptyWorldTileHashes)
+            emptyHash[std::to_string(kv.first)] = kv.second;
+        j["emptyWorldTileHashes"] = std::move(emptyHash);
         nlohmann::json tileToGeom = nlohmann::json::object();
         for (const auto& kv : ctx.tileToGeometryIds)
             tileToGeom[std::to_string(kv.first)] = kv.second;
@@ -1114,6 +1123,9 @@ namespace
         ctx.pendingTileBuildSet.clear();
         ctx.pendingWorldGeometryQueue.clear();
         ctx.pendingWorldGeometrySet.clear();
+        ctx.emptyWorldTiles.clear();
+        ctx.emptyWorldTileHashes.clear();
+        ctx.failedWorldTiles.clear();
 
         int changed = 0;
         int removed = 0;
@@ -1163,7 +1175,9 @@ namespace
                 ++loadedCount;
                 for (uint64_t k : rec.touchedTileKeys)
                 {
-                    ctx.tileToGeometryIds[k].push_back(rec.id);
+                    auto& vec = ctx.tileToGeometryIds[k];
+                    if (std::find(vec.begin(), vec.end(), rec.id) == vec.end())
+                        vec.push_back(rec.id);
                     ctx.geomToTiles[rec.id].insert(k);
                 }
             }
@@ -1187,6 +1201,18 @@ namespace
         const auto pendingTiles = j.value("pendingTileBuildQueue", std::vector<uint64_t>{});
         for (uint64_t key : pendingTiles)
             EnqueueTileBuild(ctx, key);
+        const auto emptyTiles = j.value("emptyWorldTiles", std::vector<uint64_t>{});
+        for (uint64_t key : emptyTiles)
+            ctx.emptyWorldTiles.insert(key);
+        const auto failedTiles = j.value("failedWorldTiles", std::vector<uint64_t>{});
+        for (uint64_t key : failedTiles)
+            ctx.failedWorldTiles.insert(key);
+        const auto emptyHashesJson = j.value("emptyWorldTileHashes", nlohmann::json::object());
+        if (emptyHashesJson.is_object())
+        {
+            for (auto it = emptyHashesJson.begin(); it != emptyHashesJson.end(); ++it)
+                ctx.emptyWorldTileHashes[std::stoull(it.key())] = it.value().get<uint64_t>();
+        }
         for (uint64_t key : ctx.dirtyWorldTiles)
             EnqueueTileBuild(ctx, key);
 
@@ -1357,17 +1383,19 @@ namespace
         record.spatialCacheBuilt = !record.spatialCache.chunks.empty();
     }
 
-    void AppendGeometryForTile(ExternNavmeshContext::WorldGeomRecord& rec,
-                               const glm::vec3& tileMin,
-                               const glm::vec3& tileMax,
-                               std::vector<glm::vec3>& outVerts,
-                               std::vector<unsigned int>& outIndices)
+    size_t AppendGeometryForTile(ExternNavmeshContext::WorldGeomRecord& rec,
+                                 const glm::vec3& tileMin,
+                                 const glm::vec3& tileMax,
+                                 std::vector<glm::vec3>& outVerts,
+                                 std::vector<unsigned int>& outIndices)
     {
         if (!rec.loaded || !rec.source.Valid())
-            return;
+            return 0;
 
         if (!rec.spatialCacheBuilt || rec.spatialCache.sourceHash != rec.geomHash)
             BuildSpatialCacheForGeometry(rec, 256);
+
+        const size_t beforeIndices = outIndices.size();
 
         glm::mat3 rot = GetRotationMatrix(rec.rotation);
         std::vector<glm::vec3> transformed;
@@ -1422,12 +1450,13 @@ namespace
                 for (uint32_t triIdx : chunk.triIndices)
                     appendTri(triIdx, outIndices);
             }
-            return;
+            return (outIndices.size() - beforeIndices) / 3;
         }
 
         const uint32_t triCount = static_cast<uint32_t>(rec.source.indices.size() / 3);
         for (uint32_t triIdx = 0; triIdx < triCount; ++triIdx)
             appendTri(triIdx, outIndices);
+        return (outIndices.size() - beforeIndices) / 3;
     }
 
     uint64_t ComputeWorldTileHash(ExternNavmeshContext& ctx, int tx, int ty)
@@ -1502,6 +1531,9 @@ namespace
         const glm::vec3 tileMax(params->orig[0] + (tx + 1) * params->tileWidth + border,
                                 ctx.bboxMax.y + border,
                                 params->orig[2] + (ty + 1) * params->tileHeight + border);
+        uint64_t totalRawTris = 0;
+        uint64_t totalFilteredTris = 0;
+        std::vector<std::pair<std::string, size_t>> perGeomAdded;
 
         for (const std::string& geomId : itGeoms->second)
         {
@@ -1541,6 +1573,8 @@ namespace
                 rec.fileSize = fsize;
             }
 
+            totalRawTris += rec.source.indices.size() / 3;
+
             if (rec.worldBMin.x > tileMax.x || rec.worldBMax.x < tileMin.x ||
                 rec.worldBMin.y > tileMax.y || rec.worldBMax.y < tileMin.y ||
                 rec.worldBMin.z > tileMax.z || rec.worldBMax.z < tileMin.z)
@@ -1548,8 +1582,32 @@ namespace
                 continue;
             }
 
-            AppendGeometryForTile(rec, tileMin, tileMax, outVerts, outIndices);
+            const size_t added = AppendGeometryForTile(rec, tileMin, tileMax, outVerts, outIndices);
+            if (added > 0)
+            {
+                totalFilteredTris += added;
+                perGeomAdded.emplace_back(rec.id, added);
+                if (added > 1000000)
+                    printf("[WorldTile] Geometry triCount muito alto no tile %d,%d: id=%s path=%s tris=%zu\n",
+                           tx, ty, rec.id.c_str(), rec.path.c_str(), added);
+            }
         }
+
+        std::sort(perGeomAdded.begin(), perGeomAdded.end(), [](const auto& a, const auto& b)
+        {
+            return a.second > b.second;
+        });
+        const size_t topN = std::min<size_t>(10, perGeomAdded.size());
+        for (size_t i = 0; i < topN; ++i)
+        {
+            printf("[WorldTile] Tile %d,%d topGeom[%zu]=%s tris=%zu\n",
+                   tx, ty, i, perGeomAdded[i].first.c_str(), perGeomAdded[i].second);
+        }
+        printf("[WorldTile] Tile %d,%d tris raw=%llu filtered=%llu geoms=%zu\n",
+               tx, ty,
+               static_cast<unsigned long long>(totalRawTris),
+               static_cast<unsigned long long>(totalFilteredTris),
+               itGeoms->second.size());
 
         return !outVerts.empty() && !outIndices.empty();
     }
@@ -2176,6 +2234,12 @@ GTANAVVIEWER_API bool InitTiledGrid(void* navMesh, Vector3 bmin, Vector3 bmax)
     ctx->dirtyWorldTiles.clear();
     ctx->pendingTileBuildQueue.clear();
     ctx->pendingTileBuildSet.clear();
+    ctx->emptyWorldTiles.clear();
+    ctx->emptyWorldTileHashes.clear();
+    ctx->failedWorldTiles.clear();
+    ctx->emptyWorldTiles.clear();
+    ctx->emptyWorldTileHashes.clear();
+    ctx->failedWorldTiles.clear();
     return EnsureNavQuery(*ctx);
 }
 
@@ -2656,6 +2720,9 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
             }
             ++emptied;
             ++built;
+            ctx->emptyWorldTiles.insert(tileKey);
+            ctx->emptyWorldTileHashes[tileKey] = worldHash;
+            ctx->failedWorldTiles.erase(tileKey);
             printf("[WorldTile] Build tile %d,%d geomCount=0 triCount=0 empty=1 hash=%llu\n",
                    tx, ty, static_cast<unsigned long long>(worldHash));
             continue;
@@ -2664,7 +2731,22 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         bool builtTile = false;
         bool emptyTile = false;
         if (!ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings, worldHash, &builtTile, &emptyTile))
+        {
             ++failed;
+            ctx->failedWorldTiles.insert(tileKey);
+        }
+        else if (emptyTile)
+        {
+            ctx->emptyWorldTiles.insert(tileKey);
+            ctx->emptyWorldTileHashes[tileKey] = worldHash;
+            ctx->failedWorldTiles.erase(tileKey);
+        }
+        else if (builtTile)
+        {
+            ctx->emptyWorldTiles.erase(tileKey);
+            ctx->emptyWorldTileHashes.erase(tileKey);
+            ctx->failedWorldTiles.erase(tileKey);
+        }
 
         ++built;
         printf("[WorldTile] Build tile %d,%d geomCount=%zu triCount=%zu built=%d failed=%d hash=%llu\n",
@@ -2676,7 +2758,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
                static_cast<unsigned long long>(worldHash));
     }
 
-    if (saveToCache)
+    if (saveToCache && !processedTileKeys.empty() && built > 0)
     {
         std::filesystem::path cachePath = GetSessionCachePath(*ctx);
         const auto& hashes = ctx->navData.GetCachedTileHashes();
@@ -2751,9 +2833,15 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
         if (!alreadyLoaded)
         {
             bool loaded = false;
+            const uint64_t computedHash = ComputeWorldTileHash(*ctx, tx, ty);
+            const auto itEmpty = ctx->emptyWorldTileHashes.find(key);
+            const bool knownEmpty = itEmpty != ctx->emptyWorldTileHashes.end() &&
+                                    ctx->emptyWorldTiles.find(key) != ctx->emptyWorldTiles.end() &&
+                                    itEmpty->second == computedHash;
+            const bool knownFailed = ctx->failedWorldTiles.find(key) != ctx->failedWorldTiles.end();
+
             if (hasCacheFile && indexReady)
             {
-                const uint64_t computedHash = ComputeWorldTileHash(*ctx, tx, ty);
                 auto itDb = ctx->dbIndexCache.find(key);
                 if (itDb != ctx->dbIndexCache.end())
                 {
@@ -2773,7 +2861,7 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
             }
             if (loaded)
                 ++loadedFromDb;
-            else if (allowBuildIfMissing && ctx->worldTileStreamingEnabled)
+            else if (allowBuildIfMissing && ctx->worldTileStreamingEnabled && !knownEmpty && !knownFailed)
             {
                 EnqueueTileBuild(*ctx, key);
                 ++enqueuedBuild;
