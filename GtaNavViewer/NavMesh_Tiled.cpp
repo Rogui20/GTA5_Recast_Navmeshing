@@ -204,6 +204,16 @@ namespace
                                 triSource.data(), localTris,
                                 triAreas.data());
 
+        int walkableCount = 0;
+        for (int i = 0; i < localTris; ++i)
+        {
+            if (triAreas[i] != RC_NULL_AREA)
+                ++walkableCount;
+        }
+
+        printf("[NavMeshData] Tile %d,%d walkableTris=%d/%d slope=%.1f\n",
+            tileX, tileY, walkableCount, localTris, cfg.walkableSlopeAngle);
+
         if (!rcRasterizeTriangles(&input.ctx,
                                   input.verts.data(), input.nverts,
                                   triSource.data(),
