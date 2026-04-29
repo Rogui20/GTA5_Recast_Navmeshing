@@ -28,6 +28,11 @@
 
 namespace
 {
+    inline uint64_t MakeGridCellKey(int cx, int cz)
+    {
+        return (static_cast<uint64_t>(static_cast<uint32_t>(cx)) << 32) | static_cast<uint32_t>(cz);
+    }
+
     struct LoadedGeometry
     {
         std::vector<glm::vec3> vertices;
@@ -157,7 +162,7 @@ namespace
                 float cellSize = 64.0f;
                 float originX = 0.0f;
                 float originZ = 0.0f;
-                std::unordered_map<uint64_t, uint32_t> cellToChunk;
+                std::unordered_map<uint64_t, std::vector<int>> cellToChunks;
             };
             std::string id;
             std::string path;
@@ -1367,7 +1372,7 @@ namespace
     void BuildSpatialCacheForGeometry(ExternNavmeshContext::WorldGeomRecord& record, int targetTrisPerChunk)
     {
         record.spatialCache.chunks.clear();
-        record.spatialCache.cellToChunk.clear();
+        record.spatialCache.cellToChunks.clear();
         record.spatialCache.sourceHash = record.geomHash;
         record.spatialCacheBuilt = false;
         if (!record.source.Valid())
@@ -1415,28 +1420,19 @@ namespace
             {
                 for (int cx = minCx; cx <= maxCx; ++cx)
                 {
-                    const uint64_t cellKey = MakeTileKey(cx, cz);
-                    auto itChunk = record.spatialCache.cellToChunk.find(cellKey);
-                    if (itChunk == record.spatialCache.cellToChunk.end())
-                    {
-                        ExternNavmeshContext::WorldGeomRecord::WorldGeomChunk chunk{};
-                        chunk.bmin = glm::vec3(FLT_MAX);
-                        chunk.bmax = glm::vec3(-FLT_MAX);
-                        const uint32_t idx = static_cast<uint32_t>(record.spatialCache.chunks.size());
-                        record.spatialCache.cellToChunk.emplace(cellKey, idx);
-                        record.spatialCache.chunks.push_back(std::move(chunk));
-                        itChunk = record.spatialCache.cellToChunk.find(cellKey);
-                    }
-
-                    auto& chunk = record.spatialCache.chunks[itChunk->second];
+                    const uint64_t cellKey = MakeGridCellKey(cx, cz);
+                    ExternNavmeshContext::WorldGeomRecord::WorldGeomChunk chunk{};
+                    chunk.bmin = triMin;
+                    chunk.bmax = triMax;
                     chunk.triIndices.push_back(static_cast<uint32_t>(tri));
-                    chunk.bmin = glm::min(chunk.bmin, triMin);
-                    chunk.bmax = glm::max(chunk.bmax, triMax);
+                    const int chunkIndex = static_cast<int>(record.spatialCache.chunks.size());
+                    record.spatialCache.chunks.push_back(std::move(chunk));
+                    record.spatialCache.cellToChunks[cellKey].push_back(chunkIndex);
                 }
             }
         }
 
-        record.spatialCacheBuilt = !record.spatialCache.chunks.empty() && !record.spatialCache.cellToChunk.empty();
+        record.spatialCacheBuilt = !record.spatialCache.chunks.empty() && !record.spatialCache.cellToChunks.empty();
     }
 
     size_t AppendGeometryForTile(ExternNavmeshContext::WorldGeomRecord& rec,
@@ -1499,25 +1495,63 @@ namespace
             const int minCz = static_cast<int>(std::floor((tileMin.z - rec.spatialCache.originZ) / rec.spatialCache.cellSize));
             const int maxCz = static_cast<int>(std::floor((tileMax.z - rec.spatialCache.originZ) / rec.spatialCache.cellSize));
             std::unordered_set<uint32_t> usedTriIndices;
+            uint64_t debugCellsVisited = 0;
+            uint64_t debugChunksVisited = 0;
+            uint64_t debugTrisTested = 0;
+            uint64_t debugTrisAccepted = 0;
+            float acceptedMinY = FLT_MAX;
+            float acceptedMaxY = -FLT_MAX;
             for (int cz = minCz; cz <= maxCz; ++cz)
             {
                 for (int cx = minCx; cx <= maxCx; ++cx)
                 {
-                    const uint64_t cellKey = MakeTileKey(cx, cz);
-                    auto itChunkIdx = rec.spatialCache.cellToChunk.find(cellKey);
-                    if (itChunkIdx == rec.spatialCache.cellToChunk.end())
+                    ++debugCellsVisited;
+                    const uint64_t cellKey = MakeGridCellKey(cx, cz);
+                    auto itChunkIdxs = rec.spatialCache.cellToChunks.find(cellKey);
+                    if (itChunkIdxs == rec.spatialCache.cellToChunks.end())
                         continue;
-                    const auto& chunk = rec.spatialCache.chunks[itChunkIdx->second];
-                    if (!triOverlaps(chunk.bmin, chunk.bmax))
-                        continue;
-                    for (uint32_t triIdx : chunk.triIndices)
+                    for (int chunkIdx : itChunkIdxs->second)
                     {
-                        if (!usedTriIndices.insert(triIdx).second)
+                        if (chunkIdx < 0 || static_cast<size_t>(chunkIdx) >= rec.spatialCache.chunks.size())
                             continue;
-                        appendTri(triIdx, outIndices);
+                        ++debugChunksVisited;
+                        const auto& chunk = rec.spatialCache.chunks[static_cast<size_t>(chunkIdx)];
+                        if (!triOverlaps(chunk.bmin, chunk.bmax))
+                            continue;
+                        for (uint32_t triIdx : chunk.triIndices)
+                        {
+                            if (!usedTriIndices.insert(triIdx).second)
+                                continue;
+                            ++debugTrisTested;
+                            const size_t prevCount = outIndices.size();
+                            appendTri(triIdx, outIndices);
+                            if (outIndices.size() > prevCount)
+                            {
+                                ++debugTrisAccepted;
+                                const unsigned int i0 = rec.source.indices[triIdx * 3 + 0];
+                                const unsigned int i1 = rec.source.indices[triIdx * 3 + 1];
+                                const unsigned int i2 = rec.source.indices[triIdx * 3 + 2];
+                                const glm::vec3& v0 = rec.transformedVertices[i0];
+                                const glm::vec3& v1 = rec.transformedVertices[i1];
+                                const glm::vec3& v2 = rec.transformedVertices[i2];
+                                const glm::vec3 triMin = glm::min(glm::min(v0, v1), v2);
+                                const glm::vec3 triMax = glm::max(glm::max(v0, v1), v2);
+                                acceptedMinY = std::min(acceptedMinY, triMin.y);
+                                acceptedMaxY = std::max(acceptedMaxY, triMax.y);
+                            }
+                        }
                     }
                 }
             }
+            printf("[WorldTile][AppendGeometryForTile] geom=%s cells=%llu chunks=%llu tested=%llu accepted=%llu acceptedY=[%.3f, %.3f] tileY=[%.3f, %.3f]\n",
+                   rec.id.c_str(),
+                   static_cast<unsigned long long>(debugCellsVisited),
+                   static_cast<unsigned long long>(debugChunksVisited),
+                   static_cast<unsigned long long>(debugTrisTested),
+                   static_cast<unsigned long long>(debugTrisAccepted),
+                   (debugTrisAccepted > 0 ? acceptedMinY : 0.0f),
+                   (debugTrisAccepted > 0 ? acceptedMaxY : 0.0f),
+                   tileMin.y, tileMax.y);
             return (outIndices.size() - beforeIndices) / 3;
         }
 
@@ -1608,6 +1642,10 @@ namespace
                                 params->orig[2] + (ty + 1) * params->tileHeight + border);
         uint64_t totalRawTris = 0;
         uint64_t totalFilteredTris = 0;
+        uint64_t filteredBelow0 = 0;
+        uint64_t filteredY0_50 = 0;
+        uint64_t filteredY50_150 = 0;
+        uint64_t filteredY150Plus = 0;
         std::vector<std::pair<std::string, size_t>> perGeomAdded;
         static constexpr uint64_t MAX_INPUT_TRIS_PER_TILE = 20000000ull;
 
@@ -1662,6 +1700,18 @@ namespace
             if (added > 0)
             {
                 totalFilteredTris += added;
+                const size_t startIdx = outIndices.size() - (added * 3);
+                for (size_t i = startIdx; i + 2 < outIndices.size(); i += 3)
+                {
+                    const glm::vec3& a = outVerts[outIndices[i + 0]];
+                    const glm::vec3& b = outVerts[outIndices[i + 1]];
+                    const glm::vec3& c = outVerts[outIndices[i + 2]];
+                    const float triCenterY = (a.y + b.y + c.y) / 3.0f;
+                    if (triCenterY < 0.0f) ++filteredBelow0;
+                    else if (triCenterY < 50.0f) ++filteredY0_50;
+                    else if (triCenterY < 150.0f) ++filteredY50_150;
+                    else ++filteredY150Plus;
+                }
                 perGeomAdded.emplace_back(rec.id, added);
                 const uint64_t sourceTris = rec.source.indices.size() / 3;
                 if (added > sourceTris)
@@ -1708,6 +1758,12 @@ namespace
                static_cast<unsigned long long>(totalRawTris),
                static_cast<unsigned long long>(totalFilteredTris),
                itGeoms->second.size());
+        printf("[WorldTile] Tile %d,%d filteredYDist below0=%llu y0_50=%llu y50_150=%llu y150plus=%llu\n",
+               tx, ty,
+               static_cast<unsigned long long>(filteredBelow0),
+               static_cast<unsigned long long>(filteredY0_50),
+               static_cast<unsigned long long>(filteredY50_150),
+               static_cast<unsigned long long>(filteredY150Plus));
 
         return !outVerts.empty() && !outIndices.empty();
     }
