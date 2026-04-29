@@ -2189,7 +2189,9 @@ GTANAVVIEWER_API bool UpdateGeometry(void* navMesh,
         rec.spatialCacheBuilt = false;
         rec.transformedVertices.clear();
         rec.transformedHash = 0;
-        rec.sourceHash = 0;
+        rec.spatialCache.sourceHash = 0;
+        rec.spatialCache.chunks.clear();
+        rec.spatialCache.cellToChunks.clear();
 
         if (ctx->pendingWorldGeometrySet.insert(customID).second)
             ctx->pendingWorldGeometryQueue.push_back(customID);
