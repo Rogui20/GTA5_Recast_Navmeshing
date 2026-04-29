@@ -153,6 +153,10 @@ namespace
             {
                 std::vector<WorldGeomChunk> chunks;
                 uint64_t sourceHash = 0;
+                float cellSize = 64.0f;
+                float originX = 0.0f;
+                float originZ = 0.0f;
+                std::unordered_map<uint64_t, uint32_t> cellToChunk;
             };
             std::string id;
             std::string path;
@@ -169,6 +173,8 @@ namespace
             bool spatialCacheBuilt = false;
             std::vector<uint64_t> touchedTileKeys;
             WorldGeomSpatialCache spatialCache;
+            std::vector<glm::vec3> transformedVertices;
+            uint64_t transformedHash = 0;
             LoadedGeometry source;
         };
         std::unordered_map<std::string, WorldGeomRecord> worldGeometry;
@@ -1336,9 +1342,23 @@ namespace
         return (mtime != 0 && fsize != 0 && mtime == record.fileMTime && fsize == record.fileSize);
     }
 
+    void EnsureTransformedVertices(ExternNavmeshContext::WorldGeomRecord& record)
+    {
+        if (record.transformedHash == record.geomHash && record.transformedVertices.size() == record.source.vertices.size())
+            return;
+
+        glm::mat3 rot = GetRotationMatrix(record.rotation);
+        record.transformedVertices.clear();
+        record.transformedVertices.reserve(record.source.vertices.size());
+        for (const auto& v : record.source.vertices)
+            record.transformedVertices.push_back(rot * v + record.position);
+        record.transformedHash = record.geomHash;
+    }
+
     void BuildSpatialCacheForGeometry(ExternNavmeshContext::WorldGeomRecord& record, int targetTrisPerChunk)
     {
         record.spatialCache.chunks.clear();
+        record.spatialCache.cellToChunk.clear();
         record.spatialCache.sourceHash = record.geomHash;
         record.spatialCacheBuilt = false;
         if (!record.source.Valid())
@@ -1348,39 +1368,66 @@ namespace
         if (triCount <= 0)
             return;
 
-        const int trisPerChunk = std::max(16, targetTrisPerChunk);
-        const int chunkCount = std::max(1, (triCount + trisPerChunk - 1) / trisPerChunk);
-        std::vector<std::pair<glm::vec3, glm::vec3>> triBounds(static_cast<size_t>(triCount));
-        glm::mat3 rot = GetRotationMatrix(record.rotation);
+        EnsureTransformedVertices(record);
+        const float triPerChunkHint = static_cast<float>(std::max(32, targetTrisPerChunk));
+        const float triDensity = std::sqrt(triPerChunkHint);
+        const float triWorldX = std::max(1.0f, record.worldBMax.x - record.worldBMin.x);
+        const float triWorldZ = std::max(1.0f, record.worldBMax.z - record.worldBMin.z);
+        const float tileWorld = std::max(16.0f, std::max(triWorldX, triWorldZ) / std::max(1.0f, triDensity));
+        record.spatialCache.cellSize = std::max(64.0f, tileWorld);
+        record.spatialCache.originX = record.worldBMin.x;
+        record.spatialCache.originZ = record.worldBMin.z;
+
+        auto cellCoordX = [&](float x) -> int
+        {
+            return static_cast<int>(std::floor((x - record.spatialCache.originX) / record.spatialCache.cellSize));
+        };
+        auto cellCoordZ = [&](float z) -> int
+        {
+            return static_cast<int>(std::floor((z - record.spatialCache.originZ) / record.spatialCache.cellSize));
+        };
+
         for (int tri = 0; tri < triCount; ++tri)
         {
             const unsigned int i0 = record.source.indices[tri * 3 + 0];
             const unsigned int i1 = record.source.indices[tri * 3 + 1];
             const unsigned int i2 = record.source.indices[tri * 3 + 2];
-            const glm::vec3 v0 = rot * record.source.vertices[i0] + record.position;
-            const glm::vec3 v1 = rot * record.source.vertices[i1] + record.position;
-            const glm::vec3 v2 = rot * record.source.vertices[i2] + record.position;
-            triBounds[tri] = { glm::min(glm::min(v0, v1), v2), glm::max(glm::max(v0, v1), v2) };
+            const glm::vec3& v0 = record.transformedVertices[i0];
+            const glm::vec3& v1 = record.transformedVertices[i1];
+            const glm::vec3& v2 = record.transformedVertices[i2];
+            const glm::vec3 triMin = glm::min(glm::min(v0, v1), v2);
+            const glm::vec3 triMax = glm::max(glm::max(v0, v1), v2);
+
+            const int minCx = cellCoordX(triMin.x);
+            const int maxCx = cellCoordX(triMax.x);
+            const int minCz = cellCoordZ(triMin.z);
+            const int maxCz = cellCoordZ(triMax.z);
+            for (int cz = minCz; cz <= maxCz; ++cz)
+            {
+                for (int cx = minCx; cx <= maxCx; ++cx)
+                {
+                    const uint64_t cellKey = MakeTileKey(cx, cz);
+                    auto itChunk = record.spatialCache.cellToChunk.find(cellKey);
+                    if (itChunk == record.spatialCache.cellToChunk.end())
+                    {
+                        ExternNavmeshContext::WorldGeomRecord::WorldGeomChunk chunk{};
+                        chunk.bmin = glm::vec3(FLT_MAX);
+                        chunk.bmax = glm::vec3(-FLT_MAX);
+                        const uint32_t idx = static_cast<uint32_t>(record.spatialCache.chunks.size());
+                        record.spatialCache.cellToChunk.emplace(cellKey, idx);
+                        record.spatialCache.chunks.push_back(std::move(chunk));
+                        itChunk = record.spatialCache.cellToChunk.find(cellKey);
+                    }
+
+                    auto& chunk = record.spatialCache.chunks[itChunk->second];
+                    chunk.triIndices.push_back(static_cast<uint32_t>(tri));
+                    chunk.bmin = glm::min(chunk.bmin, triMin);
+                    chunk.bmax = glm::max(chunk.bmax, triMax);
+                }
+            }
         }
 
-        record.spatialCache.chunks.reserve(static_cast<size_t>(chunkCount));
-        for (int chunk = 0; chunk < chunkCount; ++chunk)
-        {
-            ExternNavmeshContext::WorldGeomRecord::WorldGeomChunk out{};
-            out.bmin = glm::vec3(FLT_MAX);
-            out.bmax = glm::vec3(-FLT_MAX);
-            const int triStart = chunk * trisPerChunk;
-            const int triEnd = std::min(triCount, triStart + trisPerChunk);
-            out.triIndices.reserve(static_cast<size_t>(triEnd - triStart));
-            for (int tri = triStart; tri < triEnd; ++tri)
-            {
-                out.triIndices.push_back(static_cast<uint32_t>(tri));
-                out.bmin = glm::min(out.bmin, triBounds[tri].first);
-                out.bmax = glm::max(out.bmax, triBounds[tri].second);
-            }
-            record.spatialCache.chunks.push_back(std::move(out));
-        }
-        record.spatialCacheBuilt = !record.spatialCache.chunks.empty();
+        record.spatialCacheBuilt = !record.spatialCache.chunks.empty() && !record.spatialCache.cellToChunk.empty();
     }
 
     size_t AppendGeometryForTile(ExternNavmeshContext::WorldGeomRecord& rec,
@@ -1395,13 +1442,8 @@ namespace
         if (!rec.spatialCacheBuilt || rec.spatialCache.sourceHash != rec.geomHash)
             BuildSpatialCacheForGeometry(rec, 256);
 
+        EnsureTransformedVertices(rec);
         const size_t beforeIndices = outIndices.size();
-
-        glm::mat3 rot = GetRotationMatrix(rec.rotation);
-        std::vector<glm::vec3> transformed;
-        transformed.reserve(rec.source.vertices.size());
-        for (const auto& v : rec.source.vertices)
-            transformed.push_back(rot * v + rec.position);
 
         std::unordered_map<unsigned int, unsigned int> remap;
         remap.reserve(rec.source.vertices.size() / 4 + 1);
@@ -1412,7 +1454,7 @@ namespace
                 return it->second;
             unsigned int newIdx = static_cast<unsigned int>(outVerts.size());
             remap.emplace(localIdx, newIdx);
-            outVerts.push_back(transformed[localIdx]);
+            outVerts.push_back(rec.transformedVertices[localIdx]);
             return newIdx;
         };
 
@@ -1429,9 +1471,9 @@ namespace
             const unsigned int i0 = rec.source.indices[triIdx * 3 + 0];
             const unsigned int i1 = rec.source.indices[triIdx * 3 + 1];
             const unsigned int i2 = rec.source.indices[triIdx * 3 + 2];
-            const glm::vec3& v0 = transformed[i0];
-            const glm::vec3& v1 = transformed[i1];
-            const glm::vec3& v2 = transformed[i2];
+            const glm::vec3& v0 = rec.transformedVertices[i0];
+            const glm::vec3& v1 = rec.transformedVertices[i1];
+            const glm::vec3& v2 = rec.transformedVertices[i2];
             const glm::vec3 triMin = glm::min(glm::min(v0, v1), v2);
             const glm::vec3 triMax = glm::max(glm::max(v0, v1), v2);
             if (!triOverlaps(triMin, triMax))
@@ -1443,12 +1485,29 @@ namespace
 
         if (rec.spatialCacheBuilt)
         {
-            for (const auto& chunk : rec.spatialCache.chunks)
+            const int minCx = static_cast<int>(std::floor((tileMin.x - rec.spatialCache.originX) / rec.spatialCache.cellSize));
+            const int maxCx = static_cast<int>(std::floor((tileMax.x - rec.spatialCache.originX) / rec.spatialCache.cellSize));
+            const int minCz = static_cast<int>(std::floor((tileMin.z - rec.spatialCache.originZ) / rec.spatialCache.cellSize));
+            const int maxCz = static_cast<int>(std::floor((tileMax.z - rec.spatialCache.originZ) / rec.spatialCache.cellSize));
+            std::unordered_set<uint32_t> usedTriIndices;
+            for (int cz = minCz; cz <= maxCz; ++cz)
             {
-                if (!triOverlaps(chunk.bmin, chunk.bmax))
-                    continue;
-                for (uint32_t triIdx : chunk.triIndices)
-                    appendTri(triIdx, outIndices);
+                for (int cx = minCx; cx <= maxCx; ++cx)
+                {
+                    const uint64_t cellKey = MakeTileKey(cx, cz);
+                    auto itChunkIdx = rec.spatialCache.cellToChunk.find(cellKey);
+                    if (itChunkIdx == rec.spatialCache.cellToChunk.end())
+                        continue;
+                    const auto& chunk = rec.spatialCache.chunks[itChunkIdx->second];
+                    if (!triOverlaps(chunk.bmin, chunk.bmax))
+                        continue;
+                    for (uint32_t triIdx : chunk.triIndices)
+                    {
+                        if (!usedTriIndices.insert(triIdx).second)
+                            continue;
+                        appendTri(triIdx, outIndices);
+                    }
+                }
             }
             return (outIndices.size() - beforeIndices) / 3;
         }
@@ -1503,8 +1562,15 @@ namespace
         return h;
     }
 
-    bool BuildWorldTileGeometry(ExternNavmeshContext& ctx, int tx, int ty, std::vector<glm::vec3>& outVerts, std::vector<unsigned int>& outIndices)
+    bool BuildWorldTileGeometry(ExternNavmeshContext& ctx,
+                                int tx,
+                                int ty,
+                                std::vector<glm::vec3>& outVerts,
+                                std::vector<unsigned int>& outIndices,
+                                bool* outAbortedByTriLimit = nullptr)
     {
+        if (outAbortedByTriLimit)
+            *outAbortedByTriLimit = false;
         outVerts.clear();
         outIndices.clear();
 
@@ -1534,6 +1600,7 @@ namespace
         uint64_t totalRawTris = 0;
         uint64_t totalFilteredTris = 0;
         std::vector<std::pair<std::string, size_t>> perGeomAdded;
+        static constexpr uint64_t MAX_INPUT_TRIS_PER_TILE = 2000000ull;
 
         for (const std::string& geomId : itGeoms->second)
         {
@@ -1587,9 +1654,32 @@ namespace
             {
                 totalFilteredTris += added;
                 perGeomAdded.emplace_back(rec.id, added);
+                const uint64_t sourceTris = rec.source.indices.size() / 3;
+                if (added > sourceTris)
+                {
+                    printf("[WorldTile][erro] addedTris > sourceTris tile %d,%d id=%s added=%zu source=%llu\n",
+                           tx, ty, rec.id.c_str(), added, static_cast<unsigned long long>(sourceTris));
+                }
+                if (sourceTris > 1000000ull)
+                {
+                    printf("[WorldTile] sourceTris alto id=%s path=%s source=%llu\n",
+                           rec.id.c_str(), rec.path.c_str(), static_cast<unsigned long long>(sourceTris));
+                }
                 if (added > 1000000)
                     printf("[WorldTile] Geometry triCount muito alto no tile %d,%d: id=%s path=%s tris=%zu\n",
                            tx, ty, rec.id.c_str(), rec.path.c_str(), added);
+                if (totalFilteredTris > MAX_INPUT_TRIS_PER_TILE)
+                {
+                    printf("[WorldTile][erro] tile %d,%d excedeu limite de tris (%llu > %llu). Abortando build.\n",
+                           tx, ty,
+                           static_cast<unsigned long long>(totalFilteredTris),
+                           static_cast<unsigned long long>(MAX_INPUT_TRIS_PER_TILE));
+                    if (outAbortedByTriLimit)
+                        *outAbortedByTriLimit = true;
+                    outVerts.clear();
+                    outIndices.clear();
+                    return false;
+                }
             }
         }
 
@@ -2651,6 +2741,9 @@ GTANAVVIEWER_API int ProcessQueuedWorldGeometry(void* navMesh, int maxItems, int
                 geomTiles.insert(tileKey);
                 rec.touchedTileKeys.push_back(tileKey);
                 ctx->dirtyWorldTiles.insert(tileKey);
+                ctx->emptyWorldTiles.erase(tileKey);
+                ctx->emptyWorldTileHashes.erase(tileKey);
+                ctx->failedWorldTiles.erase(tileKey);
                 EnqueueTileBuild(*ctx, tileKey);
             }
             rec.indexed = true;
@@ -2705,10 +2798,18 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         const int ty = static_cast<int>(tileKey & 0xffffffffu);
         std::vector<glm::vec3> verts;
         std::vector<unsigned int> indices;
-        const bool hasGeom = BuildWorldTileGeometry(*ctx, tx, ty, verts, indices);
+        bool abortedByTriLimit = false;
+        const bool hasGeom = BuildWorldTileGeometry(*ctx, tx, ty, verts, indices, &abortedByTriLimit);
         const uint64_t worldHash = ComputeWorldTileHash(*ctx, tx, ty);
         if (!hasGeom)
         {
+            if (abortedByTriLimit)
+            {
+                ++failed;
+                ++built;
+                ctx->failedWorldTiles.insert(tileKey);
+                continue;
+            }
             const dtTileRef ref = nav->getTileRefAt(tx, ty, 0);
             if (ref != 0)
             {
