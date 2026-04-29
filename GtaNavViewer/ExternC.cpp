@@ -140,6 +140,7 @@ namespace
         int maxResidentTiles = 256;
         bool streamingEnabled = false;
         bool worldTileStreamingEnabled = false;
+        bool worldUnloadBuiltTilesAfterSave = false;
         std::unordered_map<uint64_t, uint32_t> residentStamp;
         std::unordered_set<uint64_t> residentTiles;
         std::unordered_map<uint32_t, std::unordered_set<uint64_t>> agentResidentTiles;
@@ -2944,6 +2945,43 @@ GTANAVVIEWER_API int ProcessQueuedWorldGeometry(void* navMesh, int maxItems, int
     return processed;
 }
 
+static void UnloadProcessedNonResidentTiles(ExternNavmeshContext& ctx,
+                                            const std::unordered_set<uint64_t>& tileKeys)
+{
+    dtNavMesh* nav = ctx.navData.GetNavMesh();
+    if (!nav)
+        return;
+
+    for (uint64_t key : tileKeys)
+    {
+        // Se está marcado como residente, não descarrega.
+        if (ctx.residentTiles.find(key) != ctx.residentTiles.end())
+            continue;
+
+        const int tx = static_cast<int>(key >> 32);
+        const int ty = static_cast<int>(key & 0xffffffffu);
+
+        const dtTileRef ref = nav->getTileRefAt(tx, ty, 0);
+        if (ref == 0)
+            continue;
+
+        unsigned char* tileData = nullptr;
+        int tileDataSize = 0;
+        const dtStatus status = nav->removeTile(ref, &tileData, &tileDataSize);
+        if (dtStatusSucceed(status) && tileData)
+            dtFree(tileData);
+    }
+}
+
+GTANAVVIEWER_API void SetWorldUnloadBuiltTilesAfterSave(void* navMesh, bool enabled)
+{
+    if (!navMesh)
+        return;
+
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->worldUnloadBuiltTilesAfterSave = enabled;
+}
+
 GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxMilliseconds, bool saveToCache)
 {
     if (!navMesh)
@@ -3047,26 +3085,35 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
     {
         std::filesystem::path cachePath = GetSessionCachePath(*ctx);
         const auto& hashes = ctx->navData.GetCachedTileHashes();
-        if (ctx->worldTileStreamingEnabled)
-        {
-            printf("[WorldTile] TileDb merge write: %s (tiles=%zu)\n", cachePath.string().c_str(), processedTileKeys.size());
-            TileDbMergeWriteOrUpdateTiles(cachePath.string().c_str(), ctx->navData.GetNavMesh(), hashes, &processedTileKeys);
-        }
-        else
-        {
-            printf("[WorldTile] TileDb write full db: %s\n", cachePath.string().c_str());
-            TileDbWriteOrUpdateTiles(cachePath.string().c_str(), ctx->navData.GetNavMesh(), hashes);
-        }
+
+        printf("[WorldTile] TileDb merge write: %s (tiles=%zu)\n",
+            cachePath.string().c_str(), processedTileKeys.size());
+
+        TileDbMergeWriteOrUpdateTiles(
+            cachePath.string().c_str(),
+            ctx->navData.GetNavMesh(),
+            hashes,
+            &processedTileKeys
+        );
+
         ctx->dbIndexCache.clear();
         ctx->dbIndexLoaded = false;
-        printf("[ExternC] BuildQueuedWorldTiles: cache salvo em %s\n", cachePath.string().c_str());
+
+        if (ctx->worldUnloadBuiltTilesAfterSave)
+            UnloadProcessedNonResidentTiles(*ctx, processedTileKeys);
+
+        printf("[ExternC] BuildQueuedWorldTiles: cache salvo em %s\n",
+            cachePath.string().c_str());
     }
 
     EnsureNavQuery(*ctx);
+
     printf("[ExternC] BuildQueuedWorldTiles: built=%d empty=%d failed=%d saved=%d cache=%s\n",
-           built, emptied, failed, saveToCache ? 1 : 0, GetSessionCachePath(*ctx).string().c_str());
+        built, emptied, failed, saveToCache ? 1 : 0, GetSessionCachePath(*ctx).string().c_str());
+
     if (built > 0 && ctx->worldAutoSaveManifest)
         SaveWorldTileManifestInternal(*ctx);
+
     return built;
 }
 
