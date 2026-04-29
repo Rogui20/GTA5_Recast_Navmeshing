@@ -280,6 +280,7 @@ GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
                                           std::uint32_t flags,
                                           const char* groupId);
 GTANAVVIEWER_API int ProcessQueuedWorldGeometry(void* navMesh, int maxItems, int maxMilliseconds);
+GTANAVVIEWER_API void SetWorldUnloadBuiltTilesAfterSave(void* navMesh, bool enabled);
 GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxMilliseconds, bool saveToCache);
 GTANAVVIEWER_API bool RemoveWorldGeometryGroup(void* navMesh, const char* groupId, bool rebuildOrQueue);
 GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
