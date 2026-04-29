@@ -80,7 +80,7 @@ var searchData=
   ['getallgeometries_77',['getallgeometries',['../ExternC_8h.html#a2e951947d36a9b91467158920029a8b9',1,'GetAllGeometries(void *navMesh, NavMeshGeometryInfo *geometries, int maxGeometries, int *outGeometryCount):&#160;ExternC.cpp'],['../ExternC_8cpp.html#a2e951947d36a9b91467158920029a8b9',1,'GetAllGeometries(void *navMesh, NavMeshGeometryInfo *geometries, int maxGeometries, int *outGeometryCount):&#160;ExternC.cpp']]],
   ['getalloc_78',['getAlloc',['../classdtTileCache.html#aa64d5b69dba5918f11efa1fdb134d250',1,'dtTileCache']]],
   ['getallocatorfunctions_79',['GetAllocatorFunctions',['../namespaceImGui.html#a855f163c9a30e8af87aa9c56a3478b0e',1,'ImGui']]],
-  ['getarea_80',['getarea',['../structdtPoly.html#ab5e97720847977aa7a4caf8c75e73792',1,'dtPoly::getArea()'],['../structImRect.html#acb166afad83795305190598a7b92a185',1,'ImRect::GetArea()']]],
+  ['getarea_80',['getarea',['../structImRect.html#acb166afad83795305190598a7b92a185',1,'ImRect::GetArea()'],['../structdtPoly.html#ab5e97720847977aa7a4caf8c75e73792',1,'dtPoly::getArea()']]],
   ['getareacost_81',['getAreaCost',['../classdtQueryFilter.html#a1e41582a45d2a10eb7e68740475e5665',1,'dtQueryFilter']]],
   ['getarenasizeinbytes_82',['GetArenaSizeInBytes',['../structImSpanAllocator.html#a6bdfe0539ad0cba8d9cb616ff20ae695',1,'ImSpanAllocator']]],
   ['getattachednavmesh_83',['getAttachedNavMesh',['../classdtNavMeshQuery.html#ab99757f03578bbd82aa70e1fd895a1f9',1,'dtNavMeshQuery']]],
