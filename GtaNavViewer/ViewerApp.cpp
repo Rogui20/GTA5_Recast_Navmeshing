@@ -2553,11 +2553,15 @@ void ViewerApp::RenderFrame()
                     ImGui::DragFloat("Detail Sample Max Error", &navGenSettings.detailSampleMaxError, 0.1f, 0.0f, 50.0f, "%.2f");
 
                     ImGui::BeginDisabled(navGenSettings.mode != NavmeshBuildMode::Tiled);
-                    ImGui::DragInt("Tile Size (cells)", &navGenSettings.tileSize, 1, 1, 512);
+                    ImGui::DragInt("Tile Size (cells)", &navGenSettings.tileSize, 1, 1, 1024);
+                    ImGui::DragInt("Max Tiles Override", &navGenSettings.maxTilesOverride, 1, 0, 32768);
+                    ImGui::DragInt("Desired Max Polys/Tile", &navGenSettings.desiredMaxPolysPerTile, 16, 256, 65536);
                     ImGui::EndDisabled();
 
                     navGenSettings.maxVertsPerPoly = std::max(3, navGenSettings.maxVertsPerPoly);
                     navGenSettings.tileSize = std::max(1, navGenSettings.tileSize);
+                    navGenSettings.maxTilesOverride = std::max(0, navGenSettings.maxTilesOverride);
+                    navGenSettings.desiredMaxPolysPerTile = std::max(256, navGenSettings.desiredMaxPolysPerTile);
                     ImGui::EndDisabled();
                 }
 
