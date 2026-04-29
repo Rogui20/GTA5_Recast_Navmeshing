@@ -1,5 +1,9 @@
 var NAVTREEINDEX102 =
 {
+"structImGui__ImplDX12__Data.html#a18255be10fad1dbe043f05a3bb8251c3":[43,0,135,3],
+"structImGui__ImplDX12__Data.html#a187dbc4571e1edac8d8dbe6a653b8eb2":[43,0,135,4],
+"structImGui__ImplDX12__Data.html#a1a82495a0db7010acb79157b74ae0aa4":[43,0,135,19],
+"structImGui__ImplDX12__Data.html#a1c8a790e04e775e3dc8e3f9b5a8f886e":[43,0,135,10],
 "structImGui__ImplDX12__Data.html#a20ce85204d95322c7b258580bfe2dfe9":[43,0,135,12],
 "structImGui__ImplDX12__Data.html#a2dc01db87c392f50d408e5bb4135206d":[43,0,135,0],
 "structImGui__ImplDX12__Data.html#a3bfa9b57f0b6250b2d9bc1d7e02e7ec9":[43,0,135,21],
@@ -245,9 +249,5 @@ var NAVTREEINDEX102 =
 "structImGui__ImplVulkanH__FrameSemaphores.html#ad396afd28149848364513e2015c992d1":[43,0,171,0],
 "structImGui__ImplVulkanH__Window.html":[43,0,172],
 "structImGui__ImplVulkanH__Window.html#a0262fbfc4b662ec7e2bedef6b264ed86":[43,0,172,1],
-"structImGui__ImplVulkanH__Window.html#a1628e6c4fac493af53009947328e55f8":[43,0,172,12],
-"structImGui__ImplVulkanH__Window.html#a22de46dc435ae4cc3b198b0416bbb84b":[43,0,172,11],
-"structImGui__ImplVulkanH__Window.html#a3409eda7f09b755e38ec7631e13937c7":[43,0,172,0],
-"structImGui__ImplVulkanH__Window.html#a3628c3c3133200ed09ee455790639ce6":[43,0,172,10],
-"structImGui__ImplVulkanH__Window.html#a40158de5962fd5bd76c5655f915d6771":[43,0,172,5]
+"structImGui__ImplVulkanH__Window.html#a1628e6c4fac493af53009947328e55f8":[43,0,172,12]
 };

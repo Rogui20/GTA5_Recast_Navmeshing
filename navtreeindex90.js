@@ -1,5 +1,9 @@
 var NAVTREEINDEX90 =
 {
+"imstb__truetype_8h.html#a5ba17159df62ca39649e6f2231ac6e89":[44,0,7,0,11,44],
+"imstb__truetype_8h.html#a5d290c4aa81bf0f7b933ea290d123a3a":[44,0,7,0,11,41],
+"imstb__truetype_8h.html#a6206e92bc06993ba26b8e7c7671f8aaa":[44,0,7,0,11,32],
+"imstb__truetype_8h.html#a6233237aecda00cf9ccd2c2d50dd6b17":[44,0,7,0,11,56],
 "imstb__truetype_8h.html#a695c82840a7d4eaa1d5be00131c9718b":[44,0,7,0,11,55],
 "imstb__truetype_8h.html#a76da72e13355eae763c567ffde0b4607":[44,0,7,0,11,80],
 "imstb__truetype_8h.html#a76ec14e5c7e57981dc5a409d89b5e92f":[44,0,7,0,11,26],
@@ -245,9 +249,5 @@ var NAVTREEINDEX90 =
 "md_external_2SDL2_2docs_2release__checklist.html#new-bugfix-release":[40,1],
 "md_external_2SDL2_2docs_2release__checklist.html#new-development-prerelease":[40,3],
 "md_external_2SDL2_2docs_2release__checklist.html#new-feature-release":[40,0],
-"native-client.html":[22],
-"native-client.html#building-sdl-for-nacl":[22,0],
-"native-client.html#running-tests":[22,1],
-"native-client.html#rwops-and-nacl_io":[22,2],
-"native-client.html#todo---known-issues":[22,3]
+"native-client.html":[22]
 };

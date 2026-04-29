@@ -1,5 +1,9 @@
 var NAVTREEINDEX96 =
 {
+"structImGuiDockNode.html#ad7add8d9aeaaa961b2b051513fbd3729":[43,0,194,9],
+"structImGuiDockNode.html#ad80dc0bc7a9c37be0068f260cb88185b":[43,0,194,24],
+"structImGuiDockNode.html#adce6cce677af97c309c086d7c4c6ddbf":[43,0,194,51],
+"structImGuiDockNode.html#add5b98bb2af75c84db2dce3c01dca6ad":[43,0,194,14],
 "structImGuiDockNode.html#add8a96af8302db75eba447823e0e3f8d":[43,0,194,30],
 "structImGuiDockNode.html#ade7d6c6bab486a70b5c7d973e1195488":[43,0,194,19],
 "structImGuiDockNode.html#ae1172cd1d1a18e5c84f354dd7f6da6c5":[43,0,194,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX96 =
 "structImGuiInputEventMouseButton.html#a6ecd75641eda3da1c42f977cd705ff03":[43,0,211,0],
 "structImGuiInputEventMouseButton.html#a9a669f2168a719da17c26dc3ad154d65":[43,0,211,1],
 "structImGuiInputEventMouseButton.html#accf7f8b2b5e686537cbc1959a36631a6":[43,0,211,2],
-"structImGuiInputEventMousePos.html":[43,0,212],
-"structImGuiInputEventMousePos.html#a515eb4e5c6cb604fabdb26dc99d14c6f":[43,0,212,2],
-"structImGuiInputEventMousePos.html#a74df17b1a446071618fcd868a32102d8":[43,0,212,1],
-"structImGuiInputEventMousePos.html#aaa1e69e32820cd2fcc824c99bb869c6f":[43,0,212,0],
-"structImGuiInputEventMouseViewport.html":[43,0,213]
+"structImGuiInputEventMousePos.html":[43,0,212]
 };

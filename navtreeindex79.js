@@ -1,5 +1,9 @@
 var NAVTREEINDEX79 =
 {
+"globals_eval_p.html":[44,1,5,7],
+"globals_eval_r.html":[44,1,5,8],
+"globals_eval_s.html":[44,1,5,9],
+"globals_eval_t.html":[44,1,5,10],
 "globals_eval_w.html":[44,1,5,11],
 "globals_f.html":[44,1,0,6],
 "globals_func.html":[44,1,1,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX79 =
 "imgui__draw_8cpp.html#a26822b1d734b4d10c08e64983024e600":[44,0,7,0,5,77],
 "imgui__draw_8cpp.html#a284a26aeebf87bc1688d38b3b16c7248":[44,0,7,0,5,26],
 "imgui__draw_8cpp.html#a28c3e00a62f1e11ddbc56c0b6c76f51a":[44,0,7,0,5,43],
-"imgui__draw_8cpp.html#a29e07f1735be59dadedeb13c6da90907":[44,0,7,0,5,7],
-"imgui__draw_8cpp.html#a2b639a5c1ed39bb9e223a78b743f3769":[44,0,7,0,5,23],
-"imgui__draw_8cpp.html#a2c96fc3febbe9f4f6c042a2f975a5b1d":[44,0,7,0,5,130],
-"imgui__draw_8cpp.html#a2e42a220e1f4f691b02e9d27159a9b48":[44,0,7,0,5,104],
-"imgui__draw_8cpp.html#a2ed1c49f29c1635abb9d187846311e43":[44,0,7,0,5,61]
+"imgui__draw_8cpp.html#a29e07f1735be59dadedeb13c6da90907":[44,0,7,0,5,7]
 };

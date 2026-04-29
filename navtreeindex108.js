@@ -1,5 +1,9 @@
 var NAVTREEINDEX108 =
 {
+"structSTB__TexteditState.html#a0e7ba5f610f5dc2d643bef0f223ada9c":[43,0,462,1],
+"structSTB__TexteditState.html#a11a63150e95225aacd204d6ef160c0c0":[43,0,462,3],
+"structSTB__TexteditState.html#a1e43e8ac88a8c7f2bba645b333a8bdc7":[43,0,462,5],
+"structSTB__TexteditState.html#a352add1502f8e2f4e9043ab7114da61c":[43,0,462,9],
 "structSTB__TexteditState.html#a4c42530e4919171df25b1f00bb95a887":[43,0,462,7],
 "structSTB__TexteditState.html#a527319df94e0fe262548fb48bebf3dea":[43,0,462,8],
 "structSTB__TexteditState.html#a63299aca2cb4e009dfa41cda5e651316":[43,0,462,12],
@@ -245,9 +249,5 @@ var NAVTREEINDEX108 =
 "structdtPolyDetail.html#ae3f408c9c8974ccd058a98f781c58801":[43,0,53,2],
 "structdtPolyDetail.html#aef53174e1c31d4304bc07da5d677528c":[43,0,53,1],
 "structdtPolyState.html":[43,0,55],
-"structdtPolyState.html#a8e3a8a1c15338bbe761ef4d9ca2b4949":[43,0,55,1],
-"structdtPolyState.html#afd684e7c95d1048ace6dc198457b7c69":[43,0,55,0],
-"structdtSegInterval.html":[43,0,59],
-"structdtSegInterval.html#a4463687b08087da04f076ec79beb5c03":[43,0,59,1],
-"structdtSegInterval.html#a93cb86ab8a97836ee145bb03bab7ed89":[43,0,59,2]
+"structdtPolyState.html#a8e3a8a1c15338bbe761ef4d9ca2b4949":[43,0,55,1]
 };

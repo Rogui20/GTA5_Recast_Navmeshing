@@ -1,5 +1,9 @@
 var NAVTREEINDEX91 =
 {
+"native-client.html#building-sdl-for-nacl":[22,0],
+"native-client.html#running-tests":[22,1],
+"native-client.html#rwops-and-nacl_io":[22,2],
+"native-client.html#todo---known-issues":[22,3],
 "nokia-n-gage.html":[23],
 "nokia-n-gage.html#acknowledgements":[23,2],
 "nokia-n-gage.html#compiling":[23,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX91 =
 "structExampleAssetsBrowser.html#a9a20d664c5e923e41f088b916bb0706c":[43,0,82,7],
 "structExampleAssetsBrowser.html#aa01e4382d22d421953d108cb35ea1c6b":[43,0,82,15],
 "structExampleAssetsBrowser.html#aa9edf321cf93321b4dd8ee0581fd5a7f":[43,0,82,0],
-"structExampleAssetsBrowser.html#aacdb282937b70764d61b4cf0bfc6b742":[43,0,82,1],
-"structExampleAssetsBrowser.html#ac3af5bbe4a6069bbf68b7a3d16473a17":[43,0,82,17],
-"structExampleAssetsBrowser.html#ac3f05be4fb3f98f28ba3ceaf0854b2d2":[43,0,82,19],
-"structExampleAssetsBrowser.html#ac5837a214d5b88ec8797f2f288e9c99a":[43,0,82,11],
-"structExampleAssetsBrowser.html#ad978dee74c0c4d8fe221751f33a62364":[43,0,82,16]
+"structExampleAssetsBrowser.html#aacdb282937b70764d61b4cf0bfc6b742":[43,0,82,1]
 };

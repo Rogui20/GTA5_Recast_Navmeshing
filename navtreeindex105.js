@@ -1,5 +1,9 @@
 var NAVTREEINDEX105 =
 {
+"structNavMeshDefinition.html#ace4801ba29d7fa0e80593d523e9b857a":[43,0,316,5],
+"structNavMeshDefinition.html#acf934a7bce807961bff26989d26a7fea":[43,0,316,1],
+"structNavMeshDefinition.html#adb7246edf6f53f6ec0a8c34d90030dbd":[43,0,316,8],
+"structNavMeshDefinition.html#ae43af35792fbf175f8bd7c0b41ca9eae":[43,0,316,7],
 "structNavMeshDefinition.html#ae6636f4fff1ff6e8043feb04bbff6358":[43,0,316,2],
 "structNavMeshEdgeInfo.html":[43,0,317],
 "structNavMeshEdgeInfo.html#a3e3270d74ae0c363084fbec2ab529484":[43,0,317,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__AudioSpec.html#addc462c8a806e6c122eccf63482048f6":[43,0,384,6],
 "structSDL__AudioSpec.html#ae37c634cac5807762f184c8d5d49fc2d":[43,0,384,2],
 "structSDL__AudioSpec.html#aeec9481666f5f0982c98d3878f175d9b":[43,0,384,8],
-"structSDL__Color.html":[43,0,385],
-"structSDL__Color.html#a0bb975b6829524133fdd3c6060cfa63d":[43,0,385,3],
-"structSDL__Color.html#a3b79a27e0414049559aa5bcf241dedd3":[43,0,385,1],
-"structSDL__Color.html#ac497ba67af6ecb4d51bdd0945b314526":[43,0,385,0],
-"structSDL__Color.html#ae29d881bf740cfa7078b36e07f85d298":[43,0,385,2]
+"structSDL__Color.html":[43,0,385]
 };

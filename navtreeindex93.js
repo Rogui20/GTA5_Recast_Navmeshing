@@ -1,5 +1,9 @@
 var NAVTREEINDEX93 =
 {
+"structImDrawList.html#af86de4faf6c8e978fb712ea14c5d0c5f":[43,0,108,68],
+"structImDrawListSharedData.html":[43,0,109],
+"structImDrawListSharedData.html#a07999d7da4eeac283556d6d3843d581e":[43,0,109,16],
+"structImDrawListSharedData.html#a181f3e880c9fb53a3cf9b9f05f52dc29":[43,0,109,8],
 "structImDrawListSharedData.html#a188daa23d26c80699041dee094254754":[43,0,109,18],
 "structImDrawListSharedData.html#a189a412fcd4f66a1d60501ad758d04bd":[43,0,109,14],
 "structImDrawListSharedData.html#a1a52282912e7cf687fa4f956fc30fda5":[43,0,109,13],
@@ -245,9 +249,5 @@ var NAVTREEINDEX93 =
 "structImFontGlyph.html#a8590d023ac16bfb03085513269158a07":[43,0,121,5],
 "structImFontGlyph.html#a9bd619db20e38ed8059cc9da622387e5":[43,0,121,0],
 "structImFontGlyph.html#a9e200ee2cebb5295bb158ec7a0f79a57":[43,0,121,4],
-"structImFontGlyph.html#aa6a0440694ae06c4cf03316498327bd2":[43,0,121,14],
-"structImFontGlyph.html#aaca9625f2d6972016e05fed583db85b0":[43,0,121,7],
-"structImFontGlyph.html#ac1deecd5b352949f30d396a58b68dd09":[43,0,121,13],
-"structImFontGlyphRangesBuilder.html":[43,0,122],
-"structImFontGlyphRangesBuilder.html#a12474f5e042b7097a515db0abb71e3e6":[43,0,122,7]
+"structImFontGlyph.html#aa6a0440694ae06c4cf03316498327bd2":[43,0,121,14]
 };

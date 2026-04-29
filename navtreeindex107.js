@@ -1,5 +1,9 @@
 var NAVTREEINDEX107 =
 {
+"structSDL__MessageBoxData.html#a5c333bc93705c66068e140bc28daedcb":[43,0,423,6],
+"structSDL__MessageBoxData.html#a93ceeafeed20b553ad4c86c9be37f117":[43,0,423,5],
+"structSDL__MessageBoxData.html#ada6ae208a1f85adabbd7a7a08ca609c8":[43,0,423,3],
+"structSDL__MouseButtonEvent.html":[43,0,424],
 "structSDL__MouseButtonEvent.html#a1a4680e19ae06d02d2093f0bcba1b24c":[43,0,424,0],
 "structSDL__MouseButtonEvent.html#a366aef59a0f393afc8a3561e741825df":[43,0,424,6],
 "structSDL__MouseButtonEvent.html#a5bb9c61b86e999f58637511e32e3a076":[43,0,424,8],
@@ -245,9 +249,5 @@ var NAVTREEINDEX107 =
 "structSDL__version.html#a6c35c7bf80245028d5970e6a504ecf57":[43,0,445,1],
 "structSDL__version.html#aa6dacff18edee8cd037c773b843be0f1":[43,0,445,2],
 "structSDL__version.html#ad7d7674532073eed237b90f546c97cd0":[43,0,445,0],
-"structSTB__TexteditState.html":[43,0,462],
-"structSTB__TexteditState.html#a0e7ba5f610f5dc2d643bef0f223ada9c":[43,0,462,1],
-"structSTB__TexteditState.html#a11a63150e95225aacd204d6ef160c0c0":[43,0,462,3],
-"structSTB__TexteditState.html#a1e43e8ac88a8c7f2bba645b333a8bdc7":[43,0,462,5],
-"structSTB__TexteditState.html#a352add1502f8e2f4e9043ab7114da61c":[43,0,462,9]
+"structSTB__TexteditState.html":[43,0,462]
 };

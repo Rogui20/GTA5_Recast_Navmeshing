@@ -1,5 +1,9 @@
 var NAVTREEINDEX14 =
 {
+"SDL__config__emscripten_8h.html#ab452be2c7cc8652644e7782380300b8b":[44,0,5,2,1,11,29],
+"SDL__config__emscripten_8h.html#ab57ffb2eb44926eb8af7a29a5902263d":[44,0,5,2,1,11,35],
+"SDL__config__emscripten_8h.html#ab60b60ba255fd3b42f5a28a6d5e37e4a":[44,0,5,2,1,11,38],
+"SDL__config__emscripten_8h.html#ab6cd6d1c63c1e26ea2d4537b77148354":[44,0,5,2,1,11,79],
 "SDL__config__emscripten_8h.html#ab8c46f8750f5f6fd99af7e08bc977861":[44,0,5,2,1,11,44],
 "SDL__config__emscripten_8h.html#ab90a030ff2790ebdc176660a6dd2a478":[44,0,5,2,1,11,40],
 "SDL__config__emscripten_8h.html#ab9262e27fbdd200f4ddc0fd06ac037c0":[44,0,5,2,1,11,53],
@@ -245,9 +249,5 @@ var NAVTREEINDEX14 =
 "SDL__config__macosx_8h.html#a8ff3a28c350664f46a62c4b0a0332bb7":[44,0,5,2,1,13,27],
 "SDL__config__macosx_8h.html#a91ff898d2a93eec793bba283e01a1c62":[44,0,5,2,1,13,123],
 "SDL__config__macosx_8h.html#a92874201762762e7e75d6f615b93ada1":[44,0,5,2,1,13,114],
-"SDL__config__macosx_8h.html#a928cae4d0f25298eee5f58e950abeec7":[44,0,5,2,1,13,21],
-"SDL__config__macosx_8h.html#a92e0bbc47c045d402b0fda83fb8fb9e7":[44,0,5,2,1,13,84],
-"SDL__config__macosx_8h.html#a94e999d4fffe9462fd334aa49ac341d8":[44,0,5,2,1,13,85],
-"SDL__config__macosx_8h.html#a9c7a8af2a825a8a5285f8b7be5e073d6":[44,0,5,2,1,13,54],
-"SDL__config__macosx_8h.html#a9cea659d453d5784e606e0be9bb6a69e":[44,0,5,2,1,13,45]
+"SDL__config__macosx_8h.html#a928cae4d0f25298eee5f58e950abeec7":[44,0,5,2,1,13,21]
 };
