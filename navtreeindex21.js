@@ -1,5 +1,13 @@
 var NAVTREEINDEX21 =
 {
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab4513bc97a304519728ec683780d67ad":[44,0,5,2,1,37,5,147],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab4c1434b824a88ac2ac44a2aa611322c":[44,0,5,2,1,37,5,85],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab5f42b5c7be3a80a2f7ab46d59b315b1":[44,0,5,2,1,37,5,28],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab603f3da0696b70a181452cc73c060d3":[44,0,5,2,1,37,5,157],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3daba01a33f8af815b71a357446edb39f58":[44,0,5,2,1,37,5,186],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dabbc670ea5255b47f240f18486f1b392a":[44,0,5,2,1,37,5,93],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dabf1f57519d3856237a044772a91e0e3d":[44,0,5,2,1,37,5,221],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dabf4996aa2b79791c8080d62b0bc264c9":[44,0,5,2,1,37,5,89],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dabfa4a40d8187f641afcdc1c29af3d93b":[44,0,5,2,1,37,5,232],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dac0f725479acb15dbba79c7cf9e84029f":[44,0,5,2,1,37,5,203],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dac1fb88798aae24fefcbaf4e0d9869393":[44,0,5,2,1,37,5,133],
@@ -241,13 +249,5 @@ var NAVTREEINDEX21 =
 "SDL__mouse_8h_source.html":[44,0,5,2,1,45],
 "SDL__mutex_8h.html":[44,0,5,2,1,46],
 "SDL__mutex_8h.html#a05cd070a02f5ce6eb0abbec4379468a8":[44,0,5,2,1,46,32],
-"SDL__mutex_8h.html#a068ace07dbfb746436d3c03673b4f8fb":[44,0,5,2,1,46,0],
-"SDL__mutex_8h.html#a0c50f774babf7a44c381238a1f780595":[44,0,5,2,1,46,39],
-"SDL__mutex_8h.html#a0df0a8038b0220f070fa4a81aa340859":[44,0,5,2,1,46,23],
-"SDL__mutex_8h.html#a0e2ae8dca74d9f6c2bbe87030b9e7a0c":[44,0,5,2,1,46,46],
-"SDL__mutex_8h.html#a1037a8274b0b13118fc78eeb417a1397":[44,0,5,2,1,46,29],
-"SDL__mutex_8h.html#a1214610634c24465d7c50149752791a9":[44,0,5,2,1,46,10],
-"SDL__mutex_8h.html#a13f31eaa0f73959b93f9599117f54ebc":[44,0,5,2,1,46,14],
-"SDL__mutex_8h.html#a22d43e26bb3944260e27cfd5a481637e":[44,0,5,2,1,46,24],
-"SDL__mutex_8h.html#a23deb3b7e29a5137d804e4be3453a768":[44,0,5,2,1,46,37]
+"SDL__mutex_8h.html#a068ace07dbfb746436d3c03673b4f8fb":[44,0,5,2,1,46,0]
 };

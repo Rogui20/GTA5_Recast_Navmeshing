@@ -34,6 +34,11 @@ var ExternC_8h =
       [ "SHAPE_CYLINDER", "ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9ca62eea2af0cd8bf0530c0799ce72b93cf", null ],
       [ "SHAPE_BOX", "ExternC_8h.html#a8b31fd1888d13beda99ef8fc42324c9cacd064d47d06a6cf0cb539ae3335d26b5", null ]
     ] ],
+    [ "WorldGeomFlags", "ExternC_8h.html#a1b95c2933b8b1ed214fec81260976aa9", [
+      [ "WORLD_GEOM_PERSISTENT", "ExternC_8h.html#a1b95c2933b8b1ed214fec81260976aa9a7af56f5f6bcb59d5d9ca19c9e26dfd4c", null ],
+      [ "WORLD_GEOM_DYNAMIC", "ExternC_8h.html#a1b95c2933b8b1ed214fec81260976aa9a86fc285da424dec1a882378e3ad2a86f", null ],
+      [ "WORLD_GEOM_RUNTIME", "ExternC_8h.html#a1b95c2933b8b1ed214fec81260976aa9a3b001f3e7e9c9e47d1cfee1b6574522f", null ]
+    ] ],
     [ "AddGeometry", "ExternC_8h.html#a33dd625e8066802fa192540a9d95f67f", null ],
     [ "AddOffMeshLink", "ExternC_8h.html#a3f47892fd35980c12612beae6bf9128a", null ],
     [ "AddOffmeshLinksToNavMeshIsland", "ExternC_8h.html#ac3f7fd9f646d880edc9031c6a383e883", null ],
@@ -69,6 +74,7 @@ var ExternC_8h =
     [ "LoadWorldTileManifest", "ExternC_8h.html#ae711b9f1b563ad8eabed016b09001334", null ],
     [ "ProcessQueuedWorldGeometry", "ExternC_8h.html#aecfe9b39a546ef8cf6b2e185bb5f5599", null ],
     [ "QueueWorldGeometry", "ExternC_8h.html#acc04c41d3bdcc8c455199aab378060e8", null ],
+    [ "QueueWorldGeometryEx", "ExternC_8h.html#a1fbff680e57ecfb2e0061a3f2b060069", null ],
     [ "RemoveAllGeometries", "ExternC_8h.html#abd12c10fe11219e74c416d3df583dfde", null ],
     [ "RemoveDynamicObstacles", "ExternC_8h.html#a72ced45ba6bc180e9772a6388db167b7", null ],
     [ "RemoveGeometry", "ExternC_8h.html#a077d4b40564957c7c4d253dea4a48886", null ],
@@ -76,6 +82,7 @@ var ExternC_8h =
     [ "RemoveOffMeshLinkById", "ExternC_8h.html#a1a0f9d943504aca125a94cb69c3a106a", null ],
     [ "RemoveOffMeshLinksInRadius", "ExternC_8h.html#a376a93e7b2a291bcb812a740e83ea8f4", null ],
     [ "RemoveSimAgents", "ExternC_8h.html#a13bde80dcb8d2370adfb1fdc782f016f", null ],
+    [ "RemoveWorldGeometryGroup", "ExternC_8h.html#ae4c999904b1134d6e61e2086a1513b8b", null ],
     [ "SaveNavMeshRuntimeCache", "ExternC_8h.html#a23d70761e65d82b683dfbe7cee3f47da", null ],
     [ "SaveWorldTileManifest", "ExternC_8h.html#a4e51ea2c8b9dcfb3dce91ecac14baa34", null ],
     [ "SetAutoOffMeshGenerationParams", "ExternC_8h.html#ac28c6e03b3f4ea39ac984278707bf707", null ],

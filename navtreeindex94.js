@@ -1,5 +1,14 @@
 var NAVTREEINDEX94 =
 {
+"structImFontGlyphRangesBuilder.html#a6b1480f843b82db098205872b1309f47":[43,0,122,6],
+"structImFontGlyphRangesBuilder.html#a6d3f5e3e377a73f4f4324c4cf98600dd":[43,0,122,1],
+"structImFontGlyphRangesBuilder.html#a918c20b2291c13acd86b5fbbf6097b7f":[43,0,122,5],
+"structImFontGlyphRangesBuilder.html#aaee7673423cb7e29d43ea3901628c870":[43,0,122,0],
+"structImFontGlyphRangesBuilder.html#abc11a683e1b345299c42abd8b6c422a5":[43,0,122,4],
+"structImFontGlyphRangesBuilder.html#ac28bc574d4d34d3a2889cda34470ae71":[43,0,122,2],
+"structImFontGlyphRangesBuilder.html#ade9770bde0f63b4630df30402f3619cf":[43,0,122,3],
+"structImFontGlyphRangesBuilder.html#af83d63600e78e2454a78f0d736ba8ee4":[43,0,122,8],
+"structImFontLoader.html":[43,0,123],
 "structImFontLoader.html#a0de310931947a51e065053aec6fc3066":[43,0,123,7],
 "structImFontLoader.html#a153cc96530e7e732e4bdc2b5dbf01669":[43,0,123,10],
 "structImFontLoader.html#a1b23e9ca7a5795bdafc36a788b35f730":[43,0,123,8],
@@ -240,14 +249,5 @@ var NAVTREEINDEX94 =
 "structImGuiContext.html#a94f084f405800e3234a480610776bf6f":[43,0,183,69],
 "structImGuiContext.html#a95237c5f9eb869da0f1947c54a521489":[43,0,183,317],
 "structImGuiContext.html#a955774256450d53d8466e28495741ac8":[43,0,183,231],
-"structImGuiContext.html#a955abe10fd2747c00a2b0de10529ce4d":[43,0,183,156],
-"structImGuiContext.html#a95a35b5d82d3fdea28b71580dc6a9618":[43,0,183,20],
-"structImGuiContext.html#a98e3997070856a0f4429a541198b6217":[43,0,183,176],
-"structImGuiContext.html#a9ab54092f94cbf9b8e8b9bc3bdbc0759":[43,0,183,52],
-"structImGuiContext.html#a9c0b11750492d186c9b96b75d824e91b":[43,0,183,108],
-"structImGuiContext.html#a9c1160c0d8cec1323b79693a2f163a87":[43,0,183,59],
-"structImGuiContext.html#a9dc46ee2f1b4a6322bae55844f880f02":[43,0,183,172],
-"structImGuiContext.html#a9deb2b22abfb5a4fd306371b19e2b9c4":[43,0,183,16],
-"structImGuiContext.html#a9df05c31c613ac0093ed4171c0ac8f0e":[43,0,183,36],
-"structImGuiContext.html#a9e24110f8e52f3848508f269c5ac9d7c":[43,0,183,116]
+"structImGuiContext.html#a955abe10fd2747c00a2b0de10529ce4d":[43,0,183,156]
 };

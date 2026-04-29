@@ -1,5 +1,14 @@
 var NAVTREEINDEX90 =
 {
+"imstb__truetype_8h.html#a695c82840a7d4eaa1d5be00131c9718b":[44,0,7,0,11,55],
+"imstb__truetype_8h.html#a76da72e13355eae763c567ffde0b4607":[44,0,7,0,11,80],
+"imstb__truetype_8h.html#a76ec14e5c7e57981dc5a409d89b5e92f":[44,0,7,0,11,26],
+"imstb__truetype_8h.html#a793c93dc8e39787cf5966bec548730d5":[44,0,7,0,11,10],
+"imstb__truetype_8h.html#a7a9824b918bd24da2c0193e61bc9ff24":[44,0,7,0,11,50],
+"imstb__truetype_8h.html#a7bba8bb63f534246ccd3ed5b9390cc53":[44,0,7,0,11,48],
+"imstb__truetype_8h.html#a7c4a99b31ea2207a0b2bbcbdab8f3840":[44,0,7,0,11,19],
+"imstb__truetype_8h.html#a8254e6763560645597c44e00024b58fa":[44,0,7,0,11,28],
+"imstb__truetype_8h.html#a82ca6622f6983cc08eca850280126daf":[44,0,7,0,11,20],
 "imstb__truetype_8h.html#a83703ede616bacefc0312ef2803774a1":[44,0,7,0,11,38],
 "imstb__truetype_8h.html#a86f324094c416b920f5a4df75b3abe97":[44,0,7,0,11,54],
 "imstb__truetype_8h.html#a8aa85852fbc25667bf0438e29e128c93":[44,0,7,0,11,30],
@@ -240,14 +249,5 @@ var NAVTREEINDEX90 =
 "native-client.html#building-sdl-for-nacl":[22,0],
 "native-client.html#running-tests":[22,1],
 "native-client.html#rwops-and-nacl_io":[22,2],
-"native-client.html#todo---known-issues":[22,3],
-"nokia-n-gage.html":[23],
-"nokia-n-gage.html#acknowledgements":[23,2],
-"nokia-n-gage.html#compiling":[23,0],
-"nokia-n-gage.html#current-level-of-implementation":[23,1],
-"pages.html":[],
-"pandora.html":[25],
-"platforms.html":[26],
-"porting.html":[27],
-"ps-vita.html":[35]
+"native-client.html#todo---known-issues":[22,3]
 };

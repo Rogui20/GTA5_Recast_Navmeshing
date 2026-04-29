@@ -1,5 +1,14 @@
 var NAVTREEINDEX95 =
 {
+"structImGuiContext.html#a95a35b5d82d3fdea28b71580dc6a9618":[43,0,183,20],
+"structImGuiContext.html#a98e3997070856a0f4429a541198b6217":[43,0,183,176],
+"structImGuiContext.html#a9ab54092f94cbf9b8e8b9bc3bdbc0759":[43,0,183,52],
+"structImGuiContext.html#a9c0b11750492d186c9b96b75d824e91b":[43,0,183,108],
+"structImGuiContext.html#a9c1160c0d8cec1323b79693a2f163a87":[43,0,183,59],
+"structImGuiContext.html#a9dc46ee2f1b4a6322bae55844f880f02":[43,0,183,172],
+"structImGuiContext.html#a9deb2b22abfb5a4fd306371b19e2b9c4":[43,0,183,16],
+"structImGuiContext.html#a9df05c31c613ac0093ed4171c0ac8f0e":[43,0,183,36],
+"structImGuiContext.html#a9e24110f8e52f3848508f269c5ac9d7c":[43,0,183,116],
 "structImGuiContext.html#a9ec6f27f521623d53e98c25239815fbc":[43,0,183,149],
 "structImGuiContext.html#a9f4b06fd9dc31889ca8d9db9c41a5dc4":[43,0,183,282],
 "structImGuiContext.html#a9fbaa49b39d85f3b76172c3ca8807eaf":[43,0,183,62],
@@ -240,14 +249,5 @@ var NAVTREEINDEX95 =
 "structImGuiDockNode.html#ad7add8d9aeaaa961b2b051513fbd3729":[43,0,194,9],
 "structImGuiDockNode.html#ad80dc0bc7a9c37be0068f260cb88185b":[43,0,194,24],
 "structImGuiDockNode.html#adce6cce677af97c309c086d7c4c6ddbf":[43,0,194,51],
-"structImGuiDockNode.html#add5b98bb2af75c84db2dce3c01dca6ad":[43,0,194,14],
-"structImGuiDockNode.html#add8a96af8302db75eba447823e0e3f8d":[43,0,194,30],
-"structImGuiDockNode.html#ade7d6c6bab486a70b5c7d973e1195488":[43,0,194,19],
-"structImGuiDockNode.html#ae1172cd1d1a18e5c84f354dd7f6da6c5":[43,0,194,0],
-"structImGuiDockNode.html#ae1b5573105bfdff5b0a514232c4fce4e":[43,0,194,36],
-"structImGuiDockNode.html#ae60f0c32f215399ccf89de0ca7a4c649":[43,0,194,53],
-"structImGuiDockNode.html#af861ee38a5bc618e866e3c74117689b5":[43,0,194,10],
-"structImGuiDockNode.html#afbd05787dd9f3d970f619c10d010f025":[43,0,194,44],
-"structImGuiDockNode.html#afe811231e9f144335ac7d866f7b188c7":[43,0,194,45],
-"structImGuiDockNode.html#affa7ac110122432f2b73d82b64e932b3":[43,0,194,12]
+"structImGuiDockNode.html#add5b98bb2af75c84db2dce3c01dca6ad":[43,0,194,14]
 };

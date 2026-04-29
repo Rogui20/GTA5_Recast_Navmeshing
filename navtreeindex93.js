@@ -1,5 +1,14 @@
 var NAVTREEINDEX93 =
 {
+"structImDrawListSharedData.html#a188daa23d26c80699041dee094254754":[43,0,109,18],
+"structImDrawListSharedData.html#a189a412fcd4f66a1d60501ad758d04bd":[43,0,109,14],
+"structImDrawListSharedData.html#a1a52282912e7cf687fa4f956fc30fda5":[43,0,109,13],
+"structImDrawListSharedData.html#a1f58df8c68099f8ab1e00c2d4040af5d":[43,0,109,17],
+"structImDrawListSharedData.html#a2343a659b6e750ab09401615b967df10":[43,0,109,6],
+"structImDrawListSharedData.html#a3fe9d30c0df68cce4db9d2033ba9a589":[43,0,109,0],
+"structImDrawListSharedData.html#a4542431d4afe5320a965fbe52a3cc39f":[43,0,109,11],
+"structImDrawListSharedData.html#a57a4e16ebe7a1896e798f1360f21b397":[43,0,109,1],
+"structImDrawListSharedData.html#a5b5bb46f5fd714b43e4b73a131b7f6f7":[43,0,109,9],
 "structImDrawListSharedData.html#a7e00a317793f4ed3ff592b050dfee450":[43,0,109,15],
 "structImDrawListSharedData.html#a8dff5fc643cab17128012383d75d9ad8":[43,0,109,19],
 "structImDrawListSharedData.html#ab0c46ef010a2a9d20c0995def13abfe8":[43,0,109,4],
@@ -240,14 +249,5 @@ var NAVTREEINDEX93 =
 "structImFontGlyph.html#aaca9625f2d6972016e05fed583db85b0":[43,0,121,7],
 "structImFontGlyph.html#ac1deecd5b352949f30d396a58b68dd09":[43,0,121,13],
 "structImFontGlyphRangesBuilder.html":[43,0,122],
-"structImFontGlyphRangesBuilder.html#a12474f5e042b7097a515db0abb71e3e6":[43,0,122,7],
-"structImFontGlyphRangesBuilder.html#a6b1480f843b82db098205872b1309f47":[43,0,122,6],
-"structImFontGlyphRangesBuilder.html#a6d3f5e3e377a73f4f4324c4cf98600dd":[43,0,122,1],
-"structImFontGlyphRangesBuilder.html#a918c20b2291c13acd86b5fbbf6097b7f":[43,0,122,5],
-"structImFontGlyphRangesBuilder.html#aaee7673423cb7e29d43ea3901628c870":[43,0,122,0],
-"structImFontGlyphRangesBuilder.html#abc11a683e1b345299c42abd8b6c422a5":[43,0,122,4],
-"structImFontGlyphRangesBuilder.html#ac28bc574d4d34d3a2889cda34470ae71":[43,0,122,2],
-"structImFontGlyphRangesBuilder.html#ade9770bde0f63b4630df30402f3619cf":[43,0,122,3],
-"structImFontGlyphRangesBuilder.html#af83d63600e78e2454a78f0d736ba8ee4":[43,0,122,8],
-"structImFontLoader.html":[43,0,123]
+"structImFontGlyphRangesBuilder.html#a12474f5e042b7097a515db0abb71e3e6":[43,0,122,7]
 };

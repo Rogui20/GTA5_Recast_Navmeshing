@@ -1,5 +1,13 @@
 var NAVTREEINDEX60 =
 {
+"SDL__opengles2__gl2ext_8h.html#ae81d4289ecce5a7addc83869dc241d94":[44,0,5,2,1,53,1820],
+"SDL__opengles2__gl2ext_8h.html#ae86443e35a424913df64b1827b683f71":[44,0,5,2,1,53,1471],
+"SDL__opengles2__gl2ext_8h.html#ae88b3a2be6a94fe1da034561d3a56c57":[44,0,5,2,1,53,1350],
+"SDL__opengles2__gl2ext_8h.html#ae8a626f6b822f420a03bdeb3309b6293":[44,0,5,2,1,53,437],
+"SDL__opengles2__gl2ext_8h.html#ae8fbad29c5c4dfeed1400bc9791fe41a":[44,0,5,2,1,53,862],
+"SDL__opengles2__gl2ext_8h.html#ae92a393c05c655329a48a2bc2bc1528f":[44,0,5,2,1,53,907],
+"SDL__opengles2__gl2ext_8h.html#ae93452f9b9c7779ef7bd1c7a99d461c6":[44,0,5,2,1,53,708],
+"SDL__opengles2__gl2ext_8h.html#ae938113138ad6b069d614499e50cc414":[44,0,5,2,1,53,1306],
 "SDL__opengles2__gl2ext_8h.html#ae93c5868cdad85f2e0070b1edbd0c6f6":[44,0,5,2,1,53,1742],
 "SDL__opengles2__gl2ext_8h.html#ae971d2b27bf557cd88fda20cb74bdb14":[44,0,5,2,1,53,932],
 "SDL__opengles2__gl2ext_8h.html#aea0d7edf45e2e52d0ee977defc6eba1c":[44,0,5,2,1,53,1678],
@@ -241,13 +249,5 @@ var NAVTREEINDEX60 =
 "SDL__pixels_8h.html#a355a9ed42dcc4f61e525ca4a5987fe44ae9a20b4782210f1f013cd5e2b1801c7b":[44,0,5,2,1,56,27,3],
 "SDL__pixels_8h.html#a355a9ed42dcc4f61e525ca4a5987fe44af76568442ef30ddfb7c07fbf586120cf":[44,0,5,2,1,56,27,5],
 "SDL__pixels_8h.html#a38b57b9e01151753588d55a4e2438856":[44,0,5,2,1,56,17],
-"SDL__pixels_8h.html#a4637c50b3383aa176eac2d267684e75d":[44,0,5,2,1,56,5],
-"SDL__pixels_8h.html#a4d4ef3b8864a55ebc83539a6d0c6b15d":[44,0,5,2,1,56,10],
-"SDL__pixels_8h.html#a51164f5ac7a7b2b4117ff0e0f256eaff":[44,0,5,2,1,56,40],
-"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78":[44,0,5,2,1,56,24],
-"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78a2ef492900c1e7f4b3141346da89365e1":[44,0,5,2,1,56,24,0],
-"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78a35b93a8c2dd3d57c9fdecc28ee9be3fe":[44,0,5,2,1,56,24,6],
-"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78a5a4286d01f6bdda886a28c8b7a891036":[44,0,5,2,1,56,24,8],
-"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78a7292800d58468f8b4fb3e1eb3d1b99c6":[44,0,5,2,1,56,24,5],
-"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78a80e92a3d185f911424f311e9ed9b1133":[44,0,5,2,1,56,24,1]
+"SDL__pixels_8h.html#a4637c50b3383aa176eac2d267684e75d":[44,0,5,2,1,56,5]
 };

@@ -1,5 +1,14 @@
 var NAVTREEINDEX97 =
 {
+"structImGuiInputEventMouseViewport.html#a28cb991c388ab1808e35c9b3ad4c1b02":[43,0,213,0],
+"structImGuiInputEventMouseWheel.html":[43,0,214],
+"structImGuiInputEventMouseWheel.html#a73befbdbdd99ebf390a7fb6aa803712b":[43,0,214,1],
+"structImGuiInputEventMouseWheel.html#a78146a6a771f9154fc1901d48e819fdb":[43,0,214,2],
+"structImGuiInputEventMouseWheel.html#aac2685e14b8ba9eb5bdb5e321686da23":[43,0,214,0],
+"structImGuiInputEventText.html":[43,0,215],
+"structImGuiInputEventText.html#a746d36ebae9d10620c1400bf9cd6c14f":[43,0,215,0],
+"structImGuiInputTextCallbackData.html":[43,0,216],
+"structImGuiInputTextCallbackData.html#a0e391986e9359f6777ab27a3b08229a6":[43,0,216,8],
 "structImGuiInputTextCallbackData.html#a14dacdd841c76dfd171ffca8a96d7c22":[43,0,216,1],
 "structImGuiInputTextCallbackData.html#a2db52e1da5e8109d4eeb5b0ab22200a9":[43,0,216,14],
 "structImGuiInputTextCallbackData.html#a45b3cc4d7625b1bc38d5b995ca149b43":[43,0,216,11],
@@ -240,14 +249,5 @@ var NAVTREEINDEX97 =
 "structImGuiNextWindowData.html#a39c9abe5cd84d20203ab577018e93342":[43,0,236,22],
 "structImGuiNextWindowData.html#a3b80639b573e9a009da8aa9f9ca1a250":[43,0,236,18],
 "structImGuiNextWindowData.html#a4efb638d3fc101f6c8c62daa5f19ce09":[43,0,236,15],
-"structImGuiNextWindowData.html#a5c3f6091bfa5fc0923f4415542e5985c":[43,0,236,24],
-"structImGuiNextWindowData.html#a63e7f1aa93d6bf9eed7452d57d3930c9":[43,0,236,20],
-"structImGuiNextWindowData.html#a707d9e7a1d21b6f133478d8e06a59906":[43,0,236,3],
-"structImGuiNextWindowData.html#a7452f2116f5e7eb320f24ac00a6675a5":[43,0,236,13],
-"structImGuiNextWindowData.html#a864d3d1bf0dbf81ba4cf9cefd75fe06b":[43,0,236,4],
-"structImGuiNextWindowData.html#a9543431fafe3d0627fdecc5fa839487c":[43,0,236,1],
-"structImGuiNextWindowData.html#aa35f8e3551f41298074f15633a298e69":[43,0,236,23],
-"structImGuiNextWindowData.html#aacc1478ee81850d0d6aff6569469911d":[43,0,236,14],
-"structImGuiNextWindowData.html#ab2b226f215bfdf2639f620e6d84157f6":[43,0,236,10],
-"structImGuiNextWindowData.html#acab3905da227922b52f03943b355b27a":[43,0,236,17]
+"structImGuiNextWindowData.html#a5c3f6091bfa5fc0923f4415542e5985c":[43,0,236,24]
 };

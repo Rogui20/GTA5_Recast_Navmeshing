@@ -1,5 +1,13 @@
 var NAVTREEINDEX52 =
 {
+"SDL__opengles2__gl2_8h.html#acc7597b706a657e1bd9926188f4d9b2f":[44,0,5,2,1,52,332],
+"SDL__opengles2__gl2_8h.html#acc767188698aaeec666ffad2064f28fe":[44,0,5,2,1,52,350],
+"SDL__opengles2__gl2_8h.html#acc7a4dd7346bd1f43ae107ca9d8f8c35":[44,0,5,2,1,52,122],
+"SDL__opengles2__gl2_8h.html#accdb7c47dae700218b31fb2b129ee0f4":[44,0,5,2,1,52,243],
+"SDL__opengles2__gl2_8h.html#accfe6586be4665bd486583700b250697":[44,0,5,2,1,52,483],
+"SDL__opengles2__gl2_8h.html#acd2abef6afceea16ef19a117ae7fc3eb":[44,0,5,2,1,52,63],
+"SDL__opengles2__gl2_8h.html#acd91f154544ab6a152e97adcb742c891":[44,0,5,2,1,52,205],
+"SDL__opengles2__gl2_8h.html#acda8b2d7711f88b608c0a47aa14b01b4":[44,0,5,2,1,52,392],
 "SDL__opengles2__gl2_8h.html#acdbdc0b3c774163814b3923049d7d532":[44,0,5,2,1,52,245],
 "SDL__opengles2__gl2_8h.html#ace6fa1d73128e6b24233f54f0beac9cc":[44,0,5,2,1,52,317],
 "SDL__opengles2__gl2_8h.html#aceb29bc16e885f956eb9e351a7dd6276":[44,0,5,2,1,52,301],
@@ -241,13 +249,5 @@ var NAVTREEINDEX52 =
 "SDL__opengles2__gl2ext_8h.html#a11cbdec8c5cfb3f2d13939a9f33f3b41":[44,0,5,2,1,53,1200],
 "SDL__opengles2__gl2ext_8h.html#a11d94888acbeffbdc587155c0576417d":[44,0,5,2,1,53,1968],
 "SDL__opengles2__gl2ext_8h.html#a11efeda1cca825af2b60818037a47d9e":[44,0,5,2,1,53,1511],
-"SDL__opengles2__gl2ext_8h.html#a11f48300c966a8014bfbc61441d89156":[44,0,5,2,1,53,1092],
-"SDL__opengles2__gl2ext_8h.html#a123389501f9480b96e7d033b5575d471":[44,0,5,2,1,53,1422],
-"SDL__opengles2__gl2ext_8h.html#a127ef660e04bd85ec64ad9efb39ae334":[44,0,5,2,1,53,1460],
-"SDL__opengles2__gl2ext_8h.html#a127fe56e0078026428a32a1c471cabf1":[44,0,5,2,1,53,155],
-"SDL__opengles2__gl2ext_8h.html#a129e89730bb19a3d997b8deb34807b4f":[44,0,5,2,1,53,1043],
-"SDL__opengles2__gl2ext_8h.html#a129f046e19fac135cc7b76a00bf49297":[44,0,5,2,1,53,778],
-"SDL__opengles2__gl2ext_8h.html#a12aac872b3495ac7f1ceeaec3561f093":[44,0,5,2,1,53,1878],
-"SDL__opengles2__gl2ext_8h.html#a12d02feb44c56035bf1af92d3e6a1a3b":[44,0,5,2,1,53,1871],
-"SDL__opengles2__gl2ext_8h.html#a12d99226e590bbaaf0be69169eeb4834":[44,0,5,2,1,53,2065]
+"SDL__opengles2__gl2ext_8h.html#a11f48300c966a8014bfbc61441d89156":[44,0,5,2,1,53,1092]
 };

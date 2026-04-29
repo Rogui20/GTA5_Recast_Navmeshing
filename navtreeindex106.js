@@ -1,5 +1,14 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__CommonEvent.html":[43,0,386],
+"structSDL__CommonEvent.html#a4ecd888325355321b42b2e2956f27453":[43,0,386,1],
+"structSDL__CommonEvent.html#a7d9046abb021ffc88dd5d32978289e65":[43,0,386,0],
+"structSDL__ControllerAxisEvent.html":[43,0,387],
+"structSDL__ControllerAxisEvent.html#a07087f68ea9d64b50047d65312ee7b94":[43,0,387,8],
+"structSDL__ControllerAxisEvent.html#a1ed7f14255ed01b982d40a38791d475a":[43,0,387,7],
+"structSDL__ControllerAxisEvent.html#a4a04fcd20a54db21c5258ab0e40c6ab5":[43,0,387,2],
+"structSDL__ControllerAxisEvent.html#aa904b61e4763d28d887cf8afcc3cbb7c":[43,0,387,6],
+"structSDL__ControllerAxisEvent.html#ab82598fe5621dca9b1a41f7b2ca1e9a0":[43,0,387,3],
 "structSDL__ControllerAxisEvent.html#aba6543c143521aebce06a41a8cf79db0":[43,0,387,0],
 "structSDL__ControllerAxisEvent.html#ae0ad0f279b9978bbbac9f5b22ae8020b":[43,0,387,4],
 "structSDL__ControllerAxisEvent.html#af980495b1e24f9a868f2ccb25ce9629b":[43,0,387,1],
@@ -240,14 +249,5 @@ var NAVTREEINDEX106 =
 "structSDL__MessageBoxData.html#a5c333bc93705c66068e140bc28daedcb":[43,0,423,6],
 "structSDL__MessageBoxData.html#a93ceeafeed20b553ad4c86c9be37f117":[43,0,423,5],
 "structSDL__MessageBoxData.html#ada6ae208a1f85adabbd7a7a08ca609c8":[43,0,423,3],
-"structSDL__MouseButtonEvent.html":[43,0,424],
-"structSDL__MouseButtonEvent.html#a1a4680e19ae06d02d2093f0bcba1b24c":[43,0,424,0],
-"structSDL__MouseButtonEvent.html#a366aef59a0f393afc8a3561e741825df":[43,0,424,6],
-"structSDL__MouseButtonEvent.html#a5bb9c61b86e999f58637511e32e3a076":[43,0,424,8],
-"structSDL__MouseButtonEvent.html#a765957d218d16fa00558fa4d20e80689":[43,0,424,2],
-"structSDL__MouseButtonEvent.html#a7ccb5c55a7ddadce723f4ea6d5269540":[43,0,424,9],
-"structSDL__MouseButtonEvent.html#a8809cef85cfffad4f2059f2ba4fc6a3d":[43,0,424,3],
-"structSDL__MouseButtonEvent.html#aa606bebcbc3ffc7e932016039c2a36a1":[43,0,424,1],
-"structSDL__MouseButtonEvent.html#ab05e8a454692608ff56c502e95799c56":[43,0,424,4],
-"structSDL__MouseButtonEvent.html#ab3b855d4b543b5d02fcf5d56e4421393":[43,0,424,7]
+"structSDL__MouseButtonEvent.html":[43,0,424]
 };

@@ -176,6 +176,10 @@ Functions</h2></td></tr>
 <tr class="separator:aabb67d7f3b0a5cfd081e2abad0fd262b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc04c41d3bdcc8c455199aab378060e8" id="r_acc04c41d3bdcc8c455199aab378060e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#acc04c41d3bdcc8c455199aab378060e8">QueueWorldGeometry</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *pathToGeometry, <a class="el" href="structVector3.html">Vector3</a> pos, <a class="el" href="structVector3.html">Vector3</a> rot, const char *customID, bool preferBIN)</td></tr>
 <tr class="separator:acc04c41d3bdcc8c455199aab378060e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f42909286d456a4859409c8ff37c3b3" id="r_a8f42909286d456a4859409c8ff37c3b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a8f42909286d456a4859409c8ff37c3b3">QueueWorldGeometryEx</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *pathToGeometry, <a class="el" href="structVector3.html">Vector3</a> pos, <a class="el" href="structVector3.html">Vector3</a> rot, const char *customID, bool preferBIN, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, const char *groupId)</td></tr>
+<tr class="separator:a8f42909286d456a4859409c8ff37c3b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4c999904b1134d6e61e2086a1513b8b" id="r_ae4c999904b1134d6e61e2086a1513b8b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ae4c999904b1134d6e61e2086a1513b8b">RemoveWorldGeometryGroup</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *groupId, bool rebuildOrQueue)</td></tr>
+<tr class="separator:ae4c999904b1134d6e61e2086a1513b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecfe9b39a546ef8cf6b2e185bb5f5599" id="r_aecfe9b39a546ef8cf6b2e185bb5f5599"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#aecfe9b39a546ef8cf6b2e185bb5f5599">ProcessQueuedWorldGeometry</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, int maxItems, int maxMilliseconds)</td></tr>
 <tr class="separator:aecfe9b39a546ef8cf6b2e185bb5f5599"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5c6066cf12da9718835c3122efebdf8" id="r_ad5c6066cf12da9718835c3122efebdf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ad5c6066cf12da9718835c3122efebdf8">BuildQueuedWorldTiles</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, int maxTiles, int maxMilliseconds, bool saveToCache)</td></tr>
@@ -2441,6 +2445,70 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a8f42909286d456a4859409c8ff37c3b3" name="a8f42909286d456a4859409c8ff37c3b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f42909286d456a4859409c8ff37c3b3">&#9670;&#160;</a></span>QueueWorldGeometryEx()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int QueueWorldGeometryEx </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>pathToGeometry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVector3.html">Vector3</a>&#160;</td>
+          <td class="paramname"><em>pos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVector3.html">Vector3</a>&#160;</td>
+          <td class="paramname"><em>rot</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>customID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>preferBIN</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a>&#160;</td>
+          <td class="paramname"><em>flags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>groupId</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a782d5738b1ac491d83e277d364199475" name="a782d5738b1ac491d83e277d364199475"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a782d5738b1ac491d83e277d364199475">&#9670;&#160;</a></span>RefreshAgentNearestPoly()</h2>
 
@@ -2670,6 +2738,40 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae4c999904b1134d6e61e2086a1513b8b" name="ae4c999904b1134d6e61e2086a1513b8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4c999904b1134d6e61e2086a1513b8b">&#9670;&#160;</a></span>RemoveWorldGeometryGroup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool RemoveWorldGeometryGroup </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>groupId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>rebuildOrQueue</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

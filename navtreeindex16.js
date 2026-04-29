@@ -1,5 +1,13 @@
 var NAVTREEINDEX16 =
 {
+"SDL__config__pandora_8h.html#a1fad346f47011d76be980bfa07db0b80":[44,0,5,2,1,17,6],
+"SDL__config__pandora_8h.html#a1fd175575c8092f9b8dd4667ea98a3c5":[44,0,5,2,1,17,4],
+"SDL__config__pandora_8h.html#a2019f6c8defc179ec7b26b5cea18f27f":[44,0,5,2,1,17,35],
+"SDL__config__pandora_8h.html#a26b4047e39db024ef79ad7d75fafccb8":[44,0,5,2,1,17,34],
+"SDL__config__pandora_8h.html#a277c3d138498b9267fe43589b6b7d91e":[44,0,5,2,1,17,2],
+"SDL__config__pandora_8h.html#a2af11e1db137370de1217c3708c50e3d":[44,0,5,2,1,17,18],
+"SDL__config__pandora_8h.html#a2d4cb3eb2b8eb2b02807c241464aaf93":[44,0,5,2,1,17,90],
+"SDL__config__pandora_8h.html#a348655482f599e61eeead7304ad0d52d":[44,0,5,2,1,17,62],
 "SDL__config__pandora_8h.html#a37bb486d90aa4e96552e0b9cc4f63cf6":[44,0,5,2,1,17,36],
 "SDL__config__pandora_8h.html#a37eb0020e42f0ebb6cba24c2888cc48b":[44,0,5,2,1,17,54],
 "SDL__config__pandora_8h.html#a391fe86ae55f2addd7ee59fe0ba163fb":[44,0,5,2,1,17,70],
@@ -241,13 +249,5 @@ var NAVTREEINDEX16 =
 "SDL__config__winrt_8h.html#aa953e4cda9023d78ea5a18460e8ac594":[44,0,5,2,1,20,49],
 "SDL__config__winrt_8h.html#aaf5250164f8a3c52b7820317aee7d9ce":[44,0,5,2,1,20,10],
 "SDL__config__winrt_8h.html#ab16f46169d92b78980b56216950e7213":[44,0,5,2,1,20,3],
-"SDL__config__winrt_8h.html#ab326d583ba2d834dfaf8a50d0b730126":[44,0,5,2,1,20,4],
-"SDL__config__winrt_8h.html#ab452be2c7cc8652644e7782380300b8b":[44,0,5,2,1,20,33],
-"SDL__config__winrt_8h.html#ab51950b727f094c8c6bc870a89924ceb":[44,0,5,2,1,20,90],
-"SDL__config__winrt_8h.html#ab5fea56647f25333c758d1b174e44534":[44,0,5,2,1,20,84],
-"SDL__config__winrt_8h.html#ab6cd6d1c63c1e26ea2d4537b77148354":[44,0,5,2,1,20,66],
-"SDL__config__winrt_8h.html#ab8c46f8750f5f6fd99af7e08bc977861":[44,0,5,2,1,20,42],
-"SDL__config__winrt_8h.html#ab9262e27fbdd200f4ddc0fd06ac037c0":[44,0,5,2,1,20,50],
-"SDL__config__winrt_8h.html#abd3c4aff90801d067f0dd1d176a0d1ac":[44,0,5,2,1,20,26],
-"SDL__config__winrt_8h.html#ac113b1149ff6806b32454e2897354a40":[44,0,5,2,1,20,73]
+"SDL__config__winrt_8h.html#ab326d583ba2d834dfaf8a50d0b730126":[44,0,5,2,1,20,4]
 };

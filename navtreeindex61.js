@@ -1,5 +1,13 @@
 var NAVTREEINDEX61 =
 {
+"SDL__pixels_8h.html#a4d4ef3b8864a55ebc83539a6d0c6b15d":[44,0,5,2,1,56,10],
+"SDL__pixels_8h.html#a51164f5ac7a7b2b4117ff0e0f256eaff":[44,0,5,2,1,56,40],
+"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78":[44,0,5,2,1,56,24],
+"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78a2ef492900c1e7f4b3141346da89365e1":[44,0,5,2,1,56,24,0],
+"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78a35b93a8c2dd3d57c9fdecc28ee9be3fe":[44,0,5,2,1,56,24,6],
+"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78a5a4286d01f6bdda886a28c8b7a891036":[44,0,5,2,1,56,24,8],
+"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78a7292800d58468f8b4fb3e1eb3d1b99c6":[44,0,5,2,1,56,24,5],
+"SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78a80e92a3d185f911424f311e9ed9b1133":[44,0,5,2,1,56,24,1],
 "SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78a99c982b03457719a09f097d191a4d9e1":[44,0,5,2,1,56,24,4],
 "SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78aca8b94e25710c91c4059244134dbd6e7":[44,0,5,2,1,56,24,3],
 "SDL__pixels_8h.html#a53908f8e47e506d3c25529cde6800f78af186084b057632bf806c5c67c47c60cc":[44,0,5,2,1,56,24,2],
@@ -241,13 +249,5 @@ var NAVTREEINDEX61 =
 "SDL__render_8h.html#ac2c665c1ce910413272a004cdb52e28e":[44,0,5,2,1,61,43],
 "SDL__render_8h.html#ac3aa070e5cda5bab246621f7efc9f143":[44,0,5,2,1,61,20],
 "SDL__render_8h.html#ac43b1fdc65fefdb6915d2b6db262430b":[44,0,5,2,1,61,72],
-"SDL__render_8h.html#ac7f9810c9b14afb97cd9b0bbc68ac73d":[44,0,5,2,1,61,44],
-"SDL__render_8h.html#ac8150fe0d07b012138ab18defc2dd2f4":[44,0,5,2,1,61,9],
-"SDL__render_8h.html#aca9e64e8ad1fe52edee61b916dd7d3a7":[44,0,5,2,1,61,6],
-"SDL__render_8h.html#ad0596fd507c9bf9f8f9594cd9064860c":[44,0,5,2,1,61,79],
-"SDL__render_8h.html#ae0a927b5b2d8c797dfa06e4226a5c840":[44,0,5,2,1,61,74],
-"SDL__render_8h.html#ae56460fe1b478a55916650e695145cbf":[44,0,5,2,1,61,56],
-"SDL__render_8h.html#ae6ca4e63fe1189d44a42eb831c4f9dc2":[44,0,5,2,1,61,55],
-"SDL__render_8h.html#aeb5644ee43c35ed27e54e312a1cd954b":[44,0,5,2,1,61,17],
-"SDL__render_8h.html#af1f12f5baf50ec8c86235dd4528a4e0c":[44,0,5,2,1,61,39]
+"SDL__render_8h.html#ac7f9810c9b14afb97cd9b0bbc68ac73d":[44,0,5,2,1,61,44]
 };

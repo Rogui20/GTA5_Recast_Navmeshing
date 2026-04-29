@@ -1,5 +1,14 @@
 var NAVTREEINDEX98 =
 {
+"structImGuiNextWindowData.html#a63e7f1aa93d6bf9eed7452d57d3930c9":[43,0,236,20],
+"structImGuiNextWindowData.html#a707d9e7a1d21b6f133478d8e06a59906":[43,0,236,3],
+"structImGuiNextWindowData.html#a7452f2116f5e7eb320f24ac00a6675a5":[43,0,236,13],
+"structImGuiNextWindowData.html#a864d3d1bf0dbf81ba4cf9cefd75fe06b":[43,0,236,4],
+"structImGuiNextWindowData.html#a9543431fafe3d0627fdecc5fa839487c":[43,0,236,1],
+"structImGuiNextWindowData.html#aa35f8e3551f41298074f15633a298e69":[43,0,236,23],
+"structImGuiNextWindowData.html#aacc1478ee81850d0d6aff6569469911d":[43,0,236,14],
+"structImGuiNextWindowData.html#ab2b226f215bfdf2639f620e6d84157f6":[43,0,236,10],
+"structImGuiNextWindowData.html#acab3905da227922b52f03943b355b27a":[43,0,236,17],
 "structImGuiNextWindowData.html#adb6dfd7cba17293b0610afa0d16d9491":[43,0,236,11],
 "structImGuiNextWindowData.html#ae6b6651b219549de2844261363be5d75":[43,0,236,16],
 "structImGuiNextWindowData.html#af1a646d2540a1aaac96466e3690768f2":[43,0,236,8],
@@ -240,14 +249,5 @@ var NAVTREEINDEX98 =
 "structImGuiStyle.html#a495f55e77c7b13320a5b121c05c264c2":[43,0,258,2],
 "structImGuiStyle.html#a4b33eff3854b4427af0964b084ddb235":[43,0,258,61],
 "structImGuiStyle.html#a4e2af4dd711f57ee841f9c843a18bec2":[43,0,258,68],
-"structImGuiStyle.html#a56645f0f87af1714871c6cc942b6f8ba":[43,0,258,24],
-"structImGuiStyle.html#a5dd4fc33733ac7171d88740eb777f2e3":[43,0,258,10],
-"structImGuiStyle.html#a63913c1da22332ca132aedb7a082dbfd":[43,0,258,25],
-"structImGuiStyle.html#a6448eb2273c8868d7ecccf1152857f68":[43,0,258,43],
-"structImGuiStyle.html#a64b5fdd495573fa07a80dc0071e99802":[43,0,258,13],
-"structImGuiStyle.html#a6bc07d81e049cd75e86e6b3753c0da4a":[43,0,258,41],
-"structImGuiStyle.html#a6c8674e8aa93236717b36110d7b1f1da":[43,0,258,42],
-"structImGuiStyle.html#a7c9d3e0974a239f65e433cc952be0627":[43,0,258,1],
-"structImGuiStyle.html#a7d32779113a08f74b5654f3069f8a430":[43,0,258,51],
-"structImGuiStyle.html#a7e522a0be6df5271f0da530708d7f4fc":[43,0,258,56]
+"structImGuiStyle.html#a56645f0f87af1714871c6cc942b6f8ba":[43,0,258,24]
 };

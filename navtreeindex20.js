@@ -1,5 +1,13 @@
 var NAVTREEINDEX20 =
 {
+"SDL__joystick_8h.html#a4d930819d9a2fbb637b87a1f282d08c5":[44,0,5,2,1,35,41],
+"SDL__joystick_8h.html#a4e3e052e175f47fe02c63e92a59f4b04":[44,0,5,2,1,35,69],
+"SDL__joystick_8h.html#a51ba353843fd4477f6a485ac4ef35d00":[44,0,5,2,1,35,26],
+"SDL__joystick_8h.html#a552d1be1bccb9cd81191ddf5f576fa31":[44,0,5,2,1,35,70],
+"SDL__joystick_8h.html#a58aabd8f8b84fa55e2bf1af6facd188e":[44,0,5,2,1,35,13],
+"SDL__joystick_8h.html#a591b0765b63a2cab64d8f268be8a22ec":[44,0,5,2,1,35,12],
+"SDL__joystick_8h.html#a5d1844afaf2ceaf58c689a8bd480a543":[44,0,5,2,1,35,6],
+"SDL__joystick_8h.html#a6330470720659333e6ef60994942a855":[44,0,5,2,1,35,37],
 "SDL__joystick_8h.html#a65fde978b4ab9c269c215d1922ae7755":[44,0,5,2,1,35,8],
 "SDL__joystick_8h.html#a68d808bc0054c5cd068b0d0ff7c5ef7d":[44,0,5,2,1,35,71],
 "SDL__joystick_8h.html#a69452f7f7e11db54292f64db9a629029":[44,0,5,2,1,35,63],
@@ -241,13 +249,5 @@ var NAVTREEINDEX20 =
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab312547c153a4069a681029f0f40b1e3":[44,0,5,2,1,37,5,5],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab365a294c12bb6ada6a1d6b599c3c347":[44,0,5,2,1,37,5,16],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab396acc55a0b478d824555696ddfb8ec":[44,0,5,2,1,37,5,75],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab3d4420647d73fa22ea7bb5e418a7a4f":[44,0,5,2,1,37,5,153],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab4513bc97a304519728ec683780d67ad":[44,0,5,2,1,37,5,147],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab4c1434b824a88ac2ac44a2aa611322c":[44,0,5,2,1,37,5,85],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab5f42b5c7be3a80a2f7ab46d59b315b1":[44,0,5,2,1,37,5,28],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab603f3da0696b70a181452cc73c060d3":[44,0,5,2,1,37,5,157],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3daba01a33f8af815b71a357446edb39f58":[44,0,5,2,1,37,5,186],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dabbc670ea5255b47f240f18486f1b392a":[44,0,5,2,1,37,5,93],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dabf1f57519d3856237a044772a91e0e3d":[44,0,5,2,1,37,5,221],
-"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dabf4996aa2b79791c8080d62b0bc264c9":[44,0,5,2,1,37,5,89]
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3dab3d4420647d73fa22ea7bb5e418a7a4f":[44,0,5,2,1,37,5,153]
 };
