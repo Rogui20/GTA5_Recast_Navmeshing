@@ -1,5 +1,7 @@
 var NAVTREEINDEX103 =
 {
+"structImGui__ImplVulkanH__FrameSemaphores.html#aa5dad94e9e02ef1cfd2ef171bb72f3e8":[43,0,171,1],
+"structImGui__ImplVulkanH__FrameSemaphores.html#ad396afd28149848364513e2015c992d1":[43,0,171,0],
 "structImGui__ImplVulkanH__Window.html":[43,0,172],
 "structImGui__ImplVulkanH__Window.html#a0262fbfc4b662ec7e2bedef6b264ed86":[43,0,172,1],
 "structImGui__ImplVulkanH__Window.html#a1628e6c4fac493af53009947328e55f8":[43,0,172,12],
@@ -247,7 +249,5 @@ var NAVTREEINDEX103 =
 "structImTextureData.html#a1aead7291732f48cb9823d54dc391bfe":[43,0,294,25],
 "structImTextureData.html#a22fc119a6933ecbb7fc600cbf93d41aa":[43,0,294,2],
 "structImTextureData.html#a252075dbaa4d989728807e85fd21df1e":[43,0,294,0],
-"structImTextureData.html#a27b7e872abe8da79fa5167d24ef71fe8":[43,0,294,18],
-"structImTextureData.html#a29b25466f5f5df589de5cd76a798b12a":[43,0,294,24],
-"structImTextureData.html#a3563799e96e5c4500b339fa758042efe":[43,0,294,26]
+"structImTextureData.html#a27b7e872abe8da79fa5167d24ef71fe8":[43,0,294,18]
 };

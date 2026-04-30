@@ -1,5 +1,7 @@
 var NAVTREEINDEX13 =
 {
+"SDL__bits_8h_source.html":[44,0,5,2,1,6],
+"SDL__blendmode_8h.html":[44,0,5,2,1,7],
 "SDL__blendmode_8h.html#a27a782fb535e9c4c87202402ee1c652f":[44,0,5,2,1,7,1],
 "SDL__blendmode_8h.html#a54ae8d3f832db7354f4fda522835f502":[44,0,5,2,1,7,5],
 "SDL__blendmode_8h.html#a54ae8d3f832db7354f4fda522835f502a236541634d3e80b4932b6c8a6b278f2a":[44,0,5,2,1,7,5,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX13 =
 "SDL__config__emscripten_8h.html#a9c7a8af2a825a8a5285f8b7be5e073d6":[44,0,5,2,1,11,60],
 "SDL__config__emscripten_8h.html#a9cea659d453d5784e606e0be9bb6a69e":[44,0,5,2,1,11,48],
 "SDL__config__emscripten_8h.html#a9d17c48138de7e59ce0ef00b33ed05cb":[44,0,5,2,1,11,59],
-"SDL__config__emscripten_8h.html#a9e0e434ec1a6ddbd97db12b5a32905e0":[44,0,5,2,1,11,81],
-"SDL__config__emscripten_8h.html#a9e3788ffe53c7301b1d808d1d1756d53":[44,0,5,2,1,11,45],
-"SDL__config__emscripten_8h.html#a9fa2c451911eb9ffcb45e44c550b2fd5":[44,0,5,2,1,11,76]
+"SDL__config__emscripten_8h.html#a9e0e434ec1a6ddbd97db12b5a32905e0":[44,0,5,2,1,11,81]
 };

@@ -4,7 +4,7 @@ var searchData=
   ['edittablecolumnsflags_1',['EditTableColumnsFlags',['../imgui__demo_8cpp.html#ac60963e91aa3f871d24c6ae59869c603',1,'imgui_demo.cpp']]],
   ['edittablesizingflags_2',['EditTableSizingFlags',['../imgui__demo_8cpp.html#a78417cb29765a673b9f4bd0e39944368',1,'imgui_demo.cpp']]],
   ['empty_3',['empty',['../structImVector.html#aa53e48a5272f4bad1099368769514ff1',1,'ImVector::empty()'],['../structImGuiTextFilter_1_1ImGuiTextRange.html#a1861f25905e1f19f979998faf5349b5a',1,'ImGuiTextFilter::ImGuiTextRange::empty()'],['../structImGuiTextBuffer.html#affd606443a661cd0fcce0d381bc8cf98',1,'ImGuiTextBuffer::empty()'],['../structImChunkStream.html#aef1d3eeb4c1aa2980da6a14ae96d2499',1,'ImChunkStream::empty()'],['../classrcVectorBase.html#abea713b48ccadfde8ef3f3f61af23553',1,'rcVectorBase::empty()'],['../classdtNodeQueue.html#a15693f0c97c5d9a32cd0302cdcafd27c',1,'dtNodeQueue::empty()']]],
-  ['enableheightsampling_4',['enableheightsampling',['../ExternC_8cpp.html#a946e5d323ca20456aa6922a4976fb148',1,'EnableHeightSampling(void *navMesh, bool enabled):&#160;ExternC.cpp'],['../ExternC_8h.html#a946e5d323ca20456aa6922a4976fb148',1,'EnableHeightSampling(void *navMesh, bool enabled):&#160;ExternC.cpp']]],
+  ['enableheightsampling_4',['enableheightsampling',['../ExternC_8h.html#a946e5d323ca20456aa6922a4976fb148',1,'EnableHeightSampling(void *navMesh, bool enabled):&#160;ExternC.cpp'],['../ExternC_8cpp.html#a946e5d323ca20456aa6922a4976fb148',1,'EnableHeightSampling(void *navMesh, bool enabled):&#160;ExternC.cpp']]],
   ['enablelog_5',['enableLog',['../classrcContext.html#a03dcf9240dc69a7c329c15e32be12d8e',1,'rcContext']]],
   ['enabletimer_6',['enableTimer',['../classrcContext.html#aa4680430d751824f83634ac753df9669',1,'rcContext']]],
   ['enableworldtilestreaming_7',['enableworldtilestreaming',['../ExternC_8cpp.html#a64de3ef86751ccdaf6fc66529580debf',1,'EnableWorldTileStreaming(void *navMesh, bool enabled):&#160;ExternC.cpp'],['../ExternC_8h.html#a64de3ef86751ccdaf6fc66529580debf',1,'EnableWorldTileStreaming(void *navMesh, bool enabled):&#160;ExternC.cpp']]],
@@ -35,7 +35,7 @@ var searchData=
   ['endtabitem_32',['EndTabItem',['../namespaceImGui.html#a42abffd6af88c1362535514925e1358b',1,'ImGui']]],
   ['endtable_33',['EndTable',['../namespaceImGui.html#a9c70aaa6464c2e51e6f3342da133ada1',1,'ImGui']]],
   ['endtooltip_34',['EndTooltip',['../namespaceImGui.html#ac8d75c160cfdf43d512f773ca133a1c6',1,'ImGui']]],
-  ['erase_35',['erase',['../structImVector.html#a8feb96da4eb8ef13a48dbd2e18cb641d',1,'ImVector::erase(const T *it, const T *it_last)'],['../structImVector.html#a2f88ac70791f2da6d4168d7b29f38f1e',1,'ImVector::erase(const T *it)']]],
+  ['erase_35',['erase',['../structImVector.html#a2f88ac70791f2da6d4168d7b29f38f1e',1,'ImVector::erase(const T *it)'],['../structImVector.html#a8feb96da4eb8ef13a48dbd2e18cb641d',1,'ImVector::erase(const T *it, const T *it_last)']]],
   ['erase_5funsorted_36',['erase_unsorted',['../structImVector.html#a87a4cae517c156b73823c5cd5e86378a',1,'ImVector']]],
   ['errorcheckendframefinalizeerrortooltip_37',['ErrorCheckEndFrameFinalizeErrorTooltip',['../namespaceImGui.html#a84f054b17e7003e5f9031dd02b522afc',1,'ImGui']]],
   ['errorcheckendframesanitychecks_38',['ErrorCheckEndFrameSanityChecks',['../namespaceImGui.html#af501a9de56446597afe2ae5cde18e1ba',1,'ImGui']]],
@@ -61,5 +61,6 @@ var searchData=
   ['expand_58',['expand',['../structImRect.html#ac0b0b88fe65725b4694cd7d91d42d382',1,'ImRect::Expand(const ImVec2 &amp;amount)'],['../structImRect.html#af33a7424c3341d08acd69da30c27c753',1,'ImRect::Expand(const float amount)']]],
   ['expandregions_59',['expandRegions',['../RecastRegion_8cpp.html#a019a1b335b38abce33594128c4806a04',1,'RecastRegion.cpp']]],
   ['exportmergedgeometriesobj_60',['exportmergedgeometriesobj',['../ExternC_8cpp.html#a018403d7757d15f55ea268bdf830769e',1,'ExportMergedGeometriesObj(void *navMesh, const char *outputObjPath):&#160;ExternC.cpp'],['../ExternC_8h.html#a018403d7757d15f55ea268bdf830769e',1,'ExportMergedGeometriesObj(void *navMesh, const char *outputObjPath):&#160;ExternC.cpp']]],
-  ['extractdebugmesh_61',['extractdebugmesh',['../classRendererGL.html#a1a3f8eb7ddf00ff88a9c7bd759a86324',1,'RendererGL::ExtractDebugMesh()'],['../classNavMeshData.html#a1e3a68693ca1bb2655cc9db37a6f111f',1,'NavMeshData::ExtractDebugMesh()']]]
+  ['exportworldgeometriesobj_61',['exportworldgeometriesobj',['../ExternC_8cpp.html#a7ad9e57ceb3bc6779179389e033b5242',1,'ExportWorldGeometriesObj(void *navMesh, const char *outputObjPath, uint32_t includeFlags, uint32_t excludeFlags, const char *groupId, bool onlyLoaded, bool onlyResidentTiles):&#160;ExternC.cpp'],['../ExternC_8h.html#a3a87a8b45b8ddb078cd54a04bcb694b6',1,'ExportWorldGeometriesObj(void *navMesh, const char *outputObjPath, std::uint32_t includeFlags, std::uint32_t excludeFlags, const char *groupId, bool onlyLoaded, bool onlyResidentTiles):&#160;ExternC.h']]],
+  ['extractdebugmesh_62',['extractdebugmesh',['../classRendererGL.html#a1a3f8eb7ddf00ff88a9c7bd759a86324',1,'RendererGL::ExtractDebugMesh()'],['../classNavMeshData.html#a1e3a68693ca1bb2655cc9db37a6f111f',1,'NavMeshData::ExtractDebugMesh()']]]
 ];

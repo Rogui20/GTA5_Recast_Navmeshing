@@ -1,5 +1,7 @@
 var NAVTREEINDEX109 =
 {
+"structdtPolyDetail.html":[43,0,53],
+"structdtPolyDetail.html#a2b1473cb6f856126db05a2955fbb2a61":[43,0,53,3],
 "structdtPolyDetail.html#aaccd8de89ab39454558ce4bfe6230c98":[43,0,53,0],
 "structdtPolyDetail.html#ae3f408c9c8974ccd058a98f781c58801":[43,0,53,2],
 "structdtPolyDetail.html#aef53174e1c31d4304bc07da5d677528c":[43,0,53,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX109 =
 "structrcSpan.html#aba70c34dc95c49c4b3142b7d9ca9d359":[43,0,364,3],
 "structrcSpanPool.html":[43,0,365],
 "structrcSpanPool.html#a7527556787dc57fc87296e8f3dcdd227":[43,0,365,0],
-"structrcSpanPool.html#aaa72cbbf0abb73bfaa8fefc55ef37f2f":[43,0,365,1],
-"structrcSweepSpan.html":[43,0,366],
-"structrcSweepSpan.html#a4d7da0d9409cf1124f8fed63783da60e":[43,0,366,1]
+"structrcSpanPool.html#aaa72cbbf0abb73bfaa8fefc55ef37f2f":[43,0,365,1]
 };

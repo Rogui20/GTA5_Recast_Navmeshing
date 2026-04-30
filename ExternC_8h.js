@@ -58,6 +58,7 @@ var ExternC_8h =
     [ "EnableHeightSampling", "ExternC_8h.html#a946e5d323ca20456aa6922a4976fb148", null ],
     [ "EnableWorldTileStreaming", "ExternC_8h.html#a64de3ef86751ccdaf6fc66529580debf", null ],
     [ "ExportMergedGeometriesObj", "ExternC_8h.html#a018403d7757d15f55ea268bdf830769e", null ],
+    [ "ExportWorldGeometriesObj", "ExternC_8h.html#a3a87a8b45b8ddb078cd54a04bcb694b6", null ],
     [ "FindPath", "ExternC_8h.html#a462e8adf4796b96d81b1563df6e9a8ee", null ],
     [ "FindPathAvoidingDynamicObstacles", "ExternC_8h.html#a106f41a99303d9e34871f716f8b52747", null ],
     [ "FindPathWithMinEdge", "ExternC_8h.html#a0a609079f4645ccec18a5cefc10f79c8", null ],

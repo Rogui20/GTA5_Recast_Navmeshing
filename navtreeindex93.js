@@ -1,5 +1,7 @@
 var NAVTREEINDEX93 =
 {
+"structImDrawList.html#aed11b27ac866240f59e487afcbdba212":[43,0,108,23],
+"structImDrawList.html#aef950cf8b0293b2c5e4708af72de045b":[43,0,108,18],
 "structImDrawList.html#af1dd4a3888034c5f71b66a38e44edf31":[43,0,108,39],
 "structImDrawList.html#af48c5212d06ca5967f70da33ffadbc86":[43,0,108,49],
 "structImDrawList.html#af86073403f1557cccb4ff45dfad0a74a":[43,0,108,46],
@@ -247,7 +249,5 @@ var NAVTREEINDEX93 =
 "structImFontGlyph.html#a26b7b7b9ee43ab67e98af9ea1131ce20":[43,0,121,8],
 "structImFontGlyph.html#a3c9d90fb39f6beaf9d69413fa4c8366f":[43,0,121,6],
 "structImFontGlyph.html#a3d28904aad639835cdff3e4416663d7c":[43,0,121,9],
-"structImFontGlyph.html#a4e7d64945eeb9cf823c2ce7bb66a1e85":[43,0,121,10],
-"structImFontGlyph.html#a6dca72bfeb40ba1cf6ceae007894f665":[43,0,121,3],
-"structImFontGlyph.html#a8590d023ac16bfb03085513269158a07":[43,0,121,5]
+"structImFontGlyph.html#a4e7d64945eeb9cf823c2ce7bb66a1e85":[43,0,121,10]
 };

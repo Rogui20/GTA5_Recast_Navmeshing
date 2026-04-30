@@ -1,5 +1,7 @@
 var NAVTREEINDEX90 =
 {
+"imstb__truetype_8h.html#a4c55e174efbacaf82a8ddb9d1956717e":[44,0,7,0,11,77],
+"imstb__truetype_8h.html#a4dd4ca3bff4e304b2c8d952f87fbb639":[44,0,7,0,11,42],
 "imstb__truetype_8h.html#a51bd3fc45817d8606c749e585241fa71":[44,0,7,0,11,65],
 "imstb__truetype_8h.html#a597ef6b92ab0b5800c74478548b4782f":[44,0,7,0,11,49],
 "imstb__truetype_8h.html#a5b868ef9a9f92e0cc8b6bc0dd52087db":[44,0,7,0,11,79],
@@ -247,7 +249,5 @@ var NAVTREEINDEX90 =
 "md_external_2SDL2_2docs_2README-windows.html#opengl-es-2x-support":[37,1],
 "md_external_2SDL2_2docs_2README-windows.html#vulkan-surface-support":[37,2],
 "md_external_2SDL2_2docs_2README.html":[39],
-"md_external_2SDL2_2docs_2release__checklist.html":[40],
-"md_external_2SDL2_2docs_2release__checklist.html#after-a-feature-release":[40,2],
-"md_external_2SDL2_2docs_2release__checklist.html#new-bugfix-release":[40,1]
+"md_external_2SDL2_2docs_2release__checklist.html":[40]
 };

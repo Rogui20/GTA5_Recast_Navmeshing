@@ -158,6 +158,8 @@ Functions</h2></td></tr>
 <tr class="separator:a2e951947d36a9b91467158920029a8b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a018403d7757d15f55ea268bdf830769e" id="r_a018403d7757d15f55ea268bdf830769e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a018403d7757d15f55ea268bdf830769e">ExportMergedGeometriesObj</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *outputObjPath)</td></tr>
 <tr class="separator:a018403d7757d15f55ea268bdf830769e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ad9e57ceb3bc6779179389e033b5242" id="r_a7ad9e57ceb3bc6779179389e033b5242"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a7ad9e57ceb3bc6779179389e033b5242">ExportWorldGeometriesObj</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh, const char *outputObjPath, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> includeFlags, <a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> excludeFlags, const char *groupId, bool onlyLoaded, bool onlyResidentTiles)</td></tr>
+<tr class="separator:a7ad9e57ceb3bc6779179389e033b5242"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdcdde7a6aa314427c97c0a2e0743321" id="r_acdcdde7a6aa314427c97c0a2e0743321"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#acdcdde7a6aa314427c97c0a2e0743321">BuildNavMesh</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
 <tr class="separator:acdcdde7a6aa314427c97c0a2e0743321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af58c6b0d37352974167fecd9270e033a" id="r_af58c6b0d37352974167fecd9270e033a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#af58c6b0d37352974167fecd9270e033a">UpdateNavMesh</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *navMesh)</td></tr>
@@ -1396,6 +1398,64 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>outputObjPath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7ad9e57ceb3bc6779179389e033b5242" name="a7ad9e57ceb3bc6779179389e033b5242"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ad9e57ceb3bc6779179389e033b5242">&#9670;&#160;</a></span>ExportWorldGeometriesObj()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool ExportWorldGeometriesObj </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>navMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>outputObjPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a>&#160;</td>
+          <td class="paramname"><em>includeFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDL__config__ngage_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a>&#160;</td>
+          <td class="paramname"><em>excludeFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>groupId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>onlyLoaded</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>onlyResidentTiles</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

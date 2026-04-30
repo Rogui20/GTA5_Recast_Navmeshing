@@ -1,5 +1,7 @@
 var NAVTREEINDEX110 =
 {
+"structrcSweepSpan.html":[43,0,366],
+"structrcSweepSpan.html#a4d7da0d9409cf1124f8fed63783da60e":[43,0,366,1],
 "structrcSweepSpan.html#ab92de3221c19c2c9a2d716ea7680146f":[43,0,366,3],
 "structrcSweepSpan.html#ac1a82c65b0a40920eab883fc2b0aa706":[43,0,366,0],
 "structrcSweepSpan.html#afa7aea20a3d345b6663799f60d846737":[43,0,366,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX110 =
 "winrt.html#requirements-2":[38,0],
 "winrt.html#setup-detailed-steps":[38,4],
 "winrt.html#setup-high-level-steps":[38,3],
-"winrt.html#status":[38,1],
-"winrt.html#troubleshooting-2":[38,5],
-"winrt.html#upgrade-notes":[38,2]
+"winrt.html#status":[38,1]
 };

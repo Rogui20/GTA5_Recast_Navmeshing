@@ -28,6 +28,7 @@ var ExternC_8cpp =
     [ "EnableHeightSampling", "ExternC_8cpp.html#a946e5d323ca20456aa6922a4976fb148", null ],
     [ "EnableWorldTileStreaming", "ExternC_8cpp.html#a64de3ef86751ccdaf6fc66529580debf", null ],
     [ "ExportMergedGeometriesObj", "ExternC_8cpp.html#a018403d7757d15f55ea268bdf830769e", null ],
+    [ "ExportWorldGeometriesObj", "ExternC_8cpp.html#a7ad9e57ceb3bc6779179389e033b5242", null ],
     [ "FindBestCornerIndexByCorner", "ExternC_8cpp.html#ac09bc3e5fee5a7873ad19ba478bacadd", null ],
     [ "FindBestCornerIndexBySegment", "ExternC_8cpp.html#a01bba6a85c657e74f8fc9deffb4ff378", null ],
     [ "FindPath", "ExternC_8cpp.html#a462e8adf4796b96d81b1563df6e9a8ee", null ],

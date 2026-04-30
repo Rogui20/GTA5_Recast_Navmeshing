@@ -1,5 +1,7 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__hid__device__info.html#ae1450dccd0f426357f6b95422645a0e3":[43,0,410,1],
+"structSDL__hid__device__info.html#af60f9bc8de63c26113cca7e60158b91d":[43,0,410,10],
 "structSDL__version.html":[43,0,445],
 "structSDL__version.html#a6c35c7bf80245028d5970e6a504ecf57":[43,0,445,1],
 "structSDL__version.html#aa6dacff18edee8cd037c773b843be0f1":[43,0,445,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX108 =
 "structdtOffMeshConnection.html#a4b6b7097d8fd55a5e7f7173a40d01325":[43,0,49,1],
 "structdtOffMeshConnection.html#a8c193e7df9998a218be48a39b2be1488":[43,0,49,4],
 "structdtOffMeshConnection.html#adf581af16754d8bbed1479cdf91dd82d":[43,0,49,0],
-"structdtOffMeshConnection.html#af5ea87d3e8c0d6c1bd5afeac3f954fa1":[43,0,49,3],
-"structdtPolyDetail.html":[43,0,53],
-"structdtPolyDetail.html#a2b1473cb6f856126db05a2955fbb2a61":[43,0,53,3]
+"structdtOffMeshConnection.html#af5ea87d3e8c0d6c1bd5afeac3f954fa1":[43,0,49,3]
 };

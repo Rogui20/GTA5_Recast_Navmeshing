@@ -1,5 +1,7 @@
 var NAVTREEINDEX66 =
 {
+"SDL__video_8h.html#a912994189211554bdd0b264e3f6d8e9f":[44,0,5,2,1,89,42],
+"SDL__video_8h.html#a92103adf9637ec2dc471714076872bdc":[44,0,5,2,1,89,97],
 "SDL__video_8h.html#a9305b50111e5d09ed2f856465abb1a45":[44,0,5,2,1,89,56],
 "SDL__video_8h.html#a96d43295bb10972e2cde06f35c353df8":[44,0,5,2,1,89,9],
 "SDL__video_8h.html#a98181cae6b6d56f3bdbe9f83e46482de":[44,0,5,2,1,89,87],
@@ -247,7 +249,5 @@ var NAVTREEINDEX66 =
 "android.html#why-is-api-level-19-the-minimum-required":[8,15],
 "annotated.html":[43,0],
 "begin__code_8h.html":[44,0,5,2,1,0],
-"begin__code_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4":[44,0,5,2,1,0,2],
-"begin__code_8h.html#a10bf668f248382b6b4447f7865cb563e":[44,0,5,2,1,0,9],
-"begin__code_8h.html#a6a319a994e2ea1a7e16679ad4dec2e94":[44,0,5,2,1,0,8]
+"begin__code_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4":[44,0,5,2,1,0,2]
 };
