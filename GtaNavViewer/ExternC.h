@@ -248,6 +248,13 @@ GTANAVVIEWER_API int  GetAllGeometries(void* navMesh,
                                        int maxGeometries,
                                        int* outGeometryCount);
 GTANAVVIEWER_API bool ExportMergedGeometriesObj(void* navMesh, const char* outputObjPath);
+GTANAVVIEWER_API bool ExportWorldGeometriesObj(void* navMesh,
+                                               const char* outputObjPath,
+                                               std::uint32_t includeFlags,
+                                               std::uint32_t excludeFlags,
+                                               const char* groupId,
+                                               bool onlyLoaded,
+                                               bool onlyResidentTiles);
 
 // Navmesh lifecycle
 GTANAVVIEWER_API bool BuildNavMesh(void* navMesh);

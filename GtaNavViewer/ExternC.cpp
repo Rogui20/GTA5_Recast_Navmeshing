@@ -329,6 +329,40 @@ namespace
         return glm::mat3(rot);
     }
 
+    static bool WriteGeometryObj(std::ofstream& out,
+                                 const LoadedGeometry& source,
+                                 const glm::vec3& position,
+                                 const glm::vec3& rotation,
+                                 const std::string& objectName,
+                                 const std::string& comment,
+                                 std::size_t& globalVertexOffset)
+    {
+        if (!source.Valid())
+            return false;
+
+        const glm::mat3 rotationMat = GetRotationMatrix(rotation);
+        out << "\no " << objectName << "\n";
+        if (!comment.empty())
+            out << comment;
+
+        for (const auto& v : source.vertices)
+        {
+            const glm::vec3 transformed = rotationMat * v + position;
+            out << "v " << transformed.x << " " << transformed.y << " " << transformed.z << "\n";
+        }
+
+        for (size_t i = 0; i + 2 < source.indices.size(); i += 3)
+        {
+            const std::size_t i0 = globalVertexOffset + source.indices[i];
+            const std::size_t i1 = globalVertexOffset + source.indices[i + 1];
+            const std::size_t i2 = globalVertexOffset + source.indices[i + 2];
+            out << "f " << i0 << " " << i1 << " " << i2 << "\n";
+        }
+
+        globalVertexOffset += source.vertices.size();
+        return true;
+    }
+
     void UpdateWorldBounds(GeometryInstance& instance)
     {
         glm::vec3 bmin(FLT_MAX);
@@ -2409,8 +2443,8 @@ GTANAVVIEWER_API bool ExportMergedGeometriesObj(void* navMesh, const char* outpu
     if (!navMesh || !outputObjPath)
         return false;
 
-    const auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
-    if (ctx->geometries.empty())
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    if (!ctx->worldTileStreamingEnabled && ctx->geometries.empty())
         return false;
 
     std::filesystem::path outPath(outputObjPath);
@@ -2424,34 +2458,177 @@ GTANAVVIEWER_API bool ExportMergedGeometriesObj(void* navMesh, const char* outpu
     out << "# Merged navmesh geometries\n";
 
     std::size_t globalVertexOffset = 1;
-    for (const auto& geom : ctx->geometries)
+    if (!ctx->worldTileStreamingEnabled)
     {
-        if (!geom.source.Valid())
-            continue;
-
-        const glm::mat3 rotation = GetRotationMatrix(geom.rotation);
-
-        out << "\no geometry_" << geom.id << "\n";
-        out << "# position " << geom.position.x << " " << geom.position.y << " " << geom.position.z << "\n";
-        out << "# rotationDeg " << geom.rotation.x << " " << geom.rotation.y << " " << geom.rotation.z << "\n";
-
-        for (const auto& v : geom.source.vertices)
+        for (const auto& geom : ctx->geometries)
         {
-            const glm::vec3 transformed = rotation * v + geom.position;
-            out << "v " << transformed.x << " " << transformed.y << " " << transformed.z << "\n";
+            std::ostringstream comment;
+            comment << "# position " << geom.position.x << " " << geom.position.y << " " << geom.position.z << "\n";
+            comment << "# rotationDeg " << geom.rotation.x << " " << geom.rotation.y << " " << geom.rotation.z << "\n";
+            (void)WriteGeometryObj(out,
+                                   geom.source,
+                                   geom.position,
+                                   geom.rotation,
+                                   "geometry_" + geom.id,
+                                   comment.str(),
+                                   globalVertexOffset);
         }
-
-        for (size_t i = 0; i + 2 < geom.source.indices.size(); i += 3)
-        {
-            const std::size_t i0 = globalVertexOffset + geom.source.indices[i];
-            const std::size_t i1 = globalVertexOffset + geom.source.indices[i + 1];
-            const std::size_t i2 = globalVertexOffset + geom.source.indices[i + 2];
-            out << "f " << i0 << " " << i1 << " " << i2 << "\n";
-        }
-
-        globalVertexOffset += geom.source.vertices.size();
+        return out.good();
     }
 
+    std::size_t considered = 0;
+    std::size_t exported = 0;
+    std::size_t filtered = 0;
+    std::size_t loadFailures = 0;
+    std::size_t totalVertices = 0;
+    std::size_t totalFaces = 0;
+    for (auto& [id, rec] : ctx->worldGeometry)
+    {
+        (void)id;
+        ++considered;
+        if (!rec.loaded || !rec.source.Valid())
+        {
+            rec.source = LoadGeometry(rec.path.c_str(), rec.preferBin);
+            rec.loaded = rec.source.Valid();
+        }
+        if (!rec.loaded || !rec.source.Valid())
+        {
+            ++loadFailures;
+            ++filtered;
+            printf("[ExternC] ExportMergedGeometriesObj: skip invalid world geometry id=%s path=%s\n",
+                   rec.id.c_str(),
+                   rec.path.c_str());
+            continue;
+        }
+
+        std::ostringstream comment;
+        comment << "# path " << rec.path << "\n";
+        comment << "# flags " << rec.flags << "\n";
+        comment << "# groupId " << rec.groupId << "\n";
+        comment << "# position " << rec.position.x << " " << rec.position.y << " " << rec.position.z << "\n";
+        comment << "# rotationDeg " << rec.rotation.x << " " << rec.rotation.y << " " << rec.rotation.z << "\n";
+
+        if (!WriteGeometryObj(out,
+                              rec.source,
+                              rec.position,
+                              rec.rotation,
+                              "world_geometry_" + rec.id,
+                              comment.str(),
+                              globalVertexOffset))
+        {
+            ++filtered;
+            continue;
+        }
+
+        ++exported;
+        totalVertices += rec.source.vertices.size();
+        totalFaces += rec.source.indices.size() / 3;
+    }
+    printf("[ExternC] ExportMergedGeometriesObj(world): considered=%zu exported=%zu skipped=%zu loadFailures=%zu approxVerts=%zu approxFaces=%zu\n",
+           considered,
+           exported,
+           filtered,
+           loadFailures,
+           totalVertices,
+           totalFaces);
+
+    return out.good();
+}
+
+GTANAVVIEWER_API bool ExportWorldGeometriesObj(void* navMesh,
+                                               const char* outputObjPath,
+                                               uint32_t includeFlags,
+                                               uint32_t excludeFlags,
+                                               const char* groupId,
+                                               bool onlyLoaded,
+                                               bool onlyResidentTiles)
+{
+    if (!navMesh || !outputObjPath)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    if (!ctx->worldTileStreamingEnabled)
+        return false;
+
+    std::filesystem::path outPath(outputObjPath);
+    if (outPath.has_parent_path())
+        std::filesystem::create_directories(outPath.parent_path());
+    std::ofstream out(outPath);
+    if (!out.is_open())
+        return false;
+    out << "# World navmesh geometries\n";
+
+    const std::string groupFilter = groupId ? groupId : "";
+    std::size_t globalVertexOffset = 1, considered = 0, exported = 0, filtered = 0, loadFailures = 0, totalVertices = 0, totalFaces = 0;
+    for (auto& [id, rec] : ctx->worldGeometry)
+    {
+        (void)id;
+        ++considered;
+        if (includeFlags != 0 && (rec.flags & includeFlags) == 0) { ++filtered; continue; }
+        if (excludeFlags != 0 && (rec.flags & excludeFlags) != 0) { ++filtered; continue; }
+        if (!groupFilter.empty() && rec.groupId != groupFilter) { ++filtered; continue; }
+        if (onlyResidentTiles)
+        {
+            bool resident = false;
+            if (!rec.touchedTileKeys.empty())
+            {
+                for (uint64_t tileKey : rec.touchedTileKeys)
+                {
+                    if (ctx->residentTiles.find(tileKey) != ctx->residentTiles.end()) { resident = true; break; }
+                }
+            }
+            else
+            {
+                auto itTiles = ctx->geomToTiles.find(rec.id);
+                if (itTiles != ctx->geomToTiles.end())
+                {
+                    for (uint64_t tileKey : itTiles->second)
+                    {
+                        if (ctx->residentTiles.find(tileKey) != ctx->residentTiles.end()) { resident = true; break; }
+                    }
+                }
+            }
+            if (!resident) { ++filtered; continue; }
+        }
+
+        if (onlyLoaded)
+        {
+            if (!rec.loaded || !rec.source.Valid()) { ++filtered; continue; }
+        }
+        else if (!rec.loaded || !rec.source.Valid())
+        {
+            rec.source = LoadGeometry(rec.path.c_str(), rec.preferBin);
+            rec.loaded = rec.source.Valid();
+        }
+        if (!rec.loaded || !rec.source.Valid())
+        {
+            ++loadFailures; ++filtered;
+            printf("[ExternC] ExportWorldGeometriesObj: skip invalid world geometry id=%s path=%s\n", rec.id.c_str(), rec.path.c_str());
+            continue;
+        }
+
+        std::ostringstream comment;
+        comment << "# path " << rec.path << "\n";
+        comment << "# flags " << rec.flags << "\n";
+        comment << "# groupId " << rec.groupId << "\n";
+        comment << "# position " << rec.position.x << " " << rec.position.y << " " << rec.position.z << "\n";
+        comment << "# rotationDeg " << rec.rotation.x << " " << rec.rotation.y << " " << rec.rotation.z << "\n";
+        if (!WriteGeometryObj(out,
+                              rec.source,
+                              rec.position,
+                              rec.rotation,
+                              "world_geometry_" + rec.id,
+                              comment.str(),
+                              globalVertexOffset))
+        {
+            ++filtered;
+            continue;
+        }
+        ++exported;
+        totalVertices += rec.source.vertices.size();
+        totalFaces += rec.source.indices.size() / 3;
+    }
+    printf("[ExternC] ExportWorldGeometriesObj: considered=%zu exported=%zu skipped=%zu loadFailures=%zu approxVerts=%zu approxFaces=%zu\n",
+           considered, exported, filtered, loadFailures, totalVertices, totalFaces);
     return out.good();
 }
 
