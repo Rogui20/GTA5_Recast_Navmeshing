@@ -1716,6 +1716,7 @@ bool NavMeshData::RebuildSingleTileFromGeometry(int tx,
                                                 const std::vector<glm::vec3>& verts,
                                                 const std::vector<unsigned int>& indices,
                                                 const NavmeshGenerationSettings& settings,
+                                                const std::vector<OffmeshLink>* tileOffmeshOverride,
                                                 uint64_t tileHash,
                                                 bool* outBuilt,
                                                 bool* outEmpty)
@@ -1756,7 +1757,7 @@ bool NavMeshData::RebuildSingleTileFromGeometry(int tx,
     rcVcopy(input.meshBMin, m_gridBMin);
     rcVcopy(input.meshBMax, m_gridBMax);
     input.baseCfg = m_cachedBaseCfg;
-    input.offmeshLinks = &m_offmeshLinks;
+    input.offmeshLinks = tileOffmeshOverride ? tileOffmeshOverride : &m_offmeshLinks;
 
     bool built = false;
     bool empty = false;
