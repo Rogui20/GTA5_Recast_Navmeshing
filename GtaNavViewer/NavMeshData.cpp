@@ -1931,7 +1931,21 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
     }
 
     const int maxAllowedTiles = 32768;
-    if (stats.tileCountTotal > maxAllowedTiles)
+    const int maxAllowedWorldTiles = 500000;
+    if (stats.tileCountTotal > maxAllowedWorldTiles)
+    {
+        const float area = std::max(0.0f, stats.boundsWidth * stats.boundsHeight);
+        const float minTileWorld = area > 0.0f
+            ? std::sqrt(area / static_cast<float>(maxAllowedWorldTiles))
+            : stats.tileWorld;
+        const int suggestedTileSize = static_cast<int>(std::ceil(minTileWorld / std::max(0.001f, settings.cellSize)));
+
+        printf("[NavMeshData] InitTiledGrid: quantidade de tiles (%d) excede limite seguro (%d). tileWorld=%.2f. Sugestao: tileWorld >= %.2f (tileSize >= %d com cellSize=%.3f).\n",
+               stats.tileCountTotal, maxAllowedWorldTiles, stats.tileWorld, minTileWorld, suggestedTileSize, settings.cellSize);
+        return false;
+    }
+
+    if (settings.maxTilesOverride <= 0 && stats.tileCountTotal > maxAllowedTiles)
     {
         const float area = std::max(0.0f, stats.boundsWidth * stats.boundsHeight);
         const float minTileWorld = area > 0.0f
@@ -1939,7 +1953,7 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
             : stats.tileWorld;
         const int suggestedTileSize = static_cast<int>(std::ceil(minTileWorld / std::max(0.001f, settings.cellSize)));
 
-        printf("[NavMeshData] InitTiledGrid: quantidade de tiles (%d) excede limite seguro (%d). tileWorld=%.2f. Sugestao: tileWorld >= %.2f (tileSize >= %d com cellSize=%.3f).\n",
+        printf("[NavMeshData] InitTiledGrid: quantidade de tiles (%d) excede limite seguro (%d) sem maxTilesOverride. tileWorld=%.2f. Sugestao: tileWorld >= %.2f (tileSize >= %d com cellSize=%.3f).\n",
                stats.tileCountTotal, maxAllowedTiles, stats.tileWorld, minTileWorld, suggestedTileSize, settings.cellSize);
         return false;
     }
@@ -1971,7 +1985,7 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
 
     const int computedMaxTiles = tileWidthCount * tileHeightCount;
     navParams.maxTiles = settings.maxTilesOverride > 0
-        ? std::min(settings.maxTilesOverride, computedMaxTiles)
+        ? settings.maxTilesOverride
         : computedMaxTiles;
 
     const unsigned int desiredMaxPolys = static_cast<unsigned int>(std::max(16, settings.desiredMaxPolysPerTile));
@@ -1989,16 +2003,17 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
     const unsigned int chosenPolyBits = std::min(desiredPolyBits, maxPolyBitsAllowed);
     navParams.maxPolys = 1u << chosenPolyBits;
 
-    printf("[NavMeshData] InitTiledGrid: pre-init tileBits=%u polyBits=%u maxTiles=%d (computed=%d) maxPolys=%d desiredMaxPolys=%u tileSize=%d boundsTiles=%dx%d\n",
+    printf("[NavMeshData] InitTiledGrid: worldTiles=%d residentCapacity=%d tileWidthCount=%d tileHeightCount=%d tileWorld=%.3f tileBits=%u polyBits=%u maxPolys=%d desiredMaxPolys=%u tileSize=%d\n",
+           computedMaxTiles,
+           navParams.maxTiles,
+           tileWidthCount,
+           tileHeightCount,
+           navParams.tileWidth,
            tileBits,
            chosenPolyBits,
-           navParams.maxTiles,
-           computedMaxTiles,
            navParams.maxPolys,
            desiredMaxPolys,
-           settings.tileSize,
-           tileWidthCount,
-           tileHeightCount);
+           settings.tileSize);
 
     if (navParams.maxPolys != desiredMaxPolys)
     {
