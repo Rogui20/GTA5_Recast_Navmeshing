@@ -1286,8 +1286,10 @@ namespace
             {
                 ++removed;
                 for (uint64_t k : rec.touchedTileKeys)
+                {
                     ctx.dirtyWorldTiles.insert(k);
                     ctx.dirtyWorldOffmeshTiles.insert(k);
+                }
                 continue;
             }
 
@@ -1295,8 +1297,10 @@ namespace
             {
                 ++changed;
                 for (uint64_t k : rec.touchedTileKeys)
+                {
                     ctx.dirtyWorldTiles.insert(k);
                     ctx.dirtyWorldOffmeshTiles.insert(k);
+                }
                 if (ctx.pendingWorldGeometrySet.insert(rec.id).second)
                     ctx.pendingWorldGeometryQueue.push_back(rec.id);
             }
@@ -1450,7 +1454,7 @@ namespace
         mix(static_cast<uint64_t>(qi(link.end.x)));
         mix(static_cast<uint64_t>(qi(link.end.y)));
         mix(static_cast<uint64_t>(qi(link.end.z)));
-        mix(static_cast<uint64_t>(link.type));
+        mix(static_cast<uint64_t>(link.area));
         return h;
     }
 
