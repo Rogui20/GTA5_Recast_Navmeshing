@@ -1,5 +1,6 @@
 var NAVTREEINDEX70 =
 {
+"classdtObstacleAvoidanceQuery.html#a5209e8625a0618fd9c96ba2d0374d90f":[43,0,43,11],
 "classdtObstacleAvoidanceQuery.html#a56a81340e58ae836f32c802ab3531772":[43,0,43,1],
 "classdtObstacleAvoidanceQuery.html#a993c62548ead013ac1cb622c43c175ad":[43,0,43,9],
 "classdtObstacleAvoidanceQuery.html#a9f927e4f09b35473853be3bf7f28129a":[43,0,43,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX70 =
 "external_2glm_2simd_2platform_8h.html#a3866c1f1d2116a7c580cf7a60fc9e839":[44,0,5,1,1,7,35],
 "external_2glm_2simd_2platform_8h.html#a39ac38237d10e9f701a589eb2611f91b":[44,0,5,1,1,7,110],
 "external_2glm_2simd_2platform_8h.html#a3f74d557a77d4e86d6fb2ba68f85e7dc":[44,0,5,1,1,7,40],
-"external_2glm_2simd_2platform_8h.html#a45a76bf8a3ef61701ee21251902acb54":[44,0,5,1,1,7,28],
-"external_2glm_2simd_2platform_8h.html#a45d92d5526a4adb07978d9ee58d115e5":[44,0,5,1,1,7,79]
+"external_2glm_2simd_2platform_8h.html#a45a76bf8a3ef61701ee21251902acb54":[44,0,5,1,1,7,28]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX102 =
 {
+"structImGui__ImplDX11__RenderState.html#a8a5b8cf191eb19d637b78de8bbf37763":[43,0,132,2],
 "structImGui__ImplDX11__RenderState.html#aa5280394b74970e8f1f4d12078b7d915":[43,0,132,0],
 "structImGui__ImplDX11__RenderState.html#ad0c04f4dee7da14bdd804daa2d87f71e":[43,0,132,1],
 "structImGui__ImplDX11__Texture.html":[43,0,133],
@@ -248,6 +249,5 @@ var NAVTREEINDEX102 =
 "structImGui__ImplStbTrueType__FontSrcData.html":[43,0,161],
 "structImGui__ImplStbTrueType__FontSrcData.html#a2e76db8408b9a41edb1329061ff1b1b5":[43,0,161,0],
 "structImGui__ImplStbTrueType__FontSrcData.html#af3f3d5bb62feb6802a040061575d617d":[43,0,161,1],
-"structImGui__ImplVulkanH__Frame.html":[43,0,170],
-"structImGui__ImplVulkanH__Frame.html#a18aaf1c0c5df6cec2a8de6e35da5c7c7":[43,0,170,2]
+"structImGui__ImplVulkanH__Frame.html":[43,0,170]
 };

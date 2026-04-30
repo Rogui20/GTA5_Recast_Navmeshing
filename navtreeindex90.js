@@ -1,5 +1,6 @@
 var NAVTREEINDEX90 =
 {
+"imstb__truetype_8h.html#a344fc3b0ff7829d993ca8db3eadd321f":[44,0,7,0,11,72],
 "imstb__truetype_8h.html#a37d613643adacbed24c22718faf6afc7":[44,0,7,0,11,22],
 "imstb__truetype_8h.html#a3856cc4fbab4c126c2c438c6f567525d":[44,0,7,0,11,12],
 "imstb__truetype_8h.html#a404d8b8c23a01c8cdf71f02d6d47d185":[44,0,7,0,11,43],
@@ -248,6 +249,5 @@ var NAVTREEINDEX90 =
 "md_external_2SDL2_2docs_2README-n3ds.html#building":[21,0],
 "md_external_2SDL2_2docs_2README-n3ds.html#notes-1":[21,1],
 "md_external_2SDL2_2docs_2README-versions.html":[33],
-"md_external_2SDL2_2docs_2README-versions.html#before-2230":[33,1],
-"md_external_2SDL2_2docs_2README-versions.html#since-2230":[33,0]
+"md_external_2SDL2_2docs_2README-versions.html#before-2230":[33,1]
 };

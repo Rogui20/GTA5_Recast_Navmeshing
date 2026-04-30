@@ -1,5 +1,6 @@
 var NAVTREEINDEX91 =
 {
+"md_external_2SDL2_2docs_2README-versions.html#since-2230":[33,0],
 "md_external_2SDL2_2docs_2README-windows.html":[37],
 "md_external_2SDL2_2docs_2README-windows.html#llvm-and-intel-c-compiler-support":[37,0],
 "md_external_2SDL2_2docs_2README-windows.html#opengl-es-2x-support":[37,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX91 =
 "structExampleAssetsBrowser.html#a2b36e1f9b7d764e547611baa4c7fd8d1":[43,0,82,3],
 "structExampleAssetsBrowser.html#a2fc7cd6b1c71c99b24754b11fbe377c3":[43,0,82,24],
 "structExampleAssetsBrowser.html#a31360d753e6db9d39a2d81507b7a121c":[43,0,82,14],
-"structExampleAssetsBrowser.html#a3e637fe11493f8884937c20e1bdaf7fe":[43,0,82,23],
-"structExampleAssetsBrowser.html#a41fc44d1d85beac499c843beea5c6e41":[43,0,82,21]
+"structExampleAssetsBrowser.html#a3e637fe11493f8884937c20e1bdaf7fe":[43,0,82,23]
 };

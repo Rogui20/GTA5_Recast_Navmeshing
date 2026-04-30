@@ -1,5 +1,6 @@
 var NAVTREEINDEX110 =
 {
+"structrcSpan.html#a3b1dbeacc04852fe7330dcd0f5745424":[43,0,364,1],
 "structrcSpan.html#a6bca504828087023719794cce9a5f0ab":[43,0,364,2],
 "structrcSpan.html#a8bf133cf1e7ccf3d69f1ba365cb0c1ca":[43,0,364,0],
 "structrcSpan.html#aba70c34dc95c49c4b3142b7d9ca9d359":[43,0,364,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX110 =
 "winrt.html#autotoc_md4-adjust-your-apps-build-settings":[38,4,3],
 "winrt.html#autotoc_md5-add-a-winrt-appropriate-main-function-and-a-blank-cursor-image-to-the-app":[38,4,4],
 "winrt.html#autotoc_md6-add-app-code-and-assets":[38,4,5],
-"winrt.html#autotoc_md6a--when-creating-a-new-app":[38,4,5,0],
-"winrt.html#autotoc_md6b-adding-code-and-assets":[38,4,5,1]
+"winrt.html#autotoc_md6a--when-creating-a-new-app":[38,4,5,0]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX69 =
 {
+"classSample__SoloMesh.html#aee04a7d9dbc1c9e1f6c6084ac5503a93":[43,0,373,18],
 "classSample__SoloMesh.html#af63e6f988dc1866aabc7257802f794ce":[43,0,373,6],
 "classSample__SoloMesh.html#afede15e3275e57b471fe72d26957d1b8":[43,0,373,3],
 "classSample__TempObstacles.html":[43,0,374],
@@ -248,6 +249,5 @@ var NAVTREEINDEX69 =
 "classdtObstacleAvoidanceQuery.html":[43,0,43],
 "classdtObstacleAvoidanceQuery.html#a00f5433cca84077375f445a1e432badc":[43,0,43,6],
 "classdtObstacleAvoidanceQuery.html#a353d5b1f7b8feb1e5867528255924968":[43,0,43,0],
-"classdtObstacleAvoidanceQuery.html#a38c5fdba38e19e6c7481b75d089e45b6":[43,0,43,7],
-"classdtObstacleAvoidanceQuery.html#a5209e8625a0618fd9c96ba2d0374d90f":[43,0,43,11]
+"classdtObstacleAvoidanceQuery.html#a38c5fdba38e19e6c7481b75d089e45b6":[43,0,43,7]
 };

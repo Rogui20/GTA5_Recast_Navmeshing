@@ -1,5 +1,6 @@
 var NAVTREEINDEX111 =
 {
+"winrt.html#autotoc_md6b-adding-code-and-assets":[38,4,5,1],
 "winrt.html#autotoc_md7-build-and-run-your-app":[38,4,6],
 "winrt.html#autotoc_md7a-running-apps-on-older-arm-based-windows-rt-devices":[38,4,6,0],
 "winrt.html#requirements-2":[38,0],
