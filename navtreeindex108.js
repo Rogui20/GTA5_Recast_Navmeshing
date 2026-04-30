@@ -1,5 +1,11 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__hid__device__info.html#aa66ffa58c4a37986285dee7d0adad766":[43,0,410,6],
+"structSDL__hid__device__info.html#aa8da06646522138690bec6e5fba7540f":[43,0,410,5],
+"structSDL__hid__device__info.html#ab5851e5c55c1903b63ecf8bb736c4249":[43,0,410,11],
+"structSDL__hid__device__info.html#ac874d63dbfe581736033f266f08fd51a":[43,0,410,4],
+"structSDL__hid__device__info.html#ace00a62000be5a947106f04d0dd5efc4":[43,0,410,12],
+"structSDL__hid__device__info.html#ad6eb1e9cafd756ef89cd427cccc89da8":[43,0,410,9],
 "structSDL__hid__device__info.html#ae1450dccd0f426357f6b95422645a0e3":[43,0,410,1],
 "structSDL__hid__device__info.html#af60f9bc8de63c26113cca7e60158b91d":[43,0,410,10],
 "structSDL__version.html":[43,0,445],
@@ -243,11 +249,5 @@ var NAVTREEINDEX108 =
 "structdtObstacleSegment.html#a26ef06bc8db4ec6ceac546dd4d34da83":[43,0,48,2],
 "structdtObstacleSegment.html#a3282730543d772664692b32c15576ee9":[43,0,48,1],
 "structdtObstacleSegment.html#aac975238e1614b0652643f973f32dc78":[43,0,48,0],
-"structdtOffMeshConnection.html":[43,0,49],
-"structdtOffMeshConnection.html#a157eae33ff9cb301e25f822a9d0b74dc":[43,0,49,5],
-"structdtOffMeshConnection.html#a1ad6f470aa15ca67e1df62d692a4efe4":[43,0,49,2],
-"structdtOffMeshConnection.html#a4b6b7097d8fd55a5e7f7173a40d01325":[43,0,49,1],
-"structdtOffMeshConnection.html#a8c193e7df9998a218be48a39b2be1488":[43,0,49,4],
-"structdtOffMeshConnection.html#adf581af16754d8bbed1479cdf91dd82d":[43,0,49,0],
-"structdtOffMeshConnection.html#af5ea87d3e8c0d6c1bd5afeac3f954fa1":[43,0,49,3]
+"structdtOffMeshConnection.html":[43,0,49]
 };

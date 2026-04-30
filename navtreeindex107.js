@@ -1,5 +1,11 @@
 var NAVTREEINDEX107 =
 {
+"structSDL__MessageBoxButtonData.html#a426c8b5da0e718242c7840706d95de0b":[43,0,420,1],
+"structSDL__MessageBoxButtonData.html#af35f3062f0577159284c8828caaf08e4":[43,0,420,2],
+"structSDL__MessageBoxColor.html":[43,0,421],
+"structSDL__MessageBoxColor.html#a43ab2172c10058380fcf67ecc3f53184":[43,0,421,2],
+"structSDL__MessageBoxColor.html#a5820adab0b32aa3eade101ea36ed6b4a":[43,0,421,1],
+"structSDL__MessageBoxColor.html#ad1215a42167cb5b190ff8f19dbd42066":[43,0,421,0],
 "structSDL__MessageBoxColorScheme.html":[43,0,422],
 "structSDL__MessageBoxColorScheme.html#ae3712ec81e41b63b781b7d49d3b3b8f6":[43,0,422,0],
 "structSDL__MessageBoxData.html":[43,0,423],
@@ -243,11 +249,5 @@ var NAVTREEINDEX107 =
 "structSDL__hid__device__info.html#a7ad2c1748503188c35a8a306a8abd55b":[43,0,410,2],
 "structSDL__hid__device__info.html#a7bb9b5c173278a6699b3191953fcfe77":[43,0,410,13],
 "structSDL__hid__device__info.html#a7dff2f9edbe860f476fdaf5e91614038":[43,0,410,3],
-"structSDL__hid__device__info.html#a80f37d1aaae118285bec4442a8c9b1d0":[43,0,410,8],
-"structSDL__hid__device__info.html#aa66ffa58c4a37986285dee7d0adad766":[43,0,410,6],
-"structSDL__hid__device__info.html#aa8da06646522138690bec6e5fba7540f":[43,0,410,5],
-"structSDL__hid__device__info.html#ab5851e5c55c1903b63ecf8bb736c4249":[43,0,410,11],
-"structSDL__hid__device__info.html#ac874d63dbfe581736033f266f08fd51a":[43,0,410,4],
-"structSDL__hid__device__info.html#ace00a62000be5a947106f04d0dd5efc4":[43,0,410,12],
-"structSDL__hid__device__info.html#ad6eb1e9cafd756ef89cd427cccc89da8":[43,0,410,9]
+"structSDL__hid__device__info.html#a80f37d1aaae118285bec4442a8c9b1d0":[43,0,410,8]
 };

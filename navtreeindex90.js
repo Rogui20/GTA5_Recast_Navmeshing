@@ -1,5 +1,11 @@
 var NAVTREEINDEX90 =
 {
+"imstb__truetype_8h.html#a37d613643adacbed24c22718faf6afc7":[44,0,7,0,11,22],
+"imstb__truetype_8h.html#a3856cc4fbab4c126c2c438c6f567525d":[44,0,7,0,11,12],
+"imstb__truetype_8h.html#a404d8b8c23a01c8cdf71f02d6d47d185":[44,0,7,0,11,43],
+"imstb__truetype_8h.html#a42c4058f71988e703efdf4703d5dfe31":[44,0,7,0,11,17],
+"imstb__truetype_8h.html#a4416bb8395a4d2e717f613bb4903c7eb":[44,0,7,0,11,64],
+"imstb__truetype_8h.html#a4b3487c748701f5b89b7be56625df1be":[44,0,7,0,11,66],
 "imstb__truetype_8h.html#a4c55e174efbacaf82a8ddb9d1956717e":[44,0,7,0,11,77],
 "imstb__truetype_8h.html#a4dd4ca3bff4e304b2c8d952f87fbb639":[44,0,7,0,11,42],
 "imstb__truetype_8h.html#a51bd3fc45817d8606c749e585241fa71":[44,0,7,0,11,65],
@@ -243,11 +249,5 @@ var NAVTREEINDEX90 =
 "md_external_2SDL2_2docs_2README-n3ds.html#notes-1":[21,1],
 "md_external_2SDL2_2docs_2README-versions.html":[33],
 "md_external_2SDL2_2docs_2README-versions.html#before-2230":[33,1],
-"md_external_2SDL2_2docs_2README-versions.html#since-2230":[33,0],
-"md_external_2SDL2_2docs_2README-windows.html":[37],
-"md_external_2SDL2_2docs_2README-windows.html#llvm-and-intel-c-compiler-support":[37,0],
-"md_external_2SDL2_2docs_2README-windows.html#opengl-es-2x-support":[37,1],
-"md_external_2SDL2_2docs_2README-windows.html#vulkan-surface-support":[37,2],
-"md_external_2SDL2_2docs_2README.html":[39],
-"md_external_2SDL2_2docs_2release__checklist.html":[40]
+"md_external_2SDL2_2docs_2README-versions.html#since-2230":[33,0]
 };

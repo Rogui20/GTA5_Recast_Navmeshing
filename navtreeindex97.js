@@ -1,5 +1,11 @@
 var NAVTREEINDEX97 =
 {
+"structImGuiInputEventAppFocused.html":[43,0,209],
+"structImGuiInputEventAppFocused.html#a5da1aaa6b0be42c9a46c788bb86b8d93":[43,0,209,0],
+"structImGuiInputEventKey.html":[43,0,210],
+"structImGuiInputEventKey.html#a44a873572239dde28b0e332b6e8582bf":[43,0,210,1],
+"structImGuiInputEventKey.html#a4f464b98784a0b94e33a5b4a55b03bc0":[43,0,210,0],
+"structImGuiInputEventKey.html#aa4efa74612b817e41b2a73f2f0d41b1c":[43,0,210,2],
 "structImGuiInputEventMouseButton.html":[43,0,211],
 "structImGuiInputEventMouseButton.html#a6ecd75641eda3da1c42f977cd705ff03":[43,0,211,0],
 "structImGuiInputEventMouseButton.html#a9a669f2168a719da17c26dc3ad154d65":[43,0,211,1],
@@ -243,11 +249,5 @@ var NAVTREEINDEX97 =
 "structImGuiNextItemData.html#a72e212148815fefe93e7a7723d5db97b":[43,0,235,6],
 "structImGuiNextItemData.html#ab4e2f2f28801cc1d449ccaa105168938":[43,0,235,12],
 "structImGuiNextItemData.html#ab90cd4cdefc4ebd1ebdac9f0af80c92b":[43,0,235,3],
-"structImGuiNextItemData.html#acfb5c2e6ab0f2c0836ab1b13be98ddba":[43,0,235,7],
-"structImGuiNextItemData.html#aefdf9d7c8565e489155dcc5a1f252eab":[43,0,235,5],
-"structImGuiNextItemData.html#af34404b66163c26db7df295130df3e6e":[43,0,235,8],
-"structImGuiNextWindowData.html":[43,0,236],
-"structImGuiNextWindowData.html#a0471ae42c04fce2e38c9cd8c37690b09":[43,0,236,0],
-"structImGuiNextWindowData.html#a050058f58709d637bc6a0468ee48548f":[43,0,236,6],
-"structImGuiNextWindowData.html#a0937e1b171826a367e95f75895a4aa5b":[43,0,236,9]
+"structImGuiNextItemData.html#acfb5c2e6ab0f2c0836ab1b13be98ddba":[43,0,235,7]
 };

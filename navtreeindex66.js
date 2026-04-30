@@ -1,5 +1,11 @@
 var NAVTREEINDEX66 =
 {
+"SDL__video_8h.html#a841edb930dc7cb2c1ec64f831d3abba6":[44,0,5,2,1,89,35],
+"SDL__video_8h.html#a896972250b4d2e0f75888fa44fa792ec":[44,0,5,2,1,89,107],
+"SDL__video_8h.html#a8add4d45c3653fd63e15a08ce202d29a":[44,0,5,2,1,89,15],
+"SDL__video_8h.html#a8d2f428ddef3b4ccf08915814e35d9c7":[44,0,5,2,1,89,1],
+"SDL__video_8h.html#a8d969b660fee270f84cb403c8b75ded6":[44,0,5,2,1,89,101],
+"SDL__video_8h.html#a8ded7367fc7c4375cc195ff4a2a2132c":[44,0,5,2,1,89,5],
 "SDL__video_8h.html#a912994189211554bdd0b264e3f6d8e9f":[44,0,5,2,1,89,42],
 "SDL__video_8h.html#a92103adf9637ec2dc471714076872bdc":[44,0,5,2,1,89,97],
 "SDL__video_8h.html#a9305b50111e5d09ed2f856465abb1a45":[44,0,5,2,1,89,56],
@@ -243,11 +249,5 @@ var NAVTREEINDEX66 =
 "android.html#pause--resume-behaviour":[8,6],
 "android.html#requirements":[8,0],
 "android.html#threads-and-the-java-vm":[8,9],
-"android.html#troubleshooting":[8,12],
-"android.html#using-stl":[8,10],
-"android.html#using-the-emulator":[8,11],
-"android.html#why-is-api-level-19-the-minimum-required":[8,15],
-"annotated.html":[43,0],
-"begin__code_8h.html":[44,0,5,2,1,0],
-"begin__code_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4":[44,0,5,2,1,0,2]
+"android.html#troubleshooting":[8,12]
 };

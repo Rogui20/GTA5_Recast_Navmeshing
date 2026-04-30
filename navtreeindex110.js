@@ -1,5 +1,11 @@
 var NAVTREEINDEX110 =
 {
+"structrcSpan.html#a6bca504828087023719794cce9a5f0ab":[43,0,364,2],
+"structrcSpan.html#a8bf133cf1e7ccf3d69f1ba365cb0c1ca":[43,0,364,0],
+"structrcSpan.html#aba70c34dc95c49c4b3142b7d9ca9d359":[43,0,364,3],
+"structrcSpanPool.html":[43,0,365],
+"structrcSpanPool.html#a7527556787dc57fc87296e8f3dcdd227":[43,0,365,0],
+"structrcSpanPool.html#aaa72cbbf0abb73bfaa8fefc55ef37f2f":[43,0,365,1],
 "structrcSweepSpan.html":[43,0,366],
 "structrcSweepSpan.html#a4d7da0d9409cf1124f8fed63783da60e":[43,0,366,1],
 "structrcSweepSpan.html#ab92de3221c19c2c9a2d716ea7680146f":[43,0,366,3],
@@ -243,11 +249,5 @@ var NAVTREEINDEX110 =
 "winrt.html#autotoc_md5-add-a-winrt-appropriate-main-function-and-a-blank-cursor-image-to-the-app":[38,4,4],
 "winrt.html#autotoc_md6-add-app-code-and-assets":[38,4,5],
 "winrt.html#autotoc_md6a--when-creating-a-new-app":[38,4,5,0],
-"winrt.html#autotoc_md6b-adding-code-and-assets":[38,4,5,1],
-"winrt.html#autotoc_md7-build-and-run-your-app":[38,4,6],
-"winrt.html#autotoc_md7a-running-apps-on-older-arm-based-windows-rt-devices":[38,4,6,0],
-"winrt.html#requirements-2":[38,0],
-"winrt.html#setup-detailed-steps":[38,4],
-"winrt.html#setup-high-level-steps":[38,3],
-"winrt.html#status":[38,1]
+"winrt.html#autotoc_md6b-adding-code-and-assets":[38,4,5,1]
 };

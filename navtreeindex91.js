@@ -1,5 +1,11 @@
 var NAVTREEINDEX91 =
 {
+"md_external_2SDL2_2docs_2README-windows.html":[37],
+"md_external_2SDL2_2docs_2README-windows.html#llvm-and-intel-c-compiler-support":[37,0],
+"md_external_2SDL2_2docs_2README-windows.html#opengl-es-2x-support":[37,1],
+"md_external_2SDL2_2docs_2README-windows.html#vulkan-surface-support":[37,2],
+"md_external_2SDL2_2docs_2README.html":[39],
+"md_external_2SDL2_2docs_2release__checklist.html":[40],
 "md_external_2SDL2_2docs_2release__checklist.html#after-a-feature-release":[40,2],
 "md_external_2SDL2_2docs_2release__checklist.html#new-bugfix-release":[40,1],
 "md_external_2SDL2_2docs_2release__checklist.html#new-development-prerelease":[40,3],
@@ -243,11 +249,5 @@ var NAVTREEINDEX91 =
 "structExampleAssetsBrowser.html#a2fc7cd6b1c71c99b24754b11fbe377c3":[43,0,82,24],
 "structExampleAssetsBrowser.html#a31360d753e6db9d39a2d81507b7a121c":[43,0,82,14],
 "structExampleAssetsBrowser.html#a3e637fe11493f8884937c20e1bdaf7fe":[43,0,82,23],
-"structExampleAssetsBrowser.html#a41fc44d1d85beac499c843beea5c6e41":[43,0,82,21],
-"structExampleAssetsBrowser.html#a60f2d2a599316f3a56f8de8b6ae2d04c":[43,0,82,25],
-"structExampleAssetsBrowser.html#a62ad4a50da3fa63f0b60e51742f112da":[43,0,82,2],
-"structExampleAssetsBrowser.html#a6a7b2ab78f40c8007c558b9c8daaec63":[43,0,82,4],
-"structExampleAssetsBrowser.html#a795a88cb7c87f49442b5d679263268ec":[43,0,82,10],
-"structExampleAssetsBrowser.html#a85229b3bc84648fc7df5defb380c0c0e":[43,0,82,12],
-"structExampleAssetsBrowser.html#a8b569f2534ae0781f548c70498f2e58c":[43,0,82,20]
+"structExampleAssetsBrowser.html#a41fc44d1d85beac499c843beea5c6e41":[43,0,82,21]
 };

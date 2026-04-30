@@ -1,5 +1,11 @@
 var NAVTREEINDEX106 =
 {
+"structSDL__AudioDeviceEvent.html#ae68c3bd49b49608711a17395c7cbfe58":[43,0,383,5],
+"structSDL__AudioDeviceEvent.html#af3163ba92c77f08a4f0d8f043f24c96c":[43,0,383,3],
+"structSDL__AudioSpec.html":[43,0,384],
+"structSDL__AudioSpec.html#a154cf44743ecec78c36dc6c827dd2fdb":[43,0,384,7],
+"structSDL__AudioSpec.html#a1f8d05139f1679dcf359f49251233eac":[43,0,384,0],
+"structSDL__AudioSpec.html#a2cdf5e885808c10bfa2810b706e69f95":[43,0,384,5],
 "structSDL__AudioSpec.html#a31fe8b3710cf23bbef24be8a1749fe46":[43,0,384,1],
 "structSDL__AudioSpec.html#a738371fc13b54cefef4db16994abeeb6":[43,0,384,4],
 "structSDL__AudioSpec.html#a8b823ce46fc2e448cf7e6fc141aff6b2":[43,0,384,3],
@@ -243,11 +249,5 @@ var NAVTREEINDEX106 =
 "structSDL__Locale.html#a0a6d2720db6bc77bfa82528294c1c6e8":[43,0,419,0],
 "structSDL__Locale.html#a0b568d515a6587876f41fc8e059514c6":[43,0,419,1],
 "structSDL__MessageBoxButtonData.html":[43,0,420],
-"structSDL__MessageBoxButtonData.html#a22938886a6b13792006cc5c91fa38e92":[43,0,420,0],
-"structSDL__MessageBoxButtonData.html#a426c8b5da0e718242c7840706d95de0b":[43,0,420,1],
-"structSDL__MessageBoxButtonData.html#af35f3062f0577159284c8828caaf08e4":[43,0,420,2],
-"structSDL__MessageBoxColor.html":[43,0,421],
-"structSDL__MessageBoxColor.html#a43ab2172c10058380fcf67ecc3f53184":[43,0,421,2],
-"structSDL__MessageBoxColor.html#a5820adab0b32aa3eade101ea36ed6b4a":[43,0,421,1],
-"structSDL__MessageBoxColor.html#ad1215a42167cb5b190ff8f19dbd42066":[43,0,421,0]
+"structSDL__MessageBoxButtonData.html#a22938886a6b13792006cc5c91fa38e92":[43,0,420,0]
 };

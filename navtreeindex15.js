@@ -1,5 +1,11 @@
 var NAVTREEINDEX15 =
 {
+"SDL__config__macosx_8h.html#a867273f57e03fd4a82de049f9c0f71d7":[44,0,5,2,1,13,134],
+"SDL__config__macosx_8h.html#a86a0e8975f1e24ecbd650aa724be875b":[44,0,5,2,1,13,125],
+"SDL__config__macosx_8h.html#a8842122c022f68c0be435220abeeced9":[44,0,5,2,1,13,32],
+"SDL__config__macosx_8h.html#a8a106b4b1b82a5b9dc1878e2a7913b04":[44,0,5,2,1,13,24],
+"SDL__config__macosx_8h.html#a8bcdbb0550d2cf79483efdfb3fe9013f":[44,0,5,2,1,13,138],
+"SDL__config__macosx_8h.html#a8c92adb1e131f27ed3df84fab1a2f54d":[44,0,5,2,1,13,78],
 "SDL__config__macosx_8h.html#a8f96bad320625b3ebc45b5e178d84ef8":[44,0,5,2,1,13,112],
 "SDL__config__macosx_8h.html#a8ff3a28c350664f46a62c4b0a0332bb7":[44,0,5,2,1,13,27],
 "SDL__config__macosx_8h.html#a91ff898d2a93eec793bba283e01a1c62":[44,0,5,2,1,13,123],
@@ -221,8 +227,8 @@ var NAVTREEINDEX15 =
 "SDL__config__os2_8h.html#acc0a82e924c3573aabbfdd996ae56bde":[44,0,5,2,1,16,82],
 "SDL__config__os2_8h.html#acc2bed5d68d90c16dff96bcf1bcde0b4":[44,0,5,2,1,16,88],
 "SDL__config__os2_8h.html#acce0cf4223f69a5aa693ac36ebffcbf6":[44,0,5,2,1,16,104],
-"SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[44,0,5,2,1,16,85],
 "SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[44,0,5,2,1,16,84],
+"SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[44,0,5,2,1,16,85],
 "SDL__config__os2_8h.html#ad4c234dd1625255dc626a15886306e7d":[44,0,5,2,1,16,65],
 "SDL__config__os2_8h.html#ad5351e07e3ee3d8d34e1689351c47c75":[44,0,5,2,1,16,95],
 "SDL__config__os2_8h.html#ad7c2edb2365c947f4bff624c7be9f890":[44,0,5,2,1,16,76],
@@ -243,11 +249,5 @@ var NAVTREEINDEX15 =
 "SDL__config__os2_8h.html#afb31c0ab32d51b7976adc41723b5b415":[44,0,5,2,1,16,13],
 "SDL__config__os2_8h_source.html":[44,0,5,2,1,16],
 "SDL__config__pandora_8h.html":[44,0,5,2,1,17],
-"SDL__config__pandora_8h.html#a0302094a0ee567c610a36c63104ebda5":[44,0,5,2,1,17,37],
-"SDL__config__pandora_8h.html#a04f983617a16d562f9a6df2e34a6a41c":[44,0,5,2,1,17,47],
-"SDL__config__pandora_8h.html#a0582882a281bd6c7580e454be3595703":[44,0,5,2,1,17,77],
-"SDL__config__pandora_8h.html#a069eb269b08ea1dfd2fbd9cdd60569a2":[44,0,5,2,1,17,40],
-"SDL__config__pandora_8h.html#a074c8b477744a81b81f35ac25fcf9430":[44,0,5,2,1,17,60],
-"SDL__config__pandora_8h.html#a0f08977476bc5b181092cf8b3ddaf368":[44,0,5,2,1,17,65],
-"SDL__config__pandora_8h.html#a11ac21032a27eeea45cb607b129fff62":[44,0,5,2,1,17,92]
+"SDL__config__pandora_8h.html#a0302094a0ee567c610a36c63104ebda5":[44,0,5,2,1,17,37]
 };
