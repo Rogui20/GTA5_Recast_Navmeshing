@@ -1057,6 +1057,127 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationPar
     printf("[AutoOffmeshV2] tempo total: %.3f ms\n", ms);
     return true;
 }
+
+bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
+                                                         int ty,
+                                                         const AutoOffmeshGenerationParamsV2& params,
+                                                         const std::vector<glm::vec3>& localVerts,
+                                                         const std::vector<unsigned int>& localIndices,
+                                                         std::vector<OffmeshLink>& outLinks) const
+{
+    outLinks.clear();
+    if (!m_nav)
+        return false;
+
+    const dtMeshTile* tile = m_nav->getTileAt(tx, ty, 0);
+    if (!tile || !tile->header)
+        return true;
+    if (localVerts.empty() || localIndices.empty())
+        return true;
+
+    std::vector<float> rayVerts;
+    std::vector<int> rayTris;
+    rayVerts.reserve(localVerts.size() * 3);
+    for (const auto& v : localVerts) { rayVerts.push_back(v.x); rayVerts.push_back(v.y); rayVerts.push_back(v.z); }
+    rayTris.reserve(localIndices.size());
+    for (unsigned int i : localIndices) rayTris.push_back(static_cast<int>(i));
+
+    dtNavMeshQuery* query = dtAllocNavMeshQuery();
+    if (!query) return false;
+    const std::unique_ptr<dtNavMeshQuery, void(*)(dtNavMeshQuery*)> queryGuard(query, dtFreeNavMeshQuery);
+    if (dtStatusFailed(query->init(m_nav, 4096))) return false;
+
+    dtQueryFilter filter{};
+    filter.setIncludeFlags(0xffff);
+    filter.setExcludeFlags(0);
+
+    const bool includeDrop = (params.genFlags & AUTO_OFFMESH_V2_INCLUDE_DROP) != 0;
+    const bool includeJump = (params.genFlags & AUTO_OFFMESH_V2_INCLUDE_JUMP) != 0;
+    const bool includeClimb = (params.genFlags & AUTO_OFFMESH_V2_INCLUDE_CLIMB) != 0;
+    const bool enableSweep = (params.genFlags & AUTO_OFFMESH_V2_ENABLE_SWEEP_RAYS) != 0;
+    const glm::vec3 up(0.f, 1.f, 0.f);
+    const float slopeCos = cosf(glm::radians(params.maxSlopeDegrees));
+    const float outwardOffset = std::max(params.outwardOffset, params.agentRadius + 0.05f);
+    const float maxRayDistance = params.maxDropHeight + params.raycastExtraHeight + params.upOffset;
+    const glm::vec3 snapExtents(std::max(params.agentRadius, 0.2f), std::max(params.agentHeight + params.maxJumpUp + 0.5f, 0.5f), std::max(params.agentRadius, 0.2f));
+
+    std::unordered_set<uint64_t> dedupe;
+    for (int polyIndex = 0; polyIndex < tile->header->polyCount; ++polyIndex)
+    {
+        const dtPoly* poly = &tile->polys[polyIndex];
+        if (poly->getType() != DT_POLYTYPE_GROUND) continue;
+        const glm::vec3 polyNormal = ComputePolyNormal(tile, poly);
+        if (polyNormal.y < slopeCos) continue;
+        const glm::vec3 polyCenter = ComputePolyCentroid(tile, poly);
+        for (int edge = 0; edge < poly->vertCount; ++edge)
+        {
+            if (!IsOpenEdge(tile, poly, edge, m_nav)) continue;
+            const glm::vec3 a = GetPolyVertex(tile, poly, edge);
+            const glm::vec3 b = GetPolyVertex(tile, poly, (edge + 1) % poly->vertCount);
+            glm::vec3 outward = EdgeOutwardXZ(a, b, polyCenter, polyNormal);
+            if (glm::dot(outward, outward) < 1e-6f) continue;
+            outward = glm::normalize(outward);
+            for (int sample = 0; sample < params.samplesPerEdge; ++sample)
+            {
+                const float t = static_cast<float>(sample + 1) / static_cast<float>(params.samplesPerEdge + 1);
+                const glm::vec3 p = LerpVec3(a, b, t);
+                const glm::vec3 takeoff = p - outward * params.startInset;
+                dtPolyRef takeoffRef = 0;
+                glm::vec3 takeoffSnapped{};
+                if (!SnapToNavmesh(query, takeoff, snapExtents, &filter, takeoffRef, takeoffSnapped)) continue;
+                const glm::vec3 probe = p + outward * outwardOffset + up * params.upOffset;
+                const glm::vec3 sweepStart = takeoffSnapped + up * params.sweepUp;
+                auto pushLink = [&](OffmeshLink& link, uint32_t type) {
+                    const uint64_t h = HashLink(link.start, link.end, type, params.quantizePos);
+                    if (!dedupe.insert(h).second) return false;
+                    outLinks.push_back(link);
+                    return !(params.maxLinksPerTile > 0 && static_cast<int>(outLinks.size()) >= params.maxLinksPerTile);
+                };
+                if (includeDrop)
+                {
+                    glm::vec3 hit{}, hitNormal{};
+                    if (RaycastDown(rayVerts, rayTris, probe, maxRayDistance, hit, hitNormal))
+                    {
+                        dtPolyRef hitRef = 0; glm::vec3 snapped{};
+                        if (SnapToNavmesh(query, hit, snapExtents, &filter, hitRef, snapped))
+                        {
+                            OffmeshLink link{}; link.start = takeoffSnapped; link.end = snapped; link.radius = std::max(params.agentRadius, 0.1f);
+                            link.bidirectional = false; link.area = params.dropArea; link.flags = 1; link.userId = params.userIdBase + static_cast<uint32_t>(outLinks.size()); link.ownerTx = tx; link.ownerTy = ty;
+                            if (!pushLink(link, 0u)) break;
+                        }
+                    }
+                }
+                if (includeJump || includeClimb)
+                {
+                    for (float d = params.minDist; d <= params.maxDist + 1e-3f; d += params.distStep)
+                    {
+                        glm::vec3 candRaw = p + outward * d + up * params.upOffset;
+                        dtPolyRef candRef = 0; glm::vec3 cand{};
+                        if (!SnapToNavmesh(query, candRaw, snapExtents, &filter, candRef, cand) || candRef == takeoffRef) continue;
+                        bool clear = enableSweep ? SweepRay3(rayVerts, rayTris, sweepStart, cand + up * params.sweepUp, params.sweepSideOffset, 0.10f) : true;
+                        if (!clear) continue;
+                        const float dy = cand.y - takeoffSnapped.y;
+                        uint32_t type = 1u; uint8_t area = params.jumpArea; bool accept = false;
+                        if (includeClimb && dy > 0.0f && dy <= params.maxJumpUp) { accept = true; type = 2u; area = params.climbArea; }
+                        else if (includeJump && dy >= -params.maxJumpDown && dy <= params.maxJumpUp) { accept = true; type = 1u; area = params.jumpArea; }
+                        if (!accept) continue;
+                        OffmeshLink link{}; link.start = takeoffSnapped; link.end = cand; link.radius = std::max(params.agentRadius, 0.1f); link.bidirectional = true;
+                        link.area = area; link.flags = 1; link.userId = params.userIdBase + static_cast<uint32_t>(outLinks.size()); link.ownerTx = tx; link.ownerTy = ty;
+                        if (!pushLink(link, type)) break;
+                        break;
+                    }
+                }
+                if (params.maxLinksPerTile > 0 && static_cast<int>(outLinks.size()) >= params.maxLinksPerTile)
+                    break;
+            }
+            if (params.maxLinksPerTile > 0 && static_cast<int>(outLinks.size()) >= params.maxLinksPerTile)
+                break;
+        }
+        if (params.maxLinksPerTile > 0 && static_cast<int>(outLinks.size()) >= params.maxLinksPerTile)
+            break;
+    }
+    return true;
+}
 bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& params,
                                                  std::vector<OffmeshLink>& outLinks)
 {
