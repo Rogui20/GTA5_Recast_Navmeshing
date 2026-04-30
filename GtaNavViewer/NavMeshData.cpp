@@ -450,7 +450,7 @@ namespace
 
     glm::vec3 EdgeOutwardXZ(const glm::vec3& a,
                             const glm::vec3& b,
-                            const glm::vec3& polyCenter
+                            const glm::vec3& polyCenter,
                             const glm::vec3& normal)
     {
         return ComputeEdgeOutwardNormal(a, b, polyCenter, normal);
