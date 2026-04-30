@@ -1043,12 +1043,25 @@ namespace
             {"desiredMaxPolysPerTile", ctx.genSettings.desiredMaxPolysPerTile}
         };
 
+        auto isPersistentManifestGeom = [&](const std::string& id) -> bool {
+            auto it = ctx.worldGeometry.find(id);
+            if (it == ctx.worldGeometry.end())
+                return false;
+            const auto& r = it->second;
+            return (r.flags & WORLD_GEOM_PERSISTENT) != 0 &&
+                   (r.flags & WORLD_GEOM_DYNAMIC) == 0;
+        };
+
+        std::unordered_set<uint64_t> persistentTileKeys;
+        size_t persistentGeoms = 0;
+
         j["geometries"] = nlohmann::json::array();
         for (const auto& kv : ctx.worldGeometry)
         {
             const auto& rec = kv.second;
             if ((rec.flags & WORLD_GEOM_PERSISTENT) == 0 || (rec.flags & WORLD_GEOM_DYNAMIC) != 0)
                 continue;
+            ++persistentGeoms;
             nlohmann::json g;
             g["customID"] = rec.id;
             g["path"] = rec.path;
@@ -1066,20 +1079,68 @@ namespace
             g["indexed"] = rec.indexed;
             g["tileKeys"] = rec.touchedTileKeys;
             j["geometries"].push_back(std::move(g));
+            for (uint64_t k : rec.touchedTileKeys)
+                persistentTileKeys.insert(k);
         }
 
-        j["pendingWorldGeometryQueue"] = ctx.pendingWorldGeometryQueue;
-        j["dirtyWorldTiles"] = std::vector<uint64_t>(ctx.dirtyWorldTiles.begin(), ctx.dirtyWorldTiles.end());
-        j["pendingTileBuildQueue"] = std::vector<uint64_t>(ctx.pendingTileBuildQueue.begin(), ctx.pendingTileBuildQueue.end());
-        j["emptyWorldTiles"] = std::vector<uint64_t>(ctx.emptyWorldTiles.begin(), ctx.emptyWorldTiles.end());
-        j["failedWorldTiles"] = std::vector<uint64_t>(ctx.failedWorldTiles.begin(), ctx.failedWorldTiles.end());
+        std::vector<std::string> pendingPersistentGeoms;
+        for (const auto& id : ctx.pendingWorldGeometryQueue)
+        {
+            if (isPersistentManifestGeom(id))
+                pendingPersistentGeoms.push_back(id);
+        }
+        j["pendingWorldGeometryQueue"] = std::move(pendingPersistentGeoms);
+
+        std::vector<uint64_t> dirtyPersistentTiles;
+        for (uint64_t key : ctx.dirtyWorldTiles)
+        {
+            if (persistentTileKeys.find(key) != persistentTileKeys.end())
+                dirtyPersistentTiles.push_back(key);
+        }
+        j["dirtyWorldTiles"] = std::move(dirtyPersistentTiles);
+
+        std::vector<uint64_t> pendingPersistentTiles;
+        for (uint64_t key : ctx.pendingTileBuildQueue)
+        {
+            if (persistentTileKeys.find(key) != persistentTileKeys.end())
+                pendingPersistentTiles.push_back(key);
+        }
+        j["pendingTileBuildQueue"] = std::move(pendingPersistentTiles);
+
+        std::vector<uint64_t> emptyPersistentTiles;
+        for (uint64_t key : ctx.emptyWorldTiles)
+        {
+            if (persistentTileKeys.find(key) != persistentTileKeys.end())
+                emptyPersistentTiles.push_back(key);
+        }
+        j["emptyWorldTiles"] = std::move(emptyPersistentTiles);
+
+        std::vector<uint64_t> failedPersistentTiles;
+        for (uint64_t key : ctx.failedWorldTiles)
+        {
+            if (persistentTileKeys.find(key) != persistentTileKeys.end())
+                failedPersistentTiles.push_back(key);
+        }
+        j["failedWorldTiles"] = std::move(failedPersistentTiles);
         nlohmann::json emptyHash = nlohmann::json::object();
         for (const auto& kv : ctx.emptyWorldTileHashes)
-            emptyHash[std::to_string(kv.first)] = kv.second;
+        {
+            if (persistentTileKeys.find(kv.first) != persistentTileKeys.end())
+                emptyHash[std::to_string(kv.first)] = kv.second;
+        }
         j["emptyWorldTileHashes"] = std::move(emptyHash);
         nlohmann::json tileToGeom = nlohmann::json::object();
         for (const auto& kv : ctx.tileToGeometryIds)
-            tileToGeom[std::to_string(kv.first)] = kv.second;
+        {
+            std::vector<std::string> filtered;
+            for (const auto& id : kv.second)
+            {
+                if (isPersistentManifestGeom(id))
+                    filtered.push_back(id);
+            }
+            if (!filtered.empty())
+                tileToGeom[std::to_string(kv.first)] = std::move(filtered);
+        }
         j["tileToGeometryIds"] = std::move(tileToGeom);
 
         const std::filesystem::path manifestPath = GetWorldManifestPath(ctx);
@@ -1092,8 +1153,8 @@ namespace
         if (!out.good())
             return false;
 
-        printf("[WorldTile] Save manifest: geoms=%zu dirty=%zu pendingTiles=%zu path=%s\n",
-               ctx.worldGeometry.size(), ctx.dirtyWorldTiles.size(), ctx.pendingTileBuildQueue.size(), manifestPath.string().c_str());
+        printf("[WorldTile] Save manifest: persistentGeoms=%zu totalGeoms=%zu dirtySaved=%zu pendingSaved=%zu tileToGeomSaved=%zu path=%s\n",
+               persistentGeoms, ctx.worldGeometry.size(), j["dirtyWorldTiles"].size(), j["pendingTileBuildQueue"].size(), j["tileToGeometryIds"].size(), manifestPath.string().c_str());
         return true;
     }
 
@@ -1167,6 +1228,10 @@ namespace
             const auto bmin = g.value("worldBMin", nlohmann::json::array());
             const auto bmax = g.value("worldBMax", nlohmann::json::array());
             if (rec.id.empty() || p.size() != 3 || r.size() != 3 || bmin.size() != 3 || bmax.size() != 3)
+                continue;
+            if ((rec.flags & WORLD_GEOM_DYNAMIC) != 0)
+                continue;
+            if ((rec.flags & WORLD_GEOM_PERSISTENT) == 0)
                 continue;
             rec.position = glm::vec3(p[0].get<float>(), p[1].get<float>(), p[2].get<float>());
             rec.rotation = glm::vec3(r[0].get<float>(), r[1].get<float>(), r[2].get<float>());
@@ -2196,7 +2261,8 @@ GTANAVVIEWER_API bool UpdateGeometry(void* navMesh,
 
         if (ctx->pendingWorldGeometrySet.insert(customID).second)
             ctx->pendingWorldGeometryQueue.push_back(customID);
-        if (ctx->worldAutoSaveManifest)
+        const bool isDynamic = (rec.flags & WORLD_GEOM_DYNAMIC) != 0;
+        if (!isDynamic && ctx->worldAutoSaveManifest)
             SaveWorldTileManifestInternal(*ctx);
         return !updateNavMesh || EnsureNavQuery(*ctx);
     }
@@ -2234,6 +2300,11 @@ GTANAVVIEWER_API bool RemoveGeometry(void* navMesh, const char* customID)
     if (ctx->worldTileStreamingEnabled)
     {
         const std::string id(customID);
+        bool isDynamic = false;
+        auto itGeom = ctx->worldGeometry.find(id);
+        if (itGeom != ctx->worldGeometry.end())
+            isDynamic = (itGeom->second.flags & WORLD_GEOM_DYNAMIC) != 0;
+
         std::unordered_set<uint64_t> oldTiles;
         auto itTiles = ctx->geomToTiles.find(id);
         if (itTiles != ctx->geomToTiles.end())
@@ -2252,7 +2323,7 @@ GTANAVVIEWER_API bool RemoveGeometry(void* navMesh, const char* customID)
         ctx->pendingWorldGeometryQueue.erase(
             std::remove(ctx->pendingWorldGeometryQueue.begin(), ctx->pendingWorldGeometryQueue.end(), id),
             ctx->pendingWorldGeometryQueue.end());
-        if (ctx->worldAutoSaveManifest)
+        if (!isDynamic && ctx->worldAutoSaveManifest)
             SaveWorldTileManifestInternal(*ctx);
         return true;
     }
@@ -2776,6 +2847,7 @@ GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
         ? std::string(customID)
         : (std::string(pathToGeometry) + "#" + std::to_string(ctx->worldGeometry.size() + ctx->pendingWorldGeometryQueue.size()));
 
+    bool oldWasPersistentManifestGeom = false;
     auto it = ctx->worldGeometry.find(id);
     if (it != ctx->worldGeometry.end())
     {
@@ -2790,6 +2862,10 @@ GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
 
         RemoveGeometryFromWorldIndex(*ctx, id);
         MarkTilesDirty(*ctx, oldTiles);
+
+        oldWasPersistentManifestGeom =
+            (it->second.flags & WORLD_GEOM_PERSISTENT) != 0 &&
+            (it->second.flags & WORLD_GEOM_DYNAMIC) == 0;
 
         auto& oldRec = it->second;
         oldRec.touchedTileKeys.clear();
@@ -2806,11 +2882,12 @@ GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
     rec.flags = flags == 0 ? WORLD_GEOM_PERSISTENT : flags;
     if ((rec.flags & WORLD_GEOM_DYNAMIC) != 0)
         rec.flags &= ~WORLD_GEOM_PERSISTENT;
+    const bool isDynamic = (rec.flags & WORLD_GEOM_DYNAMIC) != 0;
     rec.groupId = (groupId && groupId[0] != '\0') ? std::string(groupId) : "default";
     ctx->worldGeometry[id] = std::move(rec);
     if (ctx->pendingWorldGeometrySet.insert(id).second)
         ctx->pendingWorldGeometryQueue.push_back(id);
-    if (ctx->worldAutoSaveManifest)
+    if ((oldWasPersistentManifestGeom || !isDynamic) && ctx->worldAutoSaveManifest)
         SaveWorldTileManifestInternal(*ctx);
 
     return static_cast<int>(ctx->pendingWorldGeometryQueue.size());
@@ -3000,6 +3077,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
     int emptied = 0;
     int failed = 0;
     std::unordered_set<uint64_t> processedTileKeys;
+    std::unordered_set<uint64_t> tilesToSave;
 
     while (!ctx->pendingTileBuildQueue.empty() && built < maxCount)
     {
@@ -3043,6 +3121,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
             }
             ++emptied;
             ++built;
+            tilesToSave.insert(tileKey);
             ctx->emptyWorldTiles.insert(tileKey);
             ctx->emptyWorldTileHashes[tileKey] = worldHash;
             ctx->failedWorldTiles.erase(tileKey);
@@ -3060,12 +3139,14 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         }
         else if (emptyTile)
         {
+            tilesToSave.insert(tileKey);
             ctx->emptyWorldTiles.insert(tileKey);
             ctx->emptyWorldTileHashes[tileKey] = worldHash;
             ctx->failedWorldTiles.erase(tileKey);
         }
         else if (builtTile)
         {
+            tilesToSave.insert(tileKey);
             ctx->emptyWorldTiles.erase(tileKey);
             ctx->emptyWorldTileHashes.erase(tileKey);
             ctx->failedWorldTiles.erase(tileKey);
@@ -3081,32 +3162,35 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
                static_cast<unsigned long long>(worldHash));
     }
 
-    if (saveToCache && !processedTileKeys.empty() && built > 0)
+    if (saveToCache && !tilesToSave.empty() && built > 0)
     {
         std::filesystem::path cachePath = GetSessionCachePath(*ctx);
         const auto& hashes = ctx->navData.GetCachedTileHashes();
 
         printf("[WorldTile] TileDb merge write: %s (tiles=%zu)\n",
-            cachePath.string().c_str(), processedTileKeys.size());
+            cachePath.string().c_str(), tilesToSave.size());
 
         TileDbMergeWriteOrUpdateTiles(
             cachePath.string().c_str(),
             ctx->navData.GetNavMesh(),
             hashes,
-            &processedTileKeys
+            &tilesToSave
         );
 
         ctx->dbIndexCache.clear();
         ctx->dbIndexLoaded = false;
 
         if (ctx->worldUnloadBuiltTilesAfterSave)
-            UnloadProcessedNonResidentTiles(*ctx, processedTileKeys);
+            UnloadProcessedNonResidentTiles(*ctx, tilesToSave);
 
         printf("[ExternC] BuildQueuedWorldTiles: cache salvo em %s\n",
             cachePath.string().c_str());
     }
 
     EnsureNavQuery(*ctx);
+
+    printf("[WorldTile] BuildQueuedWorldTiles: processed=%zu tilesToSave=%zu failed=%d saveToCache=%d\n",
+        processedTileKeys.size(), tilesToSave.size(), failed, saveToCache ? 1 : 0);
 
     printf("[ExternC] BuildQueuedWorldTiles: built=%d empty=%d failed=%d saved=%d cache=%s\n",
         built, emptied, failed, saveToCache ? 1 : 0, GetSessionCachePath(*ctx).string().c_str());
