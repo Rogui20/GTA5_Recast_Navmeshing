@@ -247,6 +247,12 @@ public:
                                        std::vector<OffmeshLink>& outLinks) const;
     bool GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationParamsV2& params,
                                          std::vector<OffmeshLink>& outLinks) const;
+    bool GenerateAutomaticOffmeshLinksForTileV2(int tx,
+                                                int ty,
+                                                const AutoOffmeshGenerationParamsV2& params,
+                                                const std::vector<glm::vec3>& localVerts,
+                                                const std::vector<unsigned int>& localIndices,
+                                                std::vector<OffmeshLink>& outLinks) const;
     bool AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& params,
                                         std::vector<OffmeshLink>& outLinks);
 
