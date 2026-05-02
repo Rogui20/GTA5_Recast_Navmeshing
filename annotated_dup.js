@@ -491,6 +491,7 @@ var annotated_dup =
     [ "TileCacheTileHeader", "structTileCacheTileHeader.html", "structTileCacheTileHeader" ],
     [ "TileDbHeader", "structTileDbHeader.html", "structTileDbHeader" ],
     [ "TileDbIndexEntry", "structTileDbIndexEntry.html", "structTileDbIndexEntry" ],
+    [ "TileDbStats", "structTileDbStats.html", "structTileDbStats" ],
     [ "TileGridStats", "structTileGridStats.html", "structTileGridStats" ],
     [ "Uniforms", "structUniforms.html", "structUniforms" ],
     [ "ValueHistory", "classValueHistory.html", "classValueHistory" ],

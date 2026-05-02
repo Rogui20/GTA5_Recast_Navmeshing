@@ -1,5 +1,9 @@
 var NAVTREEINDEX15 =
 {
+"SDL__config__macosx_8h.html#a78bb72013d2a0de1f38d89a637c416c6":[44,0,5,2,1,13,105],
+"SDL__config__macosx_8h.html#a7b300f836d3d79d0d9b0039a6b842ded":[44,0,5,2,1,13,50],
+"SDL__config__macosx_8h.html#a7ff023a4e451532aa34a6dace7f6255e":[44,0,5,2,1,13,33],
+"SDL__config__macosx_8h.html#a82d9e6e346639f8e561c4179386c4e5b":[44,0,5,2,1,13,25],
 "SDL__config__macosx_8h.html#a867273f57e03fd4a82de049f9c0f71d7":[44,0,5,2,1,13,134],
 "SDL__config__macosx_8h.html#a86a0e8975f1e24ecbd650aa724be875b":[44,0,5,2,1,13,125],
 "SDL__config__macosx_8h.html#a8842122c022f68c0be435220abeeced9":[44,0,5,2,1,13,32],
@@ -227,8 +231,8 @@ var NAVTREEINDEX15 =
 "SDL__config__os2_8h.html#acc0a82e924c3573aabbfdd996ae56bde":[44,0,5,2,1,16,82],
 "SDL__config__os2_8h.html#acc2bed5d68d90c16dff96bcf1bcde0b4":[44,0,5,2,1,16,88],
 "SDL__config__os2_8h.html#acce0cf4223f69a5aa693ac36ebffcbf6":[44,0,5,2,1,16,104],
-"SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[44,0,5,2,1,16,85],
 "SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[44,0,5,2,1,16,84],
+"SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[44,0,5,2,1,16,85],
 "SDL__config__os2_8h.html#ad4c234dd1625255dc626a15886306e7d":[44,0,5,2,1,16,65],
 "SDL__config__os2_8h.html#ad5351e07e3ee3d8d34e1689351c47c75":[44,0,5,2,1,16,95],
 "SDL__config__os2_8h.html#ad7c2edb2365c947f4bff624c7be9f890":[44,0,5,2,1,16,76],
@@ -245,9 +249,5 @@ var NAVTREEINDEX15 =
 "SDL__config__os2_8h.html#af48c354ae84b052a66066ac1e0f5c8e0":[44,0,5,2,1,16,32],
 "SDL__config__os2_8h.html#af5e1c674bb7ab42ee349e48b33705a04":[44,0,5,2,1,16,69],
 "SDL__config__os2_8h.html#af7be1b451ac783c3a48ce26c6d5178f4":[44,0,5,2,1,16,67],
-"SDL__config__os2_8h.html#afb1ce161af1df3c2c55a629ea0d4bb6c":[44,0,5,2,1,16,21],
-"SDL__config__os2_8h.html#afb31c0ab32d51b7976adc41723b5b415":[44,0,5,2,1,16,13],
-"SDL__config__os2_8h_source.html":[44,0,5,2,1,16],
-"SDL__config__pandora_8h.html":[44,0,5,2,1,17],
-"SDL__config__pandora_8h.html#a0302094a0ee567c610a36c63104ebda5":[44,0,5,2,1,17,37]
+"SDL__config__os2_8h.html#afb1ce161af1df3c2c55a629ea0d4bb6c":[44,0,5,2,1,16,21]
 };

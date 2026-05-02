@@ -1,5 +1,9 @@
 var NAVTREEINDEX90 =
 {
+"imstb__truetype_8h.html#a213d5628c6b2e5c107b99378eefc6e3a":[44,0,7,0,11,25],
+"imstb__truetype_8h.html#a2784e0e55678a5980e950b1c9fbc75f0":[44,0,7,0,11,45],
+"imstb__truetype_8h.html#a2e607ba774cee7f2425917105dabd16f":[44,0,7,0,11,33],
+"imstb__truetype_8h.html#a3378c5794e9ab2a16492ab7e3c3c9485":[44,0,7,0,11,63],
 "imstb__truetype_8h.html#a344fc3b0ff7829d993ca8db3eadd321f":[44,0,7,0,11,72],
 "imstb__truetype_8h.html#a37d613643adacbed24c22718faf6afc7":[44,0,7,0,11,22],
 "imstb__truetype_8h.html#a3856cc4fbab4c126c2c438c6f567525d":[44,0,7,0,11,12],
@@ -245,9 +249,5 @@ var NAVTREEINDEX90 =
 "md_external_2SDL2_2docs_2README-macos.html#using-the-simple-directmedia-layer-with-xcode":[20,3],
 "md_external_2SDL2_2docs_2README-macos.html#working-directory":[20,4,0],
 "md_external_2SDL2_2docs_2README-macos.html#you-have-a-cocoa-app":[20,4,1],
-"md_external_2SDL2_2docs_2README-n3ds.html":[21],
-"md_external_2SDL2_2docs_2README-n3ds.html#building":[21,0],
-"md_external_2SDL2_2docs_2README-n3ds.html#notes-1":[21,1],
-"md_external_2SDL2_2docs_2README-versions.html":[33],
-"md_external_2SDL2_2docs_2README-versions.html#before-2230":[33,1]
+"md_external_2SDL2_2docs_2README-n3ds.html":[21]
 };

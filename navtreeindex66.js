@@ -1,5 +1,9 @@
 var NAVTREEINDEX66 =
 {
+"SDL__video_8h.html#a742f600404b9090bd64f8e863ece98c8":[44,0,5,2,1,89,86],
+"SDL__video_8h.html#a7bbfee05788dc85a1d67218cf3006653":[44,0,5,2,1,89,128],
+"SDL__video_8h.html#a8185547bc7cb0bbeb400f459792d081a":[44,0,5,2,1,89,63],
+"SDL__video_8h.html#a8207ec5d13bd87158cbb42ef76e33216":[44,0,5,2,1,89,47],
 "SDL__video_8h.html#a841edb930dc7cb2c1ec64f831d3abba6":[44,0,5,2,1,89,35],
 "SDL__video_8h.html#a896972250b4d2e0f75888fa44fa792ec":[44,0,5,2,1,89,107],
 "SDL__video_8h.html#a8add4d45c3653fd63e15a08ce202d29a":[44,0,5,2,1,89,15],
@@ -245,9 +249,5 @@ var NAVTREEINDEX66 =
 "android.html#loading-assets":[8,5],
 "android.html#memory-debugging":[8,13],
 "android.html#misc":[8,8],
-"android.html#mouse--touch-events":[8,7],
-"android.html#pause--resume-behaviour":[8,6],
-"android.html#requirements":[8,0],
-"android.html#threads-and-the-java-vm":[8,9],
-"android.html#troubleshooting":[8,12]
+"android.html#mouse--touch-events":[8,7]
 };

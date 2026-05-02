@@ -1,5 +1,9 @@
 var NAVTREEINDEX63 =
 {
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777babd231b2e5b57f28e35afddeb5461f999":[44,0,5,2,1,64,1,61],
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777bac1281d31ef54c88224ed000d330d8abe":[44,0,5,2,1,64,1,220],
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777bac142178be558fc9a3374a35f1c2535e7":[44,0,5,2,1,64,1,134],
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777bac174bfdfddbb3e83e67e70f4534a3261":[44,0,5,2,1,64,1,42],
 "SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777bac3149d38992b048463fe2aee8c3524ec":[44,0,5,2,1,64,1,1],
 "SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777bac35fd3f41be03648c6c478d6e88bbe91":[44,0,5,2,1,64,1,213],
 "SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777bac3a553bf8b10cc5fb62734c866e799e5":[44,0,5,2,1,64,1,47],
@@ -245,9 +249,5 @@ var NAVTREEINDEX63 =
 "SDL__stdinc_8h.html#a91fcc07ab87653a6c92ae1288c20a606":[44,0,5,2,1,67,189],
 "SDL__stdinc_8h.html#a92eeaa95348c308ebd882ca85eccd684":[44,0,5,2,1,67,116],
 "SDL__stdinc_8h.html#a9309b62decdda5d9abdbed5a1afee7de":[44,0,5,2,1,67,138],
-"SDL__stdinc_8h.html#a936588a2d12ce83c915d9a2441653370":[44,0,5,2,1,67,94],
-"SDL__stdinc_8h.html#a93b34777fdbdd6f60d50788cdd6e2a5b":[44,0,5,2,1,67,24],
-"SDL__stdinc_8h.html#a9548171a530aeb28aa02f22b0263c390":[44,0,5,2,1,67,136],
-"SDL__stdinc_8h.html#a9891f68858953b42cbc18e68a441e39d":[44,0,5,2,1,67,52],
-"SDL__stdinc_8h.html#a992b08a30e37eb465de30d6d6f59e349":[44,0,5,2,1,67,93]
+"SDL__stdinc_8h.html#a936588a2d12ce83c915d9a2441653370":[44,0,5,2,1,67,94]
 };

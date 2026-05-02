@@ -1,5 +1,9 @@
 var NAVTREEINDEX91 =
 {
+"md_external_2SDL2_2docs_2README-n3ds.html#building":[21,0],
+"md_external_2SDL2_2docs_2README-n3ds.html#notes-1":[21,1],
+"md_external_2SDL2_2docs_2README-versions.html":[33],
+"md_external_2SDL2_2docs_2README-versions.html#before-2230":[33,1],
 "md_external_2SDL2_2docs_2README-versions.html#since-2230":[33,0],
 "md_external_2SDL2_2docs_2README-windows.html":[37],
 "md_external_2SDL2_2docs_2README-windows.html#llvm-and-intel-c-compiler-support":[37,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX91 =
 "structExampleAssetsBrowser.html#a0d086443d4134995b272351b85e1c721":[43,0,82,5],
 "structExampleAssetsBrowser.html#a0da737c053f5db2ee8ee8f73773554bc":[43,0,82,6],
 "structExampleAssetsBrowser.html#a10620ceff20798eca9e740d1d6353c7b":[43,0,82,18],
-"structExampleAssetsBrowser.html#a12bf1e42c5707a74a78151d13725c436":[43,0,82,8],
-"structExampleAssetsBrowser.html#a2b36e1f9b7d764e547611baa4c7fd8d1":[43,0,82,3],
-"structExampleAssetsBrowser.html#a2fc7cd6b1c71c99b24754b11fbe377c3":[43,0,82,24],
-"structExampleAssetsBrowser.html#a31360d753e6db9d39a2d81507b7a121c":[43,0,82,14],
-"structExampleAssetsBrowser.html#a3e637fe11493f8884937c20e1bdaf7fe":[43,0,82,23]
+"structExampleAssetsBrowser.html#a12bf1e42c5707a74a78151d13725c436":[43,0,82,8]
 };

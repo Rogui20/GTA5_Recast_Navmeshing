@@ -2,9 +2,12 @@ var NavMesh__TileCacheDB_8h =
 [
     [ "TileDbHeader", "structTileDbHeader.html", "structTileDbHeader" ],
     [ "TileDbIndexEntry", "structTileDbIndexEntry.html", "structTileDbIndexEntry" ],
+    [ "TileDbStats", "structTileDbStats.html", "structTileDbStats" ],
     [ "LoadTileFromDb", "NavMesh__TileCacheDB_8h.html#a86ba610b00588560b249e0f034063558", null ],
     [ "LoadTilesInBoundsFromDb", "NavMesh__TileCacheDB_8h.html#a3b9e5dc7fcce5b8221c89612b95f541f", null ],
     [ "MakeTileKey", "NavMesh__TileCacheDB_8h.html#a0c35bf644d6b3b33ad30bcfa88092ce1", null ],
+    [ "TileDbAppendOrReplaceTiles", "NavMesh__TileCacheDB_8h.html#ae4029fa57fc2256f4d26357f106a5334", null ],
+    [ "TileDbGetStats", "NavMesh__TileCacheDB_8h.html#aa86b6539516313793f7ed31d563b521f", null ],
     [ "TileDbLoadIndex", "NavMesh__TileCacheDB_8h.html#a69e2241ad03fb8171bd43a997e59ca3f", null ],
     [ "TileDbMergeWriteOrUpdateTiles", "NavMesh__TileCacheDB_8h.html#a97db8f4d3c319f50adfd29db2364c9c1", null ],
     [ "TileDbReadTile", "NavMesh__TileCacheDB_8h.html#a9bb03ee1a76d76aba6e7185226064301", null ],

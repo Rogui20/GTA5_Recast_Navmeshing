@@ -1,5 +1,9 @@
 var NAVTREEINDEX105 =
 {
+"structNavMeshContext.html#abc3691cf3d40c5862e4e2c4da2183835":[43,0,314,1],
+"structNavMeshContext.html#abcd0555ead49affc973edcf914736415":[43,0,314,3],
+"structNavMeshContext.html#ace432d358f08ab26fd653028a339a081":[43,0,314,21],
+"structNavMeshContext.html#ae6064d5b280a562725ace92367554a97":[43,0,314,8],
 "structNavMeshContext.html#aeb7b4526a52b31f1e566eabc1f584d22":[43,0,314,22],
 "structNavMeshDefinition.html":[43,0,316],
 "structNavMeshDefinition.html#a1392e75dfd653046599329e9ec592e0a":[43,0,316,12],
@@ -245,9 +249,5 @@ var NAVTREEINDEX105 =
 "structSDL__AudioCVT.html#ad886122c23a6673073baace31bff3b6c":[43,0,382,9],
 "structSDL__AudioCVT.html#aeaeb8c5a63c3ab96471fbfdf412c78ff":[43,0,382,4],
 "structSDL__AudioCVT.html#afeb8dc60716644de3b681653442de1db":[43,0,382,3],
-"structSDL__AudioDeviceEvent.html":[43,0,383],
-"structSDL__AudioDeviceEvent.html#a1482dcd50b47046ef8e9bfa7cc7457d9":[43,0,383,0],
-"structSDL__AudioDeviceEvent.html#aa471680486a6103eafc9af569016df57":[43,0,383,4],
-"structSDL__AudioDeviceEvent.html#ac91d70fd4e1dd596185fed061388896c":[43,0,383,6],
-"structSDL__AudioDeviceEvent.html#ad6efdec7189e735f4a05fc123c0cb723":[43,0,383,1]
+"structSDL__AudioDeviceEvent.html":[43,0,383]
 };

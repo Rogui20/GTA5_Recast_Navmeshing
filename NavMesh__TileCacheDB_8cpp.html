@@ -122,6 +122,10 @@ Functions</h2></td></tr>
 <tr class="separator:a58956e073e730c2bb9fd807331255360"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b9e5dc7fcce5b8221c89612b95f541f" id="r_a3b9e5dc7fcce5b8221c89612b95f541f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__TileCacheDB_8cpp.html#a3b9e5dc7fcce5b8221c89612b95f541f">LoadTilesInBoundsFromDb</a> (const char *dbPath, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav, const float *bmin, const float *bmax, int &amp;outLoadedCount)</td></tr>
 <tr class="separator:a3b9e5dc7fcce5b8221c89612b95f541f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa86b6539516313793f7ed31d563b521f" id="r_aa86b6539516313793f7ed31d563b521f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__TileCacheDB_8cpp.html#aa86b6539516313793f7ed31d563b521f">TileDbGetStats</a> (const char *dbPath, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav, <a class="el" href="structTileDbStats.html">TileDbStats</a> &amp;outStats)</td></tr>
+<tr class="separator:aa86b6539516313793f7ed31d563b521f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cd3c80c735bd90572b851feaaaafe43" id="r_a6cd3c80c735bd90572b851feaaaafe43"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMesh__TileCacheDB_8cpp.html#a6cd3c80c735bd90572b851feaaaafe43">TileDbAppendOrReplaceTiles</a> (const char *dbPath, <a class="el" href="classdtNavMesh.html">dtNavMesh</a> *nav, const std::unordered_map&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a>, <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> &gt; &amp;tileHashes, const std::unordered_set&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> &gt; *onlyTileKeysToUpdate)</td></tr>
+<tr class="separator:a6cd3c80c735bd90572b851feaaaafe43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a58956e073e730c2bb9fd807331255360" name="a58956e073e730c2bb9fd807331255360"></a>
@@ -211,6 +215,80 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">int &amp;&#160;</td>
           <td class="paramname"><em>outLoadedCount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6cd3c80c735bd90572b851feaaaafe43" name="a6cd3c80c735bd90572b851feaaaafe43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cd3c80c735bd90572b851feaaaafe43">&#9670;&#160;</a></span>TileDbAppendOrReplaceTiles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TileDbAppendOrReplaceTiles </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>dbPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&#160;</td>
+          <td class="paramname"><em>nav</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::unordered_map&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a>, <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tileHashes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::unordered_set&lt; <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> &gt; *&#160;</td>
+          <td class="paramname"><em>onlyTileKeysToUpdate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa86b6539516313793f7ed31d563b521f" name="aa86b6539516313793f7ed31d563b521f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa86b6539516313793f7ed31d563b521f">&#9670;&#160;</a></span>TileDbGetStats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TileDbGetStats </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>dbPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classdtNavMesh.html">dtNavMesh</a> *&#160;</td>
+          <td class="paramname"><em>nav</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structTileDbStats.html">TileDbStats</a> &amp;&#160;</td>
+          <td class="paramname"><em>outStats</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
