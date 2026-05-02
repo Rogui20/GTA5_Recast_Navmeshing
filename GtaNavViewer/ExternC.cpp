@@ -1180,6 +1180,11 @@ namespace
                 tileToGeom[std::to_string(kv.first)] = std::move(filtered);
         }
         j["tileToGeometryIds"] = std::move(tileToGeom);
+        std::vector<uint64_t> allIndexedTileKeys;
+        allIndexedTileKeys.reserve(ctx.tileToGeometryIds.size());
+        for (const auto& kv : ctx.tileToGeometryIds)
+            allIndexedTileKeys.push_back(kv.first);
+        j["allIndexedTileKeys"] = std::move(allIndexedTileKeys);
 
         const std::filesystem::path manifestPath = GetWorldManifestPath(ctx);
         if (manifestPath.has_parent_path())
@@ -1447,50 +1452,6 @@ namespace
                 ctx.pendingWorldGeometryQueue.push_back(id);
         }
 
-        const auto dirtyTiles = j.value("dirtyWorldTiles", std::vector<uint64_t>{});
-        for (uint64_t key : dirtyTiles)
-            ctx.dirtyWorldTiles.insert(key);
-
-        const auto pendingTiles = j.value("pendingTileBuildQueue", std::vector<uint64_t>{});
-        for (uint64_t key : pendingTiles)
-            EnqueueTileBuild(ctx, key);
-
-        std::filesystem::path cachePath = GetSessionCachePath(ctx);
-        const bool indexLoaded = EnsureDbIndexLoaded(ctx, cachePath);
-        const size_t dbTiles = indexLoaded ? ctx.dbIndexCache.size() : 0;
-        const size_t pendingBefore = ctx.pendingTileBuildQueue.size();
-        const size_t dirtyBefore = ctx.dirtyWorldTiles.size();
-        size_t skippedCached = 0;
-        if (indexLoaded)
-        {
-            auto removeIfCached = [&](uint64_t key)
-            {
-                const int tx = static_cast<int>(key >> 32);
-                const int ty = static_cast<int>(key & 0xffffffffu);
-                const uint64_t expectedHash = ComputeWorldTileHash(ctx, tx, ty);
-                auto itDb = ctx.dbIndexCache.find(key);
-                if (itDb != ctx.dbIndexCache.end() && itDb->second.geomHash == expectedHash)
-                {
-                    ctx.pendingTileBuildSet.erase(key);
-                    ctx.dirtyWorldTiles.erase(key);
-                    ++skippedCached;
-                    return true;
-                }
-                return false;
-            };
-
-            std::deque<uint64_t> filtered;
-            for (uint64_t key : ctx.pendingTileBuildQueue)
-            {
-                if (!removeIfCached(key))
-                    filtered.push_back(key);
-            }
-            ctx.pendingTileBuildQueue.swap(filtered);
-
-            std::vector<uint64_t> dirtySnapshot(ctx.dirtyWorldTiles.begin(), ctx.dirtyWorldTiles.end());
-            for (uint64_t key : dirtySnapshot)
-                removeIfCached(key);
-        }
         const auto emptyTiles = j.value("emptyWorldTiles", std::vector<uint64_t>{});
         for (uint64_t key : emptyTiles)
             ctx.emptyWorldTiles.insert(key);
@@ -1503,16 +1464,82 @@ namespace
             for (auto it = emptyHashesJson.begin(); it != emptyHashesJson.end(); ++it)
                 ctx.emptyWorldTileHashes[std::stoull(it.key())] = it.value().get<uint64_t>();
         }
-        if (ctx.pendingTileBuildQueue.empty() && !ctx.dirtyWorldTiles.empty())
+
+        std::filesystem::path cachePath = GetSessionCachePath(ctx);
+        const bool indexLoaded = EnsureDbIndexLoaded(ctx, cachePath);
+        const size_t dbTiles = indexLoaded ? ctx.dbIndexCache.size() : 0;
+        size_t cachedOk = 0;
+        size_t knownEmpty = 0;
+        size_t queuedMissing = 0;
+
+        for (const auto& kv : ctx.tileToGeometryIds)
         {
-            std::vector<uint64_t> dirtySnapshot(ctx.dirtyWorldTiles.begin(), ctx.dirtyWorldTiles.end());
-            for (uint64_t key : dirtySnapshot)
-                EnqueueTileBuild(ctx, key);
+            const uint64_t tileKey = kv.first;
+            const int tx = static_cast<int>(tileKey >> 32);
+            const int ty = static_cast<int>(tileKey & 0xffffffffu);
+            const uint64_t expectedHash = ComputeWorldTileHash(ctx, tx, ty);
+
+            auto itDb = ctx.dbIndexCache.find(tileKey);
+            if (itDb != ctx.dbIndexCache.end() && itDb->second.geomHash == expectedHash)
+            {
+                ++cachedOk;
+                continue;
+            }
+
+            auto itEmpty = ctx.emptyWorldTileHashes.find(tileKey);
+            if (itEmpty != ctx.emptyWorldTileHashes.end() && itEmpty->second == expectedHash)
+            {
+                ++knownEmpty;
+                continue;
+            }
+
+            ctx.dirtyWorldTiles.insert(tileKey);
+            EnqueueTileBuild(ctx, tileKey);
+            ++queuedMissing;
+        }
+
+        const auto pendingTiles = j.value("pendingTileBuildQueue", std::vector<uint64_t>{});
+        size_t pendingFromManifest = 0;
+        for (uint64_t tileKey : pendingTiles)
+        {
+            const int tx = static_cast<int>(tileKey >> 32);
+            const int ty = static_cast<int>(tileKey & 0xffffffffu);
+            const uint64_t expectedHash = ComputeWorldTileHash(ctx, tx, ty);
+            auto itDb = ctx.dbIndexCache.find(tileKey);
+            if (itDb != ctx.dbIndexCache.end() && itDb->second.geomHash == expectedHash)
+                continue;
+
+            auto itEmpty = ctx.emptyWorldTileHashes.find(tileKey);
+            if (itEmpty != ctx.emptyWorldTileHashes.end() && itEmpty->second == expectedHash)
+                continue;
+
+            if (ctx.pendingTileBuildSet.find(tileKey) == ctx.pendingTileBuildSet.end())
+                ++pendingFromManifest;
+            ctx.dirtyWorldTiles.insert(tileKey);
+            EnqueueTileBuild(ctx, tileKey);
+        }
+
+        const auto dirtyTiles = j.value("dirtyWorldTiles", std::vector<uint64_t>{});
+        for (uint64_t tileKey : dirtyTiles)
+        {
+            const int tx = static_cast<int>(tileKey >> 32);
+            const int ty = static_cast<int>(tileKey & 0xffffffffu);
+            const uint64_t expectedHash = ComputeWorldTileHash(ctx, tx, ty);
+            auto itDb = ctx.dbIndexCache.find(tileKey);
+            if (itDb != ctx.dbIndexCache.end() && itDb->second.geomHash == expectedHash)
+                continue;
+
+            auto itEmpty = ctx.emptyWorldTileHashes.find(tileKey);
+            if (itEmpty != ctx.emptyWorldTileHashes.end() && itEmpty->second == expectedHash)
+                continue;
+
+            ctx.dirtyWorldTiles.insert(tileKey);
+            EnqueueTileBuild(ctx, tileKey);
         }
 
         ctx.worldManifestLoaded = true;
-        printf("[WorldTile] Resume: dbTiles=%zu pendingBefore=%zu dirtyBefore=%zu skippedCached=%zu pendingAfter=%zu dirtyAfter=%zu\n",
-               dbTiles, pendingBefore, dirtyBefore, skippedCached, ctx.pendingTileBuildQueue.size(), ctx.dirtyWorldTiles.size());
+        printf("[WorldTile] Resume scan: indexedTiles=%zu dbTiles=%zu cachedOk=%zu knownEmpty=%zu queuedMissing=%zu pendingFromManifest=%zu pendingFinal=%zu dirtyFinal=%zu\n",
+               ctx.tileToGeometryIds.size(), dbTiles, cachedOk, knownEmpty, queuedMissing, pendingFromManifest, ctx.pendingTileBuildQueue.size(), ctx.dirtyWorldTiles.size());
         printf("[WorldTile] Load manifest: loaded=%d changed=%d removed=%d pendingGeoms=%zu indexedGeometries=%d dirtyTiles=%zu pendingTiles=%zu\n",
                loadedCount, changed, removed, ctx.pendingWorldGeometryQueue.size(), indexedGeometries, ctx.dirtyWorldTiles.size(), ctx.pendingTileBuildQueue.size());
         return true;
