@@ -7,14 +7,14 @@
 #include <DetourNavMesh.h>
 
 static constexpr uint32_t TILE_DB_MAGIC = 'G' << 24 | 'T' << 16 | 'D' << 8 | 'B';
-static constexpr uint32_t TILE_DB_VERSION = 1;
+static constexpr uint32_t TILE_DB_VERSION = 2;
 
 struct TileDbHeader
 {
     uint32_t magic = TILE_DB_MAGIC;
     uint32_t version = TILE_DB_VERSION;
     uint32_t tileCount = 0;
-    uint32_t indexOffset = 0;
+    uint64_t indexOffset = 0;
     dtNavMeshParams navParams{};
 };
 
@@ -23,7 +23,7 @@ struct TileDbIndexEntry
     int tx = 0;
     int ty = 0;
     uint32_t dataSize = 0;
-    uint32_t dataOffset = 0;
+    uint64_t dataOffset = 0;
     uint64_t geomHash = 0;
 };
 
@@ -61,3 +61,27 @@ bool LoadTilesInBoundsFromDb(const char* dbPath,
                              const float* bmin,
                              const float* bmax,
                              int& outLoadedCount);
+
+struct TileDbStats
+{
+    uint64_t fileSizeBytes = 0;
+    uint32_t tileCount = 0;
+    int minTx = 0;
+    int maxTx = 0;
+    int minTy = 0;
+    int maxTy = 0;
+    uint64_t indexOffset = 0;
+    uint32_t invalidEntries = 0;
+    uint32_t duplicateKeys = 0;
+    bool navParamsCompatible = false;
+};
+
+bool TileDbGetStats(const char* dbPath,
+                    dtNavMesh* nav,
+                    TileDbStats& outStats);
+
+// TODO: Implement append/segmented tile DB writes to avoid full rewrite in long full builds.
+bool TileDbAppendOrReplaceTiles(const char* dbPath,
+                                dtNavMesh* nav,
+                                const std::unordered_map<uint64_t, uint64_t>& tileHashes,
+                                const std::unordered_set<uint64_t>* onlyTileKeysToUpdate = nullptr);
