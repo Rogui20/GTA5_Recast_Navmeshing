@@ -12,6 +12,37 @@
 
 namespace
 {
+    bool FileSeek64(FILE* fp, uint64_t offset, int origin)
+    {
+#if defined(_WIN32)
+        return _fseeki64(fp, static_cast<__int64>(offset), origin) == 0;
+#else
+        return fseeko(fp, static_cast<off_t>(offset), origin) == 0;
+#endif
+    }
+
+    int64_t FileTell64(FILE* fp)
+    {
+#if defined(_WIN32)
+        return _ftelli64(fp);
+#else
+        return static_cast<int64_t>(ftello(fp));
+#endif
+    }
+
+    bool GetFileSizeBytes(FILE* fp, uint64_t& outSize)
+    {
+        outSize = 0;
+        const int64_t cur = FileTell64(fp);
+        if (cur < 0 || !FileSeek64(fp, 0, SEEK_END))
+            return false;
+        const int64_t end = FileTell64(fp);
+        if (end < 0 || !FileSeek64(fp, static_cast<uint64_t>(cur), SEEK_SET))
+            return false;
+        outSize = static_cast<uint64_t>(end);
+        return true;
+    }
+
     bool ReadHeader(FILE* fp, TileDbHeader& outHeader)
     {
         if (!fp)
@@ -87,7 +118,30 @@ bool TileDbLoadIndex(const char* dbPath,
         return false;
     }
 
-    if (fseek(fp, static_cast<long>(header.indexOffset), SEEK_SET) != 0)
+    uint64_t fileSize = 0;
+    if (!GetFileSizeBytes(fp, fileSize))
+    {
+        fclose(fp);
+        return false;
+    }
+    if (header.indexOffset < sizeof(TileDbHeader) || header.indexOffset >= fileSize)
+    {
+        fclose(fp);
+        return false;
+    }
+    if (header.tileCount > 20000000u)
+    {
+        fclose(fp);
+        return false;
+    }
+    const uint64_t indexBytes = static_cast<uint64_t>(header.tileCount) * sizeof(TileDbIndexEntry);
+    if (header.indexOffset + indexBytes > fileSize)
+    {
+        fclose(fp);
+        return false;
+    }
+
+    if (!FileSeek64(fp, header.indexOffset, SEEK_SET))
     {
         fclose(fp);
         return false;
@@ -103,7 +157,18 @@ bool TileDbLoadIndex(const char* dbPath,
             outIndex.clear();
             return false;
         }
-        outIndex.emplace(MakeTileKey(entry.tx, entry.ty), entry);
+        if (entry.dataSize == 0 || entry.dataOffset < sizeof(TileDbHeader) || entry.dataOffset > fileSize ||
+            entry.dataOffset + static_cast<uint64_t>(entry.dataSize) > fileSize ||
+            std::abs(entry.tx) > 1000000 || std::abs(entry.ty) > 1000000)
+        {
+            fclose(fp);
+            outIndex.clear();
+            return false;
+        }
+        const auto [it, inserted] = outIndex.emplace(MakeTileKey(entry.tx, entry.ty), entry);
+        (void)it;
+        if (!inserted)
+            printf("[TileDB][WARN] duplicate key in index (%d,%d)\n", entry.tx, entry.ty);
     }
 
     fclose(fp);
@@ -124,8 +189,24 @@ bool TileDbReadTile(const char* dbPath,
     if (!fp)
         return false;
 
-    if (fseek(fp, static_cast<long>(entry.dataOffset), SEEK_SET) != 0)
+    uint64_t fileSize = 0;
+    if (!GetFileSizeBytes(fp, fileSize) || entry.dataSize == 0 ||
+        entry.dataOffset + static_cast<uint64_t>(entry.dataSize) > fileSize)
     {
+        printf("[TileDB][ERROR] read bounds fail path=%s offset=%llu size=%u\n", dbPath,
+               static_cast<unsigned long long>(entry.dataOffset), entry.dataSize);
+        fclose(fp);
+        return false;
+    }
+    if (entry.dataSize > static_cast<uint32_t>(std::numeric_limits<int>::max()))
+    {
+        fclose(fp);
+        return false;
+    }
+    if (!FileSeek64(fp, entry.dataOffset, SEEK_SET))
+    {
+        printf("[TileDB][ERROR] seek fail path=%s offset=%llu size=%u\n", dbPath,
+               static_cast<unsigned long long>(entry.dataOffset), entry.dataSize);
         fclose(fp);
         return false;
     }
@@ -191,7 +272,8 @@ bool TileDbWriteOrUpdateTiles(const char* dbPath,
     header.indexOffset = 0;
     memcpy(&header.navParams, nav->getParams(), sizeof(dtNavMeshParams));
 
-    FILE* fp = fopen(dbPath, "wb");
+    const std::filesystem::path tmpPath = path.string() + ".tmp";
+    FILE* fp = fopen(tmpPath.string().c_str(), "wb");
     if (!fp)
         return false;
 
@@ -199,26 +281,26 @@ bool TileDbWriteOrUpdateTiles(const char* dbPath,
 
     for (size_t i = 0; ok && i < indexEntries.size(); ++i)
     {
-        const long offset = ftell(fp);
+        const int64_t offset = FileTell64(fp);
         if (offset < 0)
         {
             ok = false;
             break;
         }
-        indexEntries[i].dataOffset = static_cast<uint32_t>(offset);
+        indexEntries[i].dataOffset = static_cast<uint64_t>(offset);
         ok = fwrite(tileData[i], indexEntries[i].dataSize, 1, fp) == 1;
     }
 
     if (ok)
     {
-        const long indexOffset = ftell(fp);
-        if (indexOffset < 0 || static_cast<uint64_t>(indexOffset) > std::numeric_limits<uint32_t>::max())
+        const int64_t indexOffset = FileTell64(fp);
+        if (indexOffset < 0)
         {
             ok = false;
         }
         else
         {
-            header.indexOffset = static_cast<uint32_t>(indexOffset);
+            header.indexOffset = static_cast<uint64_t>(indexOffset);
             for (const auto& entry : indexEntries)
             {
                 if (!ok)
@@ -230,7 +312,7 @@ bool TileDbWriteOrUpdateTiles(const char* dbPath,
 
     if (ok)
     {
-        if (fseek(fp, 0, SEEK_SET) != 0)
+        if (!FileSeek64(fp, 0, SEEK_SET))
         {
             ok = false;
         }
@@ -240,7 +322,22 @@ bool TileDbWriteOrUpdateTiles(const char* dbPath,
         }
     }
 
+    fflush(fp);
     fclose(fp);
+
+    if (ok)
+    {
+        std::error_code ec;
+        std::filesystem::remove(path, ec);
+        ec.clear();
+        std::filesystem::rename(tmpPath, path, ec);
+        ok = !ec;
+    }
+    if (!ok)
+    {
+        std::error_code ec;
+        std::filesystem::remove(tmpPath, ec);
+    }
 
     if (ok)
         printf("[NavMeshData] Tile DB salvo em %s (%zu tiles)\n", dbPath, indexEntries.size());
@@ -273,8 +370,10 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
     std::size_t removedTiles = 0;
 
     // 1) Preserve old DB tiles (when compatible) unless explicitly updated.
+    uint64_t oldFileSizeBytes = 0;
     if (std::filesystem::exists(path))
     {
+        oldFileSizeBytes = std::filesystem::file_size(path);
         std::unordered_map<uint64_t, TileDbIndexEntry> oldIndex;
         if (TileDbLoadIndex(dbPath, nav, oldIndex))
         {
@@ -288,7 +387,10 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
                 unsigned char* raw = nullptr;
                 int rawSize = 0;
                 if (!TileDbReadTile(dbPath, kv.second, raw, rawSize))
-                    continue;
+                {
+                    printf("[TileDB][FATAL] failed to preserve old tile (%d,%d)\n", kv.second.tx, kv.second.ty);
+                    return false;
+                }
 
                 StoredTile st{};
                 st.entry = kv.second;
@@ -301,7 +403,8 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
         }
         else
         {
-            printf("[NavMeshData] TileDbMergeWriteOrUpdateTiles: DB antigo incompativel/invalido, iniciando merge sem preservar entradas antigas.\n");
+            printf("[TileDB][FATAL] existing DB could not be indexed; aborting merge to avoid data loss\n");
+            return false;
         }
     }
 
@@ -368,24 +471,24 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
     {
         if (!ok)
             break;
-        const long offset = ftell(fp);
+        const int64_t offset = FileTell64(fp);
         if (offset < 0)
         {
             ok = false;
             break;
         }
-        t.entry.dataOffset = static_cast<uint32_t>(offset);
+        t.entry.dataOffset = static_cast<uint64_t>(offset);
         ok = fwrite(t.data.data(), t.entry.dataSize, 1, fp) == 1;
     }
 
     if (ok)
     {
-        const long idxOff = ftell(fp);
-        if (idxOff < 0 || static_cast<uint64_t>(idxOff) > std::numeric_limits<uint32_t>::max())
+        const int64_t idxOff = FileTell64(fp);
+        if (idxOff < 0)
             ok = false;
         else
         {
-            header.indexOffset = static_cast<uint32_t>(idxOff);
+            header.indexOffset = static_cast<uint64_t>(idxOff);
             for (const auto& t : ordered)
             {
                 if (fwrite(&t.entry, sizeof(TileDbIndexEntry), 1, fp) != 1)
@@ -399,12 +502,13 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
 
     if (ok)
     {
-        if (fseek(fp, 0, SEEK_SET) != 0)
+        if (!FileSeek64(fp, 0, SEEK_SET))
             ok = false;
         else
             ok = fwrite(&header, sizeof(TileDbHeader), 1, fp) == 1;
     }
 
+    fflush(fp);
     fclose(fp);
 
     if (!ok)
@@ -424,8 +528,12 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
         return false;
     }
 
-    printf("[NavMeshData] TileDbMergeWriteOrUpdateTiles: oldIndex.size=%zu preservedOldTiles=%zu updatedTiles=%zu removedTiles=%zu finalTiles=%zu\n",
-           oldIndexSize, preservedOldTiles, updatedTiles, removedTiles, ordered.size());
+    const uint64_t newSize = std::filesystem::file_size(path);
+    printf("[NavMeshData] TileDbMergeWriteOrUpdateTiles: oldIndexSize=%zu preservedOldTiles=%zu updatedTiles=%zu removedTiles=%zu finalTiles=%zu onlyTileKeysToUpdate=%zu oldFileMB=%.2f newFileMB=%.2f\n",
+           oldIndexSize, preservedOldTiles, updatedTiles, removedTiles, ordered.size(),
+           onlyTileKeysToUpdate ? onlyTileKeysToUpdate->size() : 0,
+           static_cast<double>(oldFileSizeBytes) / (1024.0 * 1024.0),
+           static_cast<double>(newSize) / (1024.0 * 1024.0));
     printf("[NavMeshData] Tile DB merge salvo em %s (%zu tiles)\n", dbPath, ordered.size());
     return true;
 }
@@ -460,11 +568,16 @@ bool LoadTileFromDb(const char* dbPath,
     if (!TileDbReadTile(dbPath, it->second, data, dataSize))
         return false;
 
+    if (nav->getTileRefAt(tx, ty, 0) != 0)
+    {
+        dtTileRef oldRef = nav->getTileRefAt(tx, ty, 0);
+        nav->removeTile(oldRef, nullptr, nullptr);
+    }
     dtStatus status = nav->addTile(data, dataSize, DT_TILE_FREE_DATA, 0, nullptr);
     if (dtStatusFailed(status))
     {
         dtFree(data);
-        printf("[NavMeshData] Falha ao adicionar tile do DB (%d,%d) status=0x%x\n", tx, ty, status);
+        printf("[NavMeshData] Falha ao adicionar tile do DB (%d,%d) dataSize=%d status=0x%x\n", tx, ty, dataSize, status);
         return false;
     }
 
@@ -490,9 +603,9 @@ bool LoadTilesInBoundsFromDb(const char* dbPath,
     const float tileWidth = params->tileWidth;
 
     const int minTx = static_cast<int>(floorf((bmin[0] - params->orig[0]) / tileWidth));
-    const int minTy = static_cast<int>(floorf((bmin[2] - params->orig[2]) / tileWidth));
+    const int minTy = static_cast<int>(floorf((bmin[2] - params->orig[2]) / params->tileHeight));
     const int maxTx = static_cast<int>(floorf((bmax[0] - params->orig[0]) / tileWidth));
-    const int maxTy = static_cast<int>(floorf((bmax[2] - params->orig[2]) / tileWidth));
+    const int maxTy = static_cast<int>(floorf((bmax[2] - params->orig[2]) / params->tileHeight));
 
     for (const auto& pair : index)
     {
@@ -500,7 +613,10 @@ bool LoadTilesInBoundsFromDb(const char* dbPath,
         if (entry.tx < minTx || entry.tx > maxTx || entry.ty < minTy || entry.ty > maxTy)
             continue;
         if (nav->getTileRefAt(entry.tx, entry.ty, 0) != 0)
+        {
+            printf("[NavMeshData] tile already loaded (%d,%d), skipping DB add\n", entry.tx, entry.ty);
             continue;
+        }
 
         unsigned char* data = nullptr;
         int dataSize = 0;
@@ -511,10 +627,62 @@ bool LoadTilesInBoundsFromDb(const char* dbPath,
         if (dtStatusFailed(status))
         {
             dtFree(data);
+            printf("[NavMeshData] Falha ao adicionar tile do DB (%d,%d) dataSize=%d status=0x%x\n", entry.tx, entry.ty, dataSize, status);
             continue;
         }
         ++outLoadedCount;
     }
 
     return true;
+}
+
+bool TileDbGetStats(const char* dbPath, dtNavMesh* nav, TileDbStats& outStats)
+{
+    outStats = {};
+    std::unordered_map<uint64_t, TileDbIndexEntry> index;
+    if (!TileDbLoadIndex(dbPath, nav, index))
+        return false;
+    outStats.tileCount = static_cast<uint32_t>(index.size());
+    outStats.navParamsCompatible = true;
+    std::filesystem::path p(dbPath);
+    if (std::filesystem::exists(p))
+        outStats.fileSizeBytes = std::filesystem::file_size(p);
+
+    FILE* fp = fopen(dbPath, "rb");
+    if (fp)
+    {
+        TileDbHeader header{};
+        if (ReadHeader(fp, header))
+            outStats.indexOffset = header.indexOffset;
+        fclose(fp);
+    }
+    bool first = true;
+    for (const auto& kv : index)
+    {
+        const auto& e = kv.second;
+        if (first)
+        {
+            outStats.minTx = outStats.maxTx = e.tx;
+            outStats.minTy = outStats.maxTy = e.ty;
+            first = false;
+        }
+        outStats.minTx = std::min(outStats.minTx, e.tx);
+        outStats.maxTx = std::max(outStats.maxTx, e.tx);
+        outStats.minTy = std::min(outStats.minTy, e.ty);
+        outStats.maxTy = std::max(outStats.maxTy, e.ty);
+    }
+    printf("[TileDB][Stats] fileMB=%.2f tileCount=%u tx=[%d,%d] ty=[%d,%d] invalid=%u dup=%u navCompatible=%d\n",
+           static_cast<double>(outStats.fileSizeBytes) / (1024.0 * 1024.0),
+           outStats.tileCount, outStats.minTx, outStats.maxTx, outStats.minTy, outStats.maxTy,
+           outStats.invalidEntries, outStats.duplicateKeys, outStats.navParamsCompatible ? 1 : 0);
+    return true;
+}
+
+bool TileDbAppendOrReplaceTiles(const char* dbPath,
+                                dtNavMesh* nav,
+                                const std::unordered_map<uint64_t, uint64_t>& tileHashes,
+                                const std::unordered_set<uint64_t>* onlyTileKeysToUpdate)
+{
+    printf("[TileDB][TODO] TileDbAppendOrReplaceTiles not implemented yet; falling back to merge rewrite.\n");
+    return TileDbMergeWriteOrUpdateTiles(dbPath, nav, tileHashes, onlyTileKeysToUpdate);
 }
