@@ -1253,6 +1253,8 @@ namespace
         int removed = 0;
         int loadedCount = 0;
         const auto geoms = j.value("geometries", nlohmann::json::array());
+        const bool hasTileToGeometryIds = j.contains("tileToGeometryIds") && j["tileToGeometryIds"].is_object();
+        int indexedGeometries = 0;
         for (const auto& g : geoms)
         {
             ExternNavmeshContext::WorldGeomRecord rec{};
@@ -1307,18 +1309,61 @@ namespace
             else
             {
                 ++loadedCount;
-                for (uint64_t k : rec.touchedTileKeys)
+                if (!hasTileToGeometryIds)
                 {
-                    auto& vec = ctx.tileToGeometryIds[k];
-                    if (std::find(vec.begin(), vec.end(), rec.id) == vec.end())
-                        vec.push_back(rec.id);
-                    ctx.geomToTiles[rec.id].insert(k);
+                    for (uint64_t k : rec.touchedTileKeys)
+                    {
+                        auto& vec = ctx.tileToGeometryIds[k];
+                        if (std::find(vec.begin(), vec.end(), rec.id) == vec.end())
+                            vec.push_back(rec.id);
+                        ctx.geomToTiles[rec.id].insert(k);
+                    }
+                    if (rec.indexed)
+                        ++indexedGeometries;
                 }
             }
 
             ctx.worldGeometry[rec.id] = std::move(rec);
         }
 
+
+        if (hasTileToGeometryIds)
+        {
+            const auto& tileToGeomJson = j["tileToGeometryIds"];
+            for (auto it = tileToGeomJson.begin(); it != tileToGeomJson.end(); ++it)
+            {
+                const uint64_t tileKey = std::stoull(it.key());
+                if (!it.value().is_array())
+                    continue;
+                auto& vec = ctx.tileToGeometryIds[tileKey];
+                for (const auto& idJson : it.value())
+                {
+                    if (!idJson.is_string())
+                        continue;
+                    const std::string geomId = idJson.get<std::string>();
+                    if (ctx.worldGeometry.find(geomId) == ctx.worldGeometry.end())
+                        continue;
+                    if (std::find(vec.begin(), vec.end(), geomId) == vec.end())
+                        vec.push_back(geomId);
+                    ctx.geomToTiles[geomId].insert(tileKey);
+                }
+            }
+
+            for (auto& kv : ctx.worldGeometry)
+            {
+                auto itGeomTiles = ctx.geomToTiles.find(kv.first);
+                kv.second.touchedTileKeys.clear();
+                if (itGeomTiles != ctx.geomToTiles.end())
+                {
+                    kv.second.touchedTileKeys.assign(itGeomTiles->second.begin(), itGeomTiles->second.end());
+                    if (!kv.second.touchedTileKeys.empty())
+                    {
+                        kv.second.indexed = true;
+                        ++indexedGeometries;
+                    }
+                }
+            }
+        }
         const auto pendingGeom = j.value("pendingWorldGeometryQueue", std::vector<std::string>{});
         for (const auto& id : pendingGeom)
         {
@@ -1335,6 +1380,43 @@ namespace
         const auto pendingTiles = j.value("pendingTileBuildQueue", std::vector<uint64_t>{});
         for (uint64_t key : pendingTiles)
             EnqueueTileBuild(ctx, key);
+
+        std::filesystem::path cachePath = GetSessionCachePath(ctx);
+        const bool indexLoaded = EnsureDbIndexLoaded(ctx, cachePath);
+        const size_t dbTiles = indexLoaded ? ctx.dbIndexCache.size() : 0;
+        const size_t pendingBefore = ctx.pendingTileBuildQueue.size();
+        const size_t dirtyBefore = ctx.dirtyWorldTiles.size();
+        size_t skippedCached = 0;
+        if (indexLoaded)
+        {
+            auto removeIfCached = [&](uint64_t key)
+            {
+                const int tx = static_cast<int>(key >> 32);
+                const int ty = static_cast<int>(key & 0xffffffffu);
+                const uint64_t expectedHash = ComputeWorldTileHash(ctx, tx, ty);
+                auto itDb = ctx.dbIndexCache.find(key);
+                if (itDb != ctx.dbIndexCache.end() && itDb->second.geomHash == expectedHash)
+                {
+                    ctx.pendingTileBuildSet.erase(key);
+                    ctx.dirtyWorldTiles.erase(key);
+                    ++skippedCached;
+                    return true;
+                }
+                return false;
+            };
+
+            std::deque<uint64_t> filtered;
+            for (uint64_t key : ctx.pendingTileBuildQueue)
+            {
+                if (!removeIfCached(key))
+                    filtered.push_back(key);
+            }
+            ctx.pendingTileBuildQueue.swap(filtered);
+
+            std::vector<uint64_t> dirtySnapshot(ctx.dirtyWorldTiles.begin(), ctx.dirtyWorldTiles.end());
+            for (uint64_t key : dirtySnapshot)
+                removeIfCached(key);
+        }
         const auto emptyTiles = j.value("emptyWorldTiles", std::vector<uint64_t>{});
         for (uint64_t key : emptyTiles)
             ctx.emptyWorldTiles.insert(key);
@@ -1347,12 +1429,18 @@ namespace
             for (auto it = emptyHashesJson.begin(); it != emptyHashesJson.end(); ++it)
                 ctx.emptyWorldTileHashes[std::stoull(it.key())] = it.value().get<uint64_t>();
         }
-        for (uint64_t key : ctx.dirtyWorldTiles)
-            EnqueueTileBuild(ctx, key);
+        if (ctx.pendingTileBuildQueue.empty() && !ctx.dirtyWorldTiles.empty())
+        {
+            std::vector<uint64_t> dirtySnapshot(ctx.dirtyWorldTiles.begin(), ctx.dirtyWorldTiles.end());
+            for (uint64_t key : dirtySnapshot)
+                EnqueueTileBuild(ctx, key);
+        }
 
         ctx.worldManifestLoaded = true;
-        printf("[WorldTile] Load manifest: loaded=%d changed=%d removed=%d pendingGeoms=%zu dirtyTiles=%zu pendingTiles=%zu\n",
-               loadedCount, changed, removed, ctx.pendingWorldGeometryQueue.size(), ctx.dirtyWorldTiles.size(), ctx.pendingTileBuildQueue.size());
+        printf("[WorldTile] Resume: dbTiles=%zu pendingBefore=%zu dirtyBefore=%zu skippedCached=%zu pendingAfter=%zu dirtyAfter=%zu\n",
+               dbTiles, pendingBefore, dirtyBefore, skippedCached, ctx.pendingTileBuildQueue.size(), ctx.dirtyWorldTiles.size());
+        printf("[WorldTile] Load manifest: loaded=%d changed=%d removed=%d pendingGeoms=%zu indexedGeometries=%d dirtyTiles=%zu pendingTiles=%zu\n",
+               loadedCount, changed, removed, ctx.pendingWorldGeometryQueue.size(), indexedGeometries, ctx.dirtyWorldTiles.size(), ctx.pendingTileBuildQueue.size());
         return true;
     }
 
