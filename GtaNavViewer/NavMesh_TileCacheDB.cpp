@@ -73,17 +73,17 @@ bool TileDbLoadIndex(const char* dbPath,
     if (!currentParams || !AreNavParamsCompatible(header.navParams, *currentParams))
     {
         fclose(fp);
-        printf("[NavMeshData] Tile DB incompatível com parametros atuais. esperado(orig=%.3f %.3f %.3f tile=%.3f x %.3f maxTiles=%d maxPolys=%d) atual(orig=%.3f %.3f %.3f tile=%.3f x %.3f maxTiles=%d maxPolys=%d).\n",
-               header.navParams.orig[0], header.navParams.orig[1], header.navParams.orig[2],
+        printf("[NavMeshData] TileDbLoadIndex navParams mismatch: header tileWidth=%.3f tileHeight=%.3f maxTiles=%d maxPolys=%d orig=(%.3f %.3f %.3f) current tileWidth=%.3f tileHeight=%.3f maxTiles=%d maxPolys=%d orig=(%.3f %.3f %.3f)\n",
                header.navParams.tileWidth, header.navParams.tileHeight,
                header.navParams.maxTiles, header.navParams.maxPolys,
-               currentParams ? currentParams->orig[0] : 0.0f,
-               currentParams ? currentParams->orig[1] : 0.0f,
-               currentParams ? currentParams->orig[2] : 0.0f,
+               header.navParams.orig[0], header.navParams.orig[1], header.navParams.orig[2],
                currentParams ? currentParams->tileWidth : 0.0f,
                currentParams ? currentParams->tileHeight : 0.0f,
                currentParams ? currentParams->maxTiles : 0,
-               currentParams ? currentParams->maxPolys : 0);
+               currentParams ? currentParams->maxPolys : 0,
+               currentParams ? currentParams->orig[0] : 0.0f,
+               currentParams ? currentParams->orig[1] : 0.0f,
+               currentParams ? currentParams->orig[2] : 0.0f);
         return false;
     }
 
@@ -267,6 +267,10 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
         std::filesystem::create_directories(path.parent_path());
 
     std::unordered_map<uint64_t, StoredTile> mergedTiles;
+    std::size_t oldIndexSize = 0;
+    std::size_t preservedOldTiles = 0;
+    std::size_t updatedTiles = 0;
+    std::size_t removedTiles = 0;
 
     // 1) Preserve old DB tiles (when compatible) unless explicitly updated.
     if (std::filesystem::exists(path))
@@ -274,6 +278,7 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
         std::unordered_map<uint64_t, TileDbIndexEntry> oldIndex;
         if (TileDbLoadIndex(dbPath, nav, oldIndex))
         {
+            oldIndexSize = oldIndex.size();
             for (const auto& kv : oldIndex)
             {
                 const uint64_t key = kv.first;
@@ -291,6 +296,7 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
                 dtFree(raw);
                 st.entry.dataSize = static_cast<uint32_t>(st.data.size());
                 mergedTiles[key] = std::move(st);
+                ++preservedOldTiles;
             }
         }
         else
@@ -318,6 +324,7 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
         st.entry.geomHash = itHash != tileHashes.end() ? itHash->second : 0;
         st.data.assign(tile->data, tile->data + tile->dataSize);
         mergedTiles[key] = std::move(st);
+        ++updatedTiles;
     }
 
     // 3) Explicit updates for missing tiles mean removal (tile empty/removed).
@@ -328,7 +335,8 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
             const int tx = static_cast<int>(key >> 32);
             const int ty = static_cast<int>(key & 0xffffffffu);
             if (nav->getTileRefAt(tx, ty, 0) == 0)
-                mergedTiles.erase(key);
+                if (mergedTiles.erase(key) > 0)
+                    ++removedTiles;
         }
     }
 
@@ -416,6 +424,8 @@ bool TileDbMergeWriteOrUpdateTiles(const char* dbPath,
         return false;
     }
 
+    printf("[NavMeshData] TileDbMergeWriteOrUpdateTiles: oldIndex.size=%zu preservedOldTiles=%zu updatedTiles=%zu removedTiles=%zu finalTiles=%zu\n",
+           oldIndexSize, preservedOldTiles, updatedTiles, removedTiles, ordered.size());
     printf("[NavMeshData] Tile DB merge salvo em %s (%zu tiles)\n", dbPath, ordered.size());
     return true;
 }

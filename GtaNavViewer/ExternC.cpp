@@ -1331,6 +1331,7 @@ namespace
         int changed = 0;
         int removed = 0;
         int loadedCount = 0;
+        std::unordered_set<std::string> disabledGeometries;
         const auto geoms = j.value("geometries", nlohmann::json::array());
         const bool hasTileToGeometryIds = j.contains("tileToGeometryIds") && j["tileToGeometryIds"].is_object();
         int indexedGeometries = 0;
@@ -1365,6 +1366,7 @@ namespace
 
             if (!std::filesystem::exists(rec.path))
             {
+                disabledGeometries.insert(rec.id);
                 ++removed;
                 for (uint64_t k : rec.touchedTileKeys)
                 {
@@ -1376,6 +1378,20 @@ namespace
 
             if (!IsWorldGeometryRecordUpToDate(rec))
             {
+                LoadedGeometry probe = LoadGeometry(rec.path.c_str(), rec.preferBin);
+                if (!probe.Valid())
+                {
+                    printf("[WorldTile] Load manifest: desabilitando geometria invalida id=%s path=%s (arquivo existe, LoadGeometry falhou)\n",
+                           rec.id.c_str(), rec.path.c_str());
+                    disabledGeometries.insert(rec.id);
+                    ++removed;
+                    for (uint64_t k : rec.touchedTileKeys)
+                    {
+                        ctx.dirtyWorldTiles.insert(k);
+                        ctx.dirtyWorldOffmeshTiles.insert(k);
+                    }
+                    continue;
+                }
                 ++changed;
                 for (uint64_t k : rec.touchedTileKeys)
                 {
@@ -1448,6 +1464,8 @@ namespace
         {
             if (ctx.worldGeometry.find(id) == ctx.worldGeometry.end())
                 continue;
+            if (disabledGeometries.find(id) != disabledGeometries.end())
+                continue;
             if (ctx.pendingWorldGeometrySet.insert(id).second)
                 ctx.pendingWorldGeometryQueue.push_back(id);
         }
@@ -1468,6 +1486,18 @@ namespace
         std::filesystem::path cachePath = GetSessionCachePath(ctx);
         const bool indexLoaded = EnsureDbIndexLoaded(ctx, cachePath);
         const size_t dbTiles = indexLoaded ? ctx.dbIndexCache.size() : 0;
+        const size_t expectedTiles = ctx.tileToGeometryIds.size();
+        if (indexLoaded && expectedTiles >= 100 && dbTiles * 10 < expectedTiles)
+        {
+            std::error_code ec;
+            const auto cacheSizeBytes = std::filesystem::file_size(cachePath, ec);
+            if (!ec)
+            {
+                const double cacheSizeMb = static_cast<double>(cacheSizeBytes) / (1024.0 * 1024.0);
+                printf("[WorldTile] Resume scan warning: dbTiles=%zu muito menor que expectedTiles=%zu, tilecacheSizeMB=%.2f\n",
+                       dbTiles, expectedTiles, cacheSizeMb);
+            }
+        }
         size_t cachedOk = 0;
         size_t knownEmpty = 0;
         size_t queuedMissing = 0;
