@@ -1196,6 +1196,80 @@ namespace
         return true;
     }
 
+    bool EnsureDbIndexLoaded(ExternNavmeshContext& ctx, const std::filesystem::path& cachePath)
+    {
+        if (!ctx.navData.GetNavMesh())
+            return false;
+
+        if (!std::filesystem::exists(cachePath))
+        {
+            ctx.dbIndexCache.clear();
+            ctx.dbIndexLoaded = false;
+            ctx.dbMTime = {};
+            return false;
+        }
+
+        const auto mtime = std::filesystem::last_write_time(cachePath);
+        if (!ctx.dbIndexLoaded || ctx.dbMTime != mtime)
+        {
+            ctx.dbIndexCache.clear();
+            if (!TileDbLoadIndex(cachePath.string().c_str(), ctx.navData.GetNavMesh(), ctx.dbIndexCache))
+            {
+                ctx.dbIndexLoaded = false;
+                ctx.dbMTime = mtime;
+                return false;
+            }
+            ctx.dbIndexLoaded = true;
+            ctx.dbMTime = mtime;
+        }
+
+        return ctx.dbIndexLoaded;
+    }
+
+    uint64_t ComputeWorldTileHash(ExternNavmeshContext& ctx, int tx, int ty)
+    {
+        uint64_t h = ComputeSettingsHash(ctx.genSettings);
+        h = WorldHashCombine64(h, static_cast<uint64_t>(static_cast<uint32_t>(tx)));
+        h = WorldHashCombine64(h, static_cast<uint64_t>(static_cast<uint32_t>(ty)));
+
+        const uint64_t key = MakeTileKey(tx, ty);
+        auto it = ctx.tileToGeometryIds.find(key);
+        if (it != ctx.tileToGeometryIds.end())
+        {
+            std::vector<std::string> ids = it->second;
+            std::sort(ids.begin(), ids.end());
+            for (const std::string& id : ids)
+            {
+                auto gIt = ctx.worldGeometry.find(id);
+                if (gIt == ctx.worldGeometry.end())
+                    continue;
+                const auto& rec = gIt->second;
+                h = WorldHashCombine64(h, rec.geomHash);
+                h = WorldHashCombine64(h, std::hash<std::string>{}(rec.id));
+            }
+        }
+
+        for (const auto& link : ctx.offmeshLinks)
+        {
+            const float minX = std::min(link.start.x, link.end.x);
+            const float maxX = std::max(link.start.x, link.end.x);
+            const float minZ = std::min(link.start.z, link.end.z);
+            const float maxZ = std::max(link.start.z, link.end.z);
+            const dtNavMeshParams* params = ctx.navData.GetNavMesh() ? ctx.navData.GetNavMesh()->getParams() : nullptr;
+            if (!params)
+                continue;
+            const float tileMinX = params->orig[0] + tx * params->tileWidth;
+            const float tileMaxX = tileMinX + params->tileWidth;
+            const float tileMinZ = params->orig[2] + ty * params->tileHeight;
+            const float tileMaxZ = tileMinZ + params->tileHeight;
+            if (minX > tileMaxX || maxX < tileMinX || minZ > tileMaxZ || maxZ < tileMinZ)
+                continue;
+            h = WorldHashCombine64(h, static_cast<uint64_t>(link.userId));
+        }
+
+        return h;
+    }
+
     bool LoadWorldTileManifestInternal(ExternNavmeshContext& ctx)
     {
         if (!ctx.worldTileStreamingEnabled)
@@ -1444,36 +1518,7 @@ namespace
         return true;
     }
 
-    bool EnsureDbIndexLoaded(ExternNavmeshContext& ctx, const std::filesystem::path& cachePath)
-    {
-        if (!ctx.navData.GetNavMesh())
-            return false;
-
-        if (!std::filesystem::exists(cachePath))
-        {
-            ctx.dbIndexCache.clear();
-            ctx.dbIndexLoaded = false;
-            ctx.dbMTime = {};
-            return false;
-        }
-
-        const auto mtime = std::filesystem::last_write_time(cachePath);
-        if (!ctx.dbIndexLoaded || ctx.dbMTime != mtime)
-        {
-            ctx.dbIndexCache.clear();
-            if (!TileDbLoadIndex(cachePath.string().c_str(), ctx.navData.GetNavMesh(), ctx.dbIndexCache))
-            {
-                ctx.dbIndexLoaded = false;
-                ctx.dbMTime = mtime;
-                return false;
-            }
-            ctx.dbIndexLoaded = true;
-            ctx.dbMTime = mtime;
-        }
-
-        return ctx.dbIndexLoaded;
-    }
-
+    
     bool EnsureNavQuery(ExternNavmeshContext& ctx)
     {
         if (!ctx.navData.GetNavMesh())
@@ -1814,50 +1859,6 @@ namespace
         for (uint32_t triIdx = 0; triIdx < triCount; ++triIdx)
             appendTri(triIdx, outIndices);
         return (outIndices.size() - beforeIndices) / 3;
-    }
-
-    uint64_t ComputeWorldTileHash(ExternNavmeshContext& ctx, int tx, int ty)
-    {
-        uint64_t h = ComputeSettingsHash(ctx.genSettings);
-        h = WorldHashCombine64(h, static_cast<uint64_t>(static_cast<uint32_t>(tx)));
-        h = WorldHashCombine64(h, static_cast<uint64_t>(static_cast<uint32_t>(ty)));
-
-        const uint64_t key = MakeTileKey(tx, ty);
-        auto it = ctx.tileToGeometryIds.find(key);
-        if (it != ctx.tileToGeometryIds.end())
-        {
-            std::vector<std::string> ids = it->second;
-            std::sort(ids.begin(), ids.end());
-            for (const std::string& id : ids)
-            {
-                auto gIt = ctx.worldGeometry.find(id);
-                if (gIt == ctx.worldGeometry.end())
-                    continue;
-                const auto& rec = gIt->second;
-                h = WorldHashCombine64(h, rec.geomHash);
-                h = WorldHashCombine64(h, std::hash<std::string>{}(rec.id));
-            }
-        }
-
-        for (const auto& link : ctx.offmeshLinks)
-        {
-            const float minX = std::min(link.start.x, link.end.x);
-            const float maxX = std::max(link.start.x, link.end.x);
-            const float minZ = std::min(link.start.z, link.end.z);
-            const float maxZ = std::max(link.start.z, link.end.z);
-            const dtNavMeshParams* params = ctx.navData.GetNavMesh() ? ctx.navData.GetNavMesh()->getParams() : nullptr;
-            if (!params)
-                continue;
-            const float tileMinX = params->orig[0] + tx * params->tileWidth;
-            const float tileMaxX = tileMinX + params->tileWidth;
-            const float tileMinZ = params->orig[2] + ty * params->tileHeight;
-            const float tileMaxZ = tileMinZ + params->tileHeight;
-            if (minX > tileMaxX || maxX < tileMinX || minZ > tileMaxZ || maxZ < tileMinZ)
-                continue;
-            h = WorldHashCombine64(h, static_cast<uint64_t>(link.userId));
-        }
-
-        return h;
     }
 
     bool BuildWorldTileGeometry(ExternNavmeshContext& ctx,
