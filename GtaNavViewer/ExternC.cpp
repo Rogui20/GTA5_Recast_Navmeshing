@@ -306,6 +306,21 @@ namespace
         int* m_rejectedCounter = nullptr;
     };
 
+    static std::uint64_t ComputeAgentProfileHash(const AgentProfileFFI& p)
+    {
+        std::uint64_t h = 1469598103934665603ull;
+        auto mixf = [&](float v)
+        {
+            std::uint32_t bits = 0;
+            std::memcpy(&bits, &v, sizeof(bits));
+            h = WorldHashCombine64(h, bits);
+        };
+        h = WorldHashCombine64(h, p.profileId);
+        mixf(p.radius); mixf(p.pedHeight); mixf(p.halfWidth); mixf(p.halfLength);
+        mixf(p.vehicleHeight); mixf(p.maxSlopeDeg); mixf(p.maxStepHeight); mixf(p.minClearance);
+        return h;
+    }
+
     std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx);
     std::filesystem::path GetWorldManifestPath(const ExternNavmeshContext& ctx);
     std::filesystem::path GetSessionGridCacheRoot(const ExternNavmeshContext& ctx);
