@@ -1,5 +1,6 @@
 #include "ExternC.h"
 #include "NavMesh_TileCacheDB.h"
+#include "NavMesh_TileCacheGridDB.h"
 #include "json.hpp"
 
 #include <DetourNavMesh.h>
@@ -141,6 +142,7 @@ namespace
         bool streamingEnabled = false;
         bool worldTileStreamingEnabled = false;
         bool worldUnloadBuiltTilesAfterSave = false;
+        bool useTileCacheGridDB = false;
         std::unordered_map<uint64_t, uint32_t> residentStamp;
         std::unordered_set<uint64_t> residentTiles;
         std::unordered_map<uint32_t, std::unordered_set<uint64_t>> agentResidentTiles;
@@ -213,6 +215,7 @@ namespace
 
     std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx);
     std::filesystem::path GetWorldManifestPath(const ExternNavmeshContext& ctx);
+    std::filesystem::path GetSessionGridCacheRoot(const ExternNavmeshContext& ctx);
     bool EnsureNavQuery(ExternNavmeshContext& ctx);
     bool UpdateNavmeshState(ExternNavmeshContext& ctx, bool forceFullBuild);
     bool SaveWorldTileManifestInternal(ExternNavmeshContext& ctx);
@@ -1049,6 +1052,14 @@ namespace
         return root / (session + ".tilecache");
     }
 
+
+    std::filesystem::path GetSessionGridCacheRoot(const ExternNavmeshContext& ctx)
+    {
+        const std::filesystem::path single = GetSessionCachePath(ctx);
+        const auto stem = single.stem().string();
+        return single.parent_path() / (stem + "_tilegrid");
+    }
+
     bool SaveWorldTileManifestInternal(ExternNavmeshContext& ctx)
     {
         if (!ctx.worldTileStreamingEnabled)
@@ -1484,7 +1495,9 @@ namespace
         }
 
         std::filesystem::path cachePath = GetSessionCachePath(ctx);
-        const bool indexLoaded = EnsureDbIndexLoaded(ctx, cachePath);
+        const bool indexLoaded = ctx.useTileCacheGridDB
+            ? TileGridDbLoadIndex(GetSessionGridCacheRoot(ctx).string().c_str(), ctx.navData.GetNavMesh(), ctx.dbIndexCache)
+            : EnsureDbIndexLoaded(ctx, cachePath);
         const size_t dbTiles = indexLoaded ? ctx.dbIndexCache.size() : 0;
         const size_t expectedTiles = ctx.tileToGeometryIds.size();
         if (indexLoaded && expectedTiles >= 100 && dbTiles * 10 < expectedTiles)
@@ -2908,8 +2921,11 @@ GTANAVVIEWER_API int StreamTilesAround(void* navMesh, Vector3 center, float radi
 
     ctx->streamingEnabled = true;
     std::filesystem::path cachePath = GetSessionCachePath(*ctx);
-    const bool hasCacheFile = std::filesystem::exists(cachePath);
-    const bool indexReady = hasCacheFile && EnsureDbIndexLoaded(*ctx, cachePath);
+    std::filesystem::path gridRoot = GetSessionGridCacheRoot(*ctx);
+    const bool hasCacheFile = ctx->useTileCacheGridDB ? std::filesystem::exists(gridRoot / "tiles") : std::filesystem::exists(cachePath);
+    const bool indexReady = hasCacheFile && (ctx->useTileCacheGridDB
+        ? TileGridDbLoadIndex(gridRoot.string().c_str(), nav, ctx->dbIndexCache)
+        : EnsureDbIndexLoaded(*ctx, cachePath));
 
     float cachedBMin[3];
     float cachedBMax[3];
@@ -3438,6 +3454,18 @@ GTANAVVIEWER_API void SetWorldUnloadBuiltTilesAfterSave(void* navMesh, bool enab
     ctx->worldUnloadBuiltTilesAfterSave = enabled;
 }
 
+GTANAVVIEWER_API void SetWorldTileCacheGridDBEnabled(void* navMesh, bool enabled)
+{
+    if (!navMesh)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->useTileCacheGridDB = enabled;
+    ctx->dbIndexCache.clear();
+    ctx->dbIndexLoaded = false;
+    ctx->dbMTime = {};
+    printf("[WorldTile][%s] tile cache backend selected\n", enabled ? "GridDB" : "SingleDB");
+}
+
 GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxMilliseconds, bool saveToCache)
 {
     if (!navMesh)
@@ -3697,8 +3725,11 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
         return 0;
 
     std::filesystem::path cachePath = GetSessionCachePath(*ctx);
-    const bool hasCacheFile = std::filesystem::exists(cachePath);
-    const bool indexReady = hasCacheFile && EnsureDbIndexLoaded(*ctx, cachePath);
+    std::filesystem::path gridRoot = GetSessionGridCacheRoot(*ctx);
+    const bool hasCacheFile = ctx->useTileCacheGridDB ? std::filesystem::exists(gridRoot / "tiles") : std::filesystem::exists(cachePath);
+    const bool indexReady = hasCacheFile && (ctx->useTileCacheGridDB
+        ? TileGridDbLoadIndex(gridRoot.string().c_str(), nav, ctx->dbIndexCache)
+        : EnsureDbIndexLoaded(*ctx, cachePath));
 
     float cachedBMin[3];
     float cachedBMax[3];
@@ -3773,7 +3804,10 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
                     if (itDb->second.geomHash != 0 && itDb->second.geomHash != computedHash)
                         shouldBuild = true;
                     else
-                        LoadTileFromDb(cachePath.string().c_str(), nav, tx, ty, loaded, &ctx->dbIndexCache);
+                        if (ctx->useTileCacheGridDB)
+                            TileGridDbLoadTile(gridRoot.string().c_str(), nav, tx, ty, loaded);
+                        else
+                            LoadTileFromDb(cachePath.string().c_str(), nav, tx, ty, loaded, &ctx->dbIndexCache);
                 }
                 else
                 {
