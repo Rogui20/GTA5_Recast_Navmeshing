@@ -9,7 +9,7 @@ SET(SOVERSION 1)
 set(LIB_VERSION 1.6.0)
 string(REPLACE "." "," LIB_VERSION_NUM "${LIB_VERSION}.0")
 
-set_property(GLOBAL PROPERTY CXX_STANDARD 17)   # <--- atualizado
+set_property(GLOBAL PROPERTY CXX_STANDARD 18)   # <--- atualizado
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
