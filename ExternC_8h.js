@@ -98,6 +98,7 @@ var ExternC_8h =
     [ "SetNavMeshSessionId", "ExternC_8h.html#a87a9adba83fdb3bc11375785f1c0a186", null ],
     [ "SetWorldAutoOffmeshEnabled", "ExternC_8h.html#a25c22b76bd1a1ce2963dae266d84c504", null ],
     [ "SetWorldTileAutoSaveManifest", "ExternC_8h.html#a2995bb91df6e316e4e25c5208f26f713", null ],
+    [ "SetWorldTileCacheGridDBEnabled", "ExternC_8h.html#aa7db278ca81ae3b55c423b929b88b94c", null ],
     [ "SetWorldUnloadBuiltTilesAfterSave", "ExternC_8h.html#a145b4649f5f2d2cf518095e2bd201b83", null ],
     [ "SimulateAgentFrames", "ExternC_8h.html#a72fa7240204673ab1b906fb62131b51e", null ],
     [ "SimulateAgentsFramesBatch", "ExternC_8h.html#a25a0f943b6c23a4b076503a970e95b10", null ],

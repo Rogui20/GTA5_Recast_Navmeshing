@@ -609,6 +609,7 @@ var hierarchy =
     [ "TileDbHeader", "structTileDbHeader.html", null ],
     [ "TileDbIndexEntry", "structTileDbIndexEntry.html", null ],
     [ "TileDbStats", "structTileDbStats.html", null ],
+    [ "TileGridDbFileHeader", "structTileGridDbFileHeader.html", null ],
     [ "TileGridStats", "structTileGridStats.html", null ],
     [ "Uniforms", "structUniforms.html", null ],
     [ "ValueHistory", "classValueHistory.html", null ],

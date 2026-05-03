@@ -85,6 +85,7 @@ var ExternC_8cpp =
     [ "SetNavMeshSessionId", "ExternC_8cpp.html#a87a9adba83fdb3bc11375785f1c0a186", null ],
     [ "SetWorldAutoOffmeshEnabled", "ExternC_8cpp.html#a25c22b76bd1a1ce2963dae266d84c504", null ],
     [ "SetWorldTileAutoSaveManifest", "ExternC_8cpp.html#a2995bb91df6e316e4e25c5208f26f713", null ],
+    [ "SetWorldTileCacheGridDBEnabled", "ExternC_8cpp.html#aa7db278ca81ae3b55c423b929b88b94c", null ],
     [ "SetWorldUnloadBuiltTilesAfterSave", "ExternC_8cpp.html#a145b4649f5f2d2cf518095e2bd201b83", null ],
     [ "ShapeAvoidRadius", "ExternC_8cpp.html#a9c0207a16f3387d3cec9bdad432340eb", null ],
     [ "SimulateAgentFrames", "ExternC_8cpp.html#a6c1f9309b27b7f42b62fbd17714ff18e", null ],

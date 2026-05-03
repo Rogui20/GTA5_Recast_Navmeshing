@@ -18,6 +18,8 @@ var dir_f73acc4eb87dae63dd8b26467f028b41 =
     [ "NavMesh_Single.cpp", "NavMesh__Single_8cpp.html", "NavMesh__Single_8cpp" ],
     [ "NavMesh_TileCacheDB.cpp", "NavMesh__TileCacheDB_8cpp.html", "NavMesh__TileCacheDB_8cpp" ],
     [ "NavMesh_TileCacheDB.h", "NavMesh__TileCacheDB_8h.html", "NavMesh__TileCacheDB_8h" ],
+    [ "NavMesh_TileCacheGridDB.cpp", "NavMesh__TileCacheGridDB_8cpp.html", "NavMesh__TileCacheGridDB_8cpp" ],
+    [ "NavMesh_TileCacheGridDB.h", "NavMesh__TileCacheGridDB_8h.html", "NavMesh__TileCacheGridDB_8h" ],
     [ "NavMesh_Tiled.cpp", "NavMesh__Tiled_8cpp.html", "NavMesh__Tiled_8cpp" ],
     [ "NavMeshBuild.h", "NavMeshBuild_8h.html", "NavMeshBuild_8h" ],
     [ "NavMeshData.cpp", "NavMeshData_8cpp.html", null ],
