@@ -404,7 +404,7 @@ var NAVTREEINDEX =
 [
 "ConvexVolumeTool_8cpp.html",
 "DetourNavMeshBuilder_8cpp.html#a1888720290d8beeb3162f90e197ff7b3",
-"ExternC_8cpp.html#a2ed5728e789cc10e4b467bbc3c7033cf",
+"ExternC_8cpp.html#a31c3b4e18ad588e205bc49cc61b2a43e",
 "GtaNavRuntime_2ChunkyTriMesh_8cpp.html#adfecf50ca2fdc642f4bd3b6d4f2c21e4",
 "GtaNavViewer_2imgui_2imgui_8cpp.html#a50afb067961d5c407afdabc34905a47f",
 "GtaNavViewer_2imgui_2imgui_8h.html#a0b8e067ab4f7a818828c8d89e531addc",

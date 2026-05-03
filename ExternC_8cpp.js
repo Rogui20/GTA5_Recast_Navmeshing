@@ -75,7 +75,7 @@ var ExternC_8cpp =
     [ "RemoveStreamingAgent", "ExternC_8cpp.html#a85329fb920961bfe7c85575b92e62daa", null ],
     [ "RemoveWorldGeometryGroup", "ExternC_8cpp.html#ae4c999904b1134d6e61e2086a1513b8b", null ],
     [ "ResetAgentPathState", "ExternC_8cpp.html#ad03e28b24e969c788e057ec9db9c6d8e", null ],
-    [ "RunPathfindInternal", "ExternC_8cpp.html#a0e69cb966a144a38c4fe169d035684ba", null ],
+    [ "RunPathfindInternal", "ExternC_8cpp.html#af6c4f1cb9f8b242070ece4204d844455", null ],
     [ "SampleAgentHeight", "ExternC_8cpp.html#aa127e379b0403975a0741c8fea71acab", null ],
     [ "SampleGroundAtXZ", "ExternC_8cpp.html#afff063db4b690384f63ecb4d28a549c6", null ],
     [ "SaveNavMeshRuntimeCache", "ExternC_8cpp.html#a23d70761e65d82b683dfbe7cee3f47da", null ],

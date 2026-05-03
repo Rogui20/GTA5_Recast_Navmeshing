@@ -233,8 +233,8 @@ Functions</h2></td></tr>
 <tr class="separator:af7789da0cef77d265747015c018eae1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9193878464e4ac33ac3813aab78976ef" id="r_a9193878464e4ac33ac3813aab78976ef"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a9193878464e4ac33ac3813aab78976ef">HeadingDegXZ</a> (const glm::vec3 &amp;from, const glm::vec3 &amp;to)</td></tr>
 <tr class="separator:a9193878464e4ac33ac3813aab78976ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e69cb966a144a38c4fe169d035684ba" id="r_a0e69cb966a144a38c4fe169d035684ba"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a0e69cb966a144a38c4fe169d035684ba">RunPathfindInternal</a> (ExternNavmeshContext &amp;ctx, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float minEdge, float *outPath, <a class="el" href="structNodeInfo.html">NodeInfo</a> *outNodeInfo, int options)</td></tr>
-<tr class="separator:a0e69cb966a144a38c4fe169d035684ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6c4f1cb9f8b242070ece4204d844455" id="r_af6c4f1cb9f8b242070ece4204d844455"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#af6c4f1cb9f8b242070ece4204d844455">RunPathfindInternal</a> (ExternNavmeshContext &amp;ctx, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, int <a class="el" href="glad_8h.html#aa9459b47e7388437191d2d9a69c10d98">flags</a>, int maxPoints, float minEdge, float *outPath, <a class="el" href="structNodeInfo.html">NodeInfo</a> *outNodeInfo, int options, <a class="el" href="classdtQueryFilter.html">dtQueryFilter</a> *customFilter=nullptr)</td></tr>
+<tr class="separator:af6c4f1cb9f8b242070ece4204d844455"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c63de9d722fb00d6bf9ada161ab24f8" id="r_a1c63de9d722fb00d6bf9ada161ab24f8"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a1c63de9d722fb00d6bf9ada161ab24f8">WrapAngleDeg</a> (float <a class="el" href="SDL__opengl__glext_8h.html#a9e06c1f76a20fed54ca742cd25cb02c4">angle</a>)</td></tr>
 <tr class="separator:a1c63de9d722fb00d6bf9ada161ab24f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cde5004dfcfb609be7429c9479f88be" id="r_a3cde5004dfcfb609be7429c9479f88be"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a3cde5004dfcfb609be7429c9479f88be">Distance2DSq</a> (const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac8729153468b5dcf13f971b21d84d4e5">a</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a6eba317e3cf44d6d26c04a5a8f197dcb">b</a>)</td></tr>
@@ -3228,8 +3228,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a0e69cb966a144a38c4fe169d035684ba" name="a0e69cb966a144a38c4fe169d035684ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e69cb966a144a38c4fe169d035684ba">&#9670;&#160;</a></span>RunPathfindInternal()</h2>
+<a id="af6c4f1cb9f8b242070ece4204d844455" name="af6c4f1cb9f8b242070ece4204d844455"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6c4f1cb9f8b242070ece4204d844455">&#9670;&#160;</a></span>RunPathfindInternal()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3289,7 +3289,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>options</em>&#160;</td>
+          <td class="paramname"><em>options</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classdtQueryFilter.html">dtQueryFilter</a> *&#160;</td>
+          <td class="paramname"><em>customFilter</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
