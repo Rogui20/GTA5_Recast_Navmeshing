@@ -1,5 +1,15 @@
 var NAVTREEINDEX90 =
 {
+"imgui__widgets_8cpp.html#aeef1ebfd613510f082618037974e1637":[44,0,7,0,8,7],
+"imgui__widgets_8cpp.html#aef61893ad1d9af7db8b56ab1a7c82cbd":[44,0,7,0,8,4],
+"imgui__widgets_8cpp.html#af3def68a1bdeda69e6af84fa7d6272cb":[44,0,7,0,8,71],
+"imgui__widgets_8cpp.html#afb0dcef1f8344768aeea25e606b1bad0":[44,0,7,0,8,59],
+"imgui__widgets_8cpp.html#aff21d9af1b439f88b59765b52de1df51":[44,0,7,0,8,14],
+"imstb__rectpack_8h.html":[44,0,7,0,9],
+"imstb__rectpack_8h.html#a0455046a8d5457bbc4f3f3ec995c338f":[44,0,7,0,9,6],
+"imstb__rectpack_8h.html#a0b73f2d2521fb81afc056a823e3ca753":[44,0,7,0,9,5],
+"imstb__rectpack_8h.html#a114ed17dfa71ac93774494ab6d14bfbc":[44,0,7,0,9,4],
+"imstb__rectpack_8h.html#a1babd70b223e571305fd9753a83a4fda":[44,0,7,0,9,12],
 "imstb__rectpack_8h.html#a4a396a45893c12de32e2d598abd6b302":[44,0,7,0,9,7],
 "imstb__rectpack_8h.html#a5a8223866c146933da3e152066bf61a1":[44,0,7,0,9,13],
 "imstb__rectpack_8h.html#a7c4a99b31ea2207a0b2bbcbdab8f3840":[44,0,7,0,9,9],
@@ -239,15 +249,5 @@ var NAVTREEINDEX90 =
 "md_external_2SDL2_2docs_2README-cmake.html":[9],
 "md_external_2SDL2_2docs_2README-cmake.html#a-system-sdl-library":[9,1,0],
 "md_external_2SDL2_2docs_2README-cmake.html#building-sdl":[9,0],
-"md_external_2SDL2_2docs_2README-cmake.html#cmake-configuration-options-for-platforms":[9,2],
-"md_external_2SDL2_2docs_2README-cmake.html#examples":[9,2,0,0],
-"md_external_2SDL2_2docs_2README-cmake.html#including-sdl-in-your-project":[9,1],
-"md_external_2SDL2_2docs_2README-cmake.html#iostvos":[9,2,0],
-"md_external_2SDL2_2docs_2README-cmake.html#using-a-vendored-sdl":[9,1,1],
-"md_external_2SDL2_2docs_2README-dynapi.html":[11],
-"md_external_2SDL2_2docs_2README-emscripten.html":[12],
-"md_external_2SDL2_2docs_2README-emscripten.html#audio":[12,4],
-"md_external_2SDL2_2docs_2README-emscripten.html#building-sdlemscripten":[12,6],
-"md_external_2SDL2_2docs_2README-emscripten.html#building-your-app":[12,7],
-"md_external_2SDL2_2docs_2README-emscripten.html#data-files":[12,8]
+"md_external_2SDL2_2docs_2README-cmake.html#cmake-configuration-options-for-platforms":[9,2]
 };

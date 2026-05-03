@@ -1,5 +1,15 @@
 var NAVTREEINDEX16 =
 {
+"SDL__config__os2_8h.html#ab90a030ff2790ebdc176660a6dd2a478":[44,0,5,2,1,16,31],
+"SDL__config__os2_8h.html#ab9262e27fbdd200f4ddc0fd06ac037c0":[44,0,5,2,1,16,41],
+"SDL__config__os2_8h.html#abb5e3d198e092490a3b15236a49ca2ee":[44,0,5,2,1,16,98],
+"SDL__config__os2_8h.html#abd3c4aff90801d067f0dd1d176a0d1ac":[44,0,5,2,1,16,23],
+"SDL__config__os2_8h.html#abedf95105b2d1cecdecc425f1b66f42b":[44,0,5,2,1,16,8],
+"SDL__config__os2_8h.html#ac113b1149ff6806b32454e2897354a40":[44,0,5,2,1,16,72],
+"SDL__config__os2_8h.html#ac42530bcc02c4d0849d8d4417024d4af":[44,0,5,2,1,16,63],
+"SDL__config__os2_8h.html#ac47b156cb0f72b330945cd009c70049d":[44,0,5,2,1,16,92],
+"SDL__config__os2_8h.html#ac5b2d1a2ecbfae9e762a4e419b091eb2":[44,0,5,2,1,16,25],
+"SDL__config__os2_8h.html#ac5d002420ef5a309454cc6c81128850a":[44,0,5,2,1,16,39],
 "SDL__config__os2_8h.html#ac5f71bfd69698a6db1ae54177fcac7ea":[44,0,5,2,1,16,35],
 "SDL__config__os2_8h.html#ac70f0930238c8d095d7cc2ee8b522c77":[44,0,5,2,1,16,34],
 "SDL__config__os2_8h.html#ac9b6ef9554237e893c442fc4d8da0584":[44,0,5,2,1,16,100],
@@ -239,15 +249,5 @@ var NAVTREEINDEX16 =
 "SDL__config__winrt_8h.html#a1dcc9ceb81320151fe93856341f221b5":[44,0,5,2,1,20,94],
 "SDL__config__winrt_8h.html#a1e40adc12022bab4caa4d01a62cfeed2":[44,0,5,2,1,20,9],
 "SDL__config__winrt_8h.html#a1f0b0b228522f8e5d1729ad239e83346":[44,0,5,2,1,20,7],
-"SDL__config__winrt_8h.html#a1fad346f47011d76be980bfa07db0b80":[44,0,5,2,1,20,20],
-"SDL__config__winrt_8h.html#a1fd175575c8092f9b8dd4667ea98a3c5":[44,0,5,2,1,20,18],
-"SDL__config__winrt_8h.html#a2b6b73803f82d92d00fa159b590a49cf":[44,0,5,2,1,20,34],
-"SDL__config__winrt_8h.html#a2f62ac0ad56a79961382293e9ebebfef":[44,0,5,2,1,20,53],
-"SDL__config__winrt_8h.html#a348655482f599e61eeead7304ad0d52d":[44,0,5,2,1,20,74],
-"SDL__config__winrt_8h.html#a37bb486d90aa4e96552e0b9cc4f63cf6":[44,0,5,2,1,20,56],
-"SDL__config__winrt_8h.html#a37eb0020e42f0ebb6cba24c2888cc48b":[44,0,5,2,1,20,68],
-"SDL__config__winrt_8h.html#a391fe86ae55f2addd7ee59fe0ba163fb":[44,0,5,2,1,20,81],
-"SDL__config__winrt_8h.html#a3df52e9809253860c385be6f3a160607":[44,0,5,2,1,20,52],
-"SDL__config__winrt_8h.html#a3f006787147ca3309a584abe1a4840b6":[44,0,5,2,1,20,58],
-"SDL__config__winrt_8h.html#a3f77f89066bc25189ef1ba9dd1bbafa6":[44,0,5,2,1,20,80]
+"SDL__config__winrt_8h.html#a1fad346f47011d76be980bfa07db0b80":[44,0,5,2,1,20,20]
 };

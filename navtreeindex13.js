@@ -1,5 +1,15 @@
 var NAVTREEINDEX13 =
 {
+"SDL__audio_8h.html#a6a8996f0cb3adf37d4c1c5ed4eef5b18":[44,0,5,2,1,5,53],
+"SDL__audio_8h.html#a6ed6333b8b294eafb6a9435fd8ff89fa":[44,0,5,2,1,5,60],
+"SDL__audio_8h.html#a76d8179bee14dad268e65378058d897d":[44,0,5,2,1,5,84],
+"SDL__audio_8h.html#a7a74da30372d4a2c3db7ceef406d65fb":[44,0,5,2,1,5,51],
+"SDL__audio_8h.html#a7ffa484f230f6085e271a4f43e678f06":[44,0,5,2,1,5,74],
+"SDL__audio_8h.html#a86ee1651c17955594a547e96b9c94890":[44,0,5,2,1,5,27],
+"SDL__audio_8h.html#a883b3d4539451e49bf014dde0f9cca29":[44,0,5,2,1,5,14],
+"SDL__audio_8h.html#a8e8660222356e07002dde4928118b7df":[44,0,5,2,1,5,59],
+"SDL__audio_8h.html#a9769845303f88f084f051b99e55b62a1":[44,0,5,2,1,5,75],
+"SDL__audio_8h.html#aa176acc650e66e1d38814cbed3ca258e":[44,0,5,2,1,5,57],
 "SDL__audio_8h.html#aa68e60a33666ff4f2d36f3827b1d6061":[44,0,5,2,1,5,81],
 "SDL__audio_8h.html#aa9f715eb12c43474ad0aae52976e5095":[44,0,5,2,1,5,31],
 "SDL__audio_8h.html#aab1f29540e28a8638ec08ecccea47c36":[44,0,5,2,1,5,64],
@@ -239,15 +249,5 @@ var NAVTREEINDEX13 =
 "SDL__config__emscripten_8h.html#a3df52e9809253860c385be6f3a160607":[44,0,5,2,1,11,56],
 "SDL__config__emscripten_8h.html#a3f7e8b5e13d96d1de1a0848f7aa80157":[44,0,5,2,1,11,43],
 "SDL__config__emscripten_8h.html#a405d10d46190bcb0320524c54eafc850":[44,0,5,2,1,11,86],
-"SDL__config__emscripten_8h.html#a418a313054bd17ae9e82ae264b00186a":[44,0,5,2,1,11,131],
-"SDL__config__emscripten_8h.html#a459593098f6863f99d457d8701a40346":[44,0,5,2,1,11,124],
-"SDL__config__emscripten_8h.html#a45bd7023ba6d49717851ccffe306840d":[44,0,5,2,1,11,6],
-"SDL__config__emscripten_8h.html#a494d1ecf5a4567ccbf7901e3be337bc7":[44,0,5,2,1,11,72],
-"SDL__config__emscripten_8h.html#a49afaaefcf9868c6d3a9fb43706af4db":[44,0,5,2,1,11,103],
-"SDL__config__emscripten_8h.html#a4ac6a60cb19181437136206238f16497":[44,0,5,2,1,11,107],
-"SDL__config__emscripten_8h.html#a4d5764d524066dd1ffa084153c3fd45e":[44,0,5,2,1,11,119],
-"SDL__config__emscripten_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,11,69],
-"SDL__config__emscripten_8h.html#a4e31ef0be24f881a3a13e42723db7095":[44,0,5,2,1,11,31],
-"SDL__config__emscripten_8h.html#a4f6ff4162269254c4c4b86bc9892ecce":[44,0,5,2,1,11,46],
-"SDL__config__emscripten_8h.html#a52de22f2e81bce94222ff968b2b3c8c1":[44,0,5,2,1,11,8]
+"SDL__config__emscripten_8h.html#a418a313054bd17ae9e82ae264b00186a":[44,0,5,2,1,11,131]
 };

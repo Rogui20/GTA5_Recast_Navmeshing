@@ -3,6 +3,7 @@ var annotated_dup =
     [ "ImGui", "namespaceImGui.html", [
       [ "FileBrowser", "classImGui_1_1FileBrowser.html", "classImGui_1_1FileBrowser" ]
     ] ],
+    [ "AgentProfileFFI", "structAgentProfileFFI.html", "structAgentProfileFFI" ],
     [ "AutoOffmeshGenerationParams", "structAutoOffmeshGenerationParams.html", "structAutoOffmeshGenerationParams" ],
     [ "AutoOffmeshGenerationParamsV2", "structAutoOffmeshGenerationParamsV2.html", "structAutoOffmeshGenerationParamsV2" ],
     [ "BoundsItem", "structBoundsItem.html", "structBoundsItem" ],

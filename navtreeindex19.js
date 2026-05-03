@@ -1,5 +1,15 @@
 var NAVTREEINDEX19 =
 {
+"SDL__haptic_8h.html#aad427170295d6b88a5a94cd6a491797a":[44,0,5,2,1,32,61],
+"SDL__haptic_8h.html#ab8e3f40f3c2bcee8905d13b634363c3f":[44,0,5,2,1,32,22],
+"SDL__haptic_8h.html#abfbc9fa0d65f4b5632788945080cc71b":[44,0,5,2,1,32,26],
+"SDL__haptic_8h.html#ac471a69170328585193066cc9d9ff482":[44,0,5,2,1,32,43],
+"SDL__haptic_8h.html#acdc35e97e5525472054a67b76e518f3b":[44,0,5,2,1,32,19],
+"SDL__haptic_8h.html#ace902fac5855f399ea16edbc2d28c8f1":[44,0,5,2,1,32,32],
+"SDL__haptic_8h.html#ad6705645197f6df4eeeea32392462483":[44,0,5,2,1,32,45],
+"SDL__haptic_8h.html#ad90d0e292edba72fdb696a1e7b9560cd":[44,0,5,2,1,32,31],
+"SDL__haptic_8h.html#adf5073b6a3b2129da7820e5506321542":[44,0,5,2,1,32,35],
+"SDL__haptic_8h.html#ae047624d8458ff6400887c37a36f86d3":[44,0,5,2,1,32,17],
 "SDL__haptic_8h.html#ae2185c0814f107dd5851dd743e9ea71c":[44,0,5,2,1,32,41],
 "SDL__haptic_8h.html#ae333ef77753ba700875fa20858b9021d":[44,0,5,2,1,32,40],
 "SDL__haptic_8h.html#ae8123eaa51511507375ba6ef9220fa46":[44,0,5,2,1,32,28],
@@ -239,15 +249,5 @@ var NAVTREEINDEX19 =
 "SDL__hints_8h.html#ae8e70c0cb4f02133bd05172915492110":[44,0,5,2,1,34,87],
 "SDL__hints_8h.html#aeea07a7843ea936cc493ae741dd0e033":[44,0,5,2,1,34,140],
 "SDL__hints_8h.html#aef83d045c6a06f26c6df9a8116489bc3":[44,0,5,2,1,34,1],
-"SDL__hints_8h.html#af03fa72fddb9fed3f6dbab282fb3f958":[44,0,5,2,1,34,128],
-"SDL__hints_8h.html#af0837cec5a903e2b652b177813c82eb4":[44,0,5,2,1,34,16],
-"SDL__hints_8h.html#af0fa9c0a2529bbbb5d23d86ba272435b":[44,0,5,2,1,34,9],
-"SDL__hints_8h.html#af4540ad6b9ce57bc910998a9f56e164f":[44,0,5,2,1,34,26],
-"SDL__hints_8h.html#af9f679cc77a01ece373e3aff177f2802":[44,0,5,2,1,34,180],
-"SDL__hints_8h.html#afb90e86b777091befbd4f8479e112b35":[44,0,5,2,1,34,63],
-"SDL__hints_8h.html#afbc6ba9f809e07557eb369f763299174":[44,0,5,2,1,34,147],
-"SDL__hints_8h.html#afcb9274e7e5e4fd0cba54acc673279bf":[44,0,5,2,1,34,41],
-"SDL__hints_8h.html#afd9e992ec99ebab318a9f73c6d9ba2ce":[44,0,5,2,1,34,194],
-"SDL__hints_8h.html#aff84d56f5de197e49a778e18ad76ab0e":[44,0,5,2,1,34,203],
-"SDL__hints_8h_source.html":[44,0,5,2,1,34]
+"SDL__hints_8h.html#af03fa72fddb9fed3f6dbab282fb3f958":[44,0,5,2,1,34,128]
 };
