@@ -239,6 +239,12 @@ namespace
         std::unordered_map<std::string, std::unordered_map<std::uint64_t, AgentProfileTileCache>> agentProfileTileCaches;
     };
 
+    uint64_t WorldHashCombine64(uint64_t seed, uint64_t v)
+    {
+        seed ^= v + 0x9e3779b97f4a7c15ull + (seed << 6) + (seed >> 2);
+        return seed;
+    }
+
     static std::uint64_t ComputeAgentProfileHash(const AgentProfileFFI& p)
     {
         std::uint64_t h = 1469598103934665603ull;
@@ -306,21 +312,6 @@ namespace
         int* m_rejectedCounter = nullptr;
     };
 
-    static std::uint64_t ComputeAgentProfileHash(const AgentProfileFFI& p)
-    {
-        std::uint64_t h = 1469598103934665603ull;
-        auto mixf = [&](float v)
-        {
-            std::uint32_t bits = 0;
-            std::memcpy(&bits, &v, sizeof(bits));
-            h = WorldHashCombine64(h, bits);
-        };
-        h = WorldHashCombine64(h, p.profileId);
-        mixf(p.radius); mixf(p.pedHeight); mixf(p.halfWidth); mixf(p.halfLength);
-        mixf(p.vehicleHeight); mixf(p.maxSlopeDeg); mixf(p.maxStepHeight); mixf(p.minClearance);
-        return h;
-    }
-
     std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx);
     std::filesystem::path GetWorldManifestPath(const ExternNavmeshContext& ctx);
     std::filesystem::path GetSessionGridCacheRoot(const ExternNavmeshContext& ctx);
@@ -336,11 +327,7 @@ namespace
     void ClearWorldGeometryHeavyCache(ExternNavmeshContext::WorldGeomRecord& rec);
     int UnloadUnusedWorldGeometryInternal(ExternNavmeshContext& ctx, bool aggressive);
 
-    uint64_t WorldHashCombine64(uint64_t seed, uint64_t v)
-    {
-        seed ^= v + 0x9e3779b97f4a7c15ull + (seed << 6) + (seed >> 2);
-        return seed;
-    }
+    
 
     uint64_t ComputeWorldGeometryHash(const std::string& path,
                                   const glm::vec3& pos,
