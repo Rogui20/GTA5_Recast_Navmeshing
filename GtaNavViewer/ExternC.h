@@ -109,6 +109,19 @@ struct PathAvoidParamsFFI
     std::uint8_t _pad[3]{};
 };
 
+struct AgentProfileFFI
+{
+    std::uint32_t profileId = 0;
+    float radius = 0.0f;
+    float pedHeight = 0.0f;
+    float halfWidth = 0.0f;
+    float halfLength = 0.0f;
+    float vehicleHeight = 0.0f;
+    float maxSlopeDeg = 0.0f;
+    float maxStepHeight = 0.0f;
+    float minClearance = 0.0f;
+};
+
 enum SimAgentFlags : std::uint32_t
 {
     AGENT_ENABLED = 1u << 0,
@@ -339,6 +352,18 @@ GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
                                          int maxPoints,
                                          float minEdge,
                                          float* outPath, int options);
+GTANAVVIEWER_API bool RegisterAgentProfile(void* navMesh, const char* profileName, AgentProfileFFI profile);
+GTANAVVIEWER_API bool RemoveAgentProfile(void* navMesh, const char* profileName);
+GTANAVVIEWER_API bool HasAgentProfile(void* navMesh, const char* profileName);
+GTANAVVIEWER_API int BuildAgentProfileCacheForTiles(void* navMesh, const char* profileName, const std::uint64_t* tileKeys, int tileCount);
+GTANAVVIEWER_API int FindPathWithAgentProfile(void* navMesh,
+                                              const char* profileName,
+                                              Vector3 start,
+                                              Vector3 target,
+                                              int flags,
+                                              int maxPoints,
+                                              float* outPath,
+                                              int options);
 
 GTANAVVIEWER_API int FindPathAvoidingDynamicObstacles(
     void* navMesh,
