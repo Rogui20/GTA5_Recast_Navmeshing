@@ -1,5 +1,13 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__VirtualJoystickDesc.html#abe0ce92d119205b71d5dac5f67720622":[43,0,447,7],
+"structSDL__VirtualJoystickDesc.html#ac27dbdc269879dd4c47086d65d10e7c6":[43,0,447,4],
+"structSDL__VirtualJoystickDesc.html#ad12e9924803338e3c4ea43a42facafbd":[43,0,447,8],
+"structSDL__VirtualJoystickDesc.html#adac36385195978f1b6aa0205d53c43ba":[43,0,447,24],
+"structSDL__VirtualJoystickDesc.html#adc9cd10e2d77fbfbce2682454cd39aa2":[43,0,447,14],
+"structSDL__VirtualJoystickDesc.html#af5addabc48cde5ea0943d964a205aab8":[43,0,447,20],
+"structSDL__VirtualJoystickDesc.html#af6e00afdc0711aae8a44613612e1703f":[43,0,447,1],
+"structSDL__VirtualJoystickDesc.html#afb2468ddc1b70e80bd09236edfe899f4":[43,0,447,22],
 "structSDL__WindowEvent.html":[43,0,448],
 "structSDL__WindowEvent.html#a01c8c8fbe8564e690f958d2db560f657":[43,0,448,7],
 "structSDL__WindowEvent.html#a01da0025428d3434c80021f3e4089fec":[43,0,448,0],
@@ -241,13 +249,5 @@ var NAVTREEINDEX108 =
 "structdtLayerSweepSpan.html#a20068e1afedf77184348891cc3f863ed":[43,0,29,2],
 "structdtLayerSweepSpan.html#a979ef3d0c22d55844358ed2e62acd83f":[43,0,29,0],
 "structdtLayerSweepSpan.html#abbd4307e791bd3ff4bd19bf13990c694":[43,0,29,1],
-"structdtLink.html":[43,0,30],
-"structdtLink.html#a0123fe6375fa414a48b2e73c3b23a1ce":[43,0,30,1],
-"structdtLink.html#a14ff7d317cbceba6ab9d1958b463cb3a":[43,0,30,2],
-"structdtLink.html#a34c73193fed76de347adb0f2e9841659":[43,0,30,4],
-"structdtLink.html#a475b893f03bf4c942ab6376d83dca82e":[43,0,30,3],
-"structdtLink.html#a62d34d0e6350fe9790e91ec287bc1423":[43,0,30,5],
-"structdtLink.html#ac8a3afc341614707afb915d2822ffdc7":[43,0,30,0],
-"structdtNode.html":[43,0,38],
-"structdtNode.html#a0ffc2be17daff1087e7d2920334eeb3d":[43,0,38,2]
+"structdtLink.html":[43,0,30]
 };

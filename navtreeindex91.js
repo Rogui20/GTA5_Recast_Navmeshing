@@ -1,5 +1,13 @@
 var NAVTREEINDEX91 =
 {
+"md_external_2SDL2_2docs_2README-emscripten.html#debugging":[12,9],
+"md_external_2SDL2_2docs_2README-emscripten.html#do-you-need-threads":[12,3],
+"md_external_2SDL2_2docs_2README-emscripten.html#porting-your-app-to-emscripten":[12,2],
+"md_external_2SDL2_2docs_2README-emscripten.html#questions":[12,10],
+"md_external_2SDL2_2docs_2README-emscripten.html#rendering":[12,5],
+"md_external_2SDL2_2docs_2README-emscripten.html#rtfm":[12,1],
+"md_external_2SDL2_2docs_2README-emscripten.html#the-state-of-things":[12,0],
+"md_external_2SDL2_2docs_2README-macos.html":[20],
 "md_external_2SDL2_2docs_2README-macos.html#bug-reports":[20,5],
 "md_external_2SDL2_2docs_2README-macos.html#build-options":[20,3,2],
 "md_external_2SDL2_2docs_2README-macos.html#building-from-command-line":[20,3,6],
@@ -241,13 +249,5 @@ var NAVTREEINDEX91 =
 "structExampleAppDocuments.html#ad5764912b760eaae5829a7197b26c911":[43,0,78,0],
 "structExampleAppDocuments.html#ae41eb7580d5a82355e9d57f1bd34f6ca":[43,0,78,3],
 "structExampleAppDocuments.html#af7281834336b28da15c2168fae2d0212":[43,0,78,5],
-"structExampleAppLog.html":[43,0,79],
-"structExampleAppLog.html#a4571947a6000e984ec8da9b7166e1e2b":[43,0,79,6],
-"structExampleAppLog.html#a5ad3a4bdb89171b84aeaff96948a1f77":[43,0,79,3],
-"structExampleAppLog.html#a6b32bf0242b10d45376a7b43a4bde2f5":[43,0,79,4],
-"structExampleAppLog.html#a74fb7cd7bd8c2507b41331ebb7d0e56d":[43,0,79,5],
-"structExampleAppLog.html#ab9c298defddbb106fdfe4ab16c5eebac":[43,0,79,2],
-"structExampleAppLog.html#adadd24050d22189a1dc43e4a694b7ab3":[43,0,79,0],
-"structExampleAppLog.html#af197fca7116f9033a5a5e831ee764ee2":[43,0,79,7],
-"structExampleAppLog.html#afd296fb3b2559acd341fd92883f8f571":[43,0,79,1]
+"structExampleAppLog.html":[43,0,79]
 };

@@ -1,5 +1,13 @@
 var NAVTREEINDEX19 =
 {
+"SDL__haptic_8h.html#ae2185c0814f107dd5851dd743e9ea71c":[44,0,5,2,1,32,41],
+"SDL__haptic_8h.html#ae333ef77753ba700875fa20858b9021d":[44,0,5,2,1,32,40],
+"SDL__haptic_8h.html#ae8123eaa51511507375ba6ef9220fa46":[44,0,5,2,1,32,28],
+"SDL__haptic_8h.html#af0181e59ecd14c6aecd1fd3c5099330a":[44,0,5,2,1,32,52],
+"SDL__haptic_8h.html#af10eb937a64a8f602e9c46682ac0d868":[44,0,5,2,1,32,20],
+"SDL__haptic_8h.html#af44cbecefe14da5a7476013ce06f38b9":[44,0,5,2,1,32,54],
+"SDL__haptic_8h.html#af4d7e7825bf98ca5a5aa8194b77b0754":[44,0,5,2,1,32,30],
+"SDL__haptic_8h.html#af8b2430a363a968de2a5b64c8f663d3b":[44,0,5,2,1,32,9],
 "SDL__haptic_8h.html#af967093786a8e460fc42c9b502472d85":[44,0,5,2,1,32,37],
 "SDL__haptic_8h.html#afc6e5a5701fe80004d529d762132ad6b":[44,0,5,2,1,32,46],
 "SDL__haptic_8h.html#afd64aa747034a7ccf4b55f6246525701":[44,0,5,2,1,32,21],
@@ -241,13 +249,5 @@ var NAVTREEINDEX19 =
 "SDL__hints_8h.html#afcb9274e7e5e4fd0cba54acc673279bf":[44,0,5,2,1,34,41],
 "SDL__hints_8h.html#afd9e992ec99ebab318a9f73c6d9ba2ce":[44,0,5,2,1,34,194],
 "SDL__hints_8h.html#aff84d56f5de197e49a778e18ad76ab0e":[44,0,5,2,1,34,203],
-"SDL__hints_8h_source.html":[44,0,5,2,1,34],
-"SDL__joystick_8h.html":[44,0,5,2,1,35],
-"SDL__joystick_8h.html#a01a289030d76adc1666951fd6021c2ea":[44,0,5,2,1,35,19],
-"SDL__joystick_8h.html#a01a289030d76adc1666951fd6021c2eaa00190ed35e476fe91ff5ca23c82116fc":[44,0,5,2,1,35,19,5],
-"SDL__joystick_8h.html#a01a289030d76adc1666951fd6021c2eaa3d7a52c076bb13f177da3ac9051ffca9":[44,0,5,2,1,35,19,8],
-"SDL__joystick_8h.html#a01a289030d76adc1666951fd6021c2eaa75dd0ff09f40f46f2558852840c4c5f5":[44,0,5,2,1,35,19,0],
-"SDL__joystick_8h.html#a01a289030d76adc1666951fd6021c2eaa767f0e4bec3e03a50cd61952f3627b7f":[44,0,5,2,1,35,19,3],
-"SDL__joystick_8h.html#a01a289030d76adc1666951fd6021c2eaa8805ad382637dbffd54e2aed0b9bf4eb":[44,0,5,2,1,35,19,2],
-"SDL__joystick_8h.html#a01a289030d76adc1666951fd6021c2eaa89b1053067e73f56c2354bf5a24ce038":[44,0,5,2,1,35,19,9]
+"SDL__hints_8h_source.html":[44,0,5,2,1,34]
 };

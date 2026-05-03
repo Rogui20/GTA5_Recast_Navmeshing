@@ -1,5 +1,13 @@
 var NAVTREEINDEX107 =
 {
+"structSDL__JoyDeviceEvent.html#a51f060ba1dd5669b458e9c97aece667e":[43,0,415,1],
+"structSDL__JoyDeviceEvent.html#a5c4a9271bfff5d5c2e09a0dc732df8f3":[43,0,415,0],
+"structSDL__JoyDeviceEvent.html#af9b295798f033b799ebbda7de6cb5a7e":[43,0,415,2],
+"structSDL__JoyHatEvent.html":[43,0,416],
+"structSDL__JoyHatEvent.html#a52b179a34407449941b61d988ca72ef4":[43,0,416,5],
+"structSDL__JoyHatEvent.html#ab1b54a6d1091e583e856f86b5af1e2f6":[43,0,416,0],
+"structSDL__JoyHatEvent.html#ac583dafab46c44354e210a542aff57cc":[43,0,416,4],
+"structSDL__JoyHatEvent.html#ac9d9bb179f9116d16b3da47cacd74b55":[43,0,416,6],
 "structSDL__JoyHatEvent.html#adaca3e99773130ae456690ba83feb420":[43,0,416,2],
 "structSDL__JoyHatEvent.html#ade58ecb3e75aad4ef9809f040519a021":[43,0,416,3],
 "structSDL__JoyHatEvent.html#afbe72b6702cf7f70ccbe206737ab2e49":[43,0,416,1],
@@ -241,13 +249,5 @@ var NAVTREEINDEX107 =
 "structSDL__VirtualJoystickDesc.html#a9f9d1f676a233c91183963cb3c36d809":[43,0,447,21],
 "structSDL__VirtualJoystickDesc.html#aa59e414ed62e7f3fb4c94713b8c57bc3":[43,0,447,17],
 "structSDL__VirtualJoystickDesc.html#aacffe03c0b064e2a033609e9e6226a8b":[43,0,447,15],
-"structSDL__VirtualJoystickDesc.html#abdee30da3694a698b2d81a1eb1e73a3c":[43,0,447,2],
-"structSDL__VirtualJoystickDesc.html#abe0ce92d119205b71d5dac5f67720622":[43,0,447,7],
-"structSDL__VirtualJoystickDesc.html#ac27dbdc269879dd4c47086d65d10e7c6":[43,0,447,4],
-"structSDL__VirtualJoystickDesc.html#ad12e9924803338e3c4ea43a42facafbd":[43,0,447,8],
-"structSDL__VirtualJoystickDesc.html#adac36385195978f1b6aa0205d53c43ba":[43,0,447,24],
-"structSDL__VirtualJoystickDesc.html#adc9cd10e2d77fbfbce2682454cd39aa2":[43,0,447,14],
-"structSDL__VirtualJoystickDesc.html#af5addabc48cde5ea0943d964a205aab8":[43,0,447,20],
-"structSDL__VirtualJoystickDesc.html#af6e00afdc0711aae8a44613612e1703f":[43,0,447,1],
-"structSDL__VirtualJoystickDesc.html#afb2468ddc1b70e80bd09236edfe899f4":[43,0,447,22]
+"structSDL__VirtualJoystickDesc.html#abdee30da3694a698b2d81a1eb1e73a3c":[43,0,447,2]
 };

@@ -1,5 +1,13 @@
 var NAVTREEINDEX16 =
 {
+"SDL__config__os2_8h.html#ac5f71bfd69698a6db1ae54177fcac7ea":[44,0,5,2,1,16,35],
+"SDL__config__os2_8h.html#ac70f0930238c8d095d7cc2ee8b522c77":[44,0,5,2,1,16,34],
+"SDL__config__os2_8h.html#ac9b6ef9554237e893c442fc4d8da0584":[44,0,5,2,1,16,100],
+"SDL__config__os2_8h.html#acc0a82e924c3573aabbfdd996ae56bde":[44,0,5,2,1,16,82],
+"SDL__config__os2_8h.html#acc2bed5d68d90c16dff96bcf1bcde0b4":[44,0,5,2,1,16,88],
+"SDL__config__os2_8h.html#acce0cf4223f69a5aa693ac36ebffcbf6":[44,0,5,2,1,16,104],
+"SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[44,0,5,2,1,16,85],
+"SDL__config__os2_8h.html#acf61f3485e8d16407a763d6be78a07dc":[44,0,5,2,1,16,84],
 "SDL__config__os2_8h.html#ad4c234dd1625255dc626a15886306e7d":[44,0,5,2,1,16,65],
 "SDL__config__os2_8h.html#ad5351e07e3ee3d8d34e1689351c47c75":[44,0,5,2,1,16,95],
 "SDL__config__os2_8h.html#ad7c2edb2365c947f4bff624c7be9f890":[44,0,5,2,1,16,76],
@@ -241,13 +249,5 @@ var NAVTREEINDEX16 =
 "SDL__config__winrt_8h.html#a391fe86ae55f2addd7ee59fe0ba163fb":[44,0,5,2,1,20,81],
 "SDL__config__winrt_8h.html#a3df52e9809253860c385be6f3a160607":[44,0,5,2,1,20,52],
 "SDL__config__winrt_8h.html#a3f006787147ca3309a584abe1a4840b6":[44,0,5,2,1,20,58],
-"SDL__config__winrt_8h.html#a3f77f89066bc25189ef1ba9dd1bbafa6":[44,0,5,2,1,20,80],
-"SDL__config__winrt_8h.html#a3f7e8b5e13d96d1de1a0848f7aa80157":[44,0,5,2,1,20,41],
-"SDL__config__winrt_8h.html#a418a313054bd17ae9e82ae264b00186a":[44,0,5,2,1,20,102],
-"SDL__config__winrt_8h.html#a430feb5c1b588373035ec2471ca02437":[44,0,5,2,1,20,101],
-"SDL__config__winrt_8h.html#a45bd7023ba6d49717851ccffe306840d":[44,0,5,2,1,20,12],
-"SDL__config__winrt_8h.html#a494d1ecf5a4567ccbf7901e3be337bc7":[44,0,5,2,1,20,61],
-"SDL__config__winrt_8h.html#a49afaaefcf9868c6d3a9fb43706af4db":[44,0,5,2,1,20,79],
-"SDL__config__winrt_8h.html#a4ac6a60cb19181437136206238f16497":[44,0,5,2,1,20,83],
-"SDL__config__winrt_8h.html#a4e31ef0be24f881a3a13e42723db7095":[44,0,5,2,1,20,35]
+"SDL__config__winrt_8h.html#a3f77f89066bc25189ef1ba9dd1bbafa6":[44,0,5,2,1,20,80]
 };

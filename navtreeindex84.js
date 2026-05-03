@@ -1,5 +1,13 @@
 var NAVTREEINDEX84 =
 {
+"imgui__impl__sdlrenderer2_8h.html#aa234961d6ca370efc655f3c347b96bf1":[44,0,7,0,0,33,1],
+"imgui__impl__sdlrenderer2_8h.html#ac6339e6931773c07b4e8e134e4eeb59b":[44,0,7,0,0,33,5],
+"imgui__impl__sdlrenderer2_8h.html#af5216c928d4b0d5f2a8b2a9c31456d03":[44,0,7,0,0,33,6],
+"imgui__impl__sdlrenderer2_8h.html#af527f68c8ade7fcf94b34d8b625be758":[44,0,7,0,0,33,3],
+"imgui__impl__sdlrenderer2_8h_source.html":[44,0,7,0,0,33],
+"imgui__impl__sdlrenderer3_8cpp.html":[44,0,7,0,0,34],
+"imgui__impl__sdlrenderer3_8cpp.html#a516c21978c61c8b9a55dd9147d98da3d":[44,0,7,0,0,34,5],
+"imgui__impl__sdlrenderer3_8cpp.html#a5dec8cf9cca7cec11fabec41e0aebb47":[44,0,7,0,0,34,1],
 "imgui__impl__sdlrenderer3_8cpp.html#a6baf78e2e9a58c88c042eae771f5d77a":[44,0,7,0,0,34,8],
 "imgui__impl__sdlrenderer3_8cpp.html#a7fbcfd958968d1938c3d99d9e9f31338":[44,0,7,0,0,34,4],
 "imgui__impl__sdlrenderer3_8cpp.html#a87d8f6c9e88a8991b2079be2b12ce7e0":[44,0,7,0,0,34,3],
@@ -241,13 +249,5 @@ var NAVTREEINDEX84 =
 "imgui__internal_8h.html#a00ee5484f4006a8b98ed323d1dc37944af89bd23e3dc8417b45d0e22ea81821de":[44,0,7,0,6,220,3],
 "imgui__internal_8h.html#a00ee5484f4006a8b98ed323d1dc37944aff021ea6bb9da9b720f4790f827c7a89":[44,0,7,0,6,220,6],
 "imgui__internal_8h.html#a02226c5ba68632cd7f55b120c99e2bc8":[44,0,7,0,6,497],
-"imgui__internal_8h.html#a03fd8ebf820fd67eccfa0ee037df2d0c":[44,0,7,0,6,392],
-"imgui__internal_8h.html#a044d12ff2cdc7af4a6de58d63cd96839":[44,0,7,0,6,104],
-"imgui__internal_8h.html#a045bb5e3e5947c10260a4889b50e3e35":[44,0,7,0,6,869],
-"imgui__internal_8h.html#a0489c61d4548badaf035435dedf0ee66":[44,0,7,0,6,552],
-"imgui__internal_8h.html#a055af7d6b7b4ae977a9c3c25a98e0d2f":[44,0,7,0,6,435],
-"imgui__internal_8h.html#a0560d8edbeb9985eda5334d2f01a6fad":[44,0,7,0,6,681],
-"imgui__internal_8h.html#a0575e1e5da712a0ab28f7c9c41167c1c":[44,0,7,0,6,369],
-"imgui__internal_8h.html#a05ada04953ac91c563334fb0fe934e03":[44,0,7,0,6,452],
-"imgui__internal_8h.html#a05f8c005c5ecb483b4aeb48fbb35108c":[44,0,7,0,6,723]
+"imgui__internal_8h.html#a03fd8ebf820fd67eccfa0ee037df2d0c":[44,0,7,0,6,392]
 };

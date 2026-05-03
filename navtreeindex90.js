@@ -1,5 +1,13 @@
 var NAVTREEINDEX90 =
 {
+"imstb__rectpack_8h.html#a4a396a45893c12de32e2d598abd6b302":[44,0,7,0,9,7],
+"imstb__rectpack_8h.html#a5a8223866c146933da3e152066bf61a1":[44,0,7,0,9,13],
+"imstb__rectpack_8h.html#a7c4a99b31ea2207a0b2bbcbdab8f3840":[44,0,7,0,9,9],
+"imstb__rectpack_8h.html#a8b32f5ad458f614f5d419ef26cef5b3c":[44,0,7,0,9,10],
+"imstb__rectpack_8h.html#ae8f871c209d2e6218baf9c0e2a209ea1":[44,0,7,0,9,8],
+"imstb__rectpack_8h.html#af038ae1b98573f24736c9a3eed0478ba":[44,0,7,0,9,11],
+"imstb__rectpack_8h.html#af2f15dfcc6ad60b1df4f5902e2cc25ce":[44,0,7,0,9,3],
+"imstb__rectpack_8h_source.html":[44,0,7,0,9],
 "imstb__textedit_8h.html":[44,0,7,0,10],
 "imstb__textedit_8h.html#a123969d1a111b15825eaa9d2b989cecc":[44,0,7,0,10,4],
 "imstb__textedit_8h.html#a8689614e35e12ab67f08f097dcef95d0":[44,0,7,0,10,5],
@@ -241,13 +249,5 @@ var NAVTREEINDEX90 =
 "md_external_2SDL2_2docs_2README-emscripten.html#audio":[12,4],
 "md_external_2SDL2_2docs_2README-emscripten.html#building-sdlemscripten":[12,6],
 "md_external_2SDL2_2docs_2README-emscripten.html#building-your-app":[12,7],
-"md_external_2SDL2_2docs_2README-emscripten.html#data-files":[12,8],
-"md_external_2SDL2_2docs_2README-emscripten.html#debugging":[12,9],
-"md_external_2SDL2_2docs_2README-emscripten.html#do-you-need-threads":[12,3],
-"md_external_2SDL2_2docs_2README-emscripten.html#porting-your-app-to-emscripten":[12,2],
-"md_external_2SDL2_2docs_2README-emscripten.html#questions":[12,10],
-"md_external_2SDL2_2docs_2README-emscripten.html#rendering":[12,5],
-"md_external_2SDL2_2docs_2README-emscripten.html#rtfm":[12,1],
-"md_external_2SDL2_2docs_2README-emscripten.html#the-state-of-things":[12,0],
-"md_external_2SDL2_2docs_2README-macos.html":[20]
+"md_external_2SDL2_2docs_2README-emscripten.html#data-files":[12,8]
 };
