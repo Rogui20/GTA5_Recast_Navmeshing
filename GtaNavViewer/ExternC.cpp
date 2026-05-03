@@ -1217,6 +1217,29 @@ namespace
         if (!ctx.navData.GetNavMesh())
             return false;
 
+        if (ctx.useTileCacheGridDB)
+        {
+            const std::filesystem::path gridRoot = GetSessionGridCacheRoot(ctx);
+            const std::filesystem::path tilesDir = gridRoot / "tiles";
+            if (!std::filesystem::exists(tilesDir))
+            {
+                ctx.dbIndexCache.clear();
+                ctx.dbIndexLoaded = false;
+                ctx.dbMTime = {};
+                return false;
+            }
+
+            ctx.dbIndexCache.clear();
+            if (!TileGridDbLoadIndex(gridRoot.string().c_str(), ctx.navData.GetNavMesh(), ctx.dbIndexCache))
+            {
+                ctx.dbIndexLoaded = false;
+                return false;
+            }
+            ctx.dbIndexLoaded = true;
+            ctx.dbMTime = {};
+            return true;
+        }
+
         if (!std::filesystem::exists(cachePath))
         {
             ctx.dbIndexCache.clear();
@@ -1495,20 +1518,27 @@ namespace
         }
 
         std::filesystem::path cachePath = GetSessionCachePath(ctx);
-        const bool indexLoaded = ctx.useTileCacheGridDB
-            ? TileGridDbLoadIndex(GetSessionGridCacheRoot(ctx).string().c_str(), ctx.navData.GetNavMesh(), ctx.dbIndexCache)
-            : EnsureDbIndexLoaded(ctx, cachePath);
+        const bool indexLoaded = EnsureDbIndexLoaded(ctx, cachePath);
         const size_t dbTiles = indexLoaded ? ctx.dbIndexCache.size() : 0;
         const size_t expectedTiles = ctx.tileToGeometryIds.size();
         if (indexLoaded && expectedTiles >= 100 && dbTiles * 10 < expectedTiles)
         {
-            std::error_code ec;
-            const auto cacheSizeBytes = std::filesystem::file_size(cachePath, ec);
-            if (!ec)
+            if (ctx.useTileCacheGridDB)
             {
-                const double cacheSizeMb = static_cast<double>(cacheSizeBytes) / (1024.0 * 1024.0);
-                printf("[WorldTile] Resume scan warning: dbTiles=%zu muito menor que expectedTiles=%zu, tilecacheSizeMB=%.2f\n",
-                       dbTiles, expectedTiles, cacheSizeMb);
+                const auto gridRoot = GetSessionGridCacheRoot(ctx);
+                printf("[WorldTile][GridDB] Resume scan warning: dbTiles=%zu muito menor que expectedTiles=%zu root=%s\n",
+                       dbTiles, expectedTiles, gridRoot.string().c_str());
+            }
+            else
+            {
+                std::error_code ec;
+                const auto cacheSizeBytes = std::filesystem::file_size(cachePath, ec);
+                if (!ec)
+                {
+                    const double cacheSizeMb = static_cast<double>(cacheSizeBytes) / (1024.0 * 1024.0);
+                    printf("[WorldTile][SingleDB] Resume scan warning: dbTiles=%zu muito menor que expectedTiles=%zu, tilecacheSizeMB=%.2f\n",
+                           dbTiles, expectedTiles, cacheSizeMb);
+                }
             }
         }
         size_t cachedOk = 0;
@@ -3605,15 +3635,31 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         std::filesystem::path cachePath = GetSessionCachePath(*ctx);
         const auto& hashes = ctx->navData.GetCachedTileHashes();
 
-        printf("[WorldTile] TileDb merge write: %s (tiles=%zu)\n",
-            cachePath.string().c_str(), tilesToSave.size());
+        if (ctx->useTileCacheGridDB)
+        {
+            const auto gridRoot = GetSessionGridCacheRoot(*ctx);
+            printf("[WorldTile][GridDB] TileDb grid write: %s tiles=%zu\n",
+                gridRoot.string().c_str(), tilesToSave.size());
 
-        TileDbMergeWriteOrUpdateTiles(
-            cachePath.string().c_str(),
-            ctx->navData.GetNavMesh(),
-            hashes,
-            &tilesToSave
-        );
+            TileGridDbWriteOrUpdateTiles(
+                gridRoot.string().c_str(),
+                ctx->navData.GetNavMesh(),
+                hashes,
+                &tilesToSave
+            );
+        }
+        else
+        {
+            printf("[WorldTile][SingleDB] TileDb merge write: %s tiles=%zu\n",
+                cachePath.string().c_str(), tilesToSave.size());
+
+            TileDbMergeWriteOrUpdateTiles(
+                cachePath.string().c_str(),
+                ctx->navData.GetNavMesh(),
+                hashes,
+                &tilesToSave
+            );
+        }
 
         ctx->dbIndexCache.clear();
         ctx->dbIndexLoaded = false;
@@ -3621,8 +3667,10 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         if (ctx->worldUnloadBuiltTilesAfterSave)
             UnloadProcessedNonResidentTiles(*ctx, tilesToSave);
 
-        printf("[ExternC] BuildQueuedWorldTiles: cache salvo em %s\n",
-            cachePath.string().c_str());
+        if (ctx->useTileCacheGridDB)
+            printf("[WorldTile][GridDB] BuildQueuedWorldTiles: cache salvo em %s\n", GetSessionGridCacheRoot(*ctx).string().c_str());
+        else
+            printf("[WorldTile][SingleDB] BuildQueuedWorldTiles: cache salvo em %s\n", cachePath.string().c_str());
     }
 
     EnsureNavQuery(*ctx);
