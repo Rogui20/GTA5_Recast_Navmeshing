@@ -214,6 +214,96 @@ namespace
         HeightSampler heightSampler;
         SimParamsFFI lastSimParams{};
         bool hasLastSimParams = false;
+        struct AgentProfile
+        {
+            std::uint32_t profileId = 0;
+            std::string profileName;
+            float radius = 0.0f;
+            float pedHeight = 0.0f;
+            float halfWidth = 0.0f;
+            float halfLength = 0.0f;
+            float vehicleHeight = 0.0f;
+            float maxSlopeDeg = 0.0f;
+            float maxStepHeight = 0.0f;
+            float minClearance = 0.0f;
+            std::uint64_t profileHash = 0;
+        };
+        struct AgentProfileTileCache
+        {
+            std::uint64_t tileKey = 0;
+            std::uint64_t profileHash = 0;
+            std::unordered_set<dtPolyRef> blockedPolys;
+            std::unordered_map<dtPolyRef, float> extraCostByPoly;
+        };
+        std::unordered_map<std::string, AgentProfile> agentProfiles;
+        std::unordered_map<std::string, std::unordered_map<std::uint64_t, AgentProfileTileCache>> agentProfileTileCaches;
+    };
+
+    static std::uint64_t ComputeAgentProfileHash(const AgentProfileFFI& p)
+    {
+        std::uint64_t h = 1469598103934665603ull;
+        auto mixf = [&](float v)
+        {
+            std::uint32_t bits = 0;
+            std::memcpy(&bits, &v, sizeof(bits));
+            h = WorldHashCombine64(h, bits);
+        };
+        h = WorldHashCombine64(h, p.profileId);
+        mixf(p.radius); mixf(p.pedHeight); mixf(p.halfWidth); mixf(p.halfLength);
+        mixf(p.vehicleHeight); mixf(p.maxSlopeDeg); mixf(p.maxStepHeight); mixf(p.minClearance);
+        return h;
+    }
+
+    class AgentProfileQueryFilter final : public dtQueryFilter
+    {
+    public:
+        AgentProfileQueryFilter(const ExternNavmeshContext::AgentProfile* profile,
+                                const std::unordered_map<std::uint64_t, ExternNavmeshContext::AgentProfileTileCache>* caches,
+                                int* rejectedCounter)
+            : m_profile(profile), m_caches(caches), m_rejectedCounter(rejectedCounter)
+        {
+        }
+
+        bool passFilter(const dtPolyRef ref, const dtMeshTile* tile, const dtPoly* poly) const override
+        {
+            if (!dtQueryFilter::passFilter(ref, tile, poly))
+                return false;
+            if (!m_profile || !m_caches || !tile)
+                return true;
+            const uint64_t tileKey = MakeTileKey(tile->header->x, tile->header->y);
+            auto it = m_caches->find(tileKey);
+            if (it == m_caches->end())
+                return true;
+            if (it->second.blockedPolys.find(ref) != it->second.blockedPolys.end())
+            {
+                if (m_rejectedCounter)
+                    ++(*m_rejectedCounter);
+                return false;
+            }
+            return true;
+        }
+
+        float getCost(const float* pa, const float* pb,
+            const dtPolyRef prevRef, const dtMeshTile* prevTile, const dtPoly* prevPoly,
+            const dtPolyRef curRef, const dtMeshTile* curTile, const dtPoly* curPoly,
+            const dtPolyRef nextRef, const dtMeshTile* nextTile, const dtPoly* nextPoly) const override
+        {
+            float cost = dtQueryFilter::getCost(pa, pb, prevRef, prevTile, prevPoly, curRef, curTile, curPoly, nextRef, nextTile, nextPoly);
+            if (!m_profile || !m_caches || !curTile)
+                return cost;
+            const uint64_t tileKey = MakeTileKey(curTile->header->x, curTile->header->y);
+            auto it = m_caches->find(tileKey);
+            if (it == m_caches->end())
+                return cost;
+            auto cIt = it->second.extraCostByPoly.find(curRef);
+            if (cIt != it->second.extraCostByPoly.end())
+                cost += cIt->second;
+            return cost;
+        }
+    private:
+        const ExternNavmeshContext::AgentProfile* m_profile = nullptr;
+        const std::unordered_map<std::uint64_t, ExternNavmeshContext::AgentProfileTileCache>* m_caches = nullptr;
+        int* m_rejectedCounter = nullptr;
     };
 
     std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx);
@@ -1203,6 +1293,24 @@ namespace
         for (const auto& kv : ctx.tileToGeometryIds)
             allIndexedTileKeys.push_back(kv.first);
         j["allIndexedTileKeys"] = std::move(allIndexedTileKeys);
+        nlohmann::json profileArray = nlohmann::json::array();
+        for (const auto& [name, p] : ctx.agentProfiles)
+        {
+            profileArray.push_back({
+                {"profileName", name},
+                {"profileId", p.profileId},
+                {"radius", p.radius},
+                {"pedHeight", p.pedHeight},
+                {"halfWidth", p.halfWidth},
+                {"halfLength", p.halfLength},
+                {"vehicleHeight", p.vehicleHeight},
+                {"maxSlopeDeg", p.maxSlopeDeg},
+                {"maxStepHeight", p.maxStepHeight},
+                {"minClearance", p.minClearance},
+                {"profileHash", p.profileHash}
+            });
+        }
+        j["agentProfiles"] = std::move(profileArray);
 
         const std::filesystem::path manifestPath = GetWorldManifestPath(ctx);
         if (manifestPath.has_parent_path())
@@ -1374,6 +1482,28 @@ namespace
         int loadedCount = 0;
         std::unordered_set<std::string> disabledGeometries;
         const auto geoms = j.value("geometries", nlohmann::json::array());
+        ctx.agentProfiles.clear();
+        ctx.agentProfileTileCaches.clear();
+        const auto agentProfiles = j.value("agentProfiles", nlohmann::json::array());
+        for (const auto& p : agentProfiles)
+        {
+            ExternNavmeshContext::AgentProfile ap{};
+            ap.profileName = p.value("profileName", std::string());
+            if (ap.profileName.empty())
+                continue;
+            ap.profileId = p.value("profileId", 0u);
+            ap.radius = p.value("radius", 0.0f);
+            ap.pedHeight = p.value("pedHeight", 0.0f);
+            ap.halfWidth = p.value("halfWidth", 0.0f);
+            ap.halfLength = p.value("halfLength", 0.0f);
+            ap.vehicleHeight = p.value("vehicleHeight", 0.0f);
+            ap.maxSlopeDeg = p.value("maxSlopeDeg", 0.0f);
+            ap.maxStepHeight = p.value("maxStepHeight", 0.0f);
+            ap.minClearance = p.value("minClearance", 0.0f);
+            ap.profileHash = p.value("profileHash", 0ull);
+            ctx.agentProfiles[ap.profileName] = ap;
+        }
+        printf("[WorldTile] Load manifest: agentProfiles=%zu\n", ctx.agentProfiles.size());
         const bool hasTileToGeometryIds = j.contains("tileToGeometryIds") && j["tileToGeometryIds"].is_object();
         int indexedGeometries = 0;
         for (const auto& g : geoms)
@@ -3646,6 +3776,14 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         ctx->pendingTileBuildQueue.pop_front();
         ctx->pendingTileBuildSet.erase(tileKey);
         ctx->dirtyWorldTiles.erase(tileKey);
+        for (auto& [profileName, caches] : ctx->agentProfileTileCaches)
+        {
+            if (caches.erase(tileKey) > 0)
+            {
+                printf("[AgentProfile] Invalidate cache: profile=%s tileKey=%llu\n",
+                       profileName.c_str(), static_cast<unsigned long long>(tileKey));
+            }
+        }
         processedTileKeys.insert(tileKey);
 
         const int tx = static_cast<int>(tileKey >> 32);
@@ -4471,7 +4609,8 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
                                float minEdge,
                                float* outPath,
                                NodeInfo* outNodeInfo,
-                               int options)
+                               int options,
+                               dtQueryFilter* customFilter = nullptr)
 {
     if (!EnsureNavQuery(ctx))
         return 0;
@@ -4479,26 +4618,26 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
     const float startPos[3] = { start.x, start.y, start.z };
     const float endPos[3]   = { end.x, end.y, end.z };
 
-    dtQueryFilter filter{};
-    filter.setIncludeFlags(static_cast<unsigned short>(flags));
-    filter.setExcludeFlags(0);
-
-    filter.setAreaCost(AREA_JUMP, 4.0f);
-    filter.setAreaCost(AREA_DROP, 1.5f);
-    filter.setAreaCost(AREA_OFFMESH, 2.0f);
+    dtQueryFilter fallbackFilter{};
+    dtQueryFilter* filter = customFilter ? customFilter : &fallbackFilter;
+    filter->setIncludeFlags(static_cast<unsigned short>(flags));
+    filter->setExcludeFlags(0);
+    filter->setAreaCost(AREA_JUMP, 4.0f);
+    filter->setAreaCost(AREA_DROP, 1.5f);
+    filter->setAreaCost(AREA_OFFMESH, 2.0f);
 
     dtPolyRef startRef = 0, endRef = 0;
     float startNearest[3]{};
     float endNearest[3]{};
 
-    if (dtStatusFailed(ctx.navQuery->findNearestPoly(startPos, ctx.cachedExtents, &filter, &startRef, startNearest)) || startRef == 0)
+    if (dtStatusFailed(ctx.navQuery->findNearestPoly(startPos, ctx.cachedExtents, filter, &startRef, startNearest)) || startRef == 0)
         return 0;
-    if (dtStatusFailed(ctx.navQuery->findNearestPoly(endPos, ctx.cachedExtents, &filter, &endRef, endNearest)) || endRef == 0)
+    if (dtStatusFailed(ctx.navQuery->findNearestPoly(endPos, ctx.cachedExtents, filter, &endRef, endNearest)) || endRef == 0)
         return 0;
 
     dtPolyRef polys[256];
     int polyCount = 0;
-    const dtStatus pathStatus = ctx.navQuery->findPath(startRef, endRef, startNearest, endNearest, &filter, polys, &polyCount, 256);
+    const dtStatus pathStatus = ctx.navQuery->findPath(startRef, endRef, startNearest, endNearest, filter, polys, &polyCount, 256);
     if (dtStatusFailed(pathStatus) || polyCount == 0)
         return 0;
 
@@ -5239,6 +5378,154 @@ GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
                                outPath,
                                nullptr,
                                options);
+}
+
+GTANAVVIEWER_API bool RegisterAgentProfile(void* navMesh, const char* profileName, AgentProfileFFI profile)
+{
+    if (!navMesh || !profileName || !*profileName)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ExternNavmeshContext::AgentProfile p{};
+    p.profileName = profileName;
+    p.profileId = profile.profileId;
+    p.radius = profile.radius;
+    p.pedHeight = profile.pedHeight;
+    p.halfWidth = profile.halfWidth;
+    p.halfLength = profile.halfLength;
+    p.vehicleHeight = profile.vehicleHeight;
+    p.maxSlopeDeg = profile.maxSlopeDeg;
+    p.maxStepHeight = profile.maxStepHeight;
+    p.minClearance = profile.minClearance;
+    p.profileHash = ComputeAgentProfileHash(profile);
+    auto it = ctx->agentProfiles.find(p.profileName);
+    if (it != ctx->agentProfiles.end() && it->second.profileHash != p.profileHash)
+        ctx->agentProfileTileCaches.erase(p.profileName);
+    ctx->agentProfiles[p.profileName] = p;
+    printf("[AgentProfile] Register: name=%s hash=%llu dims=(r=%.2f hw=%.2f hl=%.2f h=%.2f)\n",
+           p.profileName.c_str(), static_cast<unsigned long long>(p.profileHash), p.radius, p.halfWidth, p.halfLength, p.vehicleHeight);
+    return true;
+}
+
+GTANAVVIEWER_API bool RemoveAgentProfile(void* navMesh, const char* profileName)
+{
+    if (!navMesh || !profileName || !*profileName)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->agentProfileTileCaches.erase(profileName);
+    return ctx->agentProfiles.erase(profileName) > 0;
+}
+
+GTANAVVIEWER_API bool HasAgentProfile(void* navMesh, const char* profileName)
+{
+    if (!navMesh || !profileName || !*profileName)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    return ctx->agentProfiles.find(profileName) != ctx->agentProfiles.end();
+}
+
+GTANAVVIEWER_API int BuildAgentProfileCacheForTiles(void* navMesh, const char* profileName, const std::uint64_t* tileKeys, int tileCount)
+{
+    if (!navMesh || !profileName || !*profileName || !tileKeys || tileCount <= 0)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    auto pit = ctx->agentProfiles.find(profileName);
+    if (pit == ctx->agentProfiles.end())
+        return 0;
+    int built = 0;
+    dtNavMesh* nav = ctx->navData.GetNavMesh();
+    if (!nav)
+        return 0;
+    const float requiredWidth = std::max(0.0f, pit->second.halfWidth * 2.0f + pit->second.minClearance);
+    const float minAreaEdge = std::max(0.0f, pit->second.halfLength * 0.5f);
+    for (int i = 0; i < tileCount; ++i)
+    {
+        ExternNavmeshContext::AgentProfileTileCache tc{};
+        tc.tileKey = tileKeys[i];
+        tc.profileHash = pit->second.profileHash;
+        const int tx = static_cast<int>(tileKeys[i] >> 32);
+        const int ty = static_cast<int>(tileKeys[i] & 0xffffffffu);
+        const dtMeshTile* tile = nav->getTileAt(tx, ty, 0);
+        const auto t0 = std::chrono::steady_clock::now();
+        int totalPolys = 0;
+        if (tile && tile->header)
+        {
+            totalPolys = tile->header->polyCount;
+            for (int p = 0; p < tile->header->polyCount; ++p)
+            {
+                const dtPoly* poly = &tile->polys[p];
+                if (poly->getType() == DT_POLYTYPE_OFFMESH_CONNECTION)
+                    continue;
+                const dtPolyRef pref = nav->getPolyRefBase(tile) | static_cast<dtPolyRef>(p);
+                float minEdgeLenXZ = std::numeric_limits<float>::max();
+                for (int v = 0; v < poly->vertCount; ++v)
+                {
+                    const int ni = (v + 1) % poly->vertCount;
+                    const float* a = &tile->verts[poly->verts[v] * 3];
+                    const float* b = &tile->verts[poly->verts[ni] * 3];
+                    const float dx = b[0] - a[0];
+                    const float dz = b[2] - a[2];
+                    minEdgeLenXZ = std::min(minEdgeLenXZ, std::sqrt(dx * dx + dz * dz));
+                }
+                bool blocked = false;
+                if (requiredWidth > 0.0f && minEdgeLenXZ < requiredWidth)
+                    blocked = true;
+                if (!blocked && minAreaEdge > 0.0f && minEdgeLenXZ < minAreaEdge)
+                {
+                    const float penalty = (minAreaEdge - minEdgeLenXZ) * 5.0f;
+                    tc.extraCostByPoly[pref] = std::max(0.0f, penalty);
+                }
+                if (blocked)
+                    tc.blockedPolys.insert(pref);
+            }
+        }
+        ctx->agentProfileTileCaches[profileName][tileKeys[i]] = std::move(tc);
+        ++built;
+        const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - t0).count();
+        printf("[AgentProfile] Build cache: tileKey=%llu profile=%s blockedPolys=0/0 ms=0\n",
+               static_cast<unsigned long long>(tileKeys[i]), profileName);
+        const auto& saved = ctx->agentProfileTileCaches[profileName][tileKeys[i]];
+        printf("[AgentProfile] Build cache detail: tileKey=%llu profile=%s blocked=%zu total=%d ms=%lld\n",
+               static_cast<unsigned long long>(tileKeys[i]), profileName, saved.blockedPolys.size(), totalPolys, static_cast<long long>(ms));
+    }
+    return built;
+}
+
+GTANAVVIEWER_API int FindPathWithAgentProfile(void* navMesh,
+                                              const char* profileName,
+                                              Vector3 start,
+                                              Vector3 target,
+                                              int flags,
+                                              int maxPoints,
+                                              float* outPath,
+                                              int options)
+{
+    if (!navMesh || !outPath || maxPoints <= 0)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    const bool hasProfile = profileName && *profileName && ctx->agentProfiles.find(profileName) != ctx->agentProfiles.end();
+    if (!hasProfile)
+        return RunPathfindInternal(*ctx, glm::vec3(start.x, start.y, start.z), glm::vec3(target.x, target.y, target.z), flags, maxPoints, -1.0f, outPath, nullptr, options);
+    auto& caches = ctx->agentProfileTileCaches[profileName];
+    std::vector<std::uint64_t> missingTileKeys;
+    missingTileKeys.reserve(ctx->residentTiles.size());
+    for (std::uint64_t key : ctx->residentTiles)
+    {
+        auto it = caches.find(key);
+        if (it == caches.end() || it->second.profileHash != ctx->agentProfiles[profileName].profileHash)
+            missingTileKeys.push_back(key);
+    }
+    if (!missingTileKeys.empty())
+        BuildAgentProfileCacheForTiles(navMesh, profileName, missingTileKeys.data(), static_cast<int>(missingTileKeys.size()));
+
+    int rejectedPolys = 0;
+    AgentProfileQueryFilter profileFilter(&ctx->agentProfiles[profileName], &ctx->agentProfileTileCaches[profileName], &rejectedPolys);
+    const int result = RunPathfindInternal(*ctx, glm::vec3(start.x, start.y, start.z), glm::vec3(target.x, target.y, target.z), flags, maxPoints, -1.0f, outPath, nullptr, options, &profileFilter);
+    std::size_t blockedConsulted = 0;
+    for (const auto& [_, tcache] : ctx->agentProfileTileCaches[profileName])
+        blockedConsulted += tcache.blockedPolys.size();
+    printf("[AgentProfile] Pathfind: profile=%s blockedConsulted=%zu rejectedPolys=%d success=%d\n",
+           profileName, blockedConsulted, rejectedPolys, result > 0 ? 1 : 0);
+    return result;
 }
 
 GTANAVVIEWER_API bool AddOffMeshLink(void* navMesh,

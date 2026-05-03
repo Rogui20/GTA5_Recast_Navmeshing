@@ -17,7 +17,7 @@ option(RECASTNAVIGATION_DEMO "Build demo" OFF)
 option(RECASTNAVIGATION_TESTS "Build tests" ON)
 option(RECASTNAVIGATION_EXAMPLES "Build examples" ON)
 option(RECASTNAVIGATION_DT_POLYREF64 "Use 64bit polyrefs instead of 32bit for Detour" OFF)
-option(RECASTNAVIGATION_DT_VIRTUAL_QUERYFILTER "Use dynamic dispatch for dtQueryFilter" OFF)
+option(RECASTNAVIGATION_DT_VIRTUAL_QUERYFILTER "Use dynamic dispatch for dtQueryFilter" ON)
 option(RECASTNAVIGATION_ENABLE_ASSERTS "Enable custom recastnavigation asserts" "$<IF:$<CONFIG:Debug>,ON,OFF>")
 
 if(MSVC AND BUILD_SHARED_LIBS)
