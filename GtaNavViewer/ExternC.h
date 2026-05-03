@@ -289,6 +289,10 @@ GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
 GTANAVVIEWER_API int ProcessQueuedWorldGeometry(void* navMesh, int maxItems, int maxMilliseconds);
 GTANAVVIEWER_API void SetWorldUnloadBuiltTilesAfterSave(void* navMesh, bool enabled);
 GTANAVVIEWER_API void SetWorldTileCacheGridDBEnabled(void* navMesh, bool enabled);
+GTANAVVIEWER_API void SetWorldUnloadUnusedGeometryAfterBuild(void* navMesh, bool enabled);
+GTANAVVIEWER_API void SetWorldGeometryMemoryLimitsMB(void* navMesh, uint32_t softLimitMB, uint32_t hardLimitMB);
+GTANAVVIEWER_API uint64_t GetWorldLoadedGeometryMemoryBytes(void* navMesh);
+GTANAVVIEWER_API int UnloadUnusedWorldGeometry(void* navMesh, bool aggressive);
 GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxMilliseconds, bool saveToCache);
 GTANAVVIEWER_API bool SetWorldAutoOffmeshEnabled(void* navMesh, bool enabled);
 GTANAVVIEWER_API int GenerateWorldOffmeshLinksForQueuedTiles(void* navMesh, int maxTiles, int maxMilliseconds);

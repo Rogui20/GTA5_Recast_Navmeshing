@@ -142,6 +142,9 @@ namespace
         bool streamingEnabled = false;
         bool worldTileStreamingEnabled = false;
         bool worldUnloadBuiltTilesAfterSave = false;
+        bool worldUnloadUnusedGeometryAfterBuild = false;
+        uint64_t worldGeometrySoftMemoryLimitBytes = 6ull * 1024ull * 1024ull * 1024ull;
+        uint64_t worldGeometryHardMemoryLimitBytes = 10ull * 1024ull * 1024ull * 1024ull;
         bool useTileCacheGridDB = false;
         std::unordered_map<uint64_t, uint32_t> residentStamp;
         std::unordered_set<uint64_t> residentTiles;
@@ -223,6 +226,10 @@ namespace
     bool IsWorldGeometryRecordUpToDate(const ExternNavmeshContext::WorldGeomRecord& record);
     void EnqueueTileBuild(ExternNavmeshContext& ctx, uint64_t tileKey);
     bool BuildWorldTileGeometry(ExternNavmeshContext& ctx, int tx, int ty, std::vector<glm::vec3>& outVerts, std::vector<unsigned int>& outIndices, bool* outAbortedByTriLimit);
+    uint64_t EstimateWorldGeomMemoryBytes(const ExternNavmeshContext::WorldGeomRecord& rec);
+    uint64_t EstimateLoadedWorldGeometryMemoryBytes(const ExternNavmeshContext& ctx);
+    void ClearWorldGeometryHeavyCache(ExternNavmeshContext::WorldGeomRecord& rec);
+    int UnloadUnusedWorldGeometryInternal(ExternNavmeshContext& ctx, bool aggressive);
 
     uint64_t WorldHashCombine64(uint64_t seed, uint64_t v)
     {
@@ -1833,6 +1840,83 @@ namespace
         }
 
         record.spatialCacheBuilt = !record.spatialCache.chunks.empty() && !record.spatialCache.cellToChunks.empty();
+    }
+
+    uint64_t EstimateWorldGeomMemoryBytes(const ExternNavmeshContext::WorldGeomRecord& rec)
+    {
+        uint64_t total = 0;
+        total += static_cast<uint64_t>(rec.source.vertices.capacity()) * sizeof(glm::vec3);
+        total += static_cast<uint64_t>(rec.source.indices.capacity()) * sizeof(unsigned int);
+        total += static_cast<uint64_t>(rec.transformedVertices.capacity()) * sizeof(glm::vec3);
+        total += static_cast<uint64_t>(rec.spatialCache.chunks.capacity()) * sizeof(ExternNavmeshContext::WorldGeomRecord::WorldGeomChunk);
+        for (const auto& chunk : rec.spatialCache.chunks)
+            total += static_cast<uint64_t>(chunk.triIndices.capacity()) * sizeof(uint32_t);
+        total += static_cast<uint64_t>(rec.spatialCache.cellToChunks.size()) * (sizeof(uint64_t) + sizeof(std::vector<int>) + 64ull);
+        for (const auto& kv : rec.spatialCache.cellToChunks)
+            total += static_cast<uint64_t>(kv.second.capacity()) * sizeof(int);
+        return total;
+    }
+
+    uint64_t EstimateLoadedWorldGeometryMemoryBytes(const ExternNavmeshContext& ctx)
+    {
+        uint64_t total = 0;
+        for (const auto& kv : ctx.worldGeometry)
+        {
+            if (kv.second.loaded)
+                total += EstimateWorldGeomMemoryBytes(kv.second);
+        }
+        return total;
+    }
+
+    void ClearWorldGeometryHeavyCache(ExternNavmeshContext::WorldGeomRecord& rec)
+    {
+        rec.source = {};
+        rec.loaded = false;
+        rec.transformedVertices.clear();
+        rec.transformedVertices.shrink_to_fit();
+        rec.transformedHash = 0;
+        rec.spatialCacheBuilt = false;
+        rec.spatialCache.sourceHash = 0;
+        rec.spatialCache.chunks.clear();
+        rec.spatialCache.chunks.shrink_to_fit();
+        rec.spatialCache.cellToChunks.clear();
+    }
+
+    int UnloadUnusedWorldGeometryInternal(ExternNavmeshContext& ctx, bool aggressive)
+    {
+        std::unordered_set<uint64_t> protectedTiles = ctx.residentTiles;
+        if (!aggressive)
+        {
+            protectedTiles.insert(ctx.dirtyWorldTiles.begin(), ctx.dirtyWorldTiles.end());
+            protectedTiles.insert(ctx.pendingTileBuildQueue.begin(), ctx.pendingTileBuildQueue.end());
+            for (const auto& it : ctx.agentResidentTiles)
+                protectedTiles.insert(it.second.begin(), it.second.end());
+        }
+
+        int unloaded = 0;
+        for (auto& kv : ctx.worldGeometry)
+        {
+            auto& rec = kv.second;
+            if (!rec.loaded || !rec.indexed)
+                continue;
+
+            bool protectedGeom = false;
+            for (uint64_t tileKey : rec.touchedTileKeys)
+            {
+                if (protectedTiles.find(tileKey) != protectedTiles.end())
+                {
+                    protectedGeom = true;
+                    break;
+                }
+            }
+            if (protectedGeom)
+                continue;
+
+            ClearWorldGeometryHeavyCache(rec);
+            ++unloaded;
+        }
+
+        return unloaded;
     }
 
     size_t AppendGeometryForTile(ExternNavmeshContext::WorldGeomRecord& rec,
@@ -3496,6 +3580,39 @@ GTANAVVIEWER_API void SetWorldTileCacheGridDBEnabled(void* navMesh, bool enabled
     printf("[WorldTile][%s] tile cache backend selected\n", enabled ? "GridDB" : "SingleDB");
 }
 
+GTANAVVIEWER_API void SetWorldUnloadUnusedGeometryAfterBuild(void* navMesh, bool enabled)
+{
+    if (!navMesh)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->worldUnloadUnusedGeometryAfterBuild = enabled;
+}
+
+GTANAVVIEWER_API void SetWorldGeometryMemoryLimitsMB(void* navMesh, uint32_t softLimitMB, uint32_t hardLimitMB)
+{
+    if (!navMesh)
+        return;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->worldGeometrySoftMemoryLimitBytes = static_cast<uint64_t>(softLimitMB) * 1024ull * 1024ull;
+    ctx->worldGeometryHardMemoryLimitBytes = static_cast<uint64_t>(hardLimitMB) * 1024ull * 1024ull;
+}
+
+GTANAVVIEWER_API uint64_t GetWorldLoadedGeometryMemoryBytes(void* navMesh)
+{
+    if (!navMesh)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    return EstimateLoadedWorldGeometryMemoryBytes(*ctx);
+}
+
+GTANAVVIEWER_API int UnloadUnusedWorldGeometry(void* navMesh, bool aggressive)
+{
+    if (!navMesh)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    return UnloadUnusedWorldGeometryInternal(*ctx, aggressive);
+}
+
 GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxMilliseconds, bool saveToCache)
 {
     if (!navMesh)
@@ -3672,6 +3789,30 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         else
             printf("[WorldTile][SingleDB] BuildQueuedWorldTiles: cache salvo em %s\n", cachePath.string().c_str());
     }
+
+    const uint64_t memBefore = EstimateLoadedWorldGeometryMemoryBytes(*ctx);
+    int unloaded = 0;
+    if (ctx->worldUnloadUnusedGeometryAfterBuild)
+        unloaded += UnloadUnusedWorldGeometryInternal(*ctx, false);
+    uint64_t memAfter = EstimateLoadedWorldGeometryMemoryBytes(*ctx);
+    bool aggressive = false;
+    if (memAfter > ctx->worldGeometryHardMemoryLimitBytes)
+    {
+        aggressive = true;
+        unloaded += UnloadUnusedWorldGeometryInternal(*ctx, true);
+        memAfter = EstimateLoadedWorldGeometryMemoryBytes(*ctx);
+    }
+    int loadedGeoms = 0;
+    for (const auto& kv : ctx->worldGeometry)
+        loadedGeoms += kv.second.loaded ? 1 : 0;
+    printf("[WorldGeomMem] loadedGeoms=%d unloaded=%d memBeforeMB=%.2f memAfterMB=%.2f softMB=%.2f hardMB=%.2f aggressive=%d\n",
+           loadedGeoms,
+           unloaded,
+           static_cast<double>(memBefore) / (1024.0 * 1024.0),
+           static_cast<double>(memAfter) / (1024.0 * 1024.0),
+           static_cast<double>(ctx->worldGeometrySoftMemoryLimitBytes) / (1024.0 * 1024.0),
+           static_cast<double>(ctx->worldGeometryHardMemoryLimitBytes) / (1024.0 * 1024.0),
+           aggressive ? 1 : 0);
 
     EnsureNavQuery(*ctx);
 
