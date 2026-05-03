@@ -31,8 +31,15 @@ namespace
 bool TileGridDbDeleteTile(const char* rootPath, int tx, int ty)
 {
     if (!rootPath) return false;
+    const auto path = TilePath(rootPath, tx, ty);
+    if (!std::filesystem::exists(path)) return true;
     std::error_code ec;
-    std::filesystem::remove(TilePath(rootPath, tx, ty), ec);
+    const bool removed = std::filesystem::remove(path, ec);
+    if (ec || !removed)
+    {
+        printf("[WorldTile][GridDB][erro] delete failed tx=%d ty=%d path=%s\n", tx, ty, path.string().c_str());
+        return false;
+    }
     return true;
 }
 
@@ -94,15 +101,19 @@ bool TileGridDbWriteOrUpdateTiles(const char* rootPath,
         }
         std::error_code ec;
         std::filesystem::rename(tmpPath, outPath, ec);
-        if (ec)
+        if (ec && std::filesystem::exists(outPath))
         {
             std::filesystem::remove(outPath, ec);
-            ec.clear();
-            std::filesystem::rename(tmpPath, outPath, ec);
+            if (!ec)
+            {
+                std::filesystem::rename(tmpPath, outPath, ec);
+            }
         }
         if (ec)
         {
-            printf("[WorldTile][GridDB][erro] rename failed tx=%d ty=%d\n", tx, ty);
+            std::error_code rmEc;
+            std::filesystem::remove(tmpPath, rmEc);
+            printf("[WorldTile][GridDB][erro] rename failed tx=%d ty=%d path=%s\n", tx, ty, outPath.string().c_str());
             return;
         }
         ++saved;
@@ -114,12 +125,21 @@ bool TileGridDbWriteOrUpdateTiles(const char* rootPath,
     }
     else
     {
-        for (const auto& kv : tileHashes) processKey(kv.first);
+        const int maxTiles = nav->getMaxTiles();
+        for (int i = 0; i < maxTiles; ++i)
+        {
+            const dtMeshTile* tile = nav->getTile(i);
+            if (!tile || !tile->header || !tile->data || tile->dataSize <= 0) continue;
+            const int tx = tile->header->x;
+            const int ty = tile->header->y;
+            processKey(MakeTileKey(tx, ty));
+        }
     }
 
     nlohmann::json j;
     j["version"] = TILE_GRID_DB_VERSION;
-    j["tileCount"] = saved;
+    j["lastBatchSaved"] = saved;
+    j["lastBatchDeleted"] = deleted;
     if (params)
     {
         j["navParams"] = {
@@ -128,10 +148,28 @@ bool TileGridDbWriteOrUpdateTiles(const char* rootPath,
             {"maxTiles", params->maxTiles}, {"maxPolys", params->maxPolys}
         };
     }
-    std::ofstream out(root / "manifest.json");
-    out << j.dump(2);
+    const auto manifestPath = root / "manifest.json";
+    const auto tmpManifestPath = root / "manifest.json.tmp";
+    {
+        std::ofstream out(tmpManifestPath);
+        if (out) out << j.dump(2);
+    }
+    std::error_code mfEc;
+    std::filesystem::rename(tmpManifestPath, manifestPath, mfEc);
+    if (mfEc && std::filesystem::exists(manifestPath))
+    {
+        std::filesystem::remove(manifestPath, mfEc);
+        if (!mfEc) std::filesystem::rename(tmpManifestPath, manifestPath, mfEc);
+    }
+    if (mfEc)
+    {
+        std::error_code rmEc;
+        std::filesystem::remove(tmpManifestPath, rmEc);
+        printf("[WorldTile][GridDB][erro] manifest rename failed root=%s\n", root.string().c_str());
+    }
 
-    printf("[WorldTile][GridDB] saved=%d deleted=%d root=%s\n", saved, deleted, root.string().c_str());
+    printf("[WorldTile][GridDB] write batch keys=%zu saved=%d deleted=%d root=%s\n",
+        onlyTileKeysToUpdate ? onlyTileKeysToUpdate->size() : 0u, saved, deleted, root.string().c_str());
     return true;
 }
 
@@ -143,6 +181,8 @@ bool TileGridDbLoadIndex(const char* rootPath,
     if (!rootPath || !nav) return false;
     const std::filesystem::path root(rootPath);
 
+    const auto tilesRoot = root / "tiles";
+    const bool hasTilesRoot = std::filesystem::exists(tilesRoot);
     const auto manifest = root / "manifest.json";
     if (std::filesystem::exists(manifest))
     {
@@ -168,11 +208,15 @@ bool TileGridDbLoadIndex(const char* rootPath,
                     return false;
             }
         }
-        catch (...) { return false; }
+        catch (...)
+        {
+            if (!hasTilesRoot) return false;
+            printf("[WorldTile][GridDB][warn] invalid manifest, fallback to scan root=%s\n", root.string().c_str());
+        }
     }
 
-    const auto tilesRoot = root / "tiles";
     if (!std::filesystem::exists(tilesRoot)) return false;
+    size_t invalid = 0;
     for (const auto& txDir : std::filesystem::directory_iterator(tilesRoot))
     {
         if (!txDir.is_directory()) continue;
@@ -184,13 +228,22 @@ bool TileGridDbLoadIndex(const char* rootPath,
             TileGridDbFileHeader h{};
             bool ok = fread(&h, sizeof(h), 1, fp) == 1;
             fclose(fp);
-            if (!ok || h.magic != TILE_GRID_DB_MAGIC || h.version != TILE_GRID_DB_VERSION) continue;
+            const uintmax_t fileSize = std::filesystem::file_size(file.path());
+            const uintmax_t expectedSize = sizeof(TileGridDbFileHeader) + static_cast<uintmax_t>(h.dataSize);
+            const bool invalidHeader = !ok || h.magic != TILE_GRID_DB_MAGIC || h.version != TILE_GRID_DB_VERSION ||
+                h.dataSize == 0 || h.dataSize > static_cast<uint32_t>(std::numeric_limits<int>::max()) || fileSize < expectedSize;
+            if (invalidHeader)
+            {
+                ++invalid;
+                printf("[WorldTile][GridDB][warn] invalid tile file %s\n", file.path().string().c_str());
+                continue;
+            }
             TileDbIndexEntry e{};
             e.tx = h.tx; e.ty = h.ty; e.geomHash = h.geomHash; e.dataSize = h.dataSize; e.dataOffset = sizeof(TileGridDbFileHeader);
             outIndex[MakeTileKey(e.tx, e.ty)] = e;
         }
     }
-    printf("[WorldTile][GridDB] index tiles=%zu root=%s\n", outIndex.size(), root.string().c_str());
+    printf("[WorldTile][GridDB] index tiles=%zu invalid=%zu root=%s\n", outIndex.size(), invalid, root.string().c_str());
     return true;
 }
 
@@ -199,12 +252,21 @@ bool TileGridDbReadTile(const char* rootPath, int tx, int ty, uint64_t* outGeomH
     outData = nullptr; outSize = 0; if (outGeomHash) *outGeomHash = 0;
     if (!rootPath) return false;
     auto path = TilePath(rootPath, tx, ty);
+    if (!std::filesystem::exists(path)) return false;
     FILE* fp = fopen(path.string().c_str(), "rb");
     if (!fp) return false;
     TileGridDbFileHeader h{};
     if (fread(&h, sizeof(h), 1, fp) != 1 || h.magic != TILE_GRID_DB_MAGIC || h.version != TILE_GRID_DB_VERSION || h.tx != tx || h.ty != ty)
     { fclose(fp); return false; }
     if (h.dataSize == 0 || h.dataSize > static_cast<uint32_t>(std::numeric_limits<int>::max())) { fclose(fp); return false; }
+    const uintmax_t fileSize = std::filesystem::file_size(path);
+    const uintmax_t expectedSize = sizeof(TileGridDbFileHeader) + static_cast<uintmax_t>(h.dataSize);
+    if (fileSize < expectedSize)
+    {
+        printf("[WorldTile][GridDB][warn] truncated tile file %s\n", path.string().c_str());
+        fclose(fp);
+        return false;
+    }
     unsigned char* data = static_cast<unsigned char*>(dtAlloc(h.dataSize, DT_ALLOC_PERM));
     if (!data) { fclose(fp); return false; }
     if (fread(data, h.dataSize, 1, fp) != 1) { dtFree(data); fclose(fp); return false; }
@@ -220,8 +282,20 @@ bool TileGridDbLoadTile(const char* rootPath, dtNavMesh* nav, int tx, int ty, bo
     if (!rootPath || !nav) return false;
     unsigned char* data = nullptr; int size = 0; uint64_t hash = 0;
     if (!TileGridDbReadTile(rootPath, tx, ty, &hash, data, size)) return false;
+    const dtTileRef existing = nav->getTileRefAt(tx, ty, 0);
+    if (existing)
+    {
+        unsigned char* oldData = nullptr;
+        nav->removeTile(existing, &oldData, nullptr);
+        if (oldData) dtFree(oldData);
+    }
     const dtStatus st = nav->addTile(data, size, DT_TILE_FREE_DATA, 0, nullptr);
-    if (dtStatusFailed(st)) { dtFree(data); return false; }
+    if (dtStatusFailed(st))
+    {
+        dtFree(data);
+        printf("[WorldTile][GridDB][erro] addTile failed tx=%d ty=%d status=0x%08x\n", tx, ty, st);
+        return false;
+    }
     outLoaded = true;
     printf("[WorldTile][GridDB] loaded tile %d,%d size=%d hash=%llu\n", tx, ty, size, static_cast<unsigned long long>(hash));
     return true;
