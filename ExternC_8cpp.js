@@ -35,7 +35,7 @@ var ExternC_8cpp =
     [ "FindBestCornerIndexBySegment", "ExternC_8cpp.html#a01bba6a85c657e74f8fc9deffb4ff378", null ],
     [ "FindPath", "ExternC_8cpp.html#a462e8adf4796b96d81b1563df6e9a8ee", null ],
     [ "FindPathAvoidingDynamicObstacles", "ExternC_8cpp.html#a106f41a99303d9e34871f716f8b52747", null ],
-    [ "FindPathWithAgentProfile", "ExternC_8cpp.html#a76a80ccdc929d2268b637b6351d048a1", null ],
+    [ "FindPathWithAgentProfile", "ExternC_8cpp.html#ad8627961b2e6b686a3a3616390195301", null ],
     [ "FindPathWithMinEdge", "ExternC_8cpp.html#a0a609079f4645ccec18a5cefc10f79c8", null ],
     [ "FitVehicleToGround", "ExternC_8cpp.html#ac18e3a104a6b9ec3f283432bd337cf6b", null ],
     [ "GenerateAutomaticOffmeshLinks", "ExternC_8cpp.html#a8de7660c9f47651d86ef386ecbe3f6cf", null ],
