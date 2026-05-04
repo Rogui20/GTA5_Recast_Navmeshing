@@ -64,7 +64,7 @@ var ExternC_8h =
     [ "ExportWorldGeometriesObj", "ExternC_8h.html#a3a87a8b45b8ddb078cd54a04bcb694b6", null ],
     [ "FindPath", "ExternC_8h.html#a462e8adf4796b96d81b1563df6e9a8ee", null ],
     [ "FindPathAvoidingDynamicObstacles", "ExternC_8h.html#a106f41a99303d9e34871f716f8b52747", null ],
-    [ "FindPathWithAgentProfile", "ExternC_8h.html#a76a80ccdc929d2268b637b6351d048a1", null ],
+    [ "FindPathWithAgentProfile", "ExternC_8h.html#ad8627961b2e6b686a3a3616390195301", null ],
     [ "FindPathWithMinEdge", "ExternC_8h.html#a0a609079f4645ccec18a5cefc10f79c8", null ],
     [ "GenerateAutomaticOffmeshLinks", "ExternC_8h.html#a8de7660c9f47651d86ef386ecbe3f6cf", null ],
     [ "GenerateWorldOffmeshLinksForQueuedTiles", "ExternC_8h.html#aa40e5c0dab1edb07a74bbfafd7aa69c0", null ],
