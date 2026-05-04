@@ -230,10 +230,28 @@ namespace
         };
         struct AgentProfileTileCache
         {
+            struct AgentProfilePortalKey
+            {
+                dtPolyRef from = 0;
+                dtPolyRef to = 0;
+                bool operator==(const AgentProfilePortalKey& o) const
+                {
+                    return from == o.from && to == o.to;
+                }
+            };
+            struct AgentProfilePortalKeyHash
+            {
+                size_t operator()(const AgentProfilePortalKey& k) const
+                {
+                    return std::hash<uint64_t>{}(static_cast<uint64_t>(k.from) ^ (static_cast<uint64_t>(k.to) * 1099511628211ull));
+                }
+            };
             std::uint64_t tileKey = 0;
             std::uint64_t profileHash = 0;
             std::unordered_set<dtPolyRef> blockedPolys;
             std::unordered_map<dtPolyRef, float> extraCostByPoly;
+            std::unordered_set<AgentProfilePortalKey, AgentProfilePortalKeyHash> blockedPortals;
+            std::unordered_map<AgentProfilePortalKey, float, AgentProfilePortalKeyHash> extraCostByPortal;
         };
         std::unordered_map<std::string, AgentProfile> agentProfiles;
         std::unordered_map<std::string, std::unordered_map<std::uint64_t, AgentProfileTileCache>> agentProfileTileCaches;
@@ -265,8 +283,10 @@ namespace
     public:
         AgentProfileQueryFilter(const ExternNavmeshContext::AgentProfile* profile,
                                 const std::unordered_map<std::uint64_t, ExternNavmeshContext::AgentProfileTileCache>* caches,
-                                int* rejectedCounter)
-            : m_profile(profile), m_caches(caches), m_rejectedCounter(rejectedCounter)
+                                int* rejectedCounter,
+                                int* rejectedPortalCounter,
+                                int* penalizedPortalCounter)
+            : m_profile(profile), m_caches(caches), m_rejectedCounter(rejectedCounter), m_rejectedPortalCounter(rejectedPortalCounter), m_penalizedPortalCounter(penalizedPortalCounter)
         {
         }
 
@@ -304,13 +324,58 @@ namespace
             auto cIt = it->second.extraCostByPoly.find(curRef);
             if (cIt != it->second.extraCostByPoly.end())
                 cost += cIt->second;
+            ExternNavmeshContext::AgentProfileTileCache::AgentProfilePortalKey portalKey{};
+            bool hasPortalKey = false;
+            if (nextRef != 0)
+            {
+                portalKey = { curRef, nextRef };
+                hasPortalKey = true;
+            }
+            else if (prevRef != 0)
+            {
+                portalKey = { prevRef, curRef };
+                hasPortalKey = true;
+            }
+            if (hasPortalKey)
+            {
+                if (it->second.blockedPortals.find(portalKey) != it->second.blockedPortals.end())
+                {
+                    if (m_rejectedPortalCounter)
+                        ++(*m_rejectedPortalCounter);
+                    return cost + 1e6f;
+                }
+                const auto pIt = it->second.extraCostByPortal.find(portalKey);
+                if (pIt != it->second.extraCostByPortal.end())
+                {
+                    cost += pIt->second;
+                    if (m_penalizedPortalCounter)
+                        ++(*m_penalizedPortalCounter);
+                }
+            }
             return cost;
         }
     private:
         const ExternNavmeshContext::AgentProfile* m_profile = nullptr;
         const std::unordered_map<std::uint64_t, ExternNavmeshContext::AgentProfileTileCache>* m_caches = nullptr;
         int* m_rejectedCounter = nullptr;
+        int* m_rejectedPortalCounter = nullptr;
+        int* m_penalizedPortalCounter = nullptr;
     };
+
+    static void ConfigureDefaultQueryFilter(dtQueryFilter& filter, int flags)
+    {
+        filter.setIncludeFlags(static_cast<unsigned short>(flags));
+        filter.setExcludeFlags(0);
+        filter.setAreaCost(AREA_JUMP, 4.0f);
+        filter.setAreaCost(AREA_DROP, 1.5f);
+        filter.setAreaCost(AREA_OFFMESH, 2.0f);
+    }
+
+    static void InvalidateAgentProfileTileCaches(ExternNavmeshContext& ctx, uint64_t tileKey)
+    {
+        for (auto& kv : ctx.agentProfileTileCaches)
+            kv.second.erase(tileKey);
+    }
 
     std::filesystem::path GetSessionCachePath(const ExternNavmeshContext& ctx);
     std::filesystem::path GetWorldManifestPath(const ExternNavmeshContext& ctx);
@@ -3778,14 +3843,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         ctx->pendingTileBuildQueue.pop_front();
         ctx->pendingTileBuildSet.erase(tileKey);
         ctx->dirtyWorldTiles.erase(tileKey);
-        for (auto& [profileName, caches] : ctx->agentProfileTileCaches)
-        {
-            if (caches.erase(tileKey) > 0)
-            {
-                printf("[AgentProfile] Invalidate cache: profile=%s tileKey=%llu\n",
-                       profileName.c_str(), static_cast<unsigned long long>(tileKey));
-            }
-        }
+        InvalidateAgentProfileTileCaches(*ctx, tileKey);
         processedTileKeys.insert(tileKey);
 
         const int tx = static_cast<int>(tileKey >> 32);
@@ -4149,7 +4207,10 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
             }
 
             if (loaded)
+            {
+                InvalidateAgentProfileTileCaches(*ctx, key);
                 ++loadedFromDb;
+            }
             else if (shouldBuild && allowBuildIfMissing && ctx->worldTileStreamingEnabled)
             {
                 EnqueueTileBuild(*ctx, key);
@@ -4189,6 +4250,7 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
             if (dtStatusSucceed(status))
             {
                 unloaded++; // conta sempre que removeu com sucesso
+                InvalidateAgentProfileTileCaches(*ctx, key);
                 if (tileData)
                     dtFree(tileData);
             } else
@@ -4230,8 +4292,12 @@ GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
             unsigned char* tileData = nullptr;
             int tileDataSize = 0;
             const dtStatus status = nav->removeTile(ref, &tileData, &tileDataSize);
-            if (dtStatusSucceed(status) && tileData)
-                dtFree(tileData);
+            if (dtStatusSucceed(status))
+            {
+                InvalidateAgentProfileTileCaches(*ctx, lruKey);
+                if (tileData)
+                    dtFree(tileData);
+            }
         }
         ctx->residentTiles.erase(lruKey);
         ctx->residentStamp.erase(lruKey);
@@ -4622,11 +4688,8 @@ static int RunPathfindInternal(ExternNavmeshContext& ctx,
 
     dtQueryFilter fallbackFilter{};
     dtQueryFilter* filter = customFilter ? customFilter : &fallbackFilter;
-    filter->setIncludeFlags(static_cast<unsigned short>(flags));
-    filter->setExcludeFlags(0);
-    filter->setAreaCost(AREA_JUMP, 4.0f);
-    filter->setAreaCost(AREA_DROP, 1.5f);
-    filter->setAreaCost(AREA_OFFMESH, 2.0f);
+    if (!customFilter)
+        ConfigureDefaultQueryFilter(*filter, flags);
 
     dtPolyRef startRef = 0, endRef = 0;
     float startNearest[3]{};
@@ -5437,8 +5500,8 @@ GTANAVVIEWER_API int BuildAgentProfileCacheForTiles(void* navMesh, const char* p
     dtNavMesh* nav = ctx->navData.GetNavMesh();
     if (!nav)
         return 0;
-    const float requiredWidth = std::max(0.0f, pit->second.halfWidth * 2.0f + pit->second.minClearance);
-    const float minAreaEdge = std::max(0.0f, pit->second.halfLength * 0.5f);
+    const float requiredWidth = std::max(pit->second.radius * 2.0f, pit->second.halfWidth * 2.0f) + pit->second.minClearance;
+    const float cosMaxSlope = pit->second.maxSlopeDeg > 0.0f ? std::cos(glm::radians(pit->second.maxSlopeDeg)) : -1.0f;
     for (int i = 0; i < tileCount; ++i)
     {
         ExternNavmeshContext::AgentProfileTileCache tc{};
@@ -5448,7 +5511,7 @@ GTANAVVIEWER_API int BuildAgentProfileCacheForTiles(void* navMesh, const char* p
         const int ty = static_cast<int>(tileKeys[i] & 0xffffffffu);
         const dtMeshTile* tile = nav->getTileAt(tx, ty, 0);
         const auto t0 = std::chrono::steady_clock::now();
-        int totalPolys = 0;
+        int totalPolys = 0, totalPortals = 0, extraCostPolys = 0, extraCostPortals = 0;
         if (tile && tile->header)
         {
             totalPolys = tile->header->polyCount;
@@ -5469,27 +5532,59 @@ GTANAVVIEWER_API int BuildAgentProfileCacheForTiles(void* navMesh, const char* p
                     minEdgeLenXZ = std::min(minEdgeLenXZ, std::sqrt(dx * dx + dz * dz));
                 }
                 bool blocked = false;
-                if (requiredWidth > 0.0f && minEdgeLenXZ < requiredWidth)
+                const glm::vec3 polyNormal = ComputePolyNormal(tile, poly);
+                if (cosMaxSlope >= -0.5f && polyNormal.y < cosMaxSlope)
                     blocked = true;
-                if (!blocked && minAreaEdge > 0.0f && minEdgeLenXZ < minAreaEdge)
+                if (!blocked && requiredWidth > 0.0f && minEdgeLenXZ < requiredWidth * 0.5f)
+                    blocked = true;
+                if (!blocked && requiredWidth > 0.0f && minEdgeLenXZ < requiredWidth)
                 {
-                    const float penalty = (minAreaEdge - minEdgeLenXZ) * 5.0f;
-                    tc.extraCostByPoly[pref] = std::max(0.0f, penalty);
+                    tc.extraCostByPoly[pref] = (requiredWidth - minEdgeLenXZ) * 4.0f;
+                    ++extraCostPolys;
                 }
                 if (blocked)
                     tc.blockedPolys.insert(pref);
+                for (unsigned int li = poly->firstLink; li != DT_NULL_LINK; li = tile->links[li].next)
+                {
+                    const dtLink& link = tile->links[li];
+                    if (!link.ref || link.edge >= poly->vertCount)
+                        continue;
+                    ++totalPortals;
+                    const int va = poly->verts[link.edge];
+                    const int vb = poly->verts[(link.edge + 1) % poly->vertCount];
+                    const float* a = &tile->verts[va * 3];
+                    const float* b = &tile->verts[vb * 3];
+                    const float portalWidth = std::sqrt((b[0] - a[0]) * (b[0] - a[0]) + (b[2] - a[2]) * (b[2] - a[2]));
+                    ExternNavmeshContext::AgentProfileTileCache::AgentProfilePortalKey key{ pref, link.ref };
+                    if (portalWidth < requiredWidth)
+                        tc.blockedPortals.insert(key);
+                    else if (portalWidth < requiredWidth * 1.3f)
+                    {
+                        tc.extraCostByPortal[key] = (requiredWidth * 1.3f - portalWidth) * 3.0f;
+                        ++extraCostPortals;
+                    }
+                }
             }
         }
         ctx->agentProfileTileCaches[profileName][tileKeys[i]] = std::move(tc);
         ++built;
         const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - t0).count();
-        printf("[AgentProfile] Build cache: tileKey=%llu profile=%s blockedPolys=0/0 ms=0\n",
-               static_cast<unsigned long long>(tileKeys[i]), profileName);
         const auto& saved = ctx->agentProfileTileCaches[profileName][tileKeys[i]];
-        printf("[AgentProfile] Build cache detail: tileKey=%llu profile=%s blocked=%zu total=%d ms=%lld\n",
-               static_cast<unsigned long long>(tileKeys[i]), profileName, saved.blockedPolys.size(), totalPolys, static_cast<long long>(ms));
+        printf("[AgentProfile] Build cache: profile=%s tileKey=%llu totalPolys=%d blockedPolys=%zu extraCostPolys=%d totalPortals=%d blockedPortals=%zu extraCostPortals=%d requiredWidth=%.2f ms=%lld\n",
+               profileName, static_cast<unsigned long long>(tileKeys[i]), totalPolys, saved.blockedPolys.size(), extraCostPolys, totalPortals, saved.blockedPortals.size(), extraCostPortals, requiredWidth, static_cast<long long>(ms));
     }
     return built;
+}
+
+GTANAVVIEWER_API int BuildAgentProfileCacheForResidentTiles(void* navMesh, const char* profileName)
+{
+    if (!navMesh || !profileName || !*profileName)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    std::vector<std::uint64_t> keys(ctx->residentTiles.begin(), ctx->residentTiles.end());
+    if (keys.empty())
+        return 0;
+    return BuildAgentProfileCacheForTiles(navMesh, profileName, keys.data(), static_cast<int>(keys.size()));
 }
 
 GTANAVVIEWER_API int FindPathWithAgentProfile(void* navMesh,
@@ -5520,13 +5615,20 @@ GTANAVVIEWER_API int FindPathWithAgentProfile(void* navMesh,
         BuildAgentProfileCacheForTiles(navMesh, profileName, missingTileKeys.data(), static_cast<int>(missingTileKeys.size()));
 
     int rejectedPolys = 0;
-    AgentProfileQueryFilter profileFilter(&ctx->agentProfiles[profileName], &ctx->agentProfileTileCaches[profileName], &rejectedPolys);
+    int rejectedPortals = 0;
+    int penalizedPortals = 0;
+    AgentProfileQueryFilter profileFilter(&ctx->agentProfiles[profileName], &ctx->agentProfileTileCaches[profileName], &rejectedPolys, &rejectedPortals, &penalizedPortals);
+    ConfigureDefaultQueryFilter(profileFilter, flags);
     const int result = RunPathfindInternal(*ctx, glm::vec3(start.x, start.y, start.z), glm::vec3(target.x, target.y, target.z), flags, maxPoints, -1.0f, outPath, nullptr, options, &profileFilter);
     std::size_t blockedConsulted = 0;
+    std::size_t blockedPortals = 0;
     for (const auto& [_, tcache] : ctx->agentProfileTileCaches[profileName])
+    {
         blockedConsulted += tcache.blockedPolys.size();
-    printf("[AgentProfile] Pathfind: profile=%s blockedConsulted=%zu rejectedPolys=%d success=%d\n",
-           profileName, blockedConsulted, rejectedPolys, result > 0 ? 1 : 0);
+        blockedPortals += tcache.blockedPortals.size();
+    }
+    printf("[AgentProfile] Pathfind: profile=%s residentTiles=%zu missingCaches=%zu blockedPolys=%zu blockedPortals=%zu rejectedPolys=%d rejectedPortals=%d penalizedPortals=%d success=%d\n",
+           profileName, ctx->residentTiles.size(), missingTileKeys.size(), blockedConsulted, blockedPortals, rejectedPolys, rejectedPortals, penalizedPortals, result > 0 ? 1 : 0);
     return result;
 }
 
