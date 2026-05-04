@@ -2905,7 +2905,8 @@ GTANAVVIEWER_API bool UpdateGeometry(void* navMesh,
 
         if (!oldTiles.empty())
         {
-            const bool oldWasDynamic = (it->second.flags & WORLD_GEOM_DYNAMIC) != 0;
+            const bool oldWasDynamic = (itGeom != ctx->worldGeometry.end()) &&
+                                       ((itGeom->second.flags & WORLD_GEOM_DYNAMIC) != 0);
             MarkTilesDirty(*ctx, oldTiles, oldWasDynamic);
         }
 
@@ -2984,7 +2985,7 @@ GTANAVVIEWER_API bool RemoveGeometry(void* navMesh, const char* customID)
         }
         if (!oldTiles.empty())
         {
-            const bool oldWasDynamic = (it->second.flags & WORLD_GEOM_DYNAMIC) != 0;
+            const bool oldWasDynamic = isDynamic;
             MarkTilesDirty(*ctx, oldTiles, oldWasDynamic);
         }
         RemoveGeometryFromWorldIndex(*ctx, id);
