@@ -45,6 +45,7 @@ var ExternC_8h =
     [ "AddOffmeshLinksToNavMeshIsland", "ExternC_8h.html#ac3f7fd9f646d880edc9031c6a383e883", null ],
     [ "BakeTilesInBounds", "ExternC_8h.html#acf6c699ee4c5738d89858c5660e91fa4", null ],
     [ "BeginWorldTileSession", "ExternC_8h.html#aabb67d7f3b0a5cfd081e2abad0fd262b", null ],
+    [ "BuildAgentProfileCacheForResidentTiles", "ExternC_8h.html#a6afc3551982445f4d023d65858c713fd", null ],
     [ "BuildAgentProfileCacheForTiles", "ExternC_8h.html#a42fbcfed3729b8c2e00715be2679d755", null ],
     [ "BuildHeightSamplerForCurrentGeometry", "ExternC_8h.html#a7125f125e4a8a88ce2ae20b52447c900", null ],
     [ "BuildNavMesh", "ExternC_8h.html#acdcdde7a6aa314427c97c0a2e0743321", null ],

@@ -6,6 +6,7 @@ var ExternC_8cpp =
     [ "AppendJumpEvent", "ExternC_8cpp.html#add66e4c4aecd12616c8a7872b535b796", null ],
     [ "BakeTilesInBounds", "ExternC_8cpp.html#acf6c699ee4c5738d89858c5660e91fa4", null ],
     [ "BeginWorldTileSession", "ExternC_8cpp.html#aabb67d7f3b0a5cfd081e2abad0fd262b", null ],
+    [ "BuildAgentProfileCacheForResidentTiles", "ExternC_8cpp.html#a6afc3551982445f4d023d65858c713fd", null ],
     [ "BuildAgentProfileCacheForTiles", "ExternC_8cpp.html#a42fbcfed3729b8c2e00715be2679d755", null ],
     [ "BuildBasePath", "ExternC_8cpp.html#a824b69df36c093ad7c2bec761eb54251", null ],
     [ "BuildHeightSamplerForCurrentGeometry", "ExternC_8cpp.html#a7125f125e4a8a88ce2ae20b52447c900", null ],

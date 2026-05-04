@@ -1,5 +1,7 @@
 var NAVTREEINDEX91 =
 {
+"md_external_2SDL2_2docs_2README-cmake.html#building-sdl":[9,0],
+"md_external_2SDL2_2docs_2README-cmake.html#cmake-configuration-options-for-platforms":[9,2],
 "md_external_2SDL2_2docs_2README-cmake.html#examples":[9,2,0,0],
 "md_external_2SDL2_2docs_2README-cmake.html#including-sdl-in-your-project":[9,1],
 "md_external_2SDL2_2docs_2README-cmake.html#iostvos":[9,2,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX91 =
 "structExampleAppConsole.html#a2508db0a7d205947cea65b141d4ed589":[43,0,78,16],
 "structExampleAppConsole.html#a2ef13f00c474b16b8da2ec062d5e5cc2":[43,0,78,3],
 "structExampleAppConsole.html#a394debe3cbf3cfd93b9bfd2835a4fdec":[43,0,78,11],
-"structExampleAppConsole.html#a3a5622b2d8c52a3083df6ed9f90e7210":[43,0,78,9],
-"structExampleAppConsole.html#a3ac60d63c0eed2d3ad282fbbc1ae068a":[43,0,78,7],
-"structExampleAppConsole.html#a405521e6aa8f97954b67315baf8d6147":[43,0,78,0]
+"structExampleAppConsole.html#a3a5622b2d8c52a3083df6ed9f90e7210":[43,0,78,9]
 };

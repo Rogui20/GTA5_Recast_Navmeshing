@@ -1,5 +1,7 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__Vertex.html#ace816a77e2a2abe41a8c712686250577":[43,0,447,1],
+"structSDL__VirtualJoystickDesc.html":[43,0,448],
 "structSDL__VirtualJoystickDesc.html#a0235964235067e3b18a7c50708e585a7":[43,0,448,27],
 "structSDL__VirtualJoystickDesc.html#a07298bcba798527bd4b063e0f37f2378":[43,0,448,0],
 "structSDL__VirtualJoystickDesc.html#a109c5bc2cb3269bb0cbdbfff0dd35b1a":[43,0,448,26],
@@ -247,7 +249,5 @@ var NAVTREEINDEX108 =
 "structdtCompressedTile.html#a6bd5d2ea63921ee6fbacece1da31d656":[43,0,20,3],
 "structdtCompressedTile.html#a9df1de3328c707f4fb75d15522ec8ec3":[43,0,20,7],
 "structdtCrowdAgentAnimation.html":[43,0,23],
-"structdtCrowdAgentAnimation.html#a063331d0a657ca1e138dde68ad6375f4":[43,0,23,0],
-"structdtCrowdAgentAnimation.html#a607dc9fc1c1d88d93f5140217a298f45":[43,0,23,2],
-"structdtCrowdAgentAnimation.html#a6895f4df2e560189e66fac03ca02e2ba":[43,0,23,6]
+"structdtCrowdAgentAnimation.html#a063331d0a657ca1e138dde68ad6375f4":[43,0,23,0]
 };

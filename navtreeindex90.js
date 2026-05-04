@@ -1,5 +1,7 @@
 var NAVTREEINDEX90 =
 {
+"imgui__widgets_8cpp.html#aeb78e41c47236924d5e2b28ce28d042e":[44,0,7,0,8,76],
+"imgui__widgets_8cpp.html#aee9a4cbd23af66a75c6d41bad2e393d5":[44,0,7,0,8,27],
 "imgui__widgets_8cpp.html#aeef1ebfd613510f082618037974e1637":[44,0,7,0,8,7],
 "imgui__widgets_8cpp.html#aef61893ad1d9af7db8b56ab1a7c82cbd":[44,0,7,0,8,4],
 "imgui__widgets_8cpp.html#af3def68a1bdeda69e6af84fa7d6272cb":[44,0,7,0,8,71],
@@ -247,7 +249,5 @@ var NAVTREEINDEX90 =
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#running-the-tests":[7,1,2],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#suggesting-enhancements":[7,0,1],
 "md_external_2SDL2_2docs_2README-cmake.html":[9],
-"md_external_2SDL2_2docs_2README-cmake.html#a-system-sdl-library":[9,1,0],
-"md_external_2SDL2_2docs_2README-cmake.html#building-sdl":[9,0],
-"md_external_2SDL2_2docs_2README-cmake.html#cmake-configuration-options-for-platforms":[9,2]
+"md_external_2SDL2_2docs_2README-cmake.html#a-system-sdl-library":[9,1,0]
 };
