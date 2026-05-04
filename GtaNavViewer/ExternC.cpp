@@ -342,7 +342,9 @@ namespace
                 {
                     if (m_rejectedPortalCounter)
                         ++(*m_rejectedPortalCounter);
-                    return cost + 1e6f;
+                    constexpr float profileBlockedPortalCost = 1e6f;
+                    const float capped = std::min(profileBlockedPortalCost, std::numeric_limits<float>::max() - cost);
+                    return cost + capped;
                 }
                 const auto pIt = it->second.extraCostByPortal.find(portalKey);
                 if (pIt != it->second.extraCostByPortal.end())
@@ -5509,9 +5511,12 @@ GTANAVVIEWER_API int BuildAgentProfileCacheForTiles(void* navMesh, const char* p
         tc.profileHash = pit->second.profileHash;
         const int tx = static_cast<int>(tileKeys[i] >> 32);
         const int ty = static_cast<int>(tileKeys[i] & 0xffffffffu);
-        const dtMeshTile* tile = nav->getTileAt(tx, ty, 0);
+        const dtTileRef tileRef = nav->getTileRefAt(tx, ty, 0);
+        const dtMeshTile* tile = tileRef ? nav->getTileByRef(tileRef) : nullptr;
         const auto t0 = std::chrono::steady_clock::now();
         int totalPolys = 0, totalPortals = 0, extraCostPolys = 0, extraCostPortals = 0;
+        float portalWidthSum = 0.0f;
+        float portalWidthMin = std::numeric_limits<float>::max();
         if (tile && tile->header)
         {
             totalPolys = tile->header->polyCount;
@@ -5554,7 +5559,18 @@ GTANAVVIEWER_API int BuildAgentProfileCacheForTiles(void* navMesh, const char* p
                     const int vb = poly->verts[(link.edge + 1) % poly->vertCount];
                     const float* a = &tile->verts[va * 3];
                     const float* b = &tile->verts[vb * 3];
-                    const float portalWidth = std::sqrt((b[0] - a[0]) * (b[0] - a[0]) + (b[2] - a[2]) * (b[2] - a[2]));
+                    const float edgeWidth = std::sqrt((b[0] - a[0]) * (b[0] - a[0]) + (b[2] - a[2]) * (b[2] - a[2]));
+                    float portalWidth = edgeWidth;
+                    if (link.bmin <= link.bmax)
+                    {
+                        const float t0 = static_cast<float>(link.bmin) / 255.0f;
+                        const float t1 = static_cast<float>(link.bmax) / 255.0f;
+                        const float span = std::clamp(t1 - t0, 0.0f, 1.0f);
+                        if (span > 0.0f)
+                            portalWidth = edgeWidth * span;
+                    }
+                    portalWidthSum += portalWidth;
+                    portalWidthMin = std::min(portalWidthMin, portalWidth);
                     ExternNavmeshContext::AgentProfileTileCache::AgentProfilePortalKey key{ pref, link.ref };
                     if (portalWidth < requiredWidth)
                         tc.blockedPortals.insert(key);
@@ -5570,8 +5586,11 @@ GTANAVVIEWER_API int BuildAgentProfileCacheForTiles(void* navMesh, const char* p
         ++built;
         const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - t0).count();
         const auto& saved = ctx->agentProfileTileCaches[profileName][tileKeys[i]];
-        printf("[AgentProfile] Build cache: profile=%s tileKey=%llu totalPolys=%d blockedPolys=%zu extraCostPolys=%d totalPortals=%d blockedPortals=%zu extraCostPortals=%d requiredWidth=%.2f ms=%lld\n",
-               profileName, static_cast<unsigned long long>(tileKeys[i]), totalPolys, saved.blockedPolys.size(), extraCostPolys, totalPortals, saved.blockedPortals.size(), extraCostPortals, requiredWidth, static_cast<long long>(ms));
+        const float portalWidthAvg = totalPortals > 0 ? (portalWidthSum / static_cast<float>(totalPortals)) : 0.0f;
+        if (portalWidthMin == std::numeric_limits<float>::max())
+            portalWidthMin = 0.0f;
+        printf("[AgentProfile] Build cache: profile=%s tileKey=%llu totalPolys=%d blockedPolys=%zu extraCostPolys=%d totalPortals=%d blockedPortals=%zu extraCostPortals=%d portalWidthMin=%.2f portalWidthAvg=%.2f requiredWidth=%.2f ms=%lld\n",
+               profileName, static_cast<unsigned long long>(tileKeys[i]), totalPolys, saved.blockedPolys.size(), extraCostPolys, totalPortals, saved.blockedPortals.size(), extraCostPortals, portalWidthMin, portalWidthAvg, requiredWidth, static_cast<long long>(ms));
     }
     return built;
 }
@@ -5603,6 +5622,10 @@ GTANAVVIEWER_API int FindPathWithAgentProfile(void* navMesh,
     if (!hasProfile)
         return RunPathfindInternal(*ctx, glm::vec3(start.x, start.y, start.z), glm::vec3(target.x, target.y, target.z), flags, maxPoints, -1.0f, outPath, nullptr, options);
     auto& caches = ctx->agentProfileTileCaches[profileName];
+    if (ctx->residentTiles.empty())
+    {
+        printf("[AgentProfile] warning: no resident tiles; call StreamTilesForAgents before profile pathfind\n");
+    }
     std::vector<std::uint64_t> missingTileKeys;
     missingTileKeys.reserve(ctx->residentTiles.size());
     for (std::uint64_t key : ctx->residentTiles)
