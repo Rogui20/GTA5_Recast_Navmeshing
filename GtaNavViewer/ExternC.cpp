@@ -5571,12 +5571,18 @@ GTANAVVIEWER_API int BuildAgentProfileCacheForTiles(void* navMesh, const char* p
                     }
                     portalWidthSum += portalWidth;
                     portalWidthMin = std::min(portalWidthMin, portalWidth);
-                    ExternNavmeshContext::AgentProfileTileCache::AgentProfilePortalKey key{ pref, link.ref };
+                    ExternNavmeshContext::AgentProfileTileCache::AgentProfilePortalKey forward{ pref, link.ref };
+                    ExternNavmeshContext::AgentProfileTileCache::AgentProfilePortalKey reverse{ link.ref, pref };
                     if (portalWidth < requiredWidth)
-                        tc.blockedPortals.insert(key);
+                    {
+                        tc.blockedPortals.insert(forward);
+                        tc.blockedPortals.insert(reverse);
+                    }
                     else if (portalWidth < requiredWidth * 1.3f)
                     {
-                        tc.extraCostByPortal[key] = (requiredWidth * 1.3f - portalWidth) * 3.0f;
+                        const float cost = (requiredWidth * 1.3f - portalWidth) * 3.0f;
+                        tc.extraCostByPortal[forward] = cost;
+                        tc.extraCostByPortal[reverse] = cost;
                         ++extraCostPortals;
                     }
                 }
