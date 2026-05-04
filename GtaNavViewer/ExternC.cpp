@@ -4111,7 +4111,17 @@ GTANAVVIEWER_API bool SyncQueryContextWorldState(void* builderNavMesh, void* que
     queryCtx->useTileCacheGridDB = builderCtx->useTileCacheGridDB;
     queryCtx->cacheRoot = builderCtx->cacheRoot;
     queryCtx->sessionId = builderCtx->sessionId;
+    queryCtx->residentTiles = builderCtx->residentTiles;
+    queryCtx->residentStamp = builderCtx->residentStamp;
+    queryCtx->agentResidentTiles = builderCtx->agentResidentTiles;
+    queryCtx->stampCounter = builderCtx->stampCounter;
+    queryCtx->maxResidentTiles = builderCtx->maxResidentTiles;
+    queryCtx->agentProfileTileCaches.clear();
     CopyLightWorldGeometryMetadata(*builderCtx, *queryCtx);
+    printf("[QueryCtx] sync residentTiles=%zu profiles=%zu tileToGeom=%zu\n",
+           queryCtx->residentTiles.size(),
+           queryCtx->agentProfiles.size(),
+           queryCtx->tileToGeometryIds.size());
 
     if (cacheModeChanged || cacheRootChanged || sessionChanged)
     {
@@ -4147,9 +4157,6 @@ GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, voi
     queryCtx->autoOffmeshParamsV2 = builderCtx->autoOffmeshParamsV2;
     queryCtx->worldAutoGenerateOffmeshLinks = builderCtx->worldAutoGenerateOffmeshLinks;
 
-    if (!SyncQueryContextWorldState(builderCtx, queryCtx))
-        return false;
-
     const float forcedMin[3]{ queryCtx->bboxMin.x, queryCtx->bboxMin.y, queryCtx->bboxMin.z };
     const float forcedMax[3]{ queryCtx->bboxMax.x, queryCtx->bboxMax.y, queryCtx->bboxMax.z };
     if (!queryCtx->navData.InitTiledGrid(queryCtx->genSettings, forcedMin, forcedMax))
@@ -4160,6 +4167,7 @@ GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, voi
     queryCtx->residentStamp.clear();
     queryCtx->agentResidentTiles.clear();
     queryCtx->stampCounter = 0;
+    queryCtx->agentProfileTileCaches.clear();
     queryCtx->dbIndexCache.clear();
     queryCtx->dbIndexLoaded = false;
     queryCtx->dbMTime = {};
@@ -4175,6 +4183,9 @@ GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, voi
     }
 
     const bool queryOk = EnsureNavQuery(*queryCtx);
+    if (!SyncQueryContextWorldState(builderCtx, queryCtx))
+        return false;
+
     printf("[QueryCtx] init ok session=%s gridDB=%d tilesIndexed=%zu dbIndex=%d\n",
            queryCtx->sessionId.c_str(),
            queryCtx->useTileCacheGridDB ? 1 : 0,
@@ -4258,7 +4269,10 @@ GTANAVVIEWER_API int ReloadResidentWorldTilesFromCache(void* queryNavMesh)
     auto* ctx = static_cast<ExternNavmeshContext*>(queryNavMesh);
     std::vector<uint64_t> keys(ctx->residentTiles.begin(), ctx->residentTiles.end());
     if (keys.empty())
+    {
+        printf("[QueryCtx] reload skipped: no resident tiles copied\n");
         return 0;
+    }
     return ReloadWorldTilesFromCache(queryNavMesh, keys.data(), static_cast<int>(keys.size()));
 }
 
