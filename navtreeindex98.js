@@ -1,5 +1,15 @@
 var NAVTREEINDEX98 =
 {
+"structImGuiMetricsConfig.html#aebe978c4967142abdd80f83a07bee4cd":[43,0,231,1],
+"structImGuiMultiSelectIO.html":[43,0,232],
+"structImGuiMultiSelectIO.html#a13ee8b9db87472ab8094a5037ba460d4":[43,0,232,2],
+"structImGuiMultiSelectIO.html#a8aaf15ddd4d4db06cfd341c6bb09980a":[43,0,232,0],
+"structImGuiMultiSelectIO.html#a9373703b4813b42cfb1ac148cb346552":[43,0,232,4],
+"structImGuiMultiSelectIO.html#a9e628d471aec28be6206b7cf156b17c8":[43,0,232,3],
+"structImGuiMultiSelectIO.html#ab8a1fc2d5714e66cb40cab83ff8a3ac2":[43,0,232,1],
+"structImGuiMultiSelectIO.html#aba5e6ee0184f05432deba747ddc81d93":[43,0,232,5],
+"structImGuiMultiSelectState.html":[43,0,233],
+"structImGuiMultiSelectState.html#a12c4fc513946a8f855c300b245bf5e3c":[43,0,233,1],
 "structImGuiMultiSelectState.html#a19532c01ea44ae58f862bb8d81a180be":[43,0,233,8],
 "structImGuiMultiSelectState.html#a23f6a0eca7ee70eee55a28cda4d52e09":[43,0,233,6],
 "structImGuiMultiSelectState.html#a610cb42c1809f657e070a4260141a465":[43,0,233,7],
@@ -239,15 +249,5 @@ var NAVTREEINDEX98 =
 "structImGuiSettingsHandler.html":[43,0,253],
 "structImGuiSettingsHandler.html#a0a02bad8569c2d9f22e1a532d1e2de60":[43,0,253,4],
 "structImGuiSettingsHandler.html#a27706c3cad4a51af70dc2ebc5d3737d4":[43,0,253,3],
-"structImGuiSettingsHandler.html#a2b2821603e32a669c855dd97757c83c8":[43,0,253,7],
-"structImGuiSettingsHandler.html#a36355b915f61f94d90ba3f819fa02df0":[43,0,253,2],
-"structImGuiSettingsHandler.html#a461105eb071f511b480695f9915c821b":[43,0,253,5],
-"structImGuiSettingsHandler.html#a4e8dc5a10948568680764a3cdaf9b102":[43,0,253,8],
-"structImGuiSettingsHandler.html#a65f1fb45621d42fffcdec7dd09312c20":[43,0,253,1],
-"structImGuiSettingsHandler.html#a8f9d8923be4df1b5e6c17f9857b955f4":[43,0,253,9],
-"structImGuiSettingsHandler.html#ab84610a000c843d4e303e41e260fb1df":[43,0,253,0],
-"structImGuiSettingsHandler.html#ac2dd47bdb91ae6f50afb5ac14222b552":[43,0,253,6],
-"structImGuiShrinkWidthItem.html":[43,0,254],
-"structImGuiShrinkWidthItem.html#a29ba0dc283a3f57b0725b371f73fe1ed":[43,0,254,2],
-"structImGuiShrinkWidthItem.html#a5cd3b72ecdf53f6cb6c85f9064a4e256":[43,0,254,0]
+"structImGuiSettingsHandler.html#a2b2821603e32a669c855dd97757c83c8":[43,0,253,7]
 };

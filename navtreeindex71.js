@@ -1,5 +1,15 @@
 var NAVTREEINDEX71 =
 {
+"directfb.html#opengl-support":[10,1],
+"directfb.html#simple-window-manager":[10,0],
+"dollar-gestures.html":[14],
+"dollar-gestures.html#loading":[14,3],
+"dollar-gestures.html#multi-gestures":[14,4],
+"dollar-gestures.html#notes":[14,5],
+"dollar-gestures.html#performing":[14,1],
+"dollar-gestures.html#recording":[14,0],
+"dollar-gestures.html#saving":[14,2],
+"external_2glm_2detail_2glm_8cpp.html":[44,0,5,1,0,0],
 "external_2glm_2detail_2glm_8cpp.html#abd75661fe7969e19439052a5f69ba5d1":[44,0,5,1,0,0,0],
 "external_2glm_2simd_2common_8h.html":[44,0,5,1,1,0],
 "external_2glm_2simd_2common_8h_source.html":[44,0,5,1,1,0],
@@ -133,8 +143,8 @@ var NAVTREEINDEX71 =
 "external_2glm_2simd_2vector__relational_8h.html":[44,0,5,1,1,9],
 "external_2glm_2simd_2vector__relational_8h_source.html":[44,0,5,1,1,9],
 "files.html":[44,0],
-"functions.html":[43,3,0,0],
 "functions.html":[43,3,0],
+"functions.html":[43,3,0,0],
 "functions_a.html":[43,3,0,1],
 "functions_b.html":[43,3,0,2],
 "functions_c.html":[43,3,0,3],
@@ -239,15 +249,5 @@ var NAVTREEINDEX71 =
 "glad_8h.html":[44,0,5,0,0,0,0],
 "glad_8h.html#a0009b9a26c78d29e6ed13cc056edc720":[44,0,5,0,0,0,0,583],
 "glad_8h.html#a000ea5d0091e287efd51a66dcc9e99c6":[44,0,5,0,0,0,0,991],
-"glad_8h.html#a0020a1cdc41fd90c0253586098a6e181":[44,0,5,0,0,0,0,233],
-"glad_8h.html#a0058cf020ea54103d5533abcb2d6899c":[44,0,5,0,0,0,0,634],
-"glad_8h.html#a009faae8cb291d4be89383e1a49a893a":[44,0,5,0,0,0,0,1774],
-"glad_8h.html#a00ea4b5ff6c4421534a75062024e7d77":[44,0,5,0,0,0,0,1141],
-"glad_8h.html#a011fc24f10426c01349e94a4edd4b0d5":[44,0,5,0,0,0,0,1307],
-"glad_8h.html#a0137bc06acca1fd400ef32a12a417fd9":[44,0,5,0,0,0,0,435],
-"glad_8h.html#a015243e42cc591ab6070e2baf81dc050":[44,0,5,0,0,0,0,1529],
-"glad_8h.html#a01617429ec3596449a9755bd5a3a87df":[44,0,5,0,0,0,0,160],
-"glad_8h.html#a01b387fb1644960f32ac7c5eed1d2e25":[44,0,5,0,0,0,0,1038],
-"glad_8h.html#a0204d8004c3900930aebe0881e0eb64c":[44,0,5,0,0,0,0,515],
-"glad_8h.html#a0222cf5767ae6ecb6cd0738d6e99bc61":[44,0,5,0,0,0,0,1670]
+"glad_8h.html#a0020a1cdc41fd90c0253586098a6e181":[44,0,5,0,0,0,0,233]
 };

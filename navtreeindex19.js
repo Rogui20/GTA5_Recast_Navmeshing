@@ -1,5 +1,15 @@
 var NAVTREEINDEX19 =
 {
+"SDL__haptic_8h.html#a8a18c4de1076ac9bebd718329d16db29":[44,0,5,2,1,32,11],
+"SDL__haptic_8h.html#a8a2966d363cba55ffdfeff42e4204ef1":[44,0,5,2,1,32,65],
+"SDL__haptic_8h.html#a8fcc0fb333baed629004bd8c0c66bd76":[44,0,5,2,1,32,66],
+"SDL__haptic_8h.html#a955fb9f680dcf9cc72a3d5263e85b80a":[44,0,5,2,1,32,10],
+"SDL__haptic_8h.html#a971b5651414202f89a8c6eed640e990d":[44,0,5,2,1,32,55],
+"SDL__haptic_8h.html#a98a5011311168d63921aaac21403a4d8":[44,0,5,2,1,32,13],
+"SDL__haptic_8h.html#a9e11ff3ae40f59c04be3bae98d8d05ba":[44,0,5,2,1,32,56],
+"SDL__haptic_8h.html#a9efacbecc0a1b7a13684ee822b18062c":[44,0,5,2,1,32,27],
+"SDL__haptic_8h.html#aa0754b11e2aed38bc955750c7a6a6c73":[44,0,5,2,1,32,57],
+"SDL__haptic_8h.html#aa075e2777c811ecdd2ca53d49288555e":[44,0,5,2,1,32,48],
 "SDL__haptic_8h.html#aa6d75adbfcdda5075078e7a2849da5c0":[44,0,5,2,1,32,23],
 "SDL__haptic_8h.html#aacee621c474cda53e56f4a2233c65407":[44,0,5,2,1,32,42],
 "SDL__haptic_8h.html#aad427170295d6b88a5a94cd6a491797a":[44,0,5,2,1,32,61],
@@ -239,15 +249,5 @@ var NAVTREEINDEX19 =
 "SDL__hints_8h.html#ad69c295983ec1db56ea26af46f184ce7":[44,0,5,2,1,34,115],
 "SDL__hints_8h.html#ad87f87a8b1300c8401c004427027ea55":[44,0,5,2,1,34,122],
 "SDL__hints_8h.html#adb936ea7125da9c2850f0cb126e47d7f":[44,0,5,2,1,34,207],
-"SDL__hints_8h.html#adce02dd2716ef92d3c787789ccfbb98e":[44,0,5,2,1,34,120],
-"SDL__hints_8h.html#addd09f02e56b548dd05f2b927405b560":[44,0,5,2,1,34,155],
-"SDL__hints_8h.html#adf64ea7426a2fecbf2aec55da0d73750":[44,0,5,2,1,34,195],
-"SDL__hints_8h.html#ae2d42d474afb2ea4dfe4b7e4094820c2":[44,0,5,2,1,34,82],
-"SDL__hints_8h.html#ae4a20a62bbf68483f3a3ea5d5e10549a":[44,0,5,2,1,34,20],
-"SDL__hints_8h.html#ae51c386006d2420057e76975919e1ac4":[44,0,5,2,1,34,117],
-"SDL__hints_8h.html#ae6733a084fded26033d0b3a1ab1480a4":[44,0,5,2,1,34,33],
-"SDL__hints_8h.html#ae840652b9ebd21e4317ee80e7b527339":[44,0,5,2,1,34,138],
-"SDL__hints_8h.html#ae89c85f77f0d1e1f7716f4c81c96dac3":[44,0,5,2,1,34,174],
-"SDL__hints_8h.html#ae8e70c0cb4f02133bd05172915492110":[44,0,5,2,1,34,87],
-"SDL__hints_8h.html#aeea07a7843ea936cc493ae741dd0e033":[44,0,5,2,1,34,140]
+"SDL__hints_8h.html#adce02dd2716ef92d3c787789ccfbb98e":[44,0,5,2,1,34,120]
 };

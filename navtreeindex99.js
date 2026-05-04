@@ -1,5 +1,15 @@
 var NAVTREEINDEX99 =
 {
+"structImGuiSettingsHandler.html#a36355b915f61f94d90ba3f819fa02df0":[43,0,253,2],
+"structImGuiSettingsHandler.html#a461105eb071f511b480695f9915c821b":[43,0,253,5],
+"structImGuiSettingsHandler.html#a4e8dc5a10948568680764a3cdaf9b102":[43,0,253,8],
+"structImGuiSettingsHandler.html#a65f1fb45621d42fffcdec7dd09312c20":[43,0,253,1],
+"structImGuiSettingsHandler.html#a8f9d8923be4df1b5e6c17f9857b955f4":[43,0,253,9],
+"structImGuiSettingsHandler.html#ab84610a000c843d4e303e41e260fb1df":[43,0,253,0],
+"structImGuiSettingsHandler.html#ac2dd47bdb91ae6f50afb5ac14222b552":[43,0,253,6],
+"structImGuiShrinkWidthItem.html":[43,0,254],
+"structImGuiShrinkWidthItem.html#a29ba0dc283a3f57b0725b371f73fe1ed":[43,0,254,2],
+"structImGuiShrinkWidthItem.html#a5cd3b72ecdf53f6cb6c85f9064a4e256":[43,0,254,0],
 "structImGuiShrinkWidthItem.html#ac9a3ca20449e58374963f32db20bbd87":[43,0,254,1],
 "structImGuiSizeCallbackData.html":[43,0,255],
 "structImGuiSizeCallbackData.html#a42be6d99a279942b4f2019a4416f65ba":[43,0,255,1],
@@ -239,15 +249,5 @@ var NAVTREEINDEX99 =
 "structImGuiTable.html#a6e35d7f538c9d2a2c78525917e5c358d":[43,0,265,4],
 "structImGuiTable.html#a6e6aa2309557862d7da9d6970c0f2f0b":[43,0,265,96],
 "structImGuiTable.html#a6f98734a1abb8f866ffd9fc69d35b2a3":[43,0,265,84],
-"structImGuiTable.html#a72d50758681cecf127e6c9a44883ccfd":[43,0,265,109],
-"structImGuiTable.html#a75f70ed643a861d05a22c566664e0eaf":[43,0,265,38],
-"structImGuiTable.html#a79fe77ae5bb4b1280fcfbbd2e98ad882":[43,0,265,56],
-"structImGuiTable.html#a7c1826bfb454ce6b72ca910570a0f319":[43,0,265,41],
-"structImGuiTable.html#a7c42c7caf5a05ac02305aa356f29a9a4":[43,0,265,19],
-"structImGuiTable.html#a7e661eeaca53f374216bf0f45dff29e4":[43,0,265,86],
-"structImGuiTable.html#a84bfdcc0efeb85cf6f103ddf166e4c65":[43,0,265,64],
-"structImGuiTable.html#a8770e95686f57cfc9b61a037e95cc5b1":[43,0,265,108],
-"structImGuiTable.html#a89db69966920e938cdf67f23164c3a80":[43,0,265,112],
-"structImGuiTable.html#a8f297cc1ad1839a3039adf00e9f29047":[43,0,265,93],
-"structImGuiTable.html#a8f405d885f74a82872edd0dab5790789":[43,0,265,29]
+"structImGuiTable.html#a72d50758681cecf127e6c9a44883ccfd":[43,0,265,109]
 };

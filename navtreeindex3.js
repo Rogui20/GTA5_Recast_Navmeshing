@@ -1,5 +1,15 @@
 var NAVTREEINDEX3 =
 {
+"GtaNavProps_8cpp.html":[44,0,6,10],
+"GtaNavProps_8h.html":[44,0,6,11],
+"GtaNavProps_8h_source.html":[44,0,6,11],
+"GtaNavRuntime_2ChunkyTriMesh_8cpp.html":[44,0,6,1],
+"GtaNavRuntime_2ChunkyTriMesh_8cpp.html#a1888720290d8beeb3162f90e197ff7b3":[44,0,6,1,4],
+"GtaNavRuntime_2ChunkyTriMesh_8cpp.html#a1ddf6286b85d102c1012cb3db79020e2":[44,0,6,1,9],
+"GtaNavRuntime_2ChunkyTriMesh_8cpp.html#a2738633e684f03e39567d80500039c7d":[44,0,6,1,10],
+"GtaNavRuntime_2ChunkyTriMesh_8cpp.html#a488658425e021197b682d2ff039ed0d5":[44,0,6,1,2],
+"GtaNavRuntime_2ChunkyTriMesh_8cpp.html#a7e3f1cfa936454ba69f96894a38bd2e4":[44,0,6,1,6],
+"GtaNavRuntime_2ChunkyTriMesh_8cpp.html#a9a85b2fd169892112b16a277c6a59ced":[44,0,6,1,3],
 "GtaNavRuntime_2ChunkyTriMesh_8cpp.html#ab9e1d32b348378cc47d69088c6c2578b":[44,0,6,1,1],
 "GtaNavRuntime_2ChunkyTriMesh_8cpp.html#ac4386676e18bfd480f6686981f10e595":[44,0,6,1,5],
 "GtaNavRuntime_2ChunkyTriMesh_8cpp.html#adfecf50ca2fdc642f4bd3b6d4f2c21e4":[44,0,6,1,8],
@@ -239,15 +249,5 @@ var NAVTREEINDEX3 =
 "GtaNavViewer_2imgui_2imgui_8cpp.html#a45a39b3a2cfa3aa899eecb63bac79d1a":[44,0,7,0,2,241],
 "GtaNavViewer_2imgui_2imgui_8cpp.html#a486a2f0ac6b8bc3c18f14d08b3c808d6":[44,0,7,0,2,18],
 "GtaNavViewer_2imgui_2imgui_8cpp.html#a48d8e4bfb5933e8ccec0e1e5671366d9":[44,0,7,0,2,38],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a48ef1fdc5133fa3ec59365422d44a013":[44,0,7,0,2,251],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a48fa127f287f028f14e404f919b7f05c":[44,0,7,0,2,79],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a4925308f4cf4e391817bbd141cfeffd5":[44,0,7,0,2,103],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a4a29111ecf7a42189ce11cb734e5f4a2":[44,0,7,0,2,75],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a4b2f13ee0b45541c54b44f3f5f4bfd61":[44,0,7,0,2,201],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a4b4e1fb0487e571a4a04fb5b2274189e":[44,0,7,0,2,81],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a4f345909ba493da1c34b89bb89ac4475":[44,0,7,0,2,254],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a4f43285be90f89107d0512a82fdf1e32":[44,0,7,0,2,99],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a4f4924f0f74c0bd4201ca9656202f1f1":[44,0,7,0,2,216],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a4f6d9c1be5c114ebb7b9400d2747bd37":[44,0,7,0,2,134],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a4f72273a6c1d8873fe60e9dbbb61ff2c":[44,0,7,0,2,199]
+"GtaNavViewer_2imgui_2imgui_8cpp.html#a48ef1fdc5133fa3ec59365422d44a013":[44,0,7,0,2,251]
 };

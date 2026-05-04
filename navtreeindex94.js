@@ -1,5 +1,15 @@
 var NAVTREEINDEX94 =
 {
+"structImFontAtlasRect.html#a76860d76a6e8636582409fee21546996":[43,0,118,0],
+"structImFontAtlasRect.html#aa0baf4bb95c9940b2adede3a68fb7b82":[43,0,118,4],
+"structImFontAtlasRect.html#ab61826d9ca4c07bdb46fe2f26f66b8d0":[43,0,118,3],
+"structImFontAtlasRect.html#afeb47ddcbd9d86e6af48931753c149e5":[43,0,118,5],
+"structImFontAtlasRectEntry.html":[43,0,119],
+"structImFontAtlasRectEntry.html#abbf840ff2043d755f1e4231b6faf8fdc":[43,0,119,0],
+"structImFontAtlasRectEntry.html#ac289e725922bac481abcb47136917475":[43,0,119,2],
+"structImFontAtlasRectEntry.html#aedda5086fb271c73cd3d51010e28a4e0":[43,0,119,1],
+"structImFontBaked.html":[43,0,120],
+"structImFontBaked.html#a0492533ff66e22262532a384efac4116":[43,0,120,5],
 "structImFontBaked.html#a0f5240ec3a2074111c6159c4731e99b6":[43,0,120,20],
 "structImFontBaked.html#a16c0f97d7f790bdb32263cd837b71d32":[43,0,120,18],
 "structImFontBaked.html#a1e0839bf39f125ec5e40966a157d0d8b":[43,0,120,22],
@@ -239,15 +249,5 @@ var NAVTREEINDEX94 =
 "structImGuiContext.html#a58906b21765f83b753e33b4733fa596c":[43,0,184,252],
 "structImGuiContext.html#a5995f7e699f9756227f4632d02857800":[43,0,184,169],
 "structImGuiContext.html#a59df70904cc425fd2bba56b20655bb9b":[43,0,184,235],
-"structImGuiContext.html#a5b4bad72af7065aa7e57b32fedd5ea0e":[43,0,184,273],
-"structImGuiContext.html#a5c6da28d7b998680f7a748e0d54e39cf":[43,0,184,178],
-"structImGuiContext.html#a5e31703c42698a572be557ec57c5cbe7":[43,0,184,279],
-"structImGuiContext.html#a5e6e55130cd0bdf76fd716b767e15046":[43,0,184,109],
-"structImGuiContext.html#a5e8f00b3669b5047f11a1d9cc09c8d09":[43,0,184,63],
-"structImGuiContext.html#a5f1c7c1a251e83886de942a5e49df245":[43,0,184,209],
-"structImGuiContext.html#a616167202e7ae995ddba81848e519f61":[43,0,184,143],
-"structImGuiContext.html#a61c333dd7dcfead75b96cde8b35992a3":[43,0,184,162],
-"structImGuiContext.html#a61d6d8dbd670e2f4e70d50248caac012":[43,0,184,103],
-"structImGuiContext.html#a6338f974b56243f62fec2a053b773350":[43,0,184,117],
-"structImGuiContext.html#a63743d425fe5f3807308b57e06c5d1d4":[43,0,184,41]
+"structImGuiContext.html#a5b4bad72af7065aa7e57b32fedd5ea0e":[43,0,184,273]
 };

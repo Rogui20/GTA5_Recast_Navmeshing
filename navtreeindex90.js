@@ -1,5 +1,15 @@
 var NAVTREEINDEX90 =
 {
+"imgui__widgets_8cpp.html#adb6231fb52ce1b5fe340d158db4fa113":[44,0,7,0,8,20],
+"imgui__widgets_8cpp.html#addba66b893ab83d395d0a64a8fddc52c":[44,0,7,0,8,25],
+"imgui__widgets_8cpp.html#adf4d73301961430d50d7edd96f92ce38":[44,0,7,0,8,3],
+"imgui__widgets_8cpp.html#ae213820295d04561f8ea295c96ac57c8":[44,0,7,0,8,58],
+"imgui__widgets_8cpp.html#ae245ee4392b26d481ee10f0fa37fb525":[44,0,7,0,8,84],
+"imgui__widgets_8cpp.html#ae2a1dbde6be4172620d31e321d2e459f":[44,0,7,0,8,111],
+"imgui__widgets_8cpp.html#ae3cff0e3d91c185dcdb6956cfc64aeaa":[44,0,7,0,8,50],
+"imgui__widgets_8cpp.html#ae4285c8fb2c94efe37ded02e9732f619":[44,0,7,0,8,55],
+"imgui__widgets_8cpp.html#ae50355778d2d81cc085e0145f704de27":[44,0,7,0,8,53],
+"imgui__widgets_8cpp.html#ae5c188433685fd5694d9323078e7faa4":[44,0,7,0,8,13],
 "imgui__widgets_8cpp.html#aeb78e41c47236924d5e2b28ce28d042e":[44,0,7,0,8,76],
 "imgui__widgets_8cpp.html#aee9a4cbd23af66a75c6d41bad2e393d5":[44,0,7,0,8,27],
 "imgui__widgets_8cpp.html#aeef1ebfd613510f082618037974e1637":[44,0,7,0,8,7],
@@ -239,15 +249,5 @@ var NAVTREEINDEX90 =
 "md_external_2SDL2_2docs_2CONTRIBUTING.html":[7],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#contributing-code":[7,1],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#contributing-to-the-documentation":[7,2],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-a-function-documentation":[7,2,0],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-the-wiki":[7,2,1],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#filing-a-github-issue":[7,0],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#following-the-style-guide":[7,1,1],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#forking-the-project":[7,1,0],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#opening-a-pull-request":[7,1,3],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#reporting-a-bug":[7,0,0],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#running-the-tests":[7,1,2],
-"md_external_2SDL2_2docs_2CONTRIBUTING.html#suggesting-enhancements":[7,0,1],
-"md_external_2SDL2_2docs_2README-cmake.html":[9],
-"md_external_2SDL2_2docs_2README-cmake.html#a-system-sdl-library":[9,1,0]
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-a-function-documentation":[7,2,0]
 };

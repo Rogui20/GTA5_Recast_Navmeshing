@@ -1,5 +1,15 @@
 var NAVTREEINDEX107 =
 {
+"structSDL__JoyAxisEvent.html#a53ee73e7c367934dd6edb69963be5556":[43,0,412,7],
+"structSDL__JoyAxisEvent.html#a604b258940a8cd8beaa5efeb55d6f825":[43,0,412,4],
+"structSDL__JoyAxisEvent.html#a60ecfc70df9eeef8e33b5dd7dc060389":[43,0,412,5],
+"structSDL__JoyAxisEvent.html#a8bf5144fddc19686c2003add1f0e1565":[43,0,412,3],
+"structSDL__JoyAxisEvent.html#a965719f4703a7091bcc5f07f79fcf7e1":[43,0,412,8],
+"structSDL__JoyAxisEvent.html#ad5407250032f618fde7437ac5f229257":[43,0,412,2],
+"structSDL__JoyAxisEvent.html#ae8e17bced478530638982f0382a0dafa":[43,0,412,1],
+"structSDL__JoyAxisEvent.html#aed1c873fb90ba58194e65f972933c67d":[43,0,412,6],
+"structSDL__JoyBallEvent.html":[43,0,413],
+"structSDL__JoyBallEvent.html#a0b192b95a043cb494b27ed9b27e84db1":[43,0,413,5],
 "structSDL__JoyBallEvent.html#a0ea3071b99ac096b0157714f01ff04f8":[43,0,413,2],
 "structSDL__JoyBallEvent.html#a28ad48a9eb7a5d3ff62ccba09fcead76":[43,0,413,8],
 "structSDL__JoyBallEvent.html#a4e2e185717d529167cd0bea21093c454":[43,0,413,6],
@@ -239,15 +249,5 @@ var NAVTREEINDEX107 =
 "structSDL__TouchFingerEvent.html#abde2ab5cb013bbd21e37a65e2f8fa666":[43,0,444,4],
 "structSDL__TouchFingerEvent.html#ac2bb8af638d2927a8e13f6ffe8f9384e":[43,0,444,9],
 "structSDL__TouchFingerEvent.html#ac6acac209d6e2bd659fdb6760081393d":[43,0,444,0],
-"structSDL__TouchFingerEvent.html#ad7a6f39ec9af1bf47b160d18314edd70":[43,0,444,5],
-"structSDL__UserEvent.html":[43,0,445],
-"structSDL__UserEvent.html#aae4dbf65c34d654c9edf519eb061b7cf":[43,0,445,2],
-"structSDL__UserEvent.html#ab2893a12be2f97195f16463a23107913":[43,0,445,1],
-"structSDL__UserEvent.html#ab7afa8b98dbd7b52bef41155e10f7340":[43,0,445,4],
-"structSDL__UserEvent.html#abccefa10e0e0e3a0801bc6d836a08da7":[43,0,445,5],
-"structSDL__UserEvent.html#adbf1d34c73138a0c549310e5d4ad0c35":[43,0,445,3],
-"structSDL__UserEvent.html#aef47976781ee82b527a353c5acfa0a34":[43,0,445,0],
-"structSDL__Vertex.html":[43,0,447],
-"structSDL__Vertex.html#a613ca86679cbd0f84041298ffcde5bc4":[43,0,447,2],
-"structSDL__Vertex.html#ace543def50f0b3f3f87a86c47caab53f":[43,0,447,0]
+"structSDL__TouchFingerEvent.html#ad7a6f39ec9af1bf47b160d18314edd70":[43,0,444,5]
 };

@@ -1,5 +1,15 @@
 var NAVTREEINDEX12 =
 {
+"RecastMesh_8cpp.html#a256e19cca110edc31cb96adf9a52521d":[44,0,8,1,7,4],
+"RecastMesh_8cpp.html#a3152b8f34516e03fe3876163cb337bc2":[44,0,8,1,7,9],
+"RecastMesh_8cpp.html#a32119d50d88bb48bcab862a57ef86425":[44,0,8,1,7,3],
+"RecastMesh_8cpp.html#a3626785a54ec9abeb63f0fc43661b8d8":[44,0,8,1,7,14],
+"RecastMesh_8cpp.html#a3a4e01616a89d8ef01154d9dd46e0ccc":[44,0,8,1,7,32],
+"RecastMesh_8cpp.html#a3e3391b452db19de34e2242eb35ef4bc":[44,0,8,1,7,12],
+"RecastMesh_8cpp.html#a4cc687ea6596949ed340d5082d75daed":[44,0,8,1,7,19],
+"RecastMesh_8cpp.html#a589bd4317fc5d856399939218757d09e":[44,0,8,1,7,24],
+"RecastMesh_8cpp.html#a5ae2b41c36fdf5c74e434c33d31dab95":[44,0,8,1,7,8],
+"RecastMesh_8cpp.html#a5ebff194647dfe8f10ceab06390c68df":[44,0,8,1,7,17],
 "RecastMesh_8cpp.html#a6f1109916123abdff2b46675c13307e3":[44,0,8,1,7,22],
 "RecastMesh_8cpp.html#a77080de091f2816bb77dc4a6ef7805af":[44,0,8,1,7,10],
 "RecastMesh_8cpp.html#a7779e8ce95da76bac3631db6b39436db":[44,0,8,1,7,30],
@@ -239,15 +249,5 @@ var NAVTREEINDEX12 =
 "SDL__audio_8h.html#a46c5643530f8e592aeec231177aa769b":[44,0,5,2,1,5,69],
 "SDL__audio_8h.html#a4722de7e16982dd078f2b8cc64b9bae7":[44,0,5,2,1,5,9],
 "SDL__audio_8h.html#a478c602cbfaab8663cb4f58a62600323":[44,0,5,2,1,5,49],
-"SDL__audio_8h.html#a491ed103fd25d920c4e6b7495217ce66":[44,0,5,2,1,5,44],
-"SDL__audio_8h.html#a49212d7bdaed59c937ab08fdd3cf804e":[44,0,5,2,1,5,78],
-"SDL__audio_8h.html#a4b05381c3f0871e9a88b46959365f796":[44,0,5,2,1,5,23],
-"SDL__audio_8h.html#a4f4950d8eee757ebed84e50fb9316b12":[44,0,5,2,1,5,6],
-"SDL__audio_8h.html#a50b4779246a7fbf4a39205a396ec7ea6":[44,0,5,2,1,5,33],
-"SDL__audio_8h.html#a518fa9273a6a8b8b6f1d599ccca71434":[44,0,5,2,1,5,30],
-"SDL__audio_8h.html#a55a1f0fd6570cebb7d0180b6056032cf":[44,0,5,2,1,5,43],
-"SDL__audio_8h.html#a568e10207e6ff53f8e238a0d562ef594":[44,0,5,2,1,5,67],
-"SDL__audio_8h.html#a607058f35dad9277f3ca097c8fdae610":[44,0,5,2,1,5,66],
-"SDL__audio_8h.html#a611f76dc30ba9891239bcce3f9b472b5":[44,0,5,2,1,5,38],
-"SDL__audio_8h.html#a631aa8624575603df2c5ab9257feee59":[44,0,5,2,1,5,62]
+"SDL__audio_8h.html#a491ed103fd25d920c4e6b7495217ce66":[44,0,5,2,1,5,44]
 };

@@ -1,5 +1,15 @@
 var NAVTREEINDEX91 =
 {
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-the-wiki":[7,2,1],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#filing-a-github-issue":[7,0],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#following-the-style-guide":[7,1,1],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#forking-the-project":[7,1,0],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#opening-a-pull-request":[7,1,3],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#reporting-a-bug":[7,0,0],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#running-the-tests":[7,1,2],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#suggesting-enhancements":[7,0,1],
+"md_external_2SDL2_2docs_2README-cmake.html":[9],
+"md_external_2SDL2_2docs_2README-cmake.html#a-system-sdl-library":[9,1,0],
 "md_external_2SDL2_2docs_2README-cmake.html#building-sdl":[9,0],
 "md_external_2SDL2_2docs_2README-cmake.html#cmake-configuration-options-for-platforms":[9,2],
 "md_external_2SDL2_2docs_2README-cmake.html#examples":[9,2,0,0],
@@ -239,15 +249,5 @@ var NAVTREEINDEX91 =
 "structDynObstacleDescFFI.html#a9819fe72868b0c06c69f42e4c5e535e1":[43,0,77,2],
 "structDynObstacleDescFFI.html#aa008639554e9bcd6b77627b1b500f6d0":[43,0,77,9],
 "structDynObstacleDescFFI.html#aa85f08638e5014323c3719b8a9bfcc6b":[43,0,77,4],
-"structDynObstacleDescFFI.html#af68fc2f60c898ff49b02304aef388ca0":[43,0,77,3],
-"structExampleAppConsole.html":[43,0,78],
-"structExampleAppConsole.html#a01c861ed21b9ec8de5e1ee2c762c627a":[43,0,78,12],
-"structExampleAppConsole.html#a0518a09c7e8648dd52c7c06df19ac17a":[43,0,78,4],
-"structExampleAppConsole.html#a0bc85c5dd2bef56ae1a64697be00ec87":[43,0,78,10],
-"structExampleAppConsole.html#a11c7fa54e744288f3606e4d6521d6345":[43,0,78,15],
-"structExampleAppConsole.html#a1eebee69cceb0345cf9d9b6e6beb9d03":[43,0,78,13],
-"structExampleAppConsole.html#a2508db0a7d205947cea65b141d4ed589":[43,0,78,16],
-"structExampleAppConsole.html#a2ef13f00c474b16b8da2ec062d5e5cc2":[43,0,78,3],
-"structExampleAppConsole.html#a394debe3cbf3cfd93b9bfd2835a4fdec":[43,0,78,11],
-"structExampleAppConsole.html#a3a5622b2d8c52a3083df6ed9f90e7210":[43,0,78,9]
+"structDynObstacleDescFFI.html#af68fc2f60c898ff49b02304aef388ca0":[43,0,77,3]
 };
