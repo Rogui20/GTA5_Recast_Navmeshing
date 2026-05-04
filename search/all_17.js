@@ -156,7 +156,7 @@ var searchData=
   ['maxobstacles_153',['maxObstacles',['../structdtTileCacheParams.html#a30fb34944589db46ad6262748d3f4c0c',1,'dtTileCacheParams']]],
   ['maxobstaclestocheck_154',['maxObstaclesToCheck',['../structPathAvoidParamsFFI.html#a9cca9b7b52ac5e255c165be77f19da3f',1,'PathAvoidParamsFFI']]],
   ['maxpath_155',['maxPath',['../structdtRaycastHit.html#a62b75cb350d9ace5e47887c7c1add9b3',1,'dtRaycastHit']]],
-  ['maxpolys_156',['maxpolys',['../structdtNavMeshParams.html#a4f44babd04fff4f8300ecd15d4237375',1,'dtNavMeshParams::maxPolys'],['../structrcPolyMesh.html#afc6261e7cee3e3ff2a83b6ee8baf14a9',1,'rcPolyMesh::maxpolys']]],
+  ['maxpolys_156',['maxpolys',['../structrcPolyMesh.html#afc6261e7cee3e3ff2a83b6ee8baf14a9',1,'rcPolyMesh::maxpolys'],['../structdtNavMeshParams.html#a4f44babd04fff4f8300ecd15d4237375',1,'dtNavMeshParams::maxPolys']]],
   ['maxprograms_157',['maxPrograms',['../SDL__opengles2__gl2ext_8h.html#a647e21bbb81eae77c2b40788f6df2275',1,'SDL_opengles2_gl2ext.h']]],
   ['maxrectbounds_158',['MaxRectBounds',['../structImFontAtlasBuilder.html#a1a97f57c58a81c35d8c16e989c72356b',1,'ImFontAtlasBuilder']]],
   ['maxrectsize_159',['MaxRectSize',['../structImFontAtlasBuilder.html#a1b386bcf52c3daa5ce5de749d62417d6',1,'ImFontAtlasBuilder']]],
