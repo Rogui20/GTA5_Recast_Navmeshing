@@ -197,6 +197,7 @@ namespace
         std::unordered_map<uint64_t, std::vector<std::string>> tileToGeometryIds;
         std::unordered_map<std::string, std::unordered_set<uint64_t>> geomToTiles;
         std::unordered_set<uint64_t> dirtyWorldTiles;
+        std::unordered_set<uint64_t> runtimeDirtyWorldTiles;
         std::unordered_map<uint64_t, std::vector<OffmeshLink>> worldOffmeshLinksByTile;
         std::unordered_set<uint64_t> dirtyWorldOffmeshTiles;
         bool worldAutoGenerateOffmeshLinks = false;
@@ -387,6 +388,12 @@ namespace
     bool UpdateNavmeshState(ExternNavmeshContext& ctx, bool forceFullBuild);
     bool SaveWorldTileManifestInternal(ExternNavmeshContext& ctx);
     bool LoadWorldTileManifestInternal(ExternNavmeshContext& ctx);
+    bool IsPersistentWorldGeom(ExternNavmeshContext& ctx, const std::string& id);
+    bool IsDynamicWorldGeom(ExternNavmeshContext& ctx, const std::string& id);
+    bool TileHasPersistentGeometry(ExternNavmeshContext& ctx, uint64_t tileKey);
+    bool TileHasDynamicGeometry(ExternNavmeshContext& ctx, uint64_t tileKey);
+    std::vector<std::string> GetPersistentGeometryIdsForTile(ExternNavmeshContext& ctx, uint64_t tileKey);
+    uint64_t ComputePersistentWorldTileHash(ExternNavmeshContext& ctx, int tx, int ty);
     bool IsWorldGeometryRecordUpToDate(const ExternNavmeshContext::WorldGeomRecord& record);
     void EnqueueTileBuild(ExternNavmeshContext& ctx, uint64_t tileKey);
     bool BuildWorldTileGeometry(ExternNavmeshContext& ctx, int tx, int ty, std::vector<glm::vec3>& outVerts, std::vector<unsigned int>& outIndices, bool* outAbortedByTriLimit);
@@ -1389,9 +1396,9 @@ namespace
         }
         j["tileToGeometryIds"] = std::move(tileToGeom);
         std::vector<uint64_t> allIndexedTileKeys;
-        allIndexedTileKeys.reserve(ctx.tileToGeometryIds.size());
-        for (const auto& kv : ctx.tileToGeometryIds)
-            allIndexedTileKeys.push_back(kv.first);
+        allIndexedTileKeys.reserve(persistentTileKeys.size());
+        for (uint64_t key : persistentTileKeys)
+            allIndexedTileKeys.push_back(key);
         j["allIndexedTileKeys"] = std::move(allIndexedTileKeys);
         nlohmann::json profileArray = nlohmann::json::array();
         for (const auto& [name, p] : ctx.agentProfiles)
@@ -1422,8 +1429,17 @@ namespace
         if (!out.good())
             return false;
 
+        const size_t dynamicGeomsSkipped = ctx.worldGeometry.size() - persistentGeoms;
+        size_t dynamicOnlyTilesSkipped = 0;
+        for (const auto& kv : ctx.tileToGeometryIds)
+        {
+            if (!kv.second.empty() && !TileHasPersistentGeometry(ctx, kv.first))
+                ++dynamicOnlyTilesSkipped;
+        }
         printf("[WorldTile] Save manifest: persistentGeoms=%zu totalGeoms=%zu dirtySaved=%zu pendingSaved=%zu tileToGeomSaved=%zu path=%s\n",
                persistentGeoms, ctx.worldGeometry.size(), j["dirtyWorldTiles"].size(), j["pendingTileBuildQueue"].size(), j["tileToGeometryIds"].size(), manifestPath.string().c_str());
+        printf("[WorldTile] Save manifest persistentTileKeys=%zu allIndexedSaved=%zu dynamicGeomsSkipped=%zu dynamicOnlyTilesSkipped=%zu\n",
+               persistentTileKeys.size(), j["allIndexedTileKeys"].size(), dynamicGeomsSkipped, dynamicOnlyTilesSkipped);
         return true;
     }
 
@@ -1480,28 +1496,75 @@ namespace
         return ctx.dbIndexLoaded;
     }
 
-    uint64_t ComputeWorldTileHash(ExternNavmeshContext& ctx, int tx, int ty)
+    bool IsPersistentWorldGeom(ExternNavmeshContext& ctx, const std::string& id)
+    {
+        auto it = ctx.worldGeometry.find(id);
+        if (it == ctx.worldGeometry.end())
+            return false;
+        const auto& rec = it->second;
+        return (rec.flags & WORLD_GEOM_PERSISTENT) != 0 && (rec.flags & WORLD_GEOM_DYNAMIC) == 0;
+    }
+
+    bool IsDynamicWorldGeom(ExternNavmeshContext& ctx, const std::string& id)
+    {
+        auto it = ctx.worldGeometry.find(id);
+        return it != ctx.worldGeometry.end() && (it->second.flags & WORLD_GEOM_DYNAMIC) != 0;
+    }
+
+    std::vector<std::string> GetPersistentGeometryIdsForTile(ExternNavmeshContext& ctx, uint64_t tileKey)
+    {
+        std::vector<std::string> ids;
+        auto it = ctx.tileToGeometryIds.find(tileKey);
+        if (it == ctx.tileToGeometryIds.end())
+            return ids;
+        for (const auto& id : it->second)
+            if (IsPersistentWorldGeom(ctx, id))
+                ids.push_back(id);
+        return ids;
+    }
+
+    bool TileHasPersistentGeometry(ExternNavmeshContext& ctx, uint64_t tileKey)
+    {
+        auto ids = GetPersistentGeometryIdsForTile(ctx, tileKey);
+        return !ids.empty();
+    }
+
+    bool TileHasDynamicGeometry(ExternNavmeshContext& ctx, uint64_t tileKey)
+    {
+        auto it = ctx.tileToGeometryIds.find(tileKey);
+        if (it == ctx.tileToGeometryIds.end())
+            return false;
+        for (const auto& id : it->second)
+            if (IsDynamicWorldGeom(ctx, id))
+                return true;
+        return false;
+    }
+
+    uint64_t ComputePersistentWorldTileHash(ExternNavmeshContext& ctx, int tx, int ty)
     {
         uint64_t h = ComputeSettingsHash(ctx.genSettings);
         h = WorldHashCombine64(h, static_cast<uint64_t>(static_cast<uint32_t>(tx)));
         h = WorldHashCombine64(h, static_cast<uint64_t>(static_cast<uint32_t>(ty)));
 
         const uint64_t key = MakeTileKey(tx, ty);
-        auto it = ctx.tileToGeometryIds.find(key);
-        if (it != ctx.tileToGeometryIds.end())
+        auto ids = GetPersistentGeometryIdsForTile(ctx, key);
+        std::sort(ids.begin(), ids.end());
+        for (const std::string& id : ids)
         {
-            std::vector<std::string> ids = it->second;
-            std::sort(ids.begin(), ids.end());
-            for (const std::string& id : ids)
-            {
-                auto gIt = ctx.worldGeometry.find(id);
-                if (gIt == ctx.worldGeometry.end())
-                    continue;
-                const auto& rec = gIt->second;
-                h = WorldHashCombine64(h, rec.geomHash);
-                h = WorldHashCombine64(h, std::hash<std::string>{}(rec.id));
-            }
+            auto gIt = ctx.worldGeometry.find(id);
+            if (gIt == ctx.worldGeometry.end())
+                continue;
+            const auto& rec = gIt->second;
+            h = WorldHashCombine64(h, rec.geomHash);
+            h = WorldHashCombine64(h, std::hash<std::string>{}(rec.id));
         }
+
+        return h;
+    }
+
+    uint64_t ComputeWorldTileHash(ExternNavmeshContext& ctx, int tx, int ty)
+    {
+        uint64_t h = ComputePersistentWorldTileHash(ctx, tx, ty);
 
         for (const auto& link : ctx.offmeshLinks)
         {
@@ -1569,6 +1632,7 @@ namespace
         ctx.tileToGeometryIds.clear();
         ctx.geomToTiles.clear();
         ctx.dirtyWorldTiles.clear();
+        ctx.runtimeDirtyWorldTiles.clear();
         ctx.pendingTileBuildQueue.clear();
         ctx.pendingTileBuildSet.clear();
         ctx.pendingWorldGeometryQueue.clear();
@@ -1812,6 +1876,8 @@ namespace
         size_t pendingFromManifest = 0;
         for (uint64_t tileKey : pendingTiles)
         {
+            if (!TileHasPersistentGeometry(ctx, tileKey))
+                continue;
             const int tx = static_cast<int>(tileKey >> 32);
             const int ty = static_cast<int>(tileKey & 0xffffffffu);
             const uint64_t expectedHash = ComputeWorldTileHash(ctx, tx, ty);
@@ -1832,6 +1898,8 @@ namespace
         const auto dirtyTiles = j.value("dirtyWorldTiles", std::vector<uint64_t>{});
         for (uint64_t tileKey : dirtyTiles)
         {
+            if (!TileHasPersistentGeometry(ctx, tileKey))
+                continue;
             const int tx = static_cast<int>(tileKey >> 32);
             const int ty = static_cast<int>(tileKey & 0xffffffffu);
             const uint64_t expectedHash = ComputeWorldTileHash(ctx, tx, ty);
@@ -1848,8 +1916,9 @@ namespace
         }
 
         ctx.worldManifestLoaded = true;
-        printf("[WorldTile] Resume scan: indexedTiles=%zu dbTiles=%zu cachedOk=%zu knownEmpty=%zu queuedMissing=%zu pendingFromManifest=%zu pendingFinal=%zu dirtyFinal=%zu\n",
-               ctx.tileToGeometryIds.size(), dbTiles, cachedOk, knownEmpty, queuedMissing, pendingFromManifest, ctx.pendingTileBuildQueue.size(), ctx.dirtyWorldTiles.size());
+        printf("[WorldTile] Resume scan persistent: indexedTiles=%zu dbTiles=%zu cachedOk=%zu queuedMissing=%zu\n",
+               ctx.tileToGeometryIds.size(), dbTiles, cachedOk, queuedMissing);
+        printf("[WorldTile] Dynamic ignored on load: dynamicGeoms=%d dynamicTiles=%d\n", 0, 0);
         printf("[WorldTile] Load manifest: loaded=%d changed=%d removed=%d pendingGeoms=%zu indexedGeometries=%d dirtyTiles=%zu pendingTiles=%zu\n",
                loadedCount, changed, removed, ctx.pendingWorldGeometryQueue.size(), indexedGeometries, ctx.dirtyWorldTiles.size(), ctx.pendingTileBuildQueue.size());
         return true;
@@ -1902,11 +1971,14 @@ namespace
             ctx.pendingTileBuildQueue.push_back(tileKey);
     }
 
-    void MarkTilesDirty(ExternNavmeshContext& ctx, const std::unordered_set<uint64_t>& tiles)
+    void MarkTilesDirty(ExternNavmeshContext& ctx, const std::unordered_set<uint64_t>& tiles, bool runtimeOnly = false)
     {
         for (uint64_t key : tiles)
         {
-            ctx.dirtyWorldTiles.insert(key);
+            if (!runtimeOnly)
+                ctx.dirtyWorldTiles.insert(key);
+            else
+                ctx.runtimeDirtyWorldTiles.insert(key);
             ctx.dirtyWorldOffmeshTiles.insert(key);
             EnqueueTileBuild(ctx, key);
         }
@@ -2832,7 +2904,10 @@ GTANAVVIEWER_API bool UpdateGeometry(void* navMesh,
             oldTiles.insert(rec.touchedTileKeys.begin(), rec.touchedTileKeys.end());
 
         if (!oldTiles.empty())
-            MarkTilesDirty(*ctx, oldTiles);
+        {
+            const bool oldWasDynamic = (it->second.flags & WORLD_GEOM_DYNAMIC) != 0;
+            MarkTilesDirty(*ctx, oldTiles, oldWasDynamic);
+        }
 
         RemoveGeometryFromWorldIndex(*ctx, customID);
 
@@ -2908,7 +2983,10 @@ GTANAVVIEWER_API bool RemoveGeometry(void* navMesh, const char* customID)
                 oldTiles.insert(itGeom->second.touchedTileKeys.begin(), itGeom->second.touchedTileKeys.end());
         }
         if (!oldTiles.empty())
-            MarkTilesDirty(*ctx, oldTiles);
+        {
+            const bool oldWasDynamic = (it->second.flags & WORLD_GEOM_DYNAMIC) != 0;
+            MarkTilesDirty(*ctx, oldTiles, oldWasDynamic);
+        }
         RemoveGeometryFromWorldIndex(*ctx, id);
         ctx->worldGeometry.erase(id);
         ctx->pendingWorldGeometrySet.erase(id);
@@ -3517,6 +3595,7 @@ GTANAVVIEWER_API bool BeginWorldTileSession(void* navMesh,
     ctx->rebuildAll = false;
     ctx->dirtyBounds.clear();
     ctx->dirtyWorldTiles.clear();
+    ctx->runtimeDirtyWorldTiles.clear();
     ctx->pendingTileBuildQueue.clear();
     ctx->pendingTileBuildSet.clear();
     ctx->pendingWorldGeometryQueue.clear();
@@ -3599,7 +3678,8 @@ GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
         }
 
         RemoveGeometryFromWorldIndex(*ctx, id);
-        MarkTilesDirty(*ctx, oldTiles);
+        const bool oldWasDynamic = (it->second.flags & WORLD_GEOM_DYNAMIC) != 0;
+        MarkTilesDirty(*ctx, oldTiles, oldWasDynamic);
 
         oldWasPersistentManifestGeom =
             (it->second.flags & WORLD_GEOM_PERSISTENT) != 0 &&
@@ -3740,7 +3820,10 @@ GTANAVVIEWER_API int ProcessQueuedWorldGeometry(void* navMesh, int maxItems, int
                     vec.push_back(geomId);
                 geomTiles.insert(tileKey);
                 rec.touchedTileKeys.push_back(tileKey);
-                ctx->dirtyWorldTiles.insert(tileKey);
+                if ((rec.flags & WORLD_GEOM_DYNAMIC) != 0)
+                    ctx->runtimeDirtyWorldTiles.insert(tileKey);
+                else
+                    ctx->dirtyWorldTiles.insert(tileKey);
                 ctx->dirtyWorldOffmeshTiles.insert(tileKey);
                 ctx->emptyWorldTiles.erase(tileKey);
                 ctx->emptyWorldTileHashes.erase(tileKey);
@@ -3877,6 +3960,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         ctx->pendingTileBuildQueue.pop_front();
         ctx->pendingTileBuildSet.erase(tileKey);
         ctx->dirtyWorldTiles.erase(tileKey);
+        ctx->runtimeDirtyWorldTiles.erase(tileKey);
         InvalidateAgentProfileTileCaches(*ctx, tileKey);
         processedTileKeys.insert(tileKey);
 
@@ -3887,13 +3971,18 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         bool abortedByTriLimit = false;
         const bool hasGeom = BuildWorldTileGeometry(*ctx, tx, ty, verts, indices, &abortedByTriLimit);
         const uint64_t worldHash = ComputeWorldTileHash(*ctx, tx, ty);
+        const bool tileHasPersistentGeom = TileHasPersistentGeometry(*ctx, tileKey);
+        const bool tileHasDynamicGeom = TileHasDynamicGeometry(*ctx, tileKey);
+        const bool persistTileState = saveToCache && tileHasPersistentGeom;
+        const bool runtimeDynamicOnly = (!saveToCache && tileHasDynamicGeom);
         if (!hasGeom)
         {
             if (abortedByTriLimit)
             {
                 ++failed;
                 ++built;
-                ctx->failedWorldTiles.insert(tileKey);
+                if (persistTileState)
+                    ctx->failedWorldTiles.insert(tileKey);
                 continue;
             }
             const dtTileRef ref = nav->getTileRefAt(tx, ty, 0);
@@ -3907,10 +3996,17 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
             }
             ++emptied;
             ++built;
-            tilesToSave.insert(tileKey);
-            ctx->emptyWorldTiles.insert(tileKey);
-            ctx->emptyWorldTileHashes[tileKey] = worldHash;
-            ctx->failedWorldTiles.erase(tileKey);
+            if (persistTileState)
+            {
+                tilesToSave.insert(tileKey);
+                ctx->emptyWorldTiles.insert(tileKey);
+                ctx->emptyWorldTileHashes[tileKey] = worldHash;
+                ctx->failedWorldTiles.erase(tileKey);
+            }
+            else if (!runtimeDynamicOnly)
+            {
+                ctx->failedWorldTiles.erase(tileKey);
+            }
             printf("[WorldTile] Build tile %d,%d geomCount=0 triCount=0 empty=1 hash=%llu\n",
                    tx, ty, static_cast<unsigned long long>(worldHash));
             continue;
@@ -3921,7 +4017,8 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         if (!ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings, nullptr, worldHash, &builtTile, &emptyTile))
         {
             ++failed;
-            ctx->failedWorldTiles.insert(tileKey);
+            if (persistTileState)
+                ctx->failedWorldTiles.insert(tileKey);
         }
         else if (!emptyTile)
         {
@@ -3943,7 +4040,8 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
                 if (!ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings, &tileLinks, worldHash, &builtWithLinks, &emptyWithLinks))
                 {
                     ++failed;
-                    ctx->failedWorldTiles.insert(tileKey);
+                    if (persistTileState)
+                        ctx->failedWorldTiles.insert(tileKey);
                 }
                 else
                 {
@@ -3955,18 +4053,24 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
 
         if (emptyTile)
         {
-            tilesToSave.insert(tileKey);
-            ctx->emptyWorldTiles.insert(tileKey);
             ctx->worldOffmeshLinksByTile.erase(tileKey);
-            ctx->emptyWorldTileHashes[tileKey] = worldHash;
-            ctx->failedWorldTiles.erase(tileKey);
+            if (persistTileState)
+            {
+                tilesToSave.insert(tileKey);
+                ctx->emptyWorldTiles.insert(tileKey);
+                ctx->emptyWorldTileHashes[tileKey] = worldHash;
+                ctx->failedWorldTiles.erase(tileKey);
+            }
         }
         else if (builtTile)
         {
-            tilesToSave.insert(tileKey);
-            ctx->emptyWorldTiles.erase(tileKey);
-            ctx->emptyWorldTileHashes.erase(tileKey);
-            ctx->failedWorldTiles.erase(tileKey);
+            if (persistTileState)
+            {
+                tilesToSave.insert(tileKey);
+                ctx->emptyWorldTiles.erase(tileKey);
+                ctx->emptyWorldTileHashes.erase(tileKey);
+                ctx->failedWorldTiles.erase(tileKey);
+            }
         }
 
         ++built;
@@ -4311,6 +4415,10 @@ GTANAVVIEWER_API int GenerateWorldOffmeshLinksForQueuedTiles(void* navMesh, int 
                     bool rebuilt = false;
                     bool empty = false;
                     const uint64_t worldHash = ComputeWorldTileHash(*ctx, tx, ty);
+        const bool tileHasPersistentGeom = TileHasPersistentGeometry(*ctx, tileKey);
+        const bool tileHasDynamicGeom = TileHasDynamicGeometry(*ctx, tileKey);
+        const bool persistTileState = saveToCache && tileHasPersistentGeom;
+        const bool runtimeDynamicOnly = (!saveToCache && tileHasDynamicGeom);
                     ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings, &links, worldHash, &rebuilt, &empty);
                 }
             }
