@@ -4415,6 +4415,10 @@ GTANAVVIEWER_API int GenerateWorldOffmeshLinksForQueuedTiles(void* navMesh, int 
                     bool rebuilt = false;
                     bool empty = false;
                     const uint64_t worldHash = ComputeWorldTileHash(*ctx, tx, ty);
+        const bool tileHasPersistentGeom = TileHasPersistentGeometry(*ctx, tileKey);
+        const bool tileHasDynamicGeom = TileHasDynamicGeometry(*ctx, tileKey);
+        const bool persistTileState = saveToCache && tileHasPersistentGeom;
+        const bool runtimeDynamicOnly = (!saveToCache && tileHasDynamicGeom);
                     ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings, &links, worldHash, &rebuilt, &empty);
                 }
             }
