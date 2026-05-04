@@ -4150,7 +4150,9 @@ GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, voi
     if (!SyncQueryContextWorldState(builderCtx, queryCtx))
         return false;
 
-    if (!queryCtx->navData.InitTiledGrid(queryCtx->bboxMin, queryCtx->bboxMax, queryCtx->genSettings))
+    const float forcedMin[3]{ queryCtx->bboxMin.x, queryCtx->bboxMin.y, queryCtx->bboxMin.z };
+    const float forcedMax[3]{ queryCtx->bboxMax.x, queryCtx->bboxMax.y, queryCtx->bboxMax.z };
+    if (!queryCtx->navData.InitTiledGrid(queryCtx->genSettings, forcedMin, forcedMax))
         return false;
 
     queryCtx->navQuery = nullptr;
