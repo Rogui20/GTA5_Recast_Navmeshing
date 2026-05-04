@@ -5844,14 +5844,15 @@ GTANAVVIEWER_API int FindPathWithAgentProfile(void* navMesh,
                                               int flags,
                                               int maxPoints,
                                               float* outPath,
-                                              int options)
+                                              int options,
+                                              NodeInfo* outNodeInfo)
 {
     if (!navMesh || !outPath || maxPoints <= 0)
         return 0;
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     const bool hasProfile = profileName && *profileName && ctx->agentProfiles.find(profileName) != ctx->agentProfiles.end();
     if (!hasProfile)
-        return RunPathfindInternal(*ctx, glm::vec3(start.x, start.y, start.z), glm::vec3(target.x, target.y, target.z), flags, maxPoints, -1.0f, outPath, nullptr, options);
+        return RunPathfindInternal(*ctx, glm::vec3(start.x, start.y, start.z), glm::vec3(target.x, target.y, target.z), flags, maxPoints, -1.0f, outPath, outNodeInfo, options);
     auto& caches = ctx->agentProfileTileCaches[profileName];
     if (ctx->residentTiles.empty())
     {
@@ -5873,7 +5874,7 @@ GTANAVVIEWER_API int FindPathWithAgentProfile(void* navMesh,
     int penalizedPortals = 0;
     AgentProfileQueryFilter profileFilter(&ctx->agentProfiles[profileName], &ctx->agentProfileTileCaches[profileName], &rejectedPolys, &rejectedPortals, &penalizedPortals);
     ConfigureDefaultQueryFilter(profileFilter, flags);
-    const int result = RunPathfindInternal(*ctx, glm::vec3(start.x, start.y, start.z), glm::vec3(target.x, target.y, target.z), flags, maxPoints, -1.0f, outPath, nullptr, options, &profileFilter);
+    const int result = RunPathfindInternal(*ctx, glm::vec3(start.x, start.y, start.z), glm::vec3(target.x, target.y, target.z), flags, maxPoints, -1.0f, outPath, outNodeInfo, options, &profileFilter);
     std::size_t blockedConsulted = 0;
     std::size_t blockedPortals = 0;
     for (const auto& [_, tcache] : ctx->agentProfileTileCaches[profileName])
