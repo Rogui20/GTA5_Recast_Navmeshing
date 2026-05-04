@@ -356,6 +356,7 @@ GTANAVVIEWER_API bool RegisterAgentProfile(void* navMesh, const char* profileNam
 GTANAVVIEWER_API bool RemoveAgentProfile(void* navMesh, const char* profileName);
 GTANAVVIEWER_API bool HasAgentProfile(void* navMesh, const char* profileName);
 GTANAVVIEWER_API int BuildAgentProfileCacheForTiles(void* navMesh, const char* profileName, const std::uint64_t* tileKeys, int tileCount);
+GTANAVVIEWER_API int BuildAgentProfileCacheForResidentTiles(void* navMesh, const char* profileName);
 GTANAVVIEWER_API int FindPathWithAgentProfile(void* navMesh,
                                               const char* profileName,
                                               Vector3 start,
