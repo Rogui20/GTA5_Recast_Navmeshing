@@ -255,6 +255,7 @@ namespace
         };
         std::unordered_map<std::string, AgentProfile> agentProfiles;
         std::unordered_map<std::string, std::unordered_map<std::uint64_t, AgentProfileTileCache>> agentProfileTileCaches;
+        std::vector<uint64_t> lastBuiltWorldTileKeys;
     };
 
     uint64_t WorldHashCombine64(uint64_t seed, uint64_t v)
@@ -389,10 +390,40 @@ namespace
     bool IsWorldGeometryRecordUpToDate(const ExternNavmeshContext::WorldGeomRecord& record);
     void EnqueueTileBuild(ExternNavmeshContext& ctx, uint64_t tileKey);
     bool BuildWorldTileGeometry(ExternNavmeshContext& ctx, int tx, int ty, std::vector<glm::vec3>& outVerts, std::vector<unsigned int>& outIndices, bool* outAbortedByTriLimit);
+    static void CopyLightWorldGeometryMetadata(const ExternNavmeshContext& from, ExternNavmeshContext& to);
     uint64_t EstimateWorldGeomMemoryBytes(const ExternNavmeshContext::WorldGeomRecord& rec);
     uint64_t EstimateLoadedWorldGeometryMemoryBytes(const ExternNavmeshContext& ctx);
     void ClearWorldGeometryHeavyCache(ExternNavmeshContext::WorldGeomRecord& rec);
     int UnloadUnusedWorldGeometryInternal(ExternNavmeshContext& ctx, bool aggressive);
+
+    static void CopyLightWorldGeometryMetadata(const ExternNavmeshContext& from, ExternNavmeshContext& to)
+    {
+        to.worldGeometry.clear();
+        to.worldGeometry.reserve(from.worldGeometry.size());
+        for (const auto& kv : from.worldGeometry)
+        {
+            const auto& src = kv.second;
+            ExternNavmeshContext::WorldGeomRecord dst{};
+            dst.id = src.id;
+            dst.path = src.path;
+            dst.position = src.position;
+            dst.rotation = src.rotation;
+            dst.worldBMin = src.worldBMin;
+            dst.worldBMax = src.worldBMax;
+            dst.geomHash = src.geomHash;
+            dst.fileMTime = src.fileMTime;
+            dst.fileSize = src.fileSize;
+            dst.preferBin = src.preferBin;
+            dst.flags = src.flags;
+            dst.groupId = src.groupId;
+            dst.indexed = src.indexed;
+            dst.touchedTileKeys = src.touchedTileKeys;
+            dst.loaded = false;
+            dst.spatialCacheBuilt = false;
+            dst.transformedHash = 0;
+            to.worldGeometry.emplace(dst.id, std::move(dst));
+        }
+    }
 
     
 
@@ -3831,6 +3862,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
     int failed = 0;
     std::unordered_set<uint64_t> processedTileKeys;
     std::unordered_set<uint64_t> tilesToSave;
+    ctx->lastBuiltWorldTileKeys.clear();
 
     while (!ctx->pendingTileBuildQueue.empty() && built < maxCount)
     {
@@ -4015,6 +4047,9 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
            aggressive ? 1 : 0);
 
     EnsureNavQuery(*ctx);
+    ctx->lastBuiltWorldTileKeys.assign(tilesToSave.begin(), tilesToSave.end());
+    std::sort(ctx->lastBuiltWorldTileKeys.begin(), ctx->lastBuiltWorldTileKeys.end());
+    printf("[WorldTile] lastBuilt keys=%zu\n", ctx->lastBuiltWorldTileKeys.size());
 
     printf("[WorldTile] BuildQueuedWorldTiles: processed=%zu tilesToSave=%zu failed=%d saveToCache=%d\n",
         processedTileKeys.size(), tilesToSave.size(), failed, saveToCache ? 1 : 0);
@@ -4028,6 +4063,23 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
     return built;
 }
 
+GTANAVVIEWER_API int GetLastBuiltWorldTileKeys(void* navMesh, uint64_t* outKeys, int maxKeys, int* outCount)
+{
+    if (!navMesh)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    const int total = static_cast<int>(ctx->lastBuiltWorldTileKeys.size());
+    if (outCount)
+        *outCount = total;
+    printf("[WorldTile] lastBuilt keys=%d\n", total);
+    if (!outKeys || maxKeys <= 0)
+        return 0;
+    const int copyCount = std::min(maxKeys, total);
+    for (int i = 0; i < copyCount; ++i)
+        outKeys[i] = ctx->lastBuiltWorldTileKeys[static_cast<size_t>(i)];
+    return copyCount;
+}
+
 GTANAVVIEWER_API bool SetWorldAutoOffmeshEnabled(void* navMesh, bool enabled)
 {
     if (!navMesh)
@@ -4035,6 +4087,179 @@ GTANAVVIEWER_API bool SetWorldAutoOffmeshEnabled(void* navMesh, bool enabled)
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->worldAutoGenerateOffmeshLinks = enabled;
     return true;
+}
+
+GTANAVVIEWER_API bool SyncQueryContextWorldState(void* builderNavMesh, void* queryNavMesh)
+{
+    if (!builderNavMesh || !queryNavMesh)
+        return false;
+    auto* builderCtx = static_cast<ExternNavmeshContext*>(builderNavMesh);
+    auto* queryCtx = static_cast<ExternNavmeshContext*>(queryNavMesh);
+    if (builderCtx == queryCtx)
+        return false;
+
+    const bool cacheModeChanged = queryCtx->useTileCacheGridDB != builderCtx->useTileCacheGridDB;
+    const bool cacheRootChanged = queryCtx->cacheRoot != builderCtx->cacheRoot;
+    const bool sessionChanged = queryCtx->sessionId != builderCtx->sessionId;
+
+    queryCtx->emptyWorldTiles = builderCtx->emptyWorldTiles;
+    queryCtx->emptyWorldTileHashes = builderCtx->emptyWorldTileHashes;
+    queryCtx->failedWorldTiles = builderCtx->failedWorldTiles;
+    queryCtx->tileToGeometryIds = builderCtx->tileToGeometryIds;
+    queryCtx->geomToTiles = builderCtx->geomToTiles;
+    queryCtx->agentProfiles = builderCtx->agentProfiles;
+    queryCtx->useTileCacheGridDB = builderCtx->useTileCacheGridDB;
+    queryCtx->cacheRoot = builderCtx->cacheRoot;
+    queryCtx->sessionId = builderCtx->sessionId;
+    CopyLightWorldGeometryMetadata(*builderCtx, *queryCtx);
+
+    if (cacheModeChanged || cacheRootChanged || sessionChanged)
+    {
+        queryCtx->dbIndexCache.clear();
+        queryCtx->dbIndexLoaded = false;
+        queryCtx->dbMTime = {};
+    }
+    return true;
+}
+
+GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, void* queryNavMesh)
+{
+    if (!builderNavMesh || !queryNavMesh)
+        return false;
+    auto* builderCtx = static_cast<ExternNavmeshContext*>(builderNavMesh);
+    auto* queryCtx = static_cast<ExternNavmeshContext*>(queryNavMesh);
+    if (builderCtx == queryCtx)
+        return false;
+    if (!builderCtx->hasBoundingBox)
+        return false;
+
+    queryCtx->genSettings = builderCtx->genSettings;
+    queryCtx->bboxMin = builderCtx->bboxMin;
+    queryCtx->bboxMax = builderCtx->bboxMax;
+    queryCtx->hasBoundingBox = builderCtx->hasBoundingBox;
+    queryCtx->cacheRoot = builderCtx->cacheRoot;
+    queryCtx->sessionId = builderCtx->sessionId;
+    queryCtx->maxResidentTiles = builderCtx->maxResidentTiles;
+    queryCtx->streamingEnabled = builderCtx->streamingEnabled;
+    queryCtx->worldTileStreamingEnabled = true;
+    queryCtx->useTileCacheGridDB = builderCtx->useTileCacheGridDB;
+    queryCtx->autoOffmeshParams = builderCtx->autoOffmeshParams;
+    queryCtx->autoOffmeshParamsV2 = builderCtx->autoOffmeshParamsV2;
+    queryCtx->worldAutoGenerateOffmeshLinks = builderCtx->worldAutoGenerateOffmeshLinks;
+
+    if (!SyncQueryContextWorldState(builderCtx, queryCtx))
+        return false;
+
+    const float forcedMin[3]{ queryCtx->bboxMin.x, queryCtx->bboxMin.y, queryCtx->bboxMin.z };
+    const float forcedMax[3]{ queryCtx->bboxMax.x, queryCtx->bboxMax.y, queryCtx->bboxMax.z };
+    if (!queryCtx->navData.InitTiledGrid(queryCtx->genSettings, forcedMin, forcedMax))
+        return false;
+
+    queryCtx->navQuery = nullptr;
+    queryCtx->residentTiles.clear();
+    queryCtx->residentStamp.clear();
+    queryCtx->agentResidentTiles.clear();
+    queryCtx->stampCounter = 0;
+    queryCtx->dbIndexCache.clear();
+    queryCtx->dbIndexLoaded = false;
+    queryCtx->dbMTime = {};
+
+    dtNavMesh* nav = queryCtx->navData.GetNavMesh();
+    bool indexLoaded = false;
+    if (nav)
+    {
+        if (queryCtx->useTileCacheGridDB)
+            indexLoaded = TileGridDbLoadIndex(GetSessionGridCacheRoot(*queryCtx).string().c_str(), nav, queryCtx->dbIndexCache);
+        else
+            indexLoaded = EnsureDbIndexLoaded(*queryCtx, GetSessionCachePath(*queryCtx));
+    }
+
+    const bool queryOk = EnsureNavQuery(*queryCtx);
+    printf("[QueryCtx] init ok session=%s gridDB=%d tilesIndexed=%zu dbIndex=%d\n",
+           queryCtx->sessionId.c_str(),
+           queryCtx->useTileCacheGridDB ? 1 : 0,
+           queryCtx->dbIndexCache.size(),
+           indexLoaded ? 1 : 0);
+    return queryOk;
+}
+
+GTANAVVIEWER_API int ReloadWorldTilesFromCache(void* queryNavMesh, const uint64_t* tileKeys, int tileCount)
+{
+    if (!queryNavMesh || !tileKeys || tileCount <= 0)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(queryNavMesh);
+    dtNavMesh* nav = ctx->navData.GetNavMesh();
+    if (!nav)
+        return 0;
+
+    const std::filesystem::path cachePath = GetSessionCachePath(*ctx);
+    const std::filesystem::path gridRoot = GetSessionGridCacheRoot(*ctx);
+    int loadedCount = 0, emptyCount = 0, missingCount = 0, failCount = 0, removedCount = 0;
+    for (int i = 0; i < tileCount; ++i)
+    {
+        const uint64_t key = tileKeys[i];
+        const int tx = static_cast<int>(key >> 32);
+        const int ty = static_cast<int>(key & 0xffffffffu);
+        const dtTileRef ref = nav->getTileRefAt(tx, ty, 0);
+        if (ref != 0)
+        {
+            unsigned char* tileData = nullptr;
+            int tileDataSize = 0;
+            const dtStatus rm = nav->removeTile(ref, &tileData, &tileDataSize);
+            if (dtStatusSucceed(rm))
+            {
+                ++removedCount;
+                if (tileData) dtFree(tileData);
+            }
+        }
+        ctx->residentTiles.erase(key);
+        ctx->residentStamp.erase(key);
+
+        const uint64_t expectedHash = ComputeWorldTileHash(*ctx, tx, ty);
+        const auto itEmptyHash = ctx->emptyWorldTileHashes.find(key);
+        const bool knownEmpty = ctx->emptyWorldTiles.find(key) != ctx->emptyWorldTiles.end() &&
+            itEmptyHash != ctx->emptyWorldTileHashes.end() && itEmptyHash->second == expectedHash;
+        if (knownEmpty)
+        {
+            ++emptyCount;
+            InvalidateAgentProfileTileCaches(*ctx, key);
+            continue;
+        }
+
+        bool loaded = false;
+        if (ctx->useTileCacheGridDB)
+            TileGridDbLoadTile(gridRoot.string().c_str(), nav, tx, ty, loaded);
+        else
+            LoadTileFromDb(cachePath.string().c_str(), nav, tx, ty, loaded, &ctx->dbIndexCache);
+
+        if (loaded)
+        {
+            ++loadedCount;
+            ctx->residentTiles.insert(key);
+            ctx->residentStamp[key] = ++ctx->stampCounter;
+        }
+        else
+        {
+            if (ctx->dbIndexCache.find(key) != ctx->dbIndexCache.end()) ++failCount;
+            else ++missingCount;
+        }
+        InvalidateAgentProfileTileCaches(*ctx, key);
+    }
+    EnsureNavQuery(*ctx);
+    printf("[QueryCtx] reload tiles=%d loaded=%d empty=%d missing=%d failed=%d removed=%d resident=%zu\n",
+           tileCount, loadedCount, emptyCount, missingCount, failCount, removedCount, ctx->residentTiles.size());
+    return loadedCount;
+}
+
+GTANAVVIEWER_API int ReloadResidentWorldTilesFromCache(void* queryNavMesh)
+{
+    if (!queryNavMesh)
+        return 0;
+    auto* ctx = static_cast<ExternNavmeshContext*>(queryNavMesh);
+    std::vector<uint64_t> keys(ctx->residentTiles.begin(), ctx->residentTiles.end());
+    if (keys.empty())
+        return 0;
+    return ReloadWorldTilesFromCache(queryNavMesh, keys.data(), static_cast<int>(keys.size()));
 }
 
 GTANAVVIEWER_API int GenerateWorldOffmeshLinksForQueuedTiles(void* navMesh, int maxTiles, int maxMilliseconds)
