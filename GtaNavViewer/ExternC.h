@@ -369,7 +369,8 @@ GTANAVVIEWER_API int FindPathWithAgentProfile(void* navMesh,
                                               int flags,
                                               int maxPoints,
                                               float* outPath,
-                                              int options);
+                                              int options,
+                                              NodeInfo* outNodeInfo);
 
 GTANAVVIEWER_API int FindPathAvoidingDynamicObstacles(
     void* navMesh,
