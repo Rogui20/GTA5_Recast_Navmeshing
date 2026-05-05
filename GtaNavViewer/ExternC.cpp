@@ -201,6 +201,8 @@ namespace
         std::unordered_map<uint64_t, std::vector<OffmeshLink>> worldOffmeshLinksByTile;
         std::unordered_set<uint64_t> dirtyWorldOffmeshTiles;
         bool worldAutoGenerateOffmeshLinks = false;
+        int runtimeOffmeshMaxLinksPerTile = 64;
+        int runtimeOffmeshMaxTriCount = 100000;
         std::deque<uint64_t> pendingTileBuildQueue;
         std::unordered_set<uint64_t> pendingTileBuildSet;
         std::unordered_set<uint64_t> emptyWorldTiles;
@@ -2000,13 +2002,16 @@ namespace
         return h;
     }
 
-    static bool GenerateWorldOffmeshLinksForTile(ExternNavmeshContext& ctx, int tx, int ty, const AutoOffmeshGenerationParamsV2& params, std::vector<OffmeshLink>& outLinks)
+    static bool GenerateWorldOffmeshLinksForTileFromGeometry(ExternNavmeshContext& ctx,
+                                                             int tx,
+                                                             int ty,
+                                                             const AutoOffmeshGenerationParamsV2& params,
+                                                             const std::vector<glm::vec3>& verts,
+                                                             const std::vector<unsigned int>& indices,
+                                                             bool runtimeDynamic,
+                                                             std::vector<OffmeshLink>& outLinks)
     {
         outLinks.clear();
-        std::vector<glm::vec3> verts;
-        std::vector<unsigned int> indices;
-        if (!BuildWorldTileGeometry(ctx, tx, ty, verts, indices, nullptr))
-            return true;
         std::vector<OffmeshLink> generated;
         if (!ctx.navData.GenerateAutomaticOffmeshLinksForTileV2(tx, ty, params, verts, indices, generated))
             return false;
@@ -2021,9 +2026,22 @@ namespace
             if (params.maxLinksPerTile > 0 && static_cast<int>(outLinks.size()) >= params.maxLinksPerTile)
                 break;
         }
-        printf("[WorldOffmesh] tile %d,%d generatedRaw=%zu accepted=%zu passedToTile=%zu\n",
-               tx, ty, rawCount, dedupe.size(), outLinks.size());
+        printf("[WorldOffmesh] tile %d,%d generatedRaw=%zu accepted=%zu cap=%d runtimeDynamic=%d\n",
+               tx, ty, rawCount, outLinks.size(), params.maxLinksPerTile, runtimeDynamic ? 1 : 0);
         return true;
+    }
+
+
+    static bool GenerateWorldOffmeshLinksForTile(ExternNavmeshContext& ctx, int tx, int ty, const AutoOffmeshGenerationParamsV2& params, std::vector<OffmeshLink>& outLinks)
+    {
+        std::vector<glm::vec3> verts;
+        std::vector<unsigned int> indices;
+        if (!BuildWorldTileGeometry(ctx, tx, ty, verts, indices, nullptr))
+        {
+            outLinks.clear();
+            return true;
+        }
+        return GenerateWorldOffmeshLinksForTileFromGeometry(ctx, tx, ty, params, verts, indices, false, outLinks);
     }
 
     void RemoveGeometryFromWorldIndex(ExternNavmeshContext& ctx, const std::string& geomId)
@@ -4012,43 +4030,38 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
             continue;
         }
 
+        std::vector<OffmeshLink> tileLinks;
+        if (ctx->worldAutoGenerateOffmeshLinks && (ctx->dirtyWorldOffmeshTiles.count(tileKey) > 0))
+        {
+            AutoOffmeshGenerationParamsV2 offmeshParams = ctx->autoOffmeshParamsV2;
+            const size_t triCount = indices.size() / 3;
+            if (runtimeDynamicOnly)
+                offmeshParams.maxLinksPerTile = std::min(offmeshParams.maxLinksPerTile, std::max(0, ctx->runtimeOffmeshMaxLinksPerTile));
+
+            if (runtimeDynamicOnly && static_cast<int>(triCount) > ctx->runtimeOffmeshMaxTriCount)
+            {
+                printf("[WorldOffmesh] skipped tile %d,%d triCount=%zu reason=too_dense_runtime\n", tx, ty, triCount);
+            }
+            else
+            {
+                GenerateWorldOffmeshLinksForTileFromGeometry(*ctx, tx, ty, offmeshParams, verts, indices, runtimeDynamicOnly, tileLinks);
+            }
+
+            if (!tileLinks.empty())
+                ctx->worldOffmeshLinksByTile[tileKey] = tileLinks;
+            else
+                ctx->worldOffmeshLinksByTile.erase(tileKey);
+            ctx->dirtyWorldOffmeshTiles.erase(tileKey);
+        }
+
         bool builtTile = false;
         bool emptyTile = false;
-        if (!ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings, nullptr, worldHash, &builtTile, &emptyTile))
+        if (!ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings,
+            tileLinks.empty() ? nullptr : &tileLinks, worldHash, &builtTile, &emptyTile))
         {
             ++failed;
             if (persistTileState)
                 ctx->failedWorldTiles.insert(tileKey);
-        }
-        else if (!emptyTile)
-        {
-            std::vector<OffmeshLink> tileLinks;
-            if (ctx->worldAutoGenerateOffmeshLinks && (ctx->dirtyWorldOffmeshTiles.count(tileKey) > 0))
-            {
-                GenerateWorldOffmeshLinksForTile(*ctx, tx, ty, ctx->autoOffmeshParamsV2, tileLinks);
-                if (!tileLinks.empty())
-                    ctx->worldOffmeshLinksByTile[tileKey] = tileLinks;
-                else
-                    ctx->worldOffmeshLinksByTile.erase(tileKey);
-                ctx->dirtyWorldOffmeshTiles.erase(tileKey);
-            }
-
-            if (!tileLinks.empty())
-            {
-                bool builtWithLinks = false;
-                bool emptyWithLinks = false;
-                if (!ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings, &tileLinks, worldHash, &builtWithLinks, &emptyWithLinks))
-                {
-                    ++failed;
-                    if (persistTileState)
-                        ctx->failedWorldTiles.insert(tileKey);
-                }
-                else
-                {
-                    builtTile = builtWithLinks;
-                    emptyTile = emptyWithLinks;
-                }
-            }
         }
 
         if (emptyTile)
@@ -4151,7 +4164,13 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
            aggressive ? 1 : 0);
 
     EnsureNavQuery(*ctx);
-    ctx->lastBuiltWorldTileKeys.assign(tilesToSave.begin(), tilesToSave.end());
+    std::unordered_set<uint64_t> builtTileKeys;
+    for (uint64_t key : processedTileKeys)
+    {
+        if (ctx->failedWorldTiles.count(key) == 0)
+            builtTileKeys.insert(key);
+    }
+    ctx->lastBuiltWorldTileKeys.assign(builtTileKeys.begin(), builtTileKeys.end());
     std::sort(ctx->lastBuiltWorldTileKeys.begin(), ctx->lastBuiltWorldTileKeys.end());
     printf("[WorldTile] lastBuilt keys=%zu\n", ctx->lastBuiltWorldTileKeys.size());
 
