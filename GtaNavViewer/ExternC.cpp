@@ -467,6 +467,45 @@ namespace
         }
     }
 
+    static bool CopyDetourTileFromNavToNav(dtNavMesh* srcNav, dtNavMesh* dstNav, int tx, int ty, int* outOffmeshConCount, int* outPolyCount, int* outDataSize)
+    {
+        if (outOffmeshConCount) *outOffmeshConCount = 0;
+        if (outPolyCount) *outPolyCount = 0;
+        if (outDataSize) *outDataSize = 0;
+        if (!srcNav || !dstNav) return false;
+
+        const dtTileRef srcRef = srcNav->getTileRefAt(tx, ty, 0);
+        if (srcRef == 0) return false;
+        const dtMeshTile* srcTile = srcNav->getTileByRef(srcRef);
+        if (!srcTile || !srcTile->header || !srcTile->data || srcTile->dataSize <= 0) return false;
+
+        if (outOffmeshConCount) *outOffmeshConCount = srcTile->header->offMeshConCount;
+        if (outPolyCount) *outPolyCount = srcTile->header->polyCount;
+        if (outDataSize) *outDataSize = srcTile->dataSize;
+
+        const dtTileRef dstRef = dstNav->getTileRefAt(tx, ty, 0);
+        if (dstRef != 0)
+        {
+            unsigned char* oldData = nullptr;
+            int oldDataSize = 0;
+            const dtStatus rm = dstNav->removeTile(dstRef, &oldData, &oldDataSize);
+            if (dtStatusSucceed(rm) && oldData) dtFree(oldData);
+        }
+
+        unsigned char* copy = static_cast<unsigned char*>(dtAlloc(srcTile->dataSize, DT_ALLOC_PERM));
+        if (!copy) return false;
+        std::memcpy(copy, srcTile->data, srcTile->dataSize);
+
+        dtTileRef resultRef = 0;
+        const dtStatus add = dstNav->addTile(copy, srcTile->dataSize, DT_TILE_FREE_DATA, 0, &resultRef);
+        if (dtStatusFailed(add) || resultRef == 0)
+        {
+            dtFree(copy);
+            return false;
+        }
+        return true;
+    }
+
     
 
     uint64_t ComputeWorldGeometryHash(const std::string& path,
@@ -4639,7 +4678,13 @@ GTANAVVIEWER_API bool SyncQueryContextWorldState(void* builderNavMesh, void* que
     queryCtx->worldAutoOffmeshOnlyDynamicAffectedTiles = builderCtx->worldAutoOffmeshOnlyDynamicAffectedTiles;
     queryCtx->worldAutoOffmeshRequireDynamicEndpoint = builderCtx->worldAutoOffmeshRequireDynamicEndpoint;
     queryCtx->worldAutoOffmeshGenerateFullTileWhenDynamicPresent = builderCtx->worldAutoOffmeshGenerateFullTileWhenDynamicPresent;
+    queryCtx->runtimeOffmeshMaxLinksPerTile = builderCtx->runtimeOffmeshMaxLinksPerTile;
     queryCtx->runtimeOffmeshRawMaxLinksPerTile = builderCtx->runtimeOffmeshRawMaxLinksPerTile;
+    queryCtx->runtimeOffmeshMaxTriCount = builderCtx->runtimeOffmeshMaxTriCount;
+    queryCtx->autoOffmeshParamsV2 = builderCtx->autoOffmeshParamsV2;
+    queryCtx->worldOffmeshLinksByTile = builderCtx->worldOffmeshLinksByTile;
+    queryCtx->dirtyWorldOffmeshTiles = builderCtx->dirtyWorldOffmeshTiles;
+    queryCtx->runtimeDirtyWorldTiles = builderCtx->runtimeDirtyWorldTiles;
     queryCtx->agentProfileTileCaches.clear();
     CopyLightWorldGeometryMetadata(*builderCtx, *queryCtx);
     printf("[QueryCtx] sync residentTiles=%zu profiles=%zu tileToGeom=%zu\n",
@@ -4654,6 +4699,76 @@ GTANAVVIEWER_API bool SyncQueryContextWorldState(void* builderNavMesh, void* que
         queryCtx->dbMTime = {};
     }
     return true;
+}
+
+GTANAVVIEWER_API int SyncQueryContextRuntimeTiles(void* builderNavMesh, void* queryNavMesh, const uint64_t* tileKeys, int tileCount)
+{
+    if (!builderNavMesh || !queryNavMesh || !tileKeys || tileCount <= 0)
+        return 0;
+    auto* builderCtx = static_cast<ExternNavmeshContext*>(builderNavMesh);
+    auto* queryCtx = static_cast<ExternNavmeshContext*>(queryNavMesh);
+    if (builderCtx == queryCtx)
+        return 0;
+    dtNavMesh* srcNav = builderCtx->navData.GetNavMesh();
+    dtNavMesh* dstNav = queryCtx->navData.GetNavMesh();
+    if (!srcNav || !dstNav)
+        return 0;
+
+    SyncQueryContextWorldState(builderCtx, queryCtx);
+
+    const auto& srcHashes = builderCtx->navData.GetCachedTileHashes();
+    int copied = 0;
+    int removed = 0;
+    int failed = 0;
+
+    for (int i = 0; i < tileCount; ++i)
+    {
+        const uint64_t key = tileKeys[i];
+        const int tx = static_cast<int>(key >> 32);
+        const int ty = static_cast<int>(key & 0xffffffffu);
+        const dtTileRef srcRef = srcNav->getTileRefAt(tx, ty, 0);
+        if (srcRef == 0)
+        {
+            const dtTileRef dstRef = dstNav->getTileRefAt(tx, ty, 0);
+            if (dstRef != 0)
+            {
+                unsigned char* oldData = nullptr;
+                int oldDataSize = 0;
+                const dtStatus rm = dstNav->removeTile(dstRef, &oldData, &oldDataSize);
+                if (dtStatusSucceed(rm))
+                {
+                    if (oldData) dtFree(oldData);
+                    ++removed;
+                }
+                else ++failed;
+            }
+            queryCtx->residentTiles.erase(key);
+            queryCtx->residentStamp.erase(key);
+            queryCtx->navData.RemoveCachedTileHash(key);
+            InvalidateAgentProfileTileCaches(*queryCtx, key);
+            continue;
+        }
+
+        int offmeshCount = 0, polyCount = 0, dataSize = 0;
+        if (!CopyDetourTileFromNavToNav(srcNav, dstNav, tx, ty, &offmeshCount, &polyCount, &dataSize))
+        {
+            ++failed;
+            continue;
+        }
+
+        const auto hit = srcHashes.find(key);
+        if (hit != srcHashes.end()) queryCtx->navData.SetCachedTileHash(key, hit->second);
+        queryCtx->residentTiles.insert(key);
+        queryCtx->residentStamp[key] = ++queryCtx->stampCounter;
+        InvalidateAgentProfileTileCaches(*queryCtx, key);
+        ++copied;
+        printf("[QueryCtx] copied tile %d,%d offmesh=%d polys=%d dataSize=%d\n", tx, ty, offmeshCount, polyCount, dataSize);
+    }
+
+    EnsureNavQuery(*queryCtx);
+    printf("[QueryCtx] runtime tile sync: requested=%d copied=%d removed=%d failed=%d resident=%zu\n",
+           tileCount, copied, removed, failed, queryCtx->residentTiles.size());
+    return copied;
 }
 
 GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, void* queryNavMesh)
