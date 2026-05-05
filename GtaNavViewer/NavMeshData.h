@@ -123,6 +123,8 @@ struct AutoOffmeshGenerationParamsV2
     float maxJumpDown = 1.5f;
 
     float maxSlopeDegrees = 60.0f;
+    float minOutwardDot = 0.45f;
+    float tileBorderRejectEpsilon = 0.05f;
 
     float raycastExtraHeight = 0.5f;
     float sweepSideOffset = 0.36f;
