@@ -225,7 +225,8 @@ namespace
         std::unordered_set<uint64_t> dirtyWorldOffmeshTiles;
         bool worldAutoGenerateOffmeshLinks = false;
         bool worldAutoOffmeshOnlyDynamicAffectedTiles = true;
-        bool worldAutoOffmeshRequireDynamicEndpoint = true;
+        bool worldAutoOffmeshRequireDynamicEndpoint = false;
+        bool worldAutoOffmeshGenerateFullTileWhenDynamicPresent = true;
         int runtimeOffmeshMaxLinksPerTile = 64;
         int runtimeOffmeshRawMaxLinksPerTile = 4096;
         bool worldOffmeshDebugEnabled = false;
@@ -4284,6 +4285,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         {
             AutoOffmeshGenerationParamsV2 offmeshParams = ctx->autoOffmeshParamsV2;
             const size_t triCount = indices.size() / 3;
+            const bool modeFullDynamicTile = ctx->worldAutoOffmeshGenerateFullTileWhenDynamicPresent && tileHasDynamicGeom;
             if (runtimeDynamicOnly)
             {
                 const int cap = std::max(0, ctx->runtimeOffmeshMaxLinksPerTile);
@@ -4296,9 +4298,9 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
                 }
             }
 
-            if (ctx->worldAutoOffmeshRequireDynamicEndpoint && !tileHasDynamicGeom)
+            if (ctx->worldAutoOffmeshRequireDynamicEndpoint && !tileHasDynamicGeom && !modeFullDynamicTile)
             {
-                printf("[WorldOffmesh] tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireDynamicEndpoint=%d triCount=%zu links=%zu note=skipped_no_dynamic_endpoint\n",
+                printf("[WorldOffmesh] mode=skipped tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireDynamicEndpoint=%d triCount=%zu links=%zu note=skipped_no_dynamic_endpoint\n",
                     tx, ty, tileHasDynamicGeom ? 1 : 0, wasRuntimeDirty ? 1 : 0,
                     ctx->worldAutoOffmeshOnlyDynamicAffectedTiles ? 1 : 0,
                     ctx->worldAutoOffmeshRequireDynamicEndpoint ? 1 : 0, triCount, tileLinks.size());
@@ -4309,11 +4311,16 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
             }
             else
             {
+                const bool prevRequire = ctx->worldAutoOffmeshRequireDynamicEndpoint;
+                if (modeFullDynamicTile)
+                    ctx->worldAutoOffmeshRequireDynamicEndpoint = false;
                 GenerateWorldOffmeshLinksForTileFromGeometry(*ctx, tx, ty, offmeshParams, verts, indices, runtimeDynamicOnly, tileLinks, &triIsDynamic);
-                printf("[WorldOffmesh] tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireDynamicEndpoint=%d triCount=%zu links=%zu\n",
+                ctx->worldAutoOffmeshRequireDynamicEndpoint = prevRequire;
+                printf("[WorldOffmesh] mode=%s tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireDynamicEndpoint=%d triCount=%zu links=%zu\n",
+                    modeFullDynamicTile ? "full_dynamic_tile" : "endpoint_dynamic_filter",
                     tx, ty, tileHasDynamicGeom ? 1 : 0, wasRuntimeDirty ? 1 : 0,
                     ctx->worldAutoOffmeshOnlyDynamicAffectedTiles ? 1 : 0,
-                    ctx->worldAutoOffmeshRequireDynamicEndpoint ? 1 : 0, triCount, tileLinks.size());
+                    prevRequire ? 1 : 0, triCount, tileLinks.size());
             }
 
             if (!tileLinks.empty())
@@ -4504,6 +4511,15 @@ GTANAVVIEWER_API bool SetWorldAutoOffmeshRequireDynamicEndpoint(void* navMesh, b
     return true;
 }
 
+GTANAVVIEWER_API bool SetWorldAutoOffmeshGenerateFullTileWhenDynamicPresent(void* navMesh, bool enabled)
+{
+    if (!navMesh)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->worldAutoOffmeshGenerateFullTileWhenDynamicPresent = enabled;
+    return true;
+}
+
 GTANAVVIEWER_API void SetWorldOffmeshDebugEnabled(void* navMesh, bool enabled)
 {
     ExternNavmeshContext* ctx = static_cast<ExternNavmeshContext*>(navMesh);
@@ -4579,6 +4595,7 @@ GTANAVVIEWER_API bool SyncQueryContextWorldState(void* builderNavMesh, void* que
     queryCtx->worldAutoGenerateOffmeshLinks = builderCtx->worldAutoGenerateOffmeshLinks;
     queryCtx->worldAutoOffmeshOnlyDynamicAffectedTiles = builderCtx->worldAutoOffmeshOnlyDynamicAffectedTiles;
     queryCtx->worldAutoOffmeshRequireDynamicEndpoint = builderCtx->worldAutoOffmeshRequireDynamicEndpoint;
+    queryCtx->worldAutoOffmeshGenerateFullTileWhenDynamicPresent = builderCtx->worldAutoOffmeshGenerateFullTileWhenDynamicPresent;
     queryCtx->runtimeOffmeshRawMaxLinksPerTile = builderCtx->runtimeOffmeshRawMaxLinksPerTile;
     queryCtx->agentProfileTileCaches.clear();
     CopyLightWorldGeometryMetadata(*builderCtx, *queryCtx);
@@ -4622,6 +4639,7 @@ GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, voi
     queryCtx->worldAutoGenerateOffmeshLinks = builderCtx->worldAutoGenerateOffmeshLinks;
     queryCtx->worldAutoOffmeshOnlyDynamicAffectedTiles = builderCtx->worldAutoOffmeshOnlyDynamicAffectedTiles;
     queryCtx->worldAutoOffmeshRequireDynamicEndpoint = builderCtx->worldAutoOffmeshRequireDynamicEndpoint;
+    queryCtx->worldAutoOffmeshGenerateFullTileWhenDynamicPresent = builderCtx->worldAutoOffmeshGenerateFullTileWhenDynamicPresent;
     queryCtx->runtimeOffmeshRawMaxLinksPerTile = builderCtx->runtimeOffmeshRawMaxLinksPerTile;
 
     const float forcedMin[3]{ queryCtx->bboxMin.x, queryCtx->bboxMin.y, queryCtx->bboxMin.z };
