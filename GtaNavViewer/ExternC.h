@@ -308,6 +308,8 @@ GTANAVVIEWER_API uint64_t GetWorldLoadedGeometryMemoryBytes(void* navMesh);
 GTANAVVIEWER_API int UnloadUnusedWorldGeometry(void* navMesh, bool aggressive);
 GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxMilliseconds, bool saveToCache);
 GTANAVVIEWER_API bool SetWorldAutoOffmeshEnabled(void* navMesh, bool enabled);
+GTANAVVIEWER_API bool SetWorldAutoOffmeshOnlyDynamicAffectedTiles(void* navMesh, bool enabled);
+GTANAVVIEWER_API bool SetWorldAutoOffmeshRequireDynamicEndpoint(void* navMesh, bool enabled);
 GTANAVVIEWER_API int GenerateWorldOffmeshLinksForQueuedTiles(void* navMesh, int maxTiles, int maxMilliseconds);
 GTANAVVIEWER_API int GetWorldOffmeshStats(void* navMesh, int* outTilesWithLinks, int* outTotalLinks, int* outDirtyOffmeshTiles);
 GTANAVVIEWER_API bool RemoveWorldGeometryGroup(void* navMesh, const char* groupId, bool rebuildOrQueue);
