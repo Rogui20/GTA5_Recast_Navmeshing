@@ -1,5 +1,7 @@
 var NAVTREEINDEX111 =
 {
+"touch.html#functions":[32,2],
+"touch.html#notes-4":[32,3],
 "touch.html#system-specific-notes":[32,0],
 "unionImGL3WProcs.html":[43,0,127],
 "unionImGL3WProcs.html#a02fdc55f3f284b912f780848c468a7c6":[43,0,127,18],

@@ -31,6 +31,7 @@ var structAutoOffmeshGenerationParamsV2 =
     [ "maxSlopeDegrees", "structAutoOffmeshGenerationParamsV2.html#af4eba94adf780dc74262fc60d1c21c8b", null ],
     [ "minDist", "structAutoOffmeshGenerationParamsV2.html#ab992fe72c8d0a1beb24b7996caee8aca", null ],
     [ "minDropThreshold", "structAutoOffmeshGenerationParamsV2.html#ac77f74bf32ca09f92d75f54c135e65ae", null ],
+    [ "minOutwardDot", "structAutoOffmeshGenerationParamsV2.html#a776c2990f94ea97b01985d1197702d64", null ],
     [ "outwardOffset", "structAutoOffmeshGenerationParamsV2.html#a936240edbeea9c8d636f217998816ce6", null ],
     [ "quantizePos", "structAutoOffmeshGenerationParamsV2.html#aff99da9fef04ac31e62627a4c63687ad", null ],
     [ "raycastExtraHeight", "structAutoOffmeshGenerationParamsV2.html#a51ee711705fd00b35fa68f52a85111cd", null ],
@@ -38,6 +39,7 @@ var structAutoOffmeshGenerationParamsV2 =
     [ "startInset", "structAutoOffmeshGenerationParamsV2.html#aa81c261baf98b125485bac7b1dc5fe5c", null ],
     [ "sweepSideOffset", "structAutoOffmeshGenerationParamsV2.html#a3ba2dddcc342e495beb9fc9681771af9", null ],
     [ "sweepUp", "structAutoOffmeshGenerationParamsV2.html#a882370a166604f0aa2ac766428aeafde", null ],
+    [ "tileBorderRejectEpsilon", "structAutoOffmeshGenerationParamsV2.html#a59d5c1a69ba2237f962f9aed7dba3e73", null ],
     [ "upOffset", "structAutoOffmeshGenerationParamsV2.html#aad71f15f98d986119ad09a7f3231f47e", null ],
     [ "userIdBase", "structAutoOffmeshGenerationParamsV2.html#a821c8528fec534d4579cde9660d1aa3b", null ]
 ];
