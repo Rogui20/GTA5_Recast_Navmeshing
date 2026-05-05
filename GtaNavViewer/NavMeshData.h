@@ -130,10 +130,11 @@ struct AutoOffmeshGenerationParamsV2
 
     int maxLinksPerTile = 64;
     float quantizePos = 0.25f;
-    float dynamicSeedMaxXZDist = 2.0f;
-    float dynamicSeedMaxYDist = 3.0f;
-    float dynamicEndpointMaxXZDist = 1.5f;
-    float dynamicEndpointMaxYDist = 3.0f;
+    float dynamicSeedMaxXZDist = 6.0f;
+    float dynamicSeedMaxYDist = 40.0f;
+    float dynamicEndpointMaxXZDist = 4.0f;
+    float dynamicEndpointMaxYDist = 40.0f;
+    bool disableDynamicSeed = false;
 
     uint32_t userIdBase = 0xAFAF0000u;
     uint8_t dropArea = 4;

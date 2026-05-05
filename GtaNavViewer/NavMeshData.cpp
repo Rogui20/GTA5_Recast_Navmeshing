@@ -551,6 +551,15 @@ namespace
         return glm::dot(diff, diff);
     }
 
+    static bool PointInTriangleXZLocal(const glm::vec3& p, const glm::vec3& a, const glm::vec3& b, const glm::vec3& c)
+    {
+        auto sign = [](const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3){ return (p1.x - p3.x)*(p2.z - p3.z) - (p2.x - p3.x)*(p1.z - p3.z); };
+        const float d1 = sign(p, a, b), d2 = sign(p, b, c), d3 = sign(p, c, a);
+        const bool hasNeg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+        const bool hasPos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+        return !(hasNeg && hasPos);
+    }
+
     static bool IsPointNearDynamicTriangleXZLocal(const glm::vec3& p, const std::vector<glm::vec3>& verts, const std::vector<unsigned int>& indices, const std::vector<uint8_t>& triIsDynamic, float maxXZDist, float maxYDist)
     {
         const float maxXZ2 = maxXZDist * maxXZDist;
@@ -565,9 +574,13 @@ namespace
             const float triMaxY = std::max(a.y, std::max(b.y, c.y));
             const float yDist = p.y < triMinY ? (triMinY - p.y) : (p.y > triMaxY ? (p.y - triMaxY) : 0.0f);
             if (yDist > maxYDist) continue;
-            float xzDist2 = Dist2PointSegmentXZLocal(p, a, b);
-            xzDist2 = std::min(xzDist2, Dist2PointSegmentXZLocal(p, b, c));
-            xzDist2 = std::min(xzDist2, Dist2PointSegmentXZLocal(p, c, a));
+            float xzDist2 = 0.0f;
+            if (!PointInTriangleXZLocal(p, a, b, c))
+            {
+                xzDist2 = Dist2PointSegmentXZLocal(p, a, b);
+                xzDist2 = std::min(xzDist2, Dist2PointSegmentXZLocal(p, b, c));
+                xzDist2 = std::min(xzDist2, Dist2PointSegmentXZLocal(p, c, a));
+            }
             if (xzDist2 <= maxXZ2) return true;
         }
         return false;
@@ -1169,6 +1182,9 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
     struct RejectCounters{size_t dy=0,distance=0,obstruction=0,slope=0,snapFail=0,dedupe=0,perTileLimit=0,sweepBlocked=0; } rejected;
     size_t openEdges=0,samples=0,dropHits=0;
     size_t dynamicSeedSkippedEdges=0,dynamicSeedSkippedSamples=0,dynamicSeedAcceptedSamples=0;
+    size_t dynamicTrisCount=0;
+    size_t dynamicSeedDebugLogs=0;
+    if (triIsDynamic) for (uint8_t v : *triIsDynamic) if (v) ++dynamicTrisCount;
     size_t dropCount=0,jumpCount=0,climbCount=0;
     std::unordered_set<uint64_t> dedupe;
     auto tryAppend=[&](const GeneratedOffmeshCandidate& c,uint32_t type,size_t& bucket){ if(params.maxLinksPerTile>0 && static_cast<int>(outLinks.size())>=params.maxLinksPerTile){ ++rejected.perTileLimit; return false; } uint64_t h=HashLink(c.link.start,c.link.end,type,params.quantizePos); if(!dedupe.insert(h).second){++rejected.dedupe;return false;} ++bucket; if(outCandidates) outCandidates->push_back(c); outLinks.push_back(c.link); return true;};
@@ -1180,19 +1196,19 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
         glm::vec3 a=GetPolyVertex(tile,poly,edge), b=GetPolyVertex(tile,poly,(edge+1)%poly->vertCount);
         EdgeFrame frame=ComputeEdgeFrame(a,b,polyCenter,polyNormal); if(!frame.valid) continue;
         const glm::vec3 edgeCenter = (a + b) * 0.5f;
-        if (requireDynamicSeed && triIsDynamic && !triIsDynamic->empty())
-        {
-            const bool seedEdge = IsPointNearDynamicTriangleXZLocal(edgeCenter, localVerts, localIndices, *triIsDynamic, dynamicSeedMaxXZDist, dynamicSeedMaxYDist) ||
-                                  IsPointNearDynamicTriangleXZLocal(polyCenter, localVerts, localIndices, *triIsDynamic, dynamicSeedMaxXZDist, dynamicSeedMaxYDist);
-            if (!seedEdge) { ++dynamicSeedSkippedEdges; continue; }
-        }
         for(int sample=0; sample<params.samplesPerEdge; ++sample){ ++samples;
           float t=float(sample+1)/float(params.samplesPerEdge+1); glm::vec3 p=LerpVec3(a,b,t);
-          if (requireDynamicSeed && triIsDynamic && !triIsDynamic->empty())
+          if (requireDynamicSeed && !params.disableDynamicSeed && triIsDynamic && !triIsDynamic->empty())
           {
               if (!IsPointNearDynamicTriangleXZLocal(p, localVerts, localIndices, *triIsDynamic, dynamicSeedMaxXZDist, dynamicSeedMaxYDist))
               {
                   ++dynamicSeedSkippedSamples;
+                  if (dynamicSeedDebugLogs < 10)
+                  {
+                      printf("[AutoOffmeshV2][dynSeedReject] tile %d,%d p=(%.2f,%.2f,%.2f) edgeCenter=(%.2f,%.2f,%.2f) polyCenter=(%.2f,%.2f,%.2f)\n",
+                             tx, ty, p.x, p.y, p.z, edgeCenter.x, edgeCenter.y, edgeCenter.z, polyCenter.x, polyCenter.y, polyCenter.z);
+                      ++dynamicSeedDebugLogs;
+                  }
                   continue;
               }
               ++dynamicSeedAcceptedSamples;
@@ -1215,8 +1231,8 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
     }
     printf("[AutoOffmeshV2][tile %d,%d] openEdges=%zu samples=%zu dropHits=%zu snapFail=%zu sweepBlocked=%zu accepted(drop/jump/climb)=%zu/%zu/%zu perTileLimit=%zu cap=%d\n",
            tx, ty, openEdges, samples, dropHits, rejected.snapFail, rejected.sweepBlocked, dropCount, jumpCount, climbCount, rejected.perTileLimit, params.maxLinksPerTile);
-    printf("[AutoOffmeshV2][tile %d,%d] dynamicSeedSkippedEdges=%zu dynamicSeedSkippedSamples=%zu dynamicSeedAcceptedSamples=%zu rawGenerated=%zu\n",
-           tx, ty, dynamicSeedSkippedEdges, dynamicSeedSkippedSamples, dynamicSeedAcceptedSamples, outLinks.size());
+    printf("[AutoOffmeshV2][tile %d,%d] openEdges=%zu samples=%zu dynamicSeedSkippedEdges=%zu dynamicSeedSkippedSamples=%zu dynamicSeedAcceptedSamples=%zu dropHits=%zu snapFail=%zu sweepBlocked=%zu rawGenerated=%zu dynamicTris=%zu\n",
+           tx, ty, openEdges, samples, dynamicSeedSkippedEdges, dynamicSeedSkippedSamples, dynamicSeedAcceptedSamples, dropHits, rejected.snapFail, rejected.sweepBlocked, outLinks.size(), dynamicTrisCount);
     return true;
 }
 bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& params,
