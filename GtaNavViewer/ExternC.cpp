@@ -123,6 +123,29 @@ namespace
 
     struct ExternNavmeshContext
     {
+        struct OffmeshDebugLine
+        {
+            glm::vec3 a{0.0f};
+            glm::vec3 b{0.0f};
+            uint32_t color = 0xffffffffu;
+            std::string type;
+            std::string reason;
+            int tx = 0;
+            int ty = 0;
+        };
+        struct OffmeshDebugCandidate
+        {
+            OffmeshLink link{};
+            glm::vec3 rawStart{0.0f};
+            glm::vec3 rawEnd{0.0f};
+            bool startDynamic = false;
+            bool endDynamic = false;
+            bool accepted = false;
+            std::string type;
+            std::string rejectReason;
+            int tx = 0;
+            int ty = 0;
+        };
         NavmeshGenerationSettings genSettings{};
         std::vector<GeometryInstance> geometries;
         std::vector<OffmeshLink> offmeshLinks;
@@ -204,7 +227,12 @@ namespace
         bool worldAutoOffmeshOnlyDynamicAffectedTiles = true;
         bool worldAutoOffmeshRequireDynamicEndpoint = true;
         int runtimeOffmeshMaxLinksPerTile = 64;
-        int runtimeOffmeshRawMaxLinksPerTile = 0;
+        int runtimeOffmeshRawMaxLinksPerTile = 4096;
+        bool worldOffmeshDebugEnabled = false;
+        int offmeshDebugMaxLines = 20000;
+        int offmeshDebugMaxCandidates = 5000;
+        std::vector<OffmeshDebugLine> lastOffmeshDebugLines;
+        std::vector<OffmeshDebugCandidate> lastOffmeshDebugCandidates;
         int runtimeOffmeshMaxTriCount = 100000;
         std::deque<uint64_t> pendingTileBuildQueue;
         std::unordered_set<uint64_t> pendingTileBuildSet;
@@ -2112,20 +2140,52 @@ namespace
             genParams.maxLinksPerTile = ctx.runtimeOffmeshRawMaxLinksPerTile > 0 ? ctx.runtimeOffmeshRawMaxLinksPerTile : 0;
 
         std::vector<OffmeshLink> generated;
-        if (!ctx.navData.GenerateAutomaticOffmeshLinksForTileV2(tx, ty, genParams, verts, indices, generated))
+        std::vector<GeneratedOffmeshCandidate> candidates;
+        const bool useEndpointFilter = ctx.worldAutoOffmeshRequireDynamicEndpoint && triIsDynamic && (triIsDynamic->size() == indices.size() / 3);
+        if (!ctx.navData.GenerateAutomaticOffmeshLinksForTileV2(tx, ty, genParams, verts, indices, generated, &candidates,
+                                                                 triIsDynamic,
+                                                                 useEndpointFilter,
+                                                                 params.dynamicSeedMaxXZDist,
+                                                                 params.dynamicSeedMaxYDist))
             return false;
+        if (ctx.worldOffmeshDebugEnabled)
+        {
+            for (const auto& c : candidates)
+            {
+                if (static_cast<int>(ctx.lastOffmeshDebugCandidates.size()) >= ctx.offmeshDebugMaxCandidates) break;
+                ExternNavmeshContext::OffmeshDebugCandidate dc{};
+                dc.link = c.link; dc.rawStart = c.rawStart; dc.rawEnd = c.rawEnd; dc.tx = tx; dc.ty = ty;
+                dc.type = (c.link.area == params.dropArea) ? "drop" : (c.link.area == params.climbArea ? "climb" : "jump");
+                dc.accepted = false;
+                ctx.lastOffmeshDebugCandidates.push_back(std::move(dc));
+            }
+        }
         std::unordered_set<uint64_t> dedupe;
         const size_t rawCount = generated.size();
         size_t rejectedStaticStatic = 0;
         size_t startDyn = 0;
         size_t endDyn = 0;
         size_t debugRejected = 0;
-        const bool useEndpointFilter = ctx.worldAutoOffmeshRequireDynamicEndpoint && triIsDynamic && (triIsDynamic->size() == indices.size() / 3);
         const bool fallbackNoTriMetadata = ctx.worldAutoOffmeshRequireDynamicEndpoint && !useEndpointFilter;
-        const float maxXZDist = std::max(0.25f, params.agentRadius + 0.15f);
-        const float maxYDist = std::max(0.75f, params.agentHeight);
-        for (const auto& link : generated)
+        const float maxXZDist = std::max(0.05f, params.dynamicEndpointMaxXZDist);
+        const float maxYDist = std::max(0.05f, params.dynamicEndpointMaxYDist);
+        if (useEndpointFilter)
         {
+            for (auto& c : candidates)
+            {
+                c.startDynamic = IsPointNearDynamicTriangleXZ(c.rawStart, verts, indices, *triIsDynamic, maxXZDist, maxYDist, nullptr) ||
+                                 IsPointNearDynamicTriangleXZ(c.link.start, verts, indices, *triIsDynamic, maxXZDist, maxYDist, nullptr);
+                c.endDynamic = IsPointNearDynamicTriangleXZ(c.rawEnd, verts, indices, *triIsDynamic, maxXZDist, maxYDist, nullptr) ||
+                               IsPointNearDynamicTriangleXZ(c.link.end, verts, indices, *triIsDynamic, maxXZDist, maxYDist, nullptr);
+            }
+        }
+        const bool useCandidates = !candidates.empty();
+        const size_t n = useCandidates ? candidates.size() : generated.size();
+        for (size_t i = 0; i < n; ++i)
+        {
+            const OffmeshLink& link = useCandidates ? candidates[i].link : generated[i];
+            bool sDyn = false;
+            bool eDyn = false;
             const uint64_t h = QuantHashOffmeshLink(link, params.quantizePos);
             if (!dedupe.insert(h).second)
                 continue;
@@ -2133,8 +2193,10 @@ namespace
             {
                 DynamicTriDistanceDebug startDebug{};
                 DynamicTriDistanceDebug endDebug{};
-                const bool sDyn = IsPointNearDynamicTriangleXZ(link.start, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &startDebug);
-                const bool eDyn = IsPointNearDynamicTriangleXZ(link.end, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &endDebug);
+                sDyn = useCandidates ? candidates[i].startDynamic : false;
+                eDyn = useCandidates ? candidates[i].endDynamic : false;
+                if (!sDyn) sDyn = IsPointNearDynamicTriangleXZ(useCandidates ? candidates[i].rawStart : link.start, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &startDebug);
+                if (!eDyn) eDyn = IsPointNearDynamicTriangleXZ(useCandidates ? candidates[i].rawEnd : link.end, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &endDebug);
                 if (sDyn) ++startDyn;
                 if (eDyn) ++endDyn;
                 if (!(sDyn || eDyn))
@@ -2153,15 +2215,23 @@ namespace
                             endDebug.found ? endDebug.yDist : -1.0f);
                         ++debugRejected;
                     }
+                    if (ctx.worldOffmeshDebugEnabled && i < ctx.lastOffmeshDebugCandidates.size())
+                        ctx.lastOffmeshDebugCandidates[i].rejectReason = "static_static";
                     continue;
                 }
             }
             outLinks.push_back(link);
+            if (ctx.worldOffmeshDebugEnabled && i < ctx.lastOffmeshDebugCandidates.size())
+            {
+                ctx.lastOffmeshDebugCandidates[i].accepted = true;
+                ctx.lastOffmeshDebugCandidates[i].startDynamic = sDyn;
+                ctx.lastOffmeshDebugCandidates[i].endDynamic = eDyn;
+            }
             if (acceptedCap > 0 && static_cast<int>(outLinks.size()) >= acceptedCap)
                 break;
         }
-        printf("[WorldOffmesh] tile %d,%d generatedRaw=%zu accepted=%zu rejectedStaticStatic=%zu startDyn=%zu endDyn=%zu fallback=%d rawCap=%d acceptedCap=%d runtimeDynamic=%d\n",
-               tx, ty, rawCount, outLinks.size(), rejectedStaticStatic, startDyn, endDyn, fallbackNoTriMetadata ? 1 : 0,
+        printf("[WorldOffmesh] tile %d,%d rawGenerated=%zu candidatesCount=%zu acceptedAfterEndpointFilter=%zu rejectedStaticStatic=%zu startDyn=%zu endDyn=%zu fallbackNoTriMetadata=%d rawCap=%d acceptedCap=%d runtimeDynamic=%d\n",
+               tx, ty, rawCount, candidates.size(), outLinks.size(), rejectedStaticStatic, startDyn, endDyn, fallbackNoTriMetadata ? 1 : 0,
                genParams.maxLinksPerTile, acceptedCap, runtimeDynamic ? 1 : 0);
         if (fallbackNoTriMetadata)
             printf("[WorldOffmesh] tile %d,%d note=fallback_no_tri_source_metadata\n", tx, ty);
@@ -4431,6 +4501,51 @@ GTANAVVIEWER_API bool SetWorldAutoOffmeshRequireDynamicEndpoint(void* navMesh, b
         return false;
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->worldAutoOffmeshRequireDynamicEndpoint = enabled;
+    return true;
+}
+
+GTANAVVIEWER_API void SetWorldOffmeshDebugEnabled(void* navMesh, bool enabled)
+{
+    ExternNavmeshContext* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    if (!ctx) return;
+    ctx->worldOffmeshDebugEnabled = enabled;
+    if (!enabled) { ctx->lastOffmeshDebugLines.clear(); ctx->lastOffmeshDebugCandidates.clear(); }
+}
+
+GTANAVVIEWER_API void SetWorldOffmeshDebugLimits(void* navMesh, int maxLines, int maxCandidates)
+{
+    ExternNavmeshContext* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    if (!ctx) return;
+    if (maxLines > 0) ctx->offmeshDebugMaxLines = maxLines;
+    if (maxCandidates > 0) ctx->offmeshDebugMaxCandidates = maxCandidates;
+}
+
+GTANAVVIEWER_API bool ExportLastOffmeshDebugJson(void* navMesh, const char* path)
+{
+    ExternNavmeshContext* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    if (!ctx || !path || !*path) return false;
+    nlohmann::json j;
+    j["version"] = 1;
+    j["lines"] = nlohmann::json::array();
+    for (const auto& l : ctx->lastOffmeshDebugLines)
+    {
+        j["lines"].push_back({{"a",{l.a.x,l.a.y,l.a.z}},{"b",{l.b.x,l.b.y,l.b.z}},{"color",l.color},{"type",l.type},{"reason",l.reason},{"tx",l.tx},{"ty",l.ty}});
+    }
+    j["candidates"] = nlohmann::json::array();
+    for (const auto& c : ctx->lastOffmeshDebugCandidates)
+    {
+        j["candidates"].push_back({
+            {"start",{c.link.start.x,c.link.start.y,c.link.start.z}},
+            {"end",{c.link.end.x,c.link.end.y,c.link.end.z}},
+            {"rawStart",{c.rawStart.x,c.rawStart.y,c.rawStart.z}},
+            {"rawEnd",{c.rawEnd.x,c.rawEnd.y,c.rawEnd.z}},
+            {"startDynamic",c.startDynamic},{"endDynamic",c.endDynamic},{"accepted",c.accepted},
+            {"type",c.type},{"rejectReason",c.rejectReason},{"tx",c.tx},{"ty",c.ty}
+        });
+    }
+    std::ofstream f(path);
+    if (!f.is_open()) return false;
+    f << j.dump(2);
     return true;
 }
 
