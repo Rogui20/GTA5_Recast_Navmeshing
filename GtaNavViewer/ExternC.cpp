@@ -201,7 +201,10 @@ namespace
         std::unordered_map<uint64_t, std::vector<OffmeshLink>> worldOffmeshLinksByTile;
         std::unordered_set<uint64_t> dirtyWorldOffmeshTiles;
         bool worldAutoGenerateOffmeshLinks = false;
+        bool worldAutoOffmeshOnlyDynamicAffectedTiles = true;
+        bool worldAutoOffmeshRequireDynamicEndpoint = true;
         int runtimeOffmeshMaxLinksPerTile = 64;
+        int runtimeOffmeshRawMaxLinksPerTile = 0;
         int runtimeOffmeshMaxTriCount = 100000;
         std::deque<uint64_t> pendingTileBuildQueue;
         std::unordered_set<uint64_t> pendingTileBuildSet;
@@ -399,6 +402,7 @@ namespace
     bool IsWorldGeometryRecordUpToDate(const ExternNavmeshContext::WorldGeomRecord& record);
     void EnqueueTileBuild(ExternNavmeshContext& ctx, uint64_t tileKey);
     bool BuildWorldTileGeometry(ExternNavmeshContext& ctx, int tx, int ty, std::vector<glm::vec3>& outVerts, std::vector<unsigned int>& outIndices, bool* outAbortedByTriLimit);
+    bool BuildWorldTileGeometry(ExternNavmeshContext& ctx, int tx, int ty, std::vector<glm::vec3>& outVerts, std::vector<unsigned int>& outIndices, bool* outAbortedByTriLimit, std::vector<uint8_t>* outTriIsDynamic);
     static void CopyLightWorldGeometryMetadata(const ExternNavmeshContext& from, ExternNavmeshContext& to);
     uint64_t EstimateWorldGeomMemoryBytes(const ExternNavmeshContext::WorldGeomRecord& rec);
     uint64_t EstimateLoadedWorldGeometryMemoryBytes(const ExternNavmeshContext& ctx);
@@ -2002,6 +2006,94 @@ namespace
         return h;
     }
 
+    static float Dist2PointSegmentXZ(const glm::vec3& p, const glm::vec3& a, const glm::vec3& b)
+    {
+        const glm::vec2 p2(p.x, p.z);
+        const glm::vec2 a2(a.x, a.z);
+        const glm::vec2 b2(b.x, b.z);
+        const glm::vec2 ab = b2 - a2;
+        const float abLen2 = glm::dot(ab, ab);
+        if (abLen2 <= 1e-8f)
+            return glm::dot(p2 - a2, p2 - a2);
+        const float t = glm::clamp(glm::dot(p2 - a2, ab) / abLen2, 0.0f, 1.0f);
+        const glm::vec2 c = a2 + ab * t;
+        const glm::vec2 d = p2 - c;
+        return glm::dot(d, d);
+    }
+
+    static bool PointInTriangleXZ(const glm::vec3& p, const glm::vec3& a, const glm::vec3& b, const glm::vec3& c)
+    {
+        const glm::vec2 p2(p.x, p.z), a2(a.x, a.z), b2(b.x, b.z), c2(c.x, c.z);
+        const glm::vec2 v0 = b2 - a2;
+        const glm::vec2 v1 = c2 - a2;
+        const glm::vec2 v2 = p2 - a2;
+        const float den = v0.x * v1.y - v1.x * v0.y;
+        if (std::fabs(den) < 1e-8f)
+            return false;
+        const float invDen = 1.0f / den;
+        const float u = (v2.x * v1.y - v1.x * v2.y) * invDen;
+        const float v = (v0.x * v2.y - v2.x * v0.y) * invDen;
+        return u >= -1e-4f && v >= -1e-4f && (u + v) <= 1.0001f;
+    }
+
+    struct DynamicTriDistanceDebug
+    {
+        bool found = false;
+        float xzDist = FLT_MAX;
+        float yDist = FLT_MAX;
+    };
+
+    static DynamicTriDistanceDebug FindNearestDynamicTriangleDistance(const glm::vec3& p,
+                                                                      const std::vector<glm::vec3>& verts,
+                                                                      const std::vector<unsigned int>& indices,
+                                                                      const std::vector<uint8_t>& triIsDynamic)
+    {
+        DynamicTriDistanceDebug nearest{};
+        const size_t triCount = indices.size() / 3;
+        if (triIsDynamic.size() != triCount)
+            return nearest;
+        for (size_t tri = 0; tri < triCount; ++tri)
+        {
+            if (!triIsDynamic[tri])
+                continue;
+            const glm::vec3& a = verts[indices[tri * 3 + 0]];
+            const glm::vec3& b = verts[indices[tri * 3 + 1]];
+            const glm::vec3& c = verts[indices[tri * 3 + 2]];
+            const float triMinY = std::min(a.y, std::min(b.y, c.y));
+            const float triMaxY = std::max(a.y, std::max(b.y, c.y));
+            const float yDist = p.y < triMinY ? (triMinY - p.y) : (p.y > triMaxY ? (p.y - triMaxY) : 0.0f);
+            float xzDist2 = 0.0f;
+            if (!PointInTriangleXZ(p, a, b, c))
+            {
+                xzDist2 = Dist2PointSegmentXZ(p, a, b);
+                xzDist2 = std::min(xzDist2, Dist2PointSegmentXZ(p, b, c));
+                xzDist2 = std::min(xzDist2, Dist2PointSegmentXZ(p, c, a));
+            }
+            const float xzDist = std::sqrt(std::max(0.0f, xzDist2));
+            if (!nearest.found || xzDist < nearest.xzDist || (std::fabs(xzDist - nearest.xzDist) <= 1e-4f && yDist < nearest.yDist))
+            {
+                nearest.found = true;
+                nearest.xzDist = xzDist;
+                nearest.yDist = yDist;
+            }
+        }
+        return nearest;
+    }
+
+    static bool IsPointNearDynamicTriangleXZ(const glm::vec3& p,
+                                             const std::vector<glm::vec3>& verts,
+                                             const std::vector<unsigned int>& indices,
+                                             const std::vector<uint8_t>& triIsDynamic,
+                                             float maxXZDist,
+                                             float maxYDist,
+                                             DynamicTriDistanceDebug* outNearest = nullptr)
+    {
+        const DynamicTriDistanceDebug nearest = FindNearestDynamicTriangleDistance(p, verts, indices, triIsDynamic);
+        if (outNearest)
+            *outNearest = nearest;
+        return nearest.found && nearest.xzDist <= maxXZDist && nearest.yDist <= maxYDist;
+    }
+
     static bool GenerateWorldOffmeshLinksForTileFromGeometry(ExternNavmeshContext& ctx,
                                                              int tx,
                                                              int ty,
@@ -2009,25 +2101,70 @@ namespace
                                                              const std::vector<glm::vec3>& verts,
                                                              const std::vector<unsigned int>& indices,
                                                              bool runtimeDynamic,
-                                                             std::vector<OffmeshLink>& outLinks)
+                                                             std::vector<OffmeshLink>& outLinks,
+                                                             const std::vector<uint8_t>* triIsDynamic = nullptr)
     {
         outLinks.clear();
+
+        AutoOffmeshGenerationParamsV2 genParams = params;
+        const int acceptedCap = params.maxLinksPerTile;
+        if (ctx.worldAutoOffmeshRequireDynamicEndpoint)
+            genParams.maxLinksPerTile = ctx.runtimeOffmeshRawMaxLinksPerTile > 0 ? ctx.runtimeOffmeshRawMaxLinksPerTile : 0;
+
         std::vector<OffmeshLink> generated;
-        if (!ctx.navData.GenerateAutomaticOffmeshLinksForTileV2(tx, ty, params, verts, indices, generated))
+        if (!ctx.navData.GenerateAutomaticOffmeshLinksForTileV2(tx, ty, genParams, verts, indices, generated))
             return false;
         std::unordered_set<uint64_t> dedupe;
         const size_t rawCount = generated.size();
+        size_t rejectedStaticStatic = 0;
+        size_t startDyn = 0;
+        size_t endDyn = 0;
+        size_t debugRejected = 0;
+        const bool useEndpointFilter = ctx.worldAutoOffmeshRequireDynamicEndpoint && triIsDynamic && (triIsDynamic->size() == indices.size() / 3);
+        const bool fallbackNoTriMetadata = ctx.worldAutoOffmeshRequireDynamicEndpoint && !useEndpointFilter;
+        const float maxXZDist = std::max(0.25f, params.agentRadius + 0.15f);
+        const float maxYDist = std::max(0.75f, params.agentHeight);
         for (const auto& link : generated)
         {
             const uint64_t h = QuantHashOffmeshLink(link, params.quantizePos);
             if (!dedupe.insert(h).second)
                 continue;
+            if (useEndpointFilter)
+            {
+                DynamicTriDistanceDebug startDebug{};
+                DynamicTriDistanceDebug endDebug{};
+                const bool sDyn = IsPointNearDynamicTriangleXZ(link.start, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &startDebug);
+                const bool eDyn = IsPointNearDynamicTriangleXZ(link.end, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &endDebug);
+                if (sDyn) ++startDyn;
+                if (eDyn) ++endDyn;
+                if (!(sDyn || eDyn))
+                {
+                    ++rejectedStaticStatic;
+                    if (debugRejected < 5)
+                    {
+                        printf("[WorldOffmesh][RejectStaticStatic] tile %d,%d link=%zu start=(%.3f,%.3f,%.3f) end=(%.3f,%.3f,%.3f) sDyn=%d eDyn=%d sNearestXZ=%.3f sNearestY=%.3f eNearestXZ=%.3f eNearestY=%.3f\n",
+                            tx, ty, rejectedStaticStatic,
+                            link.start.x, link.start.y, link.start.z,
+                            link.end.x, link.end.y, link.end.z,
+                            sDyn ? 1 : 0, eDyn ? 1 : 0,
+                            startDebug.found ? startDebug.xzDist : -1.0f,
+                            startDebug.found ? startDebug.yDist : -1.0f,
+                            endDebug.found ? endDebug.xzDist : -1.0f,
+                            endDebug.found ? endDebug.yDist : -1.0f);
+                        ++debugRejected;
+                    }
+                    continue;
+                }
+            }
             outLinks.push_back(link);
-            if (params.maxLinksPerTile > 0 && static_cast<int>(outLinks.size()) >= params.maxLinksPerTile)
+            if (acceptedCap > 0 && static_cast<int>(outLinks.size()) >= acceptedCap)
                 break;
         }
-        printf("[WorldOffmesh] tile %d,%d generatedRaw=%zu accepted=%zu cap=%d runtimeDynamic=%d\n",
-               tx, ty, rawCount, outLinks.size(), params.maxLinksPerTile, runtimeDynamic ? 1 : 0);
+        printf("[WorldOffmesh] tile %d,%d generatedRaw=%zu accepted=%zu rejectedStaticStatic=%zu startDyn=%zu endDyn=%zu fallback=%d rawCap=%d acceptedCap=%d runtimeDynamic=%d\n",
+               tx, ty, rawCount, outLinks.size(), rejectedStaticStatic, startDyn, endDyn, fallbackNoTriMetadata ? 1 : 0,
+               genParams.maxLinksPerTile, acceptedCap, runtimeDynamic ? 1 : 0);
+        if (fallbackNoTriMetadata)
+            printf("[WorldOffmesh] tile %d,%d note=fallback_no_tri_source_metadata\n", tx, ty);
         return true;
     }
 
@@ -2036,12 +2173,13 @@ namespace
     {
         std::vector<glm::vec3> verts;
         std::vector<unsigned int> indices;
-        if (!BuildWorldTileGeometry(ctx, tx, ty, verts, indices, nullptr))
+        std::vector<uint8_t> triIsDynamic;
+        if (!BuildWorldTileGeometry(ctx, tx, ty, verts, indices, nullptr, &triIsDynamic))
         {
             outLinks.clear();
             return true;
         }
-        return GenerateWorldOffmeshLinksForTileFromGeometry(ctx, tx, ty, params, verts, indices, false, outLinks);
+        return GenerateWorldOffmeshLinksForTileFromGeometry(ctx, tx, ty, params, verts, indices, false, outLinks, &triIsDynamic);
     }
 
     void RemoveGeometryFromWorldIndex(ExternNavmeshContext& ctx, const std::string& geomId)
@@ -2243,7 +2381,8 @@ namespace
                                  const glm::vec3& tileMin,
                                  const glm::vec3& tileMax,
                                  std::vector<glm::vec3>& outVerts,
-                                 std::vector<unsigned int>& outIndices)
+                                 std::vector<unsigned int>& outIndices,
+                                 std::vector<uint8_t>* outTriIsDynamic = nullptr)
     {
         if (!rec.loaded || !rec.source.Valid())
             return 0;
@@ -2253,6 +2392,8 @@ namespace
 
         EnsureTransformedVertices(rec);
         const size_t beforeIndices = outIndices.size();
+        const size_t beforeTris = beforeIndices / 3;
+        const bool recIsDynamic = (rec.flags & WORLD_GEOM_DYNAMIC) != 0;
 
         std::unordered_map<unsigned int, unsigned int> remap;
         remap.reserve(rec.source.vertices.size() / 4 + 1);
@@ -2290,6 +2431,8 @@ namespace
             triOut.push_back(mapVertex(i0));
             triOut.push_back(mapVertex(i1));
             triOut.push_back(mapVertex(i2));
+            if (outTriIsDynamic)
+                outTriIsDynamic->push_back(recIsDynamic ? 1u : 0u);
         };
 
         if (rec.spatialCacheBuilt)
@@ -2356,12 +2499,16 @@ namespace
                    (debugTrisAccepted > 0 ? acceptedMinY : 0.0f),
                    (debugTrisAccepted > 0 ? acceptedMaxY : 0.0f),
                    tileMin.y, tileMax.y);
+            if (outTriIsDynamic && outTriIsDynamic->size() != (outIndices.size() / 3))
+                outTriIsDynamic->resize(outIndices.size() / 3, recIsDynamic ? 1u : 0u);
             return (outIndices.size() - beforeIndices) / 3;
         }
 
         const uint32_t triCount = static_cast<uint32_t>(rec.source.indices.size() / 3);
         for (uint32_t triIdx = 0; triIdx < triCount; ++triIdx)
             appendTri(triIdx, outIndices);
+        if (outTriIsDynamic && outTriIsDynamic->size() != (outIndices.size() / 3))
+            outTriIsDynamic->resize(outIndices.size() / 3, recIsDynamic ? 1u : 0u);
         return (outIndices.size() - beforeIndices) / 3;
     }
 
@@ -2372,10 +2519,23 @@ namespace
                                 std::vector<unsigned int>& outIndices,
                                 bool* outAbortedByTriLimit = nullptr)
     {
+        return BuildWorldTileGeometry(ctx, tx, ty, outVerts, outIndices, outAbortedByTriLimit, nullptr);
+    }
+
+    bool BuildWorldTileGeometry(ExternNavmeshContext& ctx,
+                                int tx,
+                                int ty,
+                                std::vector<glm::vec3>& outVerts,
+                                std::vector<unsigned int>& outIndices,
+                                bool* outAbortedByTriLimit,
+                                std::vector<uint8_t>* outTriIsDynamic)
+    {
         if (outAbortedByTriLimit)
             *outAbortedByTriLimit = false;
         outVerts.clear();
         outIndices.clear();
+        if (outTriIsDynamic)
+            outTriIsDynamic->clear();
 
         const uint64_t tileKey = MakeTileKey(tx, ty);
         auto itGeoms = ctx.tileToGeometryIds.find(tileKey);
@@ -2458,7 +2618,7 @@ namespace
                 continue;
             }
 
-            const size_t added = AppendGeometryForTile(rec, tileMin, tileMax, outVerts, outIndices);
+            const size_t added = AppendGeometryForTile(rec, tileMin, tileMax, outVerts, outIndices, outTriIsDynamic);
             if (added > 0)
             {
                 totalFilteredTris += added;
@@ -2500,6 +2660,8 @@ namespace
                         *outAbortedByTriLimit = true;
                     outVerts.clear();
                     outIndices.clear();
+                    if (outTriIsDynamic)
+                        outTriIsDynamic->clear();
                     return false;
                 }
             }
@@ -2527,6 +2689,15 @@ namespace
                static_cast<unsigned long long>(filteredY50_150),
                static_cast<unsigned long long>(filteredY150Plus));
 
+        if (outTriIsDynamic)
+        {
+            const size_t totalTris = outIndices.size() / 3;
+            if (outTriIsDynamic->size() != totalTris)
+                outTriIsDynamic->resize(totalTris, 0u);
+            const size_t dynamicTris = static_cast<size_t>(std::count(outTriIsDynamic->begin(), outTriIsDynamic->end(), static_cast<uint8_t>(1u)));
+            printf("[WorldTile] triIsDynamic size=%zu dynamicTris=%zu totalTris=%zu\n",
+                   outTriIsDynamic->size(), dynamicTris, totalTris);
+        }
         return !outVerts.empty() && !outIndices.empty();
     }
 
@@ -3962,6 +4133,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
     int emptied = 0;
     int failed = 0;
     std::unordered_set<uint64_t> processedTileKeys;
+    std::unordered_set<uint64_t> successfullyBuiltTileKeys;
     std::unordered_set<uint64_t> tilesToSave;
     ctx->lastBuiltWorldTileKeys.clear();
 
@@ -3977,6 +4149,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         const uint64_t tileKey = ctx->pendingTileBuildQueue.front();
         ctx->pendingTileBuildQueue.pop_front();
         ctx->pendingTileBuildSet.erase(tileKey);
+        const bool wasRuntimeDirty = ctx->runtimeDirtyWorldTiles.count(tileKey) > 0;
         ctx->dirtyWorldTiles.erase(tileKey);
         ctx->runtimeDirtyWorldTiles.erase(tileKey);
         InvalidateAgentProfileTileCaches(*ctx, tileKey);
@@ -3986,8 +4159,9 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         const int ty = static_cast<int>(tileKey & 0xffffffffu);
         std::vector<glm::vec3> verts;
         std::vector<unsigned int> indices;
+        std::vector<uint8_t> triIsDynamic;
         bool abortedByTriLimit = false;
-        const bool hasGeom = BuildWorldTileGeometry(*ctx, tx, ty, verts, indices, &abortedByTriLimit);
+        const bool hasGeom = BuildWorldTileGeometry(*ctx, tx, ty, verts, indices, &abortedByTriLimit, &triIsDynamic);
         const uint64_t worldHash = ComputeWorldTileHash(*ctx, tx, ty);
         const bool tileHasPersistentGeom = TileHasPersistentGeometry(*ctx, tileKey);
         const bool tileHasDynamicGeom = TileHasDynamicGeometry(*ctx, tileKey);
@@ -4027,24 +4201,49 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
             }
             printf("[WorldTile] Build tile %d,%d geomCount=0 triCount=0 empty=1 hash=%llu\n",
                    tx, ty, static_cast<unsigned long long>(worldHash));
+            successfullyBuiltTileKeys.insert(tileKey);
             continue;
         }
 
         std::vector<OffmeshLink> tileLinks;
-        if (ctx->worldAutoGenerateOffmeshLinks && (ctx->dirtyWorldOffmeshTiles.count(tileKey) > 0))
+        const bool shouldGenerateOffmesh =
+            ctx->worldAutoGenerateOffmeshLinks &&
+            ctx->dirtyWorldOffmeshTiles.count(tileKey) > 0 &&
+            (!ctx->worldAutoOffmeshOnlyDynamicAffectedTiles || tileHasDynamicGeom || wasRuntimeDirty);
+        if (shouldGenerateOffmesh)
         {
             AutoOffmeshGenerationParamsV2 offmeshParams = ctx->autoOffmeshParamsV2;
             const size_t triCount = indices.size() / 3;
             if (runtimeDynamicOnly)
-                offmeshParams.maxLinksPerTile = std::min(offmeshParams.maxLinksPerTile, std::max(0, ctx->runtimeOffmeshMaxLinksPerTile));
+            {
+                const int cap = std::max(0, ctx->runtimeOffmeshMaxLinksPerTile);
+                if (cap > 0)
+                {
+                    if (offmeshParams.maxLinksPerTile <= 0)
+                        offmeshParams.maxLinksPerTile = cap;
+                    else
+                        offmeshParams.maxLinksPerTile = std::min(offmeshParams.maxLinksPerTile, cap);
+                }
+            }
 
-            if (runtimeDynamicOnly && static_cast<int>(triCount) > ctx->runtimeOffmeshMaxTriCount)
+            if (ctx->worldAutoOffmeshRequireDynamicEndpoint && !tileHasDynamicGeom)
+            {
+                printf("[WorldOffmesh] tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireDynamicEndpoint=%d triCount=%zu links=%zu note=skipped_no_dynamic_endpoint\n",
+                    tx, ty, tileHasDynamicGeom ? 1 : 0, wasRuntimeDirty ? 1 : 0,
+                    ctx->worldAutoOffmeshOnlyDynamicAffectedTiles ? 1 : 0,
+                    ctx->worldAutoOffmeshRequireDynamicEndpoint ? 1 : 0, triCount, tileLinks.size());
+            }
+            else if (runtimeDynamicOnly && static_cast<int>(triCount) > ctx->runtimeOffmeshMaxTriCount)
             {
                 printf("[WorldOffmesh] skipped tile %d,%d triCount=%zu reason=too_dense_runtime\n", tx, ty, triCount);
             }
             else
             {
-                GenerateWorldOffmeshLinksForTileFromGeometry(*ctx, tx, ty, offmeshParams, verts, indices, runtimeDynamicOnly, tileLinks);
+                GenerateWorldOffmeshLinksForTileFromGeometry(*ctx, tx, ty, offmeshParams, verts, indices, runtimeDynamicOnly, tileLinks, &triIsDynamic);
+                printf("[WorldOffmesh] tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireDynamicEndpoint=%d triCount=%zu links=%zu\n",
+                    tx, ty, tileHasDynamicGeom ? 1 : 0, wasRuntimeDirty ? 1 : 0,
+                    ctx->worldAutoOffmeshOnlyDynamicAffectedTiles ? 1 : 0,
+                    ctx->worldAutoOffmeshRequireDynamicEndpoint ? 1 : 0, triCount, tileLinks.size());
             }
 
             if (!tileLinks.empty())
@@ -4052,6 +4251,15 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
             else
                 ctx->worldOffmeshLinksByTile.erase(tileKey);
             ctx->dirtyWorldOffmeshTiles.erase(tileKey);
+        }
+        else
+        {
+            if (ctx->dirtyWorldOffmeshTiles.count(tileKey) > 0 &&
+                ctx->worldAutoOffmeshOnlyDynamicAffectedTiles)
+            {
+                ctx->dirtyWorldOffmeshTiles.erase(tileKey);
+                ctx->worldOffmeshLinksByTile.erase(tileKey);
+            }
         }
 
         bool builtTile = false;
@@ -4085,6 +4293,8 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
                 ctx->failedWorldTiles.erase(tileKey);
             }
         }
+        if (builtTile || emptyTile)
+            successfullyBuiltTileKeys.insert(tileKey);
 
         ++built;
         printf("[WorldTile] Build tile %d,%d geomCount=%zu triCount=%zu built=%d failed=%d hash=%llu\n",
@@ -4164,13 +4374,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
            aggressive ? 1 : 0);
 
     EnsureNavQuery(*ctx);
-    std::unordered_set<uint64_t> builtTileKeys;
-    for (uint64_t key : processedTileKeys)
-    {
-        if (ctx->failedWorldTiles.count(key) == 0)
-            builtTileKeys.insert(key);
-    }
-    ctx->lastBuiltWorldTileKeys.assign(builtTileKeys.begin(), builtTileKeys.end());
+    ctx->lastBuiltWorldTileKeys.assign(successfullyBuiltTileKeys.begin(), successfullyBuiltTileKeys.end());
     std::sort(ctx->lastBuiltWorldTileKeys.begin(), ctx->lastBuiltWorldTileKeys.end());
     printf("[WorldTile] lastBuilt keys=%zu\n", ctx->lastBuiltWorldTileKeys.size());
 
@@ -4212,6 +4416,24 @@ GTANAVVIEWER_API bool SetWorldAutoOffmeshEnabled(void* navMesh, bool enabled)
     return true;
 }
 
+GTANAVVIEWER_API bool SetWorldAutoOffmeshOnlyDynamicAffectedTiles(void* navMesh, bool enabled)
+{
+    if (!navMesh)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->worldAutoOffmeshOnlyDynamicAffectedTiles = enabled;
+    return true;
+}
+
+GTANAVVIEWER_API bool SetWorldAutoOffmeshRequireDynamicEndpoint(void* navMesh, bool enabled)
+{
+    if (!navMesh)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->worldAutoOffmeshRequireDynamicEndpoint = enabled;
+    return true;
+}
+
 GTANAVVIEWER_API bool SyncQueryContextWorldState(void* builderNavMesh, void* queryNavMesh)
 {
     if (!builderNavMesh || !queryNavMesh)
@@ -4239,6 +4461,10 @@ GTANAVVIEWER_API bool SyncQueryContextWorldState(void* builderNavMesh, void* que
     queryCtx->agentResidentTiles = builderCtx->agentResidentTiles;
     queryCtx->stampCounter = builderCtx->stampCounter;
     queryCtx->maxResidentTiles = builderCtx->maxResidentTiles;
+    queryCtx->worldAutoGenerateOffmeshLinks = builderCtx->worldAutoGenerateOffmeshLinks;
+    queryCtx->worldAutoOffmeshOnlyDynamicAffectedTiles = builderCtx->worldAutoOffmeshOnlyDynamicAffectedTiles;
+    queryCtx->worldAutoOffmeshRequireDynamicEndpoint = builderCtx->worldAutoOffmeshRequireDynamicEndpoint;
+    queryCtx->runtimeOffmeshRawMaxLinksPerTile = builderCtx->runtimeOffmeshRawMaxLinksPerTile;
     queryCtx->agentProfileTileCaches.clear();
     CopyLightWorldGeometryMetadata(*builderCtx, *queryCtx);
     printf("[QueryCtx] sync residentTiles=%zu profiles=%zu tileToGeom=%zu\n",
@@ -4279,6 +4505,9 @@ GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, voi
     queryCtx->autoOffmeshParams = builderCtx->autoOffmeshParams;
     queryCtx->autoOffmeshParamsV2 = builderCtx->autoOffmeshParamsV2;
     queryCtx->worldAutoGenerateOffmeshLinks = builderCtx->worldAutoGenerateOffmeshLinks;
+    queryCtx->worldAutoOffmeshOnlyDynamicAffectedTiles = builderCtx->worldAutoOffmeshOnlyDynamicAffectedTiles;
+    queryCtx->worldAutoOffmeshRequireDynamicEndpoint = builderCtx->worldAutoOffmeshRequireDynamicEndpoint;
+    queryCtx->runtimeOffmeshRawMaxLinksPerTile = builderCtx->runtimeOffmeshRawMaxLinksPerTile;
 
     const float forcedMin[3]{ queryCtx->bboxMin.x, queryCtx->bboxMin.y, queryCtx->bboxMin.z };
     const float forcedMax[3]{ queryCtx->bboxMax.x, queryCtx->bboxMax.y, queryCtx->bboxMax.z };
