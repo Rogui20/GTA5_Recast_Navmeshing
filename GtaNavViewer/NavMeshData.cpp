@@ -477,14 +477,14 @@ namespace
         f.outward3D = glm::cross(f.edgeDir, f.surfaceNormal);
         if (glm::dot(f.outward3D, f.outward3D) <= 1e-6f) return f;
         f.outward3D = glm::normalize(f.outward3D);
-        if (glm::dot(f.outward3D, f.outwardXZ) < 0.0f)
-            f.outward3D = -f.outward3D;
-        if (!std::isfinite(f.outward3D.x) || !std::isfinite(f.outward3D.y) || !std::isfinite(f.outward3D.z))
-            return f;
         const glm::vec3 edgeCenter = (a + b) * 0.5f;
         const glm::vec3 centerToEdge = edgeCenter - polyCenter;
         if (glm::dot(centerToEdge, centerToEdge) > 1e-6f && glm::dot(f.outward3D, glm::normalize(centerToEdge)) < 0.0f)
             f.outward3D = -f.outward3D;
+        if (glm::dot(f.outward3D, f.outwardXZ) < 0.0f)
+            f.outward3D = -f.outward3D;
+        if (!std::isfinite(f.outward3D.x) || !std::isfinite(f.outward3D.y) || !std::isfinite(f.outward3D.z))
+            return f;
         f.valid = true;
         return f;
     }
@@ -1125,10 +1125,8 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
     const float dropOut = params.dropOutwardOffset>0?params.dropOutwardOffset:params.outwardOffset;
     const float dropInset = params.dropStartInset>0?params.dropStartInset:params.startInset;
     const float dropUp = params.dropUpOffset!=0?params.dropUpOffset:params.upOffset;
-    const float jumpOut = params.jumpOutwardOffset>0?params.jumpOutwardOffset:params.outwardOffset;
     const float jumpInset = params.jumpStartInset>0?params.jumpStartInset:params.startInset;
     const float jumpUp = params.jumpUpOffset!=0?params.jumpUpOffset:params.upOffset;
-    const float climbOut = params.climbOutwardOffset>0?params.climbOutwardOffset:jumpOut;
     const float climbInset = params.climbStartInset>0?params.climbStartInset:jumpInset;
     const float maxRayDistance = params.maxDropHeight + params.raycastExtraHeight + std::max(dropUp,0.0f);
 
@@ -1150,7 +1148,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
           glm::vec3 takeoffJump = p - frame.outward3D * jumpInset; dtPolyRef takeoffJumpRef=0; glm::vec3 takeoffJumpSnapped{};
           glm::vec3 takeoffClimb = p - frame.outward3D * climbInset; dtPolyRef takeoffClimbRef=0; glm::vec3 takeoffClimbSnapped{};
           
-          if(includeDrop){ if(!SnapToNavmesh(query,takeoffDrop,snapExtents,&filter,takeoffDropRef,takeoffDropSnapped)){ ++rejected.snapFail; } else { glm::vec3 sweepStartDrop = takeoffDropSnapped + up*params.sweepUp; glm::vec3 probe=p + frame.outward3D*dropOut + up*dropUp; glm::vec3 hit{},hitNormal{};
+          if(includeDrop){ if(!SnapToNavmesh(query,takeoffDrop,snapExtents,&filter,takeoffDropRef,takeoffDropSnapped)){ ++rejected.snapFail; } else { glm::vec3 sweepStartDrop = takeoffDropSnapped + up*params.sweepUp; glm::vec3 probe=p + frame.outwardXZ*dropOut + up*dropUp; glm::vec3 hit{},hitNormal{};
             if(RaycastDown(rayVerts,rayTris,probe,maxRayDistance,hit,hitNormal)){ ++dropHits; float drop=probe.y-hit.y;
               if(drop>=params.minDropThreshold && drop<=params.maxDropHeight){ if(glm::dot(hitNormal,up)>=slopeCos){ bool clear=true; if(enableSweep) clear=SweepRay3(rayVerts,rayTris,sweepStartDrop,hit+up*params.sweepUp,params.sweepSideOffset,0.0f); else {glm::vec3 hh{},hn{}; clear=!RaycastTo(rayVerts,rayTris,sweepStartDrop,hit+up*params.sweepUp,hh,hn);} if(clear){ dtPolyRef hr=0; glm::vec3 snapped{}; if(SnapToNavmesh(query,hit,snapExtents,&filter,hr,snapped)){ GeneratedOffmeshCandidate c{}; c.link.start=takeoffDropSnapped; c.link.end=snapped; c.rawStart=takeoffDrop; c.rawEnd=hit; c.link.radius=std::max(params.agentRadius,0.1f); c.link.bidirectional=false; c.link.area=params.dropArea; c.link.flags=1; c.link.userId=params.userIdBase+ (uint32_t)outLinks.size(); c.link.ownerTx=tx; c.link.ownerTy=ty; tryAppend(c,0u,dropCount);} else ++rejected.snapFail;} else {++rejected.obstruction; ++rejected.sweepBlocked;}} else ++rejected.slope;} else ++rejected.dy; }} }
           if(includeJump){ if(!SnapToNavmesh(query,takeoffJump,snapExtents,&filter,takeoffJumpRef,takeoffJumpSnapped)){ ++rejected.snapFail; } else { glm::vec3 sweepStartJump = takeoffJumpSnapped + up*params.sweepUp;
