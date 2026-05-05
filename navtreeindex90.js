@@ -1,5 +1,7 @@
 var NAVTREEINDEX90 =
 {
+"imgui__widgets_8cpp.html#ab4b8a7af0c0063874a6f7ed7e6d0bec9":[44,0,7,0,8,77],
+"imgui__widgets_8cpp.html#ab68bb13a2a0e7423f4720aef01e7c0a7":[44,0,7,0,8,103],
 "imgui__widgets_8cpp.html#ab78e75643116b67f27faa253997d6bf4":[44,0,7,0,8,11],
 "imgui__widgets_8cpp.html#ab7f998a5fc7a1f6cab073a2392e786c3":[44,0,7,0,8,65],
 "imgui__widgets_8cpp.html#ab810e3e68b96839086a444b8ca55d42d":[44,0,7,0,8,42],
@@ -247,7 +249,5 @@ var NAVTREEINDEX90 =
 "md_Docs_2__99__Roadmap.html#ensure-theres-a-good-threading-story":[3,1,1],
 "md_Docs_2__99__Roadmap.html#formations-group-behaviors":[3,3,5],
 "md_Docs_2__99__Roadmap.html#higher-level-apis":[3,2,0],
-"md_Docs_2__99__Roadmap.html#longer-term":[3,2],
-"md_Docs_2__99__Roadmap.html#medium-term":[3,1],
-"md_Docs_2__99__Roadmap.html#more-explicit-variable-names-wip":[3,0,1]
+"md_Docs_2__99__Roadmap.html#longer-term":[3,2]
 };

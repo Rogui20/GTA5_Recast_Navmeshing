@@ -1,5 +1,7 @@
 var NAVTREEINDEX99 =
 {
+"structImGuiResizeBorderDef.html":[43,0,249],
+"structImGuiResizeBorderDef.html#a89ab538c595c476e055ba33dca3451b9":[43,0,249,2],
 "structImGuiResizeBorderDef.html#a8f025428a884a2167a504858a79650a2":[43,0,249,3],
 "structImGuiResizeBorderDef.html#a98a0fd1c91fa782c3c4d5093113b2fa9":[43,0,249,1],
 "structImGuiResizeBorderDef.html#ac7561a6f748779d0318a80e6c91cfc10":[43,0,249,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX99 =
 "structImGuiTable.html#a15d1df65b26a440ffbb941f30b11b948":[43,0,266,6],
 "structImGuiTable.html#a166018c1f957586c14bc0ee081cc3125":[43,0,266,7],
 "structImGuiTable.html#a1c47654491f288507621e4b2231b4f89":[43,0,266,50],
-"structImGuiTable.html#a1daad01c8bb3bc4194401c658b61a667":[43,0,266,33],
-"structImGuiTable.html#a1e188a304ad3d2d30e7defe542bda5d6":[43,0,266,28],
-"structImGuiTable.html#a1f7e5dd488328d3a78de80e7ccc64036":[43,0,266,51]
+"structImGuiTable.html#a1daad01c8bb3bc4194401c658b61a667":[43,0,266,33]
 };

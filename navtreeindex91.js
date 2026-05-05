@@ -1,5 +1,7 @@
 var NAVTREEINDEX91 =
 {
+"md_Docs_2__99__Roadmap.html#medium-term":[3,1],
+"md_Docs_2__99__Roadmap.html#more-explicit-variable-names-wip":[3,0,1],
 "md_Docs_2__99__Roadmap.html#more-pod-structs-for-clarity-in-internals-wip":[3,1,3],
 "md_Docs_2__99__Roadmap.html#more-spatial-querying-abilities":[3,3,3],
 "md_Docs_2__99__Roadmap.html#more-tests":[3,1,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX91 =
 "structCrowdToolParams.html#a3e0009ffecf65e0b3aad0b7ad33f573b":[43,0,12,20],
 "structCrowdToolParams.html#a40ea83734142dd59c92cb695631eee4a":[43,0,12,6],
 "structCrowdToolParams.html#a4d8f49ea1fa301ad224405d12b9cd9a9":[43,0,12,16],
-"structCrowdToolParams.html#a4f8f193a139b5f88d1665949c3fe7c9c":[43,0,12,9],
-"structCrowdToolParams.html#a50149e1b215b9c9eba1059aa15f11e1e":[43,0,12,1],
-"structCrowdToolParams.html#a642a969b56ed560f2472eb4bd868416a":[43,0,12,18]
+"structCrowdToolParams.html#a4f8f193a139b5f88d1665949c3fe7c9c":[43,0,12,9]
 };

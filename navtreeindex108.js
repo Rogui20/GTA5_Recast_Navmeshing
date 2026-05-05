@@ -1,5 +1,7 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__SysWMinfo.html":[43,0,440],
+"structSDL__SysWMinfo.html#a0e7fc58b98ae8317076e763fa94bc41f":[43,0,440,0],
 "structSDL__SysWMinfo.html#a438b6a06ab3ee417293c7b7fc5a23855":[43,0,440,2],
 "structSDL__SysWMinfo.html#ac3a70af022d4849e9ff546595e94627f":[43,0,440,3],
 "structSDL__SysWMinfo.html#aded93aa13e3661b0cb3884101d63bfc3":[43,0,440,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX108 =
 "structTileDbIndexEntry.html#aaa1b15cae80f4f9324b5df964031d2e7":[43,0,490,1],
 "structTileDbStats.html":[43,0,491],
 "structTileDbStats.html#a0320c71f49ec3e1f8d798b0d51d9f341":[43,0,491,2],
-"structTileDbStats.html#a222e56be389e54da6c43e20f11962f3f":[43,0,491,7],
-"structTileDbStats.html#a233e47e260849ae3bae8f3bc3810efa6":[43,0,491,1],
-"structTileDbStats.html#a280b188866d6360cd3f376dc2ef29394":[43,0,491,4]
+"structTileDbStats.html#a222e56be389e54da6c43e20f11962f3f":[43,0,491,7]
 };
