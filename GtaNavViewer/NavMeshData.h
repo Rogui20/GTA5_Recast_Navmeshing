@@ -101,6 +101,17 @@ struct AutoOffmeshGenerationParamsV2
     float outwardOffset = 0.8f;
     float startInset = 0.05f;
     float upOffset = 0.10f;
+    float dropOutwardOffset = 0.0f;
+    float dropStartInset = 0.0f;
+    float dropUpOffset = 0.0f;
+    float jumpOutwardOffset = 0.0f;
+    float jumpStartInset = 0.0f;
+    float jumpUpOffset = 0.0f;
+    float climbOutwardOffset = 0.0f;
+    float climbStartInset = 0.0f;
+    float climbProbeDown = 2.0f;
+    float climbMinHeight = 0.2f;
+    float climbMaxHeight = 1.8f;
 
     float minDist = 0.5f;
     float maxDist = 6.0f;
@@ -124,6 +135,15 @@ struct AutoOffmeshGenerationParamsV2
     uint8_t dropArea = 4;
     uint8_t jumpArea = 3;
     uint8_t climbArea = 2;
+};
+
+struct GeneratedOffmeshCandidate
+{
+    OffmeshLink link{};
+    bool startDynamic = false;
+    bool endDynamic = false;
+    glm::vec3 rawStart{};
+    glm::vec3 rawEnd{};
 };
 
 struct IslandOffmeshLinkParams
@@ -252,7 +272,8 @@ public:
                                                 const AutoOffmeshGenerationParamsV2& params,
                                                 const std::vector<glm::vec3>& localVerts,
                                                 const std::vector<unsigned int>& localIndices,
-                                                std::vector<OffmeshLink>& outLinks) const;
+                                                std::vector<OffmeshLink>& outLinks,
+                                                std::vector<GeneratedOffmeshCandidate>* outCandidates = nullptr) const;
     bool AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& params,
                                         std::vector<OffmeshLink>& outLinks);
 
