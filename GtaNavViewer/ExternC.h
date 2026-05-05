@@ -422,6 +422,16 @@ GTANAVVIEWER_API int GetOffMeshLinks(void* navMesh,
                                      OffMeshLinkInfo* outLinks,
                                      int maxLinks,
                                      int* outLinkCount);
+GTANAVVIEWER_API int GetWorldOffMeshLinks(void* navMesh,
+                                          OffMeshLinkInfo* outLinks,
+                                          int maxLinks,
+                                          int* outLinkCount,
+                                          const uint64_t* tileKeys,
+                                          int tileKeyCount);
+GTANAVVIEWER_API int GetWorldOffMeshLinkTileKeys(void* navMesh,
+                                                 uint64_t* outKeys,
+                                                 int maxKeys,
+                                                 int* outCount);
 GTANAVVIEWER_API int RemoveOffMeshLinksInRadius(void* navMesh,
                                                 Vector3 center,
                                                 float radius,

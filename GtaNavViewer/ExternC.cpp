@@ -6829,6 +6829,90 @@ GTANAVVIEWER_API int FindPathAvoidingDynamicObstacles(
     return writeCount;
 }
 
+GTANAVVIEWER_API int GetWorldOffMeshLinks(void* navMesh,
+                                          OffMeshLinkInfo* outLinks,
+                                          int maxLinks,
+                                          int* outLinkCount,
+                                          const uint64_t* tileKeys,
+                                          int tileKeyCount)
+{
+    if (outLinkCount) *outLinkCount = 0;
+    if (!navMesh) return 0;
+    const auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+
+    auto countTileLinks = [&](uint64_t key)->int {
+        auto it = ctx->worldOffmeshLinksByTile.find(key);
+        return (it == ctx->worldOffmeshLinksByTile.end()) ? 0 : static_cast<int>(it->second.size());
+    };
+
+    int total = 0;
+    if (tileKeys && tileKeyCount > 0)
+    {
+        for (int i = 0; i < tileKeyCount; ++i) total += countTileLinks(tileKeys[i]);
+    }
+    else
+    {
+        for (const auto& kv : ctx->worldOffmeshLinksByTile) total += static_cast<int>(kv.second.size());
+    }
+    if (outLinkCount) *outLinkCount = total;
+    if (!outLinks || maxLinks <= 0) return 0;
+
+    int written = 0;
+    auto writeLinksFromTile = [&](uint64_t key)
+    {
+        auto it = ctx->worldOffmeshLinksByTile.find(key);
+        if (it == ctx->worldOffmeshLinksByTile.end()) return;
+        for (const auto& src : it->second)
+        {
+            if (written >= maxLinks) return;
+            OffMeshLinkInfo info{};
+            info.start = ToVector3(src.start);
+            info.end = ToVector3(src.end);
+            info.radius = src.radius;
+            info.biDir = src.bidirectional;
+            info.area = src.area;
+            info.flags = src.flags;
+            info.userId = src.userId;
+            info.ownerTx = src.ownerTx;
+            info.ownerTy = src.ownerTy;
+            outLinks[written++] = info;
+        }
+    };
+    if (tileKeys && tileKeyCount > 0)
+    {
+        for (int i = 0; i < tileKeyCount && written < maxLinks; ++i) writeLinksFromTile(tileKeys[i]);
+    }
+    else
+    {
+        for (const auto& kv : ctx->worldOffmeshLinksByTile)
+        {
+            if (written >= maxLinks) break;
+            writeLinksFromTile(kv.first);
+        }
+    }
+    return written;
+}
+
+GTANAVVIEWER_API int GetWorldOffMeshLinkTileKeys(void* navMesh,
+                                                 uint64_t* outKeys,
+                                                 int maxKeys,
+                                                 int* outCount)
+{
+    if (outCount) *outCount = 0;
+    if (!navMesh) return 0;
+    const auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    const int total = static_cast<int>(ctx->worldOffmeshLinksByTile.size());
+    if (outCount) *outCount = total;
+    if (!outKeys || maxKeys <= 0) return 0;
+    int written = 0;
+    for (const auto& kv : ctx->worldOffmeshLinksByTile)
+    {
+        if (written >= maxKeys) break;
+        outKeys[written++] = kv.first;
+    }
+    return written;
+}
+
 GTANAVVIEWER_API int UpsertSimAgents(void* navMesh, const SimAgentDescFFI* agents, int count)
 {
     if (!navMesh || !agents || count <= 0)
