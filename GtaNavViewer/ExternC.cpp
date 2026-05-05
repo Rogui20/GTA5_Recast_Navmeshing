@@ -2131,24 +2131,26 @@ namespace
                                                              const std::vector<unsigned int>& indices,
                                                              bool runtimeDynamic,
                                                              std::vector<OffmeshLink>& outLinks,
-                                                             const std::vector<uint8_t>* triIsDynamic = nullptr)
+                                                             const std::vector<uint8_t>* triIsDynamic = nullptr,
+                                                             bool requireDynamicEndpointForThisTile = true)
     {
         outLinks.clear();
 
         AutoOffmeshGenerationParamsV2 genParams = params;
         const int acceptedCap = params.maxLinksPerTile;
-        if (ctx.worldAutoOffmeshRequireDynamicEndpoint)
+        if (requireDynamicEndpointForThisTile)
             genParams.maxLinksPerTile = ctx.runtimeOffmeshRawMaxLinksPerTile > 0 ? ctx.runtimeOffmeshRawMaxLinksPerTile : 0;
 
         std::vector<OffmeshLink> generated;
         std::vector<GeneratedOffmeshCandidate> candidates;
-        const bool useEndpointFilter = ctx.worldAutoOffmeshRequireDynamicEndpoint && triIsDynamic && (triIsDynamic->size() == indices.size() / 3);
+        const bool useEndpointFilter = requireDynamicEndpointForThisTile && triIsDynamic && (triIsDynamic->size() == indices.size() / 3);
         if (!ctx.navData.GenerateAutomaticOffmeshLinksForTileV2(tx, ty, genParams, verts, indices, generated, &candidates,
                                                                  triIsDynamic,
                                                                  useEndpointFilter,
                                                                  params.dynamicSeedMaxXZDist,
                                                                  params.dynamicSeedMaxYDist))
             return false;
+        const size_t debugBaseIndex = ctx.lastOffmeshDebugCandidates.size();
         if (ctx.worldOffmeshDebugEnabled)
         {
             for (const auto& c : candidates)
@@ -2167,7 +2169,7 @@ namespace
         size_t startDyn = 0;
         size_t endDyn = 0;
         size_t debugRejected = 0;
-        const bool fallbackNoTriMetadata = ctx.worldAutoOffmeshRequireDynamicEndpoint && !useEndpointFilter;
+        const bool fallbackNoTriMetadata = requireDynamicEndpointForThisTile && !useEndpointFilter;
         const float maxXZDist = std::max(0.05f, params.dynamicEndpointMaxXZDist);
         const float maxYDist = std::max(0.05f, params.dynamicEndpointMaxYDist);
         if (useEndpointFilter)
@@ -2216,17 +2218,19 @@ namespace
                             endDebug.found ? endDebug.yDist : -1.0f);
                         ++debugRejected;
                     }
-                    if (ctx.worldOffmeshDebugEnabled && i < ctx.lastOffmeshDebugCandidates.size())
-                        ctx.lastOffmeshDebugCandidates[i].rejectReason = "static_static";
+                    const size_t debugIndex = debugBaseIndex + i;
+                    if (ctx.worldOffmeshDebugEnabled && debugIndex < ctx.lastOffmeshDebugCandidates.size())
+                        ctx.lastOffmeshDebugCandidates[debugIndex].rejectReason = "static_static";
                     continue;
                 }
             }
             outLinks.push_back(link);
-            if (ctx.worldOffmeshDebugEnabled && i < ctx.lastOffmeshDebugCandidates.size())
+            const size_t debugIndex = debugBaseIndex + i;
+            if (ctx.worldOffmeshDebugEnabled && debugIndex < ctx.lastOffmeshDebugCandidates.size())
             {
-                ctx.lastOffmeshDebugCandidates[i].accepted = true;
-                ctx.lastOffmeshDebugCandidates[i].startDynamic = sDyn;
-                ctx.lastOffmeshDebugCandidates[i].endDynamic = eDyn;
+                ctx.lastOffmeshDebugCandidates[debugIndex].accepted = true;
+                ctx.lastOffmeshDebugCandidates[debugIndex].startDynamic = sDyn;
+                ctx.lastOffmeshDebugCandidates[debugIndex].endDynamic = eDyn;
             }
             if (acceptedCap > 0 && static_cast<int>(outLinks.size()) >= acceptedCap)
                 break;
@@ -2250,7 +2254,7 @@ namespace
             outLinks.clear();
             return true;
         }
-        return GenerateWorldOffmeshLinksForTileFromGeometry(ctx, tx, ty, params, verts, indices, false, outLinks, &triIsDynamic);
+        return GenerateWorldOffmeshLinksForTileFromGeometry(ctx, tx, ty, params, verts, indices, false, outLinks, &triIsDynamic, ctx.worldAutoOffmeshRequireDynamicEndpoint);
     }
 
     void RemoveGeometryFromWorldIndex(ExternNavmeshContext& ctx, const std::string& geomId)
@@ -4311,16 +4315,13 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
             }
             else
             {
-                const bool prevRequire = ctx->worldAutoOffmeshRequireDynamicEndpoint;
-                if (modeFullDynamicTile)
-                    ctx->worldAutoOffmeshRequireDynamicEndpoint = false;
-                GenerateWorldOffmeshLinksForTileFromGeometry(*ctx, tx, ty, offmeshParams, verts, indices, runtimeDynamicOnly, tileLinks, &triIsDynamic);
-                ctx->worldAutoOffmeshRequireDynamicEndpoint = prevRequire;
-                printf("[WorldOffmesh] mode=%s tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireDynamicEndpoint=%d triCount=%zu links=%zu\n",
+                const bool requireDynamicEndpointForThisTile = ctx->worldAutoOffmeshRequireDynamicEndpoint && !modeFullDynamicTile;
+                GenerateWorldOffmeshLinksForTileFromGeometry(*ctx, tx, ty, offmeshParams, verts, indices, runtimeDynamicOnly, tileLinks, &triIsDynamic, requireDynamicEndpointForThisTile);
+                printf("[WorldOffmesh] mode=%s tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireEndpointThisTile=%d ctxRequireEndpoint=%d triCount=%zu links=%zu\n",
                     modeFullDynamicTile ? "full_dynamic_tile" : "endpoint_dynamic_filter",
                     tx, ty, tileHasDynamicGeom ? 1 : 0, wasRuntimeDirty ? 1 : 0,
                     ctx->worldAutoOffmeshOnlyDynamicAffectedTiles ? 1 : 0,
-                    prevRequire ? 1 : 0, triCount, tileLinks.size());
+                    requireDynamicEndpointForThisTile ? 1 : 0, ctx->worldAutoOffmeshRequireDynamicEndpoint ? 1 : 0, triCount, tileLinks.size());
             }
 
             if (!tileLinks.empty())
