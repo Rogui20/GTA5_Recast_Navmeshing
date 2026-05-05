@@ -1,5 +1,7 @@
 var NAVTREEINDEX13 =
 {
+"SDL__audio_8h.html#a32dbc13d28bdc43d7e07e080e24fb573":[44,0,5,2,1,5,22],
+"SDL__audio_8h.html#a37427a5d47e10103f2fff8165d5f9000":[44,0,5,2,1,5,85],
 "SDL__audio_8h.html#a379fcc25845e46bfa80cb3619fc2821c":[44,0,5,2,1,5,40],
 "SDL__audio_8h.html#a3b8052d0c49d14a2e3edf08eade52d3a":[44,0,5,2,1,5,17],
 "SDL__audio_8h.html#a3d38380ac4a45a68a0e1c1a7a02bd290":[44,0,5,2,1,5,36],
@@ -247,7 +249,5 @@ var NAVTREEINDEX13 =
 "SDL__config__emscripten_8h.html#a120d438f0cfa74d629beb6c85096003f":[44,0,5,2,1,11,102],
 "SDL__config__emscripten_8h.html#a14503280ca0cb757db915eea09282bfc":[44,0,5,2,1,11,49],
 "SDL__config__emscripten_8h.html#a14b60a4af99d03305d834018299c97c4":[44,0,5,2,1,11,21],
-"SDL__config__emscripten_8h.html#a14ed88d97364b75f2cc4a588e1b39302":[44,0,5,2,1,11,130],
-"SDL__config__emscripten_8h.html#a15584f56d115b955377103a0cca9ead1":[44,0,5,2,1,11,34],
-"SDL__config__emscripten_8h.html#a1569275063253ce85180e755a82e536d":[44,0,5,2,1,11,82]
+"SDL__config__emscripten_8h.html#a14ed88d97364b75f2cc4a588e1b39302":[44,0,5,2,1,11,130]
 };

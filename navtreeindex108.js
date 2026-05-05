@@ -1,5 +1,7 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__SysWMmsg.html#a7c3900af5ea797f1318fc77ee0ecd11b":[43,0,441,2],
+"structSDL__SysWMmsg.html#a8faf13f90f2477157b42b631308cd900":[43,0,441,0],
 "structSDL__SysWMmsg.html#a95f9aae58d18ee8fac556416b322a5fb":[43,0,441,3],
 "structSDL__SysWMmsg.html#add163320875f8c34e7a3f7c6e83e8d06":[43,0,441,1],
 "structSDL__TextEditingEvent.html":[43,0,442],
@@ -247,7 +249,5 @@ var NAVTREEINDEX108 =
 "structTileDbStats.html#a6ebfd2193df37dd43c8f5605ddd1f469":[43,0,491,5],
 "structTileDbStats.html#a7051a04ae262dcf4fc4e889c669d0535":[43,0,491,3],
 "structTileDbStats.html#ac3124d0e3a4c189e089e8ef97443b412":[43,0,491,0],
-"structTileDbStats.html#ad223b246a3acf98c5ece6a3d94a3ba57":[43,0,491,9],
-"structTileDbStats.html#ae2a5728aa74d78bbe09e5e1ad36a8e5a":[43,0,491,8],
-"structTileDbStats.html#af2af09c40460732bea91f3026b2535a6":[43,0,491,6]
+"structTileDbStats.html#ad223b246a3acf98c5ece6a3d94a3ba57":[43,0,491,9]
 };

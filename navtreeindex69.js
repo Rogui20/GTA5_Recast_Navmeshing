@@ -1,5 +1,7 @@
 var NAVTREEINDEX69 =
 {
+"classSample.html#af57ce10362e08d94b16cc592734bd6ba":[43,0,373,62],
+"classSample.html#af6972f1f58b458f5f5ff6291da892882":[43,0,373,37],
 "classSampleDebugDraw.html":[43,0,378],
 "classSampleDebugDraw.html#ae30775c5bef8b739d5c25a10e3603571":[43,0,378,0],
 "classSample__Debug.html":[43,0,374],
@@ -247,7 +249,5 @@ var NAVTREEINDEX69 =
 "classdtFindNearestPolyQuery.html":[43,0,27],
 "classdtFindNearestPolyQuery.html#a0f3122a8f4d6151eb628453b3e99d74c":[43,0,27,1],
 "classdtFindNearestPolyQuery.html#a70f751a070792e099462d3af34357bcd":[43,0,27,5],
-"classdtFindNearestPolyQuery.html#a713a860cc6775d929a9e0f1d64a86bda":[43,0,27,3],
-"classdtFindNearestPolyQuery.html#a72c70bc181bdd635a23e0d2b6df724cb":[43,0,27,4],
-"classdtFindNearestPolyQuery.html#a8900d818df939f8917d5220b854675c6":[43,0,27,0]
+"classdtFindNearestPolyQuery.html#a713a860cc6775d929a9e0f1d64a86bda":[43,0,27,3]
 };

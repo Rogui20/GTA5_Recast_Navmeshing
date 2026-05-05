@@ -1,5 +1,7 @@
 var NAVTREEINDEX72 =
 {
+"gdk.html#autotoc_md9-build-and-run-from-visual-studio":[13,3,8],
+"gdk.html#requirements-1":[13,0],
 "gdk.html#troubleshooting-1":[13,5],
 "gdk.html#visualc-gdk-solution":[13,2],
 "gdk.html#windows-gdk-setup-detailed-steps":[13,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX72 =
 "glad_8h.html#a22ff7b3139174894503fbae4110d5c03":[44,0,5,0,0,0,0,1139],
 "glad_8h.html#a2308c4ffa71335adb12ba6db2d937c7f":[44,0,5,0,0,0,0,140],
 "glad_8h.html#a235b789fa6b59cdbc067462b58375903":[44,0,5,0,0,0,0,931],
-"glad_8h.html#a236255e8cb6fedb01f0231d66febfb4f":[44,0,5,0,0,0,0,844],
-"glad_8h.html#a237571732a7fb356792dda17d319a553":[44,0,5,0,0,0,0,1166],
-"glad_8h.html#a23908499e05767776a20e5f62a2a7903":[44,0,5,0,0,0,0,388]
+"glad_8h.html#a236255e8cb6fedb01f0231d66febfb4f":[44,0,5,0,0,0,0,844]
 };

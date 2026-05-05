@@ -13,7 +13,7 @@ var searchData=
   ['samplesperedge_10',['samplesPerEdge',['../structAutoOffmeshGenerationParamsV2.html#affc3a73dd9f043d7a581c98b6e0abfad',1,'AutoOffmeshGenerationParamsV2']]],
   ['sassertfailfunc_11',['sAssertFailFunc',['../DetourAssert_8cpp.html#a7bbc68bcf03ba893c2d7e78eb46e9dd7',1,'DetourAssert.cpp']]],
   ['saveflags_12',['SaveFlags',['../structImGuiTableSettings.html#a9c936817432e02d76d8f9391aed70d85',1,'ImGuiTableSettings']]],
-  ['scale_13',['scale',['../structImFont.html#ae98fb07fd8862a7243d77b11f38bba19',1,'ImFont::Scale'],['../structSDLTest__CommonState.html#ad2d2821689008f2fd65034eb8040fb3c',1,'SDLTest_CommonState::scale']]],
+  ['scale_13',['scale',['../structSDLTest__CommonState.html#ad2d2821689008f2fd65034eb8040fb3c',1,'SDLTest_CommonState::scale'],['../structImFont.html#ae98fb07fd8862a7243d77b11f38bba19',1,'ImFont::Scale']]],
   ['scalefactor_14',['ScaleFactor',['../structImGui__ImplStbTrueType__FontSrcData.html#af3f3d5bb62feb6802a040061575d617d',1,'ImGui_ImplStbTrueType_FontSrcData']]],
   ['scancode_15',['scancode',['../structSDL__Keysym.html#ad47e9120a511e2efc7ec0c6d8a5ec51e',1,'SDL_Keysym']]],
   ['scanfmt_16',['ScanFmt',['../structImGuiDataTypeInfo.html#aaa2d211e7cc5f03786f82650b69e9cf3',1,'ImGuiDataTypeInfo']]],

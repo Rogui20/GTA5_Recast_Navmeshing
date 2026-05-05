@@ -1,5 +1,7 @@
 var NAVTREEINDEX91 =
 {
+"md_Docs_2__99__Roadmap.html#new-recastdetour-functionality":[3,3],
+"md_Docs_2__99__Roadmap.html#opt-in-config-value-validation-system":[3,0,2],
 "md_Docs_2__99__Roadmap.html#revisit-structural-organization":[3,1,4],
 "md_Docs_2__99__Roadmap.html#short-term":[3,0],
 "md_Docs_2__99__Roadmap.html#stb-style-single-header-release-packaging":[3,1,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX91 =
 "structCrowdToolParams.html#a8481d268ff04bf7e6b49458c911936cb":[43,0,12,8],
 "structCrowdToolParams.html#a85e1edfba62c2a2e5315ad05a0eaf0f9":[43,0,12,11],
 "structCrowdToolParams.html#a9627c513e79f26b6024c8d01843bc528":[43,0,12,5],
-"structCrowdToolParams.html#aa7340bfdeed7994d7899f8161744a3f6":[43,0,12,12],
-"structCrowdToolParams.html#aaf7a605017a4343c0536704cf0a4f1b0":[43,0,12,15],
-"structCrowdToolParams.html#abb28bf8b771767150348b0264c649991":[43,0,12,17]
+"structCrowdToolParams.html#aa7340bfdeed7994d7899f8161744a3f6":[43,0,12,12]
 };
