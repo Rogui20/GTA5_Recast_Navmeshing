@@ -456,6 +456,39 @@ namespace
         return ComputeEdgeOutwardNormal(a, b, polyCenter, normal);
     }
 
+    struct EdgeFrame
+    {
+        glm::vec3 edgeDir{};
+        glm::vec3 surfaceNormal{};
+        glm::vec3 outward3D{};
+        glm::vec3 outwardXZ{};
+        bool valid = false;
+    };
+
+    EdgeFrame ComputeEdgeFrame(const glm::vec3& a, const glm::vec3& b, const glm::vec3& polyCenter, const glm::vec3& polyNormal)
+    {
+        EdgeFrame f{};
+        f.outwardXZ = EdgeOutwardXZ(a, b, polyCenter, polyNormal);
+        const glm::vec3 edge = b - a;
+        if (glm::dot(edge, edge) <= 1e-6f || glm::dot(f.outwardXZ, f.outwardXZ) <= 1e-6f)
+            return f;
+        f.edgeDir = glm::normalize(edge);
+        f.surfaceNormal = glm::dot(polyNormal, polyNormal) > 1e-6f ? glm::normalize(polyNormal) : glm::vec3(0, 1, 0);
+        f.outward3D = glm::cross(f.edgeDir, f.surfaceNormal);
+        if (glm::dot(f.outward3D, f.outward3D) <= 1e-6f) return f;
+        f.outward3D = glm::normalize(f.outward3D);
+        const glm::vec3 edgeCenter = (a + b) * 0.5f;
+        const glm::vec3 centerToEdge = edgeCenter - polyCenter;
+        if (glm::dot(centerToEdge, centerToEdge) > 1e-6f && glm::dot(f.outward3D, glm::normalize(centerToEdge)) < 0.0f)
+            f.outward3D = -f.outward3D;
+        if (glm::dot(f.outward3D, f.outwardXZ) < 0.0f)
+            f.outward3D = -f.outward3D;
+        if (!std::isfinite(f.outward3D.x) || !std::isfinite(f.outward3D.y) || !std::isfinite(f.outward3D.z))
+            return f;
+        f.valid = true;
+        return f;
+    }
+
     bool SweepRay3(const std::vector<float>& verts,
                    const std::vector<int>& tris,
                    const glm::vec3& from,
@@ -506,6 +539,51 @@ namespace
 
         outPos = glm::vec3(nearest[0], nearest[1], nearest[2]);
         return true;
+    }
+
+    static float Dist2PointSegmentXZLocal(const glm::vec3& p, const glm::vec3& a, const glm::vec3& b)
+    {
+        const glm::vec2 pa(p.x - a.x, p.z - a.z), ba(b.x - a.x, b.z - a.z);
+        const float d = glm::dot(ba, ba);
+        const float t = d > 1e-8f ? glm::clamp(glm::dot(pa, ba) / d, 0.0f, 1.0f) : 0.0f;
+        const glm::vec2 q(a.x + ba.x * t, a.z + ba.y * t);
+        const glm::vec2 diff(p.x - q.x, p.z - q.y);
+        return glm::dot(diff, diff);
+    }
+
+    static bool PointInTriangleXZLocal(const glm::vec3& p, const glm::vec3& a, const glm::vec3& b, const glm::vec3& c)
+    {
+        auto sign = [](const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3){ return (p1.x - p3.x)*(p2.z - p3.z) - (p2.x - p3.x)*(p1.z - p3.z); };
+        const float d1 = sign(p, a, b), d2 = sign(p, b, c), d3 = sign(p, c, a);
+        const bool hasNeg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+        const bool hasPos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+        return !(hasNeg && hasPos);
+    }
+
+    static bool IsPointNearDynamicTriangleXZLocal(const glm::vec3& p, const std::vector<glm::vec3>& verts, const std::vector<unsigned int>& indices, const std::vector<uint8_t>& triIsDynamic, float maxXZDist, float maxYDist)
+    {
+        const float maxXZ2 = maxXZDist * maxXZDist;
+        const size_t triCount = indices.size() / 3;
+        for (size_t tri = 0; tri < triCount; ++tri)
+        {
+            if (tri >= triIsDynamic.size() || !triIsDynamic[tri]) continue;
+            const glm::vec3& a = verts[indices[tri * 3 + 0]];
+            const glm::vec3& b = verts[indices[tri * 3 + 1]];
+            const glm::vec3& c = verts[indices[tri * 3 + 2]];
+            const float triMinY = std::min(a.y, std::min(b.y, c.y));
+            const float triMaxY = std::max(a.y, std::max(b.y, c.y));
+            const float yDist = p.y < triMinY ? (triMinY - p.y) : (p.y > triMaxY ? (p.y - triMaxY) : 0.0f);
+            if (yDist > maxYDist) continue;
+            float xzDist2 = 0.0f;
+            if (!PointInTriangleXZLocal(p, a, b, c))
+            {
+                xzDist2 = Dist2PointSegmentXZLocal(p, a, b);
+                xzDist2 = std::min(xzDist2, Dist2PointSegmentXZLocal(p, b, c));
+                xzDist2 = std::min(xzDist2, Dist2PointSegmentXZLocal(p, c, a));
+            }
+            if (xzDist2 <= maxXZ2) return true;
+        }
+        return false;
     }
 
     uint64_t HashLink(const glm::vec3& start,
@@ -1063,119 +1141,98 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
                                                          const AutoOffmeshGenerationParamsV2& params,
                                                          const std::vector<glm::vec3>& localVerts,
                                                          const std::vector<unsigned int>& localIndices,
-                                                         std::vector<OffmeshLink>& outLinks) const
+                                                         std::vector<OffmeshLink>& outLinks,
+                                                         std::vector<GeneratedOffmeshCandidate>* outCandidates,
+                                                         const std::vector<uint8_t>* triIsDynamic,
+                                                         bool requireDynamicSeed,
+                                                         float dynamicSeedMaxXZDist,
+                                                         float dynamicSeedMaxYDist) const
 {
     outLinks.clear();
-    if (!m_nav)
-        return false;
-
+    if (outCandidates) outCandidates->clear();
+    if (!m_nav) return false;
     const dtMeshTile* tile = m_nav->getTileAt(tx, ty, 0);
-    if (!tile || !tile->header)
-        return true;
-    if (localVerts.empty() || localIndices.empty())
-        return true;
+    if (!tile || !tile->header || localVerts.empty() || localIndices.empty()) return true;
 
-    std::vector<float> rayVerts;
-    std::vector<int> rayTris;
-    rayVerts.reserve(localVerts.size() * 3);
-    for (const auto& v : localVerts) { rayVerts.push_back(v.x); rayVerts.push_back(v.y); rayVerts.push_back(v.z); }
-    rayTris.reserve(localIndices.size());
-    for (unsigned int i : localIndices) rayTris.push_back(static_cast<int>(i));
+    std::vector<float> rayVerts; std::vector<int> rayTris;
+    rayVerts.reserve(localVerts.size()*3);
+    for (auto& v: localVerts){ rayVerts.push_back(v.x); rayVerts.push_back(v.y); rayVerts.push_back(v.z);} 
+    rayTris.reserve(localIndices.size()); for (auto i: localIndices) rayTris.push_back((int)i);
 
-    dtNavMeshQuery* query = dtAllocNavMeshQuery();
-    if (!query) return false;
+    dtNavMeshQuery* query = dtAllocNavMeshQuery(); if (!query) return false;
     const std::unique_ptr<dtNavMeshQuery, void(*)(dtNavMeshQuery*)> queryGuard(query, dtFreeNavMeshQuery);
     if (dtStatusFailed(query->init(m_nav, 4096))) return false;
+    dtQueryFilter filter{}; filter.setIncludeFlags(0xffff); filter.setExcludeFlags(0);
 
-    dtQueryFilter filter{};
-    filter.setIncludeFlags(0xffff);
-    filter.setExcludeFlags(0);
-
-    const bool includeDrop = (params.genFlags & AUTO_OFFMESH_V2_INCLUDE_DROP) != 0;
-    const bool includeJump = (params.genFlags & AUTO_OFFMESH_V2_INCLUDE_JUMP) != 0;
-    const bool includeClimb = (params.genFlags & AUTO_OFFMESH_V2_INCLUDE_CLIMB) != 0;
-    const bool enableSweep = (params.genFlags & AUTO_OFFMESH_V2_ENABLE_SWEEP_RAYS) != 0;
-    const glm::vec3 up(0.f, 1.f, 0.f);
+    const bool includeDrop=(params.genFlags & AUTO_OFFMESH_V2_INCLUDE_DROP)!=0;
+    const bool includeJump=(params.genFlags & AUTO_OFFMESH_V2_INCLUDE_JUMP)!=0;
+    const bool includeClimb=(params.genFlags & AUTO_OFFMESH_V2_INCLUDE_CLIMB)!=0;
+    const bool enableSweep=(params.genFlags & AUTO_OFFMESH_V2_ENABLE_SWEEP_RAYS)!=0;
+    const glm::vec3 up(0,1,0);
     const float slopeCos = cosf(glm::radians(params.maxSlopeDegrees));
-    const float outwardOffset = std::max(params.outwardOffset, params.agentRadius + 0.05f);
-    const float maxRayDistance = params.maxDropHeight + params.raycastExtraHeight + params.upOffset;
-    const glm::vec3 snapExtents(std::max(params.agentRadius, 0.2f), std::max(params.agentHeight + params.maxJumpUp + 0.5f, 0.5f), std::max(params.agentRadius, 0.2f));
+    const glm::vec3 snapExtents(std::max(params.agentRadius,0.2f), std::max(params.agentHeight + params.maxJumpUp + 0.5f,0.5f), std::max(params.agentRadius,0.2f));
+    const float dropOut = params.dropOutwardOffset>0?params.dropOutwardOffset:params.outwardOffset;
+    const float dropInset = params.dropStartInset>0?params.dropStartInset:params.startInset;
+    const float dropUp = params.dropUpOffset!=0?params.dropUpOffset:params.upOffset;
+    const float jumpInset = params.jumpStartInset>0?params.jumpStartInset:params.startInset;
+    const float jumpUp = params.jumpUpOffset!=0?params.jumpUpOffset:params.upOffset;
+    const float climbInset = params.climbStartInset>0?params.climbStartInset:jumpInset;
+    const float maxRayDistance = params.maxDropHeight + params.raycastExtraHeight + std::max(dropUp,0.0f);
 
+    struct RejectCounters{size_t dy=0,distance=0,obstruction=0,slope=0,snapFail=0,dedupe=0,perTileLimit=0,sweepBlocked=0; } rejected;
+    size_t openEdges=0,samples=0,dropHits=0;
+    size_t dynamicSeedSkippedEdges=0,dynamicSeedSkippedSamples=0,dynamicSeedAcceptedSamples=0;
+    size_t dynamicTrisCount=0;
+    size_t dynamicSeedDebugLogs=0;
+    if (triIsDynamic) for (uint8_t v : *triIsDynamic) if (v) ++dynamicTrisCount;
+    size_t dropCount=0,jumpCount=0,climbCount=0;
     std::unordered_set<uint64_t> dedupe;
-    for (int polyIndex = 0; polyIndex < tile->header->polyCount; ++polyIndex)
-    {
-        const dtPoly* poly = &tile->polys[polyIndex];
-        if (poly->getType() != DT_POLYTYPE_GROUND) continue;
-        const glm::vec3 polyNormal = ComputePolyNormal(tile, poly);
-        if (polyNormal.y < slopeCos) continue;
-        const glm::vec3 polyCenter = ComputePolyCentroid(tile, poly);
-        for (int edge = 0; edge < poly->vertCount; ++edge)
-        {
-            if (!IsOpenEdge(tile, poly, edge, m_nav)) continue;
-            const glm::vec3 a = GetPolyVertex(tile, poly, edge);
-            const glm::vec3 b = GetPolyVertex(tile, poly, (edge + 1) % poly->vertCount);
-            glm::vec3 outward = EdgeOutwardXZ(a, b, polyCenter, polyNormal);
-            if (glm::dot(outward, outward) < 1e-6f) continue;
-            outward = glm::normalize(outward);
-            for (int sample = 0; sample < params.samplesPerEdge; ++sample)
-            {
-                const float t = static_cast<float>(sample + 1) / static_cast<float>(params.samplesPerEdge + 1);
-                const glm::vec3 p = LerpVec3(a, b, t);
-                const glm::vec3 takeoff = p - outward * params.startInset;
-                dtPolyRef takeoffRef = 0;
-                glm::vec3 takeoffSnapped{};
-                if (!SnapToNavmesh(query, takeoff, snapExtents, &filter, takeoffRef, takeoffSnapped)) continue;
-                const glm::vec3 probe = p + outward * outwardOffset + up * params.upOffset;
-                const glm::vec3 sweepStart = takeoffSnapped + up * params.sweepUp;
-                auto pushLink = [&](OffmeshLink& link, uint32_t type) {
-                    const uint64_t h = HashLink(link.start, link.end, type, params.quantizePos);
-                    if (!dedupe.insert(h).second) return false;
-                    outLinks.push_back(link);
-                    return !(params.maxLinksPerTile > 0 && static_cast<int>(outLinks.size()) >= params.maxLinksPerTile);
-                };
-                if (includeDrop)
-                {
-                    glm::vec3 hit{}, hitNormal{};
-                    if (RaycastDown(rayVerts, rayTris, probe, maxRayDistance, hit, hitNormal))
-                    {
-                        dtPolyRef hitRef = 0; glm::vec3 snapped{};
-                        if (SnapToNavmesh(query, hit, snapExtents, &filter, hitRef, snapped))
-                        {
-                            OffmeshLink link{}; link.start = takeoffSnapped; link.end = snapped; link.radius = std::max(params.agentRadius, 0.1f);
-                            link.bidirectional = false; link.area = params.dropArea; link.flags = 1; link.userId = params.userIdBase + static_cast<uint32_t>(outLinks.size()); link.ownerTx = tx; link.ownerTy = ty;
-                            if (!pushLink(link, 0u)) break;
-                        }
-                    }
-                }
-                if (includeJump || includeClimb)
-                {
-                    for (float d = params.minDist; d <= params.maxDist + 1e-3f; d += params.distStep)
-                    {
-                        glm::vec3 candRaw = p + outward * d + up * params.upOffset;
-                        dtPolyRef candRef = 0; glm::vec3 cand{};
-                        if (!SnapToNavmesh(query, candRaw, snapExtents, &filter, candRef, cand) || candRef == takeoffRef) continue;
-                        bool clear = enableSweep ? SweepRay3(rayVerts, rayTris, sweepStart, cand + up * params.sweepUp, params.sweepSideOffset, 0.10f) : true;
-                        if (!clear) continue;
-                        const float dy = cand.y - takeoffSnapped.y;
-                        uint32_t type = 1u; uint8_t area = params.jumpArea; bool accept = false;
-                        if (includeClimb && dy > 0.0f && dy <= params.maxJumpUp) { accept = true; type = 2u; area = params.climbArea; }
-                        else if (includeJump && dy >= -params.maxJumpDown && dy <= params.maxJumpUp) { accept = true; type = 1u; area = params.jumpArea; }
-                        if (!accept) continue;
-                        OffmeshLink link{}; link.start = takeoffSnapped; link.end = cand; link.radius = std::max(params.agentRadius, 0.1f); link.bidirectional = true;
-                        link.area = area; link.flags = 1; link.userId = params.userIdBase + static_cast<uint32_t>(outLinks.size()); link.ownerTx = tx; link.ownerTy = ty;
-                        if (!pushLink(link, type)) break;
-                        break;
-                    }
-                }
-                if (params.maxLinksPerTile > 0 && static_cast<int>(outLinks.size()) >= params.maxLinksPerTile)
-                    break;
-            }
-            if (params.maxLinksPerTile > 0 && static_cast<int>(outLinks.size()) >= params.maxLinksPerTile)
-                break;
+    auto tryAppend=[&](const GeneratedOffmeshCandidate& c,uint32_t type,size_t& bucket){ if(params.maxLinksPerTile>0 && static_cast<int>(outLinks.size())>=params.maxLinksPerTile){ ++rejected.perTileLimit; return false; } uint64_t h=HashLink(c.link.start,c.link.end,type,params.quantizePos); if(!dedupe.insert(h).second){++rejected.dedupe;return false;} ++bucket; if(outCandidates) outCandidates->push_back(c); outLinks.push_back(c.link); return true;};
+
+    for (int polyIndex=0; polyIndex<tile->header->polyCount; ++polyIndex){
+      const dtPoly* poly=&tile->polys[polyIndex]; if(poly->getType()!=DT_POLYTYPE_GROUND) continue;
+      glm::vec3 polyNormal=ComputePolyNormal(tile,poly); if(polyNormal.y<slopeCos) continue; glm::vec3 polyCenter=ComputePolyCentroid(tile,poly);
+      for(int edge=0; edge<poly->vertCount; ++edge){ if(!IsOpenEdge(tile,poly,edge,m_nav)) continue; ++openEdges;
+        glm::vec3 a=GetPolyVertex(tile,poly,edge), b=GetPolyVertex(tile,poly,(edge+1)%poly->vertCount);
+        EdgeFrame frame=ComputeEdgeFrame(a,b,polyCenter,polyNormal); if(!frame.valid) continue;
+        const glm::vec3 edgeCenter = (a + b) * 0.5f;
+        for(int sample=0; sample<params.samplesPerEdge; ++sample){ ++samples;
+          float t=float(sample+1)/float(params.samplesPerEdge+1); glm::vec3 p=LerpVec3(a,b,t);
+          if (requireDynamicSeed && !params.disableDynamicSeed && triIsDynamic && !triIsDynamic->empty())
+          {
+              if (!IsPointNearDynamicTriangleXZLocal(p, localVerts, localIndices, *triIsDynamic, dynamicSeedMaxXZDist, dynamicSeedMaxYDist))
+              {
+                  ++dynamicSeedSkippedSamples;
+                  if (dynamicSeedDebugLogs < 10)
+                  {
+                      printf("[AutoOffmeshV2][dynSeedReject] tile %d,%d p=(%.2f,%.2f,%.2f) edgeCenter=(%.2f,%.2f,%.2f) polyCenter=(%.2f,%.2f,%.2f)\n",
+                             tx, ty, p.x, p.y, p.z, edgeCenter.x, edgeCenter.y, edgeCenter.z, polyCenter.x, polyCenter.y, polyCenter.z);
+                      ++dynamicSeedDebugLogs;
+                  }
+                  continue;
+              }
+              ++dynamicSeedAcceptedSamples;
+          }
+          glm::vec3 takeoffDrop = p - frame.outward3D * dropInset; dtPolyRef takeoffDropRef=0; glm::vec3 takeoffDropSnapped{};
+          glm::vec3 takeoffJump = p - frame.outward3D * jumpInset; dtPolyRef takeoffJumpRef=0; glm::vec3 takeoffJumpSnapped{};
+          glm::vec3 takeoffClimb = p - frame.outward3D * climbInset; dtPolyRef takeoffClimbRef=0; glm::vec3 takeoffClimbSnapped{};
+          
+          if(includeDrop){ if(!SnapToNavmesh(query,takeoffDrop,snapExtents,&filter,takeoffDropRef,takeoffDropSnapped)){ ++rejected.snapFail; } else { glm::vec3 sweepStartDrop = takeoffDropSnapped + up*params.sweepUp; glm::vec3 probe=p + frame.outwardXZ*dropOut + up*dropUp; glm::vec3 hit{},hitNormal{};
+            if(RaycastDown(rayVerts,rayTris,probe,maxRayDistance,hit,hitNormal)){ ++dropHits; float drop=probe.y-hit.y;
+              if(drop>=params.minDropThreshold && drop<=params.maxDropHeight){ if(glm::dot(hitNormal,up)>=slopeCos){ bool clear=true; if(enableSweep) clear=SweepRay3(rayVerts,rayTris,sweepStartDrop,hit+up*params.sweepUp,params.sweepSideOffset,0.0f); else {glm::vec3 hh{},hn{}; clear=!RaycastTo(rayVerts,rayTris,sweepStartDrop,hit+up*params.sweepUp,hh,hn);} if(clear){ dtPolyRef hr=0; glm::vec3 snapped{}; if(SnapToNavmesh(query,hit,snapExtents,&filter,hr,snapped)){ GeneratedOffmeshCandidate c{}; c.link.start=takeoffDropSnapped; c.link.end=snapped; c.rawStart=takeoffDrop; c.rawEnd=hit; c.link.radius=std::max(params.agentRadius,0.1f); c.link.bidirectional=false; c.link.area=params.dropArea; c.link.flags=1; c.link.userId=params.userIdBase+ (uint32_t)outLinks.size(); c.link.ownerTx=tx; c.link.ownerTy=ty; tryAppend(c,0u,dropCount);} else ++rejected.snapFail;} else {++rejected.obstruction; ++rejected.sweepBlocked;}} else ++rejected.slope;} else ++rejected.dy; }} }
+          if(includeJump){ if(!SnapToNavmesh(query,takeoffJump,snapExtents,&filter,takeoffJumpRef,takeoffJumpSnapped)){ ++rejected.snapFail; } else { glm::vec3 sweepStartJump = takeoffJumpSnapped + up*params.sweepUp;
+            for(float d=params.minDist; d<=params.maxDist+1e-3f; d+=params.distStep){ glm::vec3 candRaw=p + frame.outwardXZ*d + up*jumpUp; dtPolyRef cr=0; glm::vec3 cand{}; if(!SnapToNavmesh(query,candRaw,snapExtents,&filter,cr,cand)){++rejected.snapFail; continue;} if(cr==takeoffJumpRef){++rejected.dedupe; continue;} float dy=cand.y-takeoffJumpSnapped.y; if(dy<-params.maxJumpDown||dy>params.maxJumpUp){++rejected.dy; continue;} bool clear= enableSweep? SweepRay3(rayVerts,rayTris,sweepStartJump,cand+up*params.sweepUp,params.sweepSideOffset,0.1f):true; if(!clear){glm::vec3 dir=cand-takeoffJumpSnapped; dir.y=0; if(glm::dot(dir,dir)>1e-6f){dir=glm::normalize(dir); glm::vec3 adj=cand; dtPolyRef ar=cr; for(int it=0;it<6 && !clear;++it){adj -= dir*std::max(0.25f,params.distStep*0.5f); if(!SnapToNavmesh(query,adj,snapExtents,&filter,ar,adj) || ar==takeoffJumpRef) break; clear= enableSweep? SweepRay3(rayVerts,rayTris,sweepStartJump,adj+up*params.sweepUp,params.sweepSideOffset,0.1f):true; if(clear){cand=adj; cr=ar;}}}} if(!clear){++rejected.obstruction; continue;} GeneratedOffmeshCandidate c{}; c.link.start=takeoffJumpSnapped; c.link.end=cand; c.rawStart=takeoffJump; c.rawEnd=candRaw; c.link.radius=std::max(params.agentRadius,0.1f); c.link.bidirectional=true; c.link.area=params.jumpArea; c.link.flags=1; c.link.userId=params.userIdBase+(uint32_t)outLinks.size(); c.link.ownerTx=tx; c.link.ownerTy=ty; if(tryAppend(c,1u,jumpCount)) break; }
+          } }
+          if(includeClimb){ if(!SnapToNavmesh(query,takeoffClimb,snapExtents,&filter,takeoffClimbRef,takeoffClimbSnapped)){ ++rejected.snapFail; } else { float minH=params.climbMinHeight; float maxH=params.climbMaxHeight>0?params.climbMaxHeight:params.maxJumpUp;
+            for(float d=params.minDist; d<=params.maxDist+1e-3f; d+=params.distStep){ glm::vec3 front = p + frame.outwardXZ*d + up*params.maxJumpUp; glm::vec3 topHit{},topN{}; if(!RaycastDown(rayVerts,rayTris,front, std::max(params.climbProbeDown,0.25f)+params.maxJumpUp, topHit, topN)){++rejected.snapFail; continue;} dtPolyRef cr=0; glm::vec3 cand{}; if(!SnapToNavmesh(query,topHit,snapExtents,&filter,cr,cand)){++rejected.snapFail; continue;} float dy=cand.y-takeoffClimbSnapped.y; if(dy<minH || dy>maxH){++rejected.dy; continue;} GeneratedOffmeshCandidate c{}; c.link.start=takeoffClimbSnapped; c.link.end=cand; c.rawStart=takeoffClimb; c.rawEnd=front; c.link.radius=std::max(params.agentRadius,0.1f); c.link.bidirectional=false; c.link.area=params.climbArea; c.link.flags=1; c.link.userId=params.userIdBase+(uint32_t)outLinks.size(); c.link.ownerTx=tx; c.link.ownerTy=ty; if(tryAppend(c,2u,climbCount)) break; }
+          } }
         }
-        if (params.maxLinksPerTile > 0 && static_cast<int>(outLinks.size()) >= params.maxLinksPerTile)
-            break;
+      }
     }
+    printf("[AutoOffmeshV2][tile %d,%d] openEdges=%zu samples=%zu dropHits=%zu snapFail=%zu sweepBlocked=%zu accepted(drop/jump/climb)=%zu/%zu/%zu perTileLimit=%zu cap=%d\n",
+           tx, ty, openEdges, samples, dropHits, rejected.snapFail, rejected.sweepBlocked, dropCount, jumpCount, climbCount, rejected.perTileLimit, params.maxLinksPerTile);
+    printf("[AutoOffmeshV2][tile %d,%d] openEdges=%zu samples=%zu dynamicSeedSkippedEdges=%zu dynamicSeedSkippedSamples=%zu dynamicSeedAcceptedSamples=%zu dropHits=%zu snapFail=%zu sweepBlocked=%zu rawGenerated=%zu dynamicTris=%zu\n",
+           tx, ty, openEdges, samples, dynamicSeedSkippedEdges, dynamicSeedSkippedSamples, dynamicSeedAcceptedSamples, dropHits, rejected.snapFail, rejected.sweepBlocked, outLinks.size(), dynamicTrisCount);
     return true;
 }
 bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& params,
