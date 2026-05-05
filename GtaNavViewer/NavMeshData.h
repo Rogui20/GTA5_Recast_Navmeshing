@@ -245,6 +245,7 @@ public:
     bool GetCachedBounds(float* outBMin, float* outBMax) const;
     const std::unordered_map<uint64_t, uint64_t>& GetCachedTileHashes() const { return m_cachedTileHashes; }
     void SetCachedTileHash(uint64_t tileKey, uint64_t hash) { m_cachedTileHashes[tileKey] = hash; }
+    void RemoveCachedTileHash(uint64_t tileKey) { m_cachedTileHashes.erase(tileKey); }
     bool GetCachedTileHash(uint64_t tileKey, uint64_t& outHash) const
     {
         auto it = m_cachedTileHashes.find(tileKey);
