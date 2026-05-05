@@ -93,6 +93,7 @@ var annotated_dup =
     [ "FastLZCompressor", "structFastLZCompressor.html", "structFastLZCompressor" ],
     [ "FileIO", "classFileIO.html", "classFileIO" ],
     [ "FrameResources", "structFrameResources.html", "structFrameResources" ],
+    [ "GeneratedOffmeshCandidate", "structGeneratedOffmeshCandidate.html", "structGeneratedOffmeshCandidate" ],
     [ "gladGLversionStruct", "structgladGLversionStruct.html", "structgladGLversionStruct" ],
     [ "GLCheckerTexture", "classGLCheckerTexture.html", "classGLCheckerTexture" ],
     [ "GraphParams", "structGraphParams.html", "structGraphParams" ],

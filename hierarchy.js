@@ -97,6 +97,7 @@ var hierarchy =
     [ "ExampleTreeNode", "structExampleTreeNode.html", null ],
     [ "ImGui::FileBrowser", "classImGui_1_1FileBrowser.html", null ],
     [ "FrameResources", "structFrameResources.html", null ],
+    [ "GeneratedOffmeshCandidate", "structGeneratedOffmeshCandidate.html", null ],
     [ "MemoryHandler::GeometrySlot", "structMemoryHandler_1_1GeometrySlot.html", null ],
     [ "gladGLversionStruct", "structgladGLversionStruct.html", null ],
     [ "GLCheckerTexture", "classGLCheckerTexture.html", null ],
