@@ -1,5 +1,11 @@
 var NAVTREEINDEX97 =
 {
+"structImGuiIO.html#a6c0c878d0d5ca6ef90f0968bd59309d3":[43,0,221,22],
+"structImGuiIO.html#a6ce2d9d34153fb79600e4fbb97c4f08a":[43,0,221,55],
+"structImGuiIO.html#a6f431c7002311965cd6d84984ceee90e":[43,0,221,51],
+"structImGuiIO.html#a6f907c3044fe77b706f48ee6d7eaa1b2":[43,0,221,18],
+"structImGuiIO.html#a703cad6bd4c9e8972d056116104d27e8":[43,0,221,69],
+"structImGuiIO.html#a7333e8741883f6ef83dd40b86e240591":[43,0,221,32],
 "structImGuiIO.html#a74739e2f344ce0868d70e8626229a94c":[43,0,221,38],
 "structImGuiIO.html#a74a64a74dcbe2a6ef0c1ef56ba328094":[43,0,221,73],
 "structImGuiIO.html#a77133a351ecaf34ea5df82866690dcaa":[43,0,221,83],
@@ -243,11 +249,5 @@ var NAVTREEINDEX97 =
 "structImGuiListClipperRange.html#a4086dae7cf99d5fba97956acc3a2263b":[43,0,229,2],
 "structImGuiListClipperRange.html#a5d0f961e00fadc1aa57fb72c197e6bf4":[43,0,229,3],
 "structImGuiListClipperRange.html#a7ea08ac3ce07bf99b1579ef29d911dba":[43,0,229,6],
-"structImGuiListClipperRange.html#ad78789e655a72bcf19d33a77c09dfe6d":[43,0,229,4],
-"structImGuiListClipperRange.html#ae04d9b8993b4fafcbf416fbaeed316b1":[43,0,229,0],
-"structImGuiLocEntry.html":[43,0,230],
-"structImGuiLocEntry.html#a95c97c84b714ad6f9a72a949be01d374":[43,0,230,1],
-"structImGuiLocEntry.html#aa2b09f545209e39a8487ab135c1d8af6":[43,0,230,0],
-"structImGuiMenuColumns.html":[43,0,231],
-"structImGuiMenuColumns.html#a1b977a8fbffb965ba5db5066ff6a7eef":[43,0,231,11]
+"structImGuiListClipperRange.html#ad78789e655a72bcf19d33a77c09dfe6d":[43,0,229,4]
 };

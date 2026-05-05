@@ -1,5 +1,11 @@
 var NAVTREEINDEX66 =
 {
+"SDL__video_8h.html#a2de24951bbc6626dc259ec0db5ae8ed4a4c35a77fa9c78ac60997b3c15e158b2e":[44,0,5,2,1,89,27,11],
+"SDL__video_8h.html#a2de24951bbc6626dc259ec0db5ae8ed4a54761551da12a1de15e2f844c70d19ad":[44,0,5,2,1,89,27,14],
+"SDL__video_8h.html#a2de24951bbc6626dc259ec0db5ae8ed4a5aa38fec236a59f29def7cbc26e0a459":[44,0,5,2,1,89,27,18],
+"SDL__video_8h.html#a2de24951bbc6626dc259ec0db5ae8ed4a610bb0aadbc3302326e6097340deac66":[44,0,5,2,1,89,27,27],
+"SDL__video_8h.html#a2de24951bbc6626dc259ec0db5ae8ed4a7d51f1f66a480883c5e7a7d58f668d72":[44,0,5,2,1,89,27,12],
+"SDL__video_8h.html#a2de24951bbc6626dc259ec0db5ae8ed4a83d7d3086480baed28bed6be4dadc8bf":[44,0,5,2,1,89,27,13],
 "SDL__video_8h.html#a2de24951bbc6626dc259ec0db5ae8ed4a901dce8f81e72cd6c0efa1f32ac96c2d":[44,0,5,2,1,89,27,9],
 "SDL__video_8h.html#a2de24951bbc6626dc259ec0db5ae8ed4aa7f058249f389ebba59f5d3cb00d7806":[44,0,5,2,1,89,27,2],
 "SDL__video_8h.html#a2de24951bbc6626dc259ec0db5ae8ed4ab162bed722047d9cd09b984a5c7e1277":[44,0,5,2,1,89,27,22],
@@ -243,11 +249,5 @@ var NAVTREEINDEX66 =
 "Sample__TempObstacles_8cpp.html#a07b411d5626ca18669a36dbce259699a":[44,0,9,1,16,9],
 "Sample__TempObstacles_8cpp.html#a07b411d5626ca18669a36dbce259699aa2583848fa9a65a13d8d705a41b45ac81":[44,0,9,1,16,9,3],
 "Sample__TempObstacles_8cpp.html#a07b411d5626ca18669a36dbce259699aa2b3e973aac1d955e6f393405f46a975f":[44,0,9,1,16,9,0],
-"Sample__TempObstacles_8cpp.html#a07b411d5626ca18669a36dbce259699aa2f2ebb162afcf9d8049d46c65724a304":[44,0,9,1,16,9,2],
-"Sample__TempObstacles_8cpp.html#a07b411d5626ca18669a36dbce259699aa9298e963d230a3f0d094748821ecc09c":[44,0,9,1,16,9,1],
-"Sample__TempObstacles_8cpp.html#a0c7f06a51de07a0953540cb0a5f089fb":[44,0,9,1,16,17],
-"Sample__TempObstacles_8cpp.html#a4298a24291a2d5201ff7a2b1cbfcf56d":[44,0,9,1,16,10],
-"Sample__TempObstacles_8cpp.html#a6e7db3dabeb68c2e9c627812ee42c47e":[44,0,9,1,16,16],
-"Sample__TempObstacles_8cpp.html#a79bfaaec8df17228648fc51c7c302f72":[44,0,9,1,16,18],
-"Sample__TempObstacles_8cpp.html#a86c92574bc37c2279e1cd899ba2dd8c7":[44,0,9,1,16,14]
+"Sample__TempObstacles_8cpp.html#a07b411d5626ca18669a36dbce259699aa2f2ebb162afcf9d8049d46c65724a304":[44,0,9,1,16,9,2]
 };

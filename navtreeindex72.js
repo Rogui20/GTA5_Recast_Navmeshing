@@ -1,5 +1,11 @@
 var NAVTREEINDEX72 =
 {
+"gdk.html#troubleshooting-1":[13,5],
+"gdk.html#visualc-gdk-solution":[13,2],
+"gdk.html#windows-gdk-setup-detailed-steps":[13,3],
+"gdk.html#windows-gdk-status":[13,1],
+"gdk.html#xbox-gdkx-setup":[13,4],
+"git.html":[15],
 "glad_8h.html":[44,0,5,0,0,0,0],
 "glad_8h.html#a0009b9a26c78d29e6ed13cc056edc720":[44,0,5,0,0,0,0,583],
 "glad_8h.html#a000ea5d0091e287efd51a66dcc9e99c6":[44,0,5,0,0,0,0,991],
@@ -243,11 +249,5 @@ var NAVTREEINDEX72 =
 "glad_8h.html#a235b789fa6b59cdbc067462b58375903":[44,0,5,0,0,0,0,931],
 "glad_8h.html#a236255e8cb6fedb01f0231d66febfb4f":[44,0,5,0,0,0,0,844],
 "glad_8h.html#a237571732a7fb356792dda17d319a553":[44,0,5,0,0,0,0,1166],
-"glad_8h.html#a23908499e05767776a20e5f62a2a7903":[44,0,5,0,0,0,0,388],
-"glad_8h.html#a2398c902b63dd997a0373c036d75ee3f":[44,0,5,0,0,0,0,152],
-"glad_8h.html#a239f4edbbd9748d15b888a990fb732f6":[44,0,5,0,0,0,0,1020],
-"glad_8h.html#a23a0bc2909cc2f79fe7287aaa044e880":[44,0,5,0,0,0,0,719],
-"glad_8h.html#a23a74c1c352ce0d74700bfed06a636e5":[44,0,5,0,0,0,0,1397],
-"glad_8h.html#a23a9e9e68af6b13075642a1353fd115f":[44,0,5,0,0,0,0,824],
-"glad_8h.html#a23f4924d457936e5aae89ae78b0c887f":[44,0,5,0,0,0,0,1281]
+"glad_8h.html#a23908499e05767776a20e5f62a2a7903":[44,0,5,0,0,0,0,388]
 };

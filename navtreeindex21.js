@@ -1,5 +1,11 @@
 var NAVTREEINDEX21 =
 {
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da62044290acefdd7524a8c95e6cf84e40":[44,0,5,2,1,37,5,65],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da635c4122c4945689eb97287fd7b97088":[44,0,5,2,1,37,5,83],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da63d960d3666540e57e0f65960929a2a1":[44,0,5,2,1,37,5,194],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da642f39c3278ba875bbffeeed2d46ebfa":[44,0,5,2,1,37,5,197],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da64c24d6731f08bd07cf87ad447ebf819":[44,0,5,2,1,37,5,119],
+"SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da651b09e2b80b445005ce63ccb01c6794":[44,0,5,2,1,37,5,112],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da675228e10bfb78455f9be8d6db799e24":[44,0,5,2,1,37,5,96],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da6953b6309d58571c0c96585bbae7e23e":[44,0,5,2,1,37,5,167],
 "SDL__keycode_8h.html#a179ce01fa41d35408f06b4b3d1cd9d3da6edbe6502eb39b3c581d45a2f50ba9c3":[44,0,5,2,1,37,5,154],
@@ -243,11 +249,5 @@ var NAVTREEINDEX21 =
 "SDL__messagebox_8h.html#a75e562d38bc214725e01f4f829bc1567add5517e7916c5aad3f9582d8d9e736ce":[44,0,5,2,1,42,12,2],
 "SDL__messagebox_8h.html#a97f06819ac610581044fdb93d81eed37":[44,0,5,2,1,42,13],
 "SDL__messagebox_8h.html#a97f06819ac610581044fdb93d81eed37a0c3a423a27f14a59ae160a8f145788d6":[44,0,5,2,1,42,13,0],
-"SDL__messagebox_8h.html#a97f06819ac610581044fdb93d81eed37a90a65bab036b0156ddec9d8c7e41a2ce":[44,0,5,2,1,42,13,1],
-"SDL__messagebox_8h.html#a97f06819ac610581044fdb93d81eed37a9786e79c1efa0c7ea96da7a08af9a24d":[44,0,5,2,1,42,13,4],
-"SDL__messagebox_8h.html#a97f06819ac610581044fdb93d81eed37aa5c724184320aa258788481e9ad6d814":[44,0,5,2,1,42,13,2],
-"SDL__messagebox_8h.html#a97f06819ac610581044fdb93d81eed37aca1b8c594588c656e940a8447a862d08":[44,0,5,2,1,42,13,3],
-"SDL__messagebox_8h.html#abe729cfa6d3cfbf8d4e70e6a31ed4cdc":[44,0,5,2,1,42,4],
-"SDL__messagebox_8h.html#ac65907683e76e7c39f0abf5a4bb94bf8":[44,0,5,2,1,42,6],
-"SDL__messagebox_8h.html#ad21beffe204426be6efbf4990c916ad0":[44,0,5,2,1,42,11]
+"SDL__messagebox_8h.html#a97f06819ac610581044fdb93d81eed37a90a65bab036b0156ddec9d8c7e41a2ce":[44,0,5,2,1,42,13,1]
 };

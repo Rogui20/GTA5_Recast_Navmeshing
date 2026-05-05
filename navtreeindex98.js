@@ -1,5 +1,11 @@
 var NAVTREEINDEX98 =
 {
+"structImGuiListClipperRange.html#ae04d9b8993b4fafcbf416fbaeed316b1":[43,0,229,0],
+"structImGuiLocEntry.html":[43,0,230],
+"structImGuiLocEntry.html#a95c97c84b714ad6f9a72a949be01d374":[43,0,230,1],
+"structImGuiLocEntry.html#aa2b09f545209e39a8487ab135c1d8af6":[43,0,230,0],
+"structImGuiMenuColumns.html":[43,0,231],
+"structImGuiMenuColumns.html#a1b977a8fbffb965ba5db5066ff6a7eef":[43,0,231,11],
 "structImGuiMenuColumns.html#a4384d90f9c7974425ad9165eed996297":[43,0,231,10],
 "structImGuiMenuColumns.html#a76bf28ca1ad728afce787f48e1645138":[43,0,231,1],
 "structImGuiMenuColumns.html#a85fedb03fec0c73555220b74ceaa2bb8":[43,0,231,2],
@@ -243,11 +249,5 @@ var NAVTREEINDEX98 =
 "structImGuiResizeBorderDef.html#ac7561a6f748779d0318a80e6c91cfc10":[43,0,249,0],
 "structImGuiResizeGripDef.html":[43,0,250],
 "structImGuiResizeGripDef.html#a5b335b7be8f517e38c56a5fd8e01d54c":[43,0,250,1],
-"structImGuiResizeGripDef.html#a697cdecca28177e275ce7ec38ef8e802":[43,0,250,0],
-"structImGuiResizeGripDef.html#a82a1367d835f206fc24b3f114c60f897":[43,0,250,3],
-"structImGuiResizeGripDef.html#ae2f7763b170625f6413e582c971f1792":[43,0,250,2],
-"structImGuiSelectionBasicStorage.html":[43,0,251],
-"structImGuiSelectionBasicStorage.html#a00b16e65ced786c9446c419ab9a75a0a":[43,0,251,6],
-"structImGuiSelectionBasicStorage.html#a18377dc1f474f77951a5da925c4cbfac":[43,0,251,7],
-"structImGuiSelectionBasicStorage.html#a331efab75bdd203770ed5ccaaa09a6d1":[43,0,251,5]
+"structImGuiResizeGripDef.html#a697cdecca28177e275ce7ec38ef8e802":[43,0,250,0]
 };

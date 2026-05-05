@@ -1,5 +1,11 @@
 var NAVTREEINDEX91 =
 {
+"md_Docs_2__99__Roadmap.html#revisit-structural-organization":[3,1,4],
+"md_Docs_2__99__Roadmap.html#short-term":[3,0],
+"md_Docs_2__99__Roadmap.html#stb-style-single-header-release-packaging":[3,1,0],
+"md_Docs_2__99__Roadmap.html#tooling":[3,3,2],
+"md_Docs_2__99__Roadmap.html#vehicle-navigation--movement":[3,3,6],
+"md_external_2SDL2_2README.html":[41],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html":[7],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#contributing-code":[7,1],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#contributing-to-the-documentation":[7,2],
@@ -243,11 +249,5 @@ var NAVTREEINDEX91 =
 "structCrowdToolParams.html#a9627c513e79f26b6024c8d01843bc528":[43,0,12,5],
 "structCrowdToolParams.html#aa7340bfdeed7994d7899f8161744a3f6":[43,0,12,12],
 "structCrowdToolParams.html#aaf7a605017a4343c0536704cf0a4f1b0":[43,0,12,15],
-"structCrowdToolParams.html#abb28bf8b771767150348b0264c649991":[43,0,12,17],
-"structCrowdToolParams.html#abd5dd62a05171d60b075e10d9290e7b3":[43,0,12,4],
-"structCrowdToolParams.html#ad4a5ed9be39d3f974e5fae65ced6c7b1":[43,0,12,0],
-"structCrowdToolParams.html#ae078b3f35f3d5b2865139b3960708426":[43,0,12,14],
-"structDebugLine.html":[43,0,16],
-"structDebugLine.html#a038052448edbedb93d3ea9d0bbad1a35":[43,0,16,1],
-"structDebugLine.html#a34ca88c2ec26300c10dc2a1f9592614f":[43,0,16,0]
+"structCrowdToolParams.html#abb28bf8b771767150348b0264c649991":[43,0,12,17]
 };

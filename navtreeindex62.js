@@ -1,5 +1,11 @@
 var NAVTREEINDEX62 =
 {
+"SDL__render_8h.html#a3a6e51bbee5fd3f8ee0c9f7504ae4130a02efc6cb7656c03d7a7d0164aced7e84":[44,0,5,2,1,61,11,0],
+"SDL__render_8h.html#a3a6e51bbee5fd3f8ee0c9f7504ae4130a1268ba2faaf6d9c7c7b71fc550f4248a":[44,0,5,2,1,61,11,1],
+"SDL__render_8h.html#a3a6e51bbee5fd3f8ee0c9f7504ae4130a12abcfe685ff444f0fc727db981a0c83":[44,0,5,2,1,61,11,2],
+"SDL__render_8h.html#a3a6e51bbee5fd3f8ee0c9f7504ae4130a77aa48df9c4f56f0b1c66c406da3ab81":[44,0,5,2,1,61,11,3],
+"SDL__render_8h.html#a3b5098c1944441034d2c5cff419f93cc":[44,0,5,2,1,61,58],
+"SDL__render_8h.html#a40ee6191edf8a60c9cb1adc00a10aefb":[44,0,5,2,1,61,69],
 "SDL__render_8h.html#a435c61d9f048550388198478e8fdeaa0":[44,0,5,2,1,61,66],
 "SDL__render_8h.html#a4514e3254853776f9c5202d8808e5354":[44,0,5,2,1,61,45],
 "SDL__render_8h.html#a473b4abbb29c60e98876eb68ad850f79":[44,0,5,2,1,61,41],
@@ -243,11 +249,5 @@ var NAVTREEINDEX62 =
 "SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba8784cfcaf0597143c194575787042952":[44,0,5,2,1,64,1,48],
 "SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba87d122e3f09f418a1f1c19badc148e91":[44,0,5,2,1,64,1,104],
 "SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba87d775bdc05b4dcd76a821fcf8e5f4dc":[44,0,5,2,1,64,1,110],
-"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba87fcff2a4b4ea2b71e20c602f960b479":[44,0,5,2,1,64,1,0],
-"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba893aa25f300cba8af0cf6263a4cd7ade":[44,0,5,2,1,64,1,233],
-"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba8b27df895b52876a689b729d2842c0f3":[44,0,5,2,1,64,1,193],
-"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba8b3916409c841cdb3ef4b0d4cc9d9155":[44,0,5,2,1,64,1,208],
-"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba8b4bd18e2d0bed5c7ba50a90a3a4dca6":[44,0,5,2,1,64,1,36],
-"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba8b6d4c68a85584d4cb430f9718cfa1c6":[44,0,5,2,1,64,1,180],
-"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba8bae7b26ad9bb7295eb3c086fd30907d":[44,0,5,2,1,64,1,228]
+"SDL__scancode_8h.html#a82ab7cff701034fb40a47b5b3a02777ba87fcff2a4b4ea2b71e20c602f960b479":[44,0,5,2,1,64,1,0]
 };
