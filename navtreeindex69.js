@@ -1,5 +1,9 @@
 var NAVTREEINDEX69 =
 {
+"classSample.html#ae77f5848426c540d452b7bbbdd33dcb2":[43,0,373,40],
+"classSample.html#ae94b1470cd74ee7abe9cf39a74c2bbd8":[43,0,373,3],
+"classSample.html#aea8a48c34d94596f6affbbd28938fb2c":[43,0,373,1],
+"classSample.html#aed281e16d0d13265d6d43d3604bc10ad":[43,0,373,13],
 "classSample.html#af57ce10362e08d94b16cc592734bd6ba":[43,0,373,62],
 "classSample.html#af6972f1f58b458f5f5ff6291da892882":[43,0,373,37],
 "classSampleDebugDraw.html":[43,0,378],
@@ -245,9 +249,5 @@ var NAVTREEINDEX69 =
 "classdtCollectPolysQuery.html#a5ebb596db273cdcc454c6ae6f981bf3a":[43,0,19,3],
 "classdtCollectPolysQuery.html#a720fc8d71cb55210dd3db71b77f3db4f":[43,0,19,4],
 "classdtCollectPolysQuery.html#a9bcdd3786ee5580ad5d52680f6edd03f":[43,0,19,0],
-"classdtCollectPolysQuery.html#af9a58ba3aff58aa0910d9446dcf8cb3b":[43,0,19,2],
-"classdtFindNearestPolyQuery.html":[43,0,27],
-"classdtFindNearestPolyQuery.html#a0f3122a8f4d6151eb628453b3e99d74c":[43,0,27,1],
-"classdtFindNearestPolyQuery.html#a70f751a070792e099462d3af34357bcd":[43,0,27,5],
-"classdtFindNearestPolyQuery.html#a713a860cc6775d929a9e0f1d64a86bda":[43,0,27,3]
+"classdtCollectPolysQuery.html#af9a58ba3aff58aa0910d9446dcf8cb3b":[43,0,19,2]
 };

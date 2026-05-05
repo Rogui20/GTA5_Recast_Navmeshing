@@ -1,5 +1,9 @@
 var NAVTREEINDEX91 =
 {
+"md_Docs_2__99__Roadmap.html#more-pod-structs-for-clarity-in-internals-wip":[3,1,3],
+"md_Docs_2__99__Roadmap.html#more-spatial-querying-abilities":[3,3,3],
+"md_Docs_2__99__Roadmap.html#more-tests":[3,1,2],
+"md_Docs_2__99__Roadmap.html#nav-volumes--3d-navigation":[3,3,0],
 "md_Docs_2__99__Roadmap.html#new-recastdetour-functionality":[3,3],
 "md_Docs_2__99__Roadmap.html#opt-in-config-value-validation-system":[3,0,2],
 "md_Docs_2__99__Roadmap.html#revisit-structural-organization":[3,1,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX91 =
 "structCrowdToolParams.html#a4d8f49ea1fa301ad224405d12b9cd9a9":[43,0,12,16],
 "structCrowdToolParams.html#a4f8f193a139b5f88d1665949c3fe7c9c":[43,0,12,9],
 "structCrowdToolParams.html#a50149e1b215b9c9eba1059aa15f11e1e":[43,0,12,1],
-"structCrowdToolParams.html#a642a969b56ed560f2472eb4bd868416a":[43,0,12,18],
-"structCrowdToolParams.html#a8481d268ff04bf7e6b49458c911936cb":[43,0,12,8],
-"structCrowdToolParams.html#a85e1edfba62c2a2e5315ad05a0eaf0f9":[43,0,12,11],
-"structCrowdToolParams.html#a9627c513e79f26b6024c8d01843bc528":[43,0,12,5],
-"structCrowdToolParams.html#aa7340bfdeed7994d7899f8161744a3f6":[43,0,12,12]
+"structCrowdToolParams.html#a642a969b56ed560f2472eb4bd868416a":[43,0,12,18]
 };

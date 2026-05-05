@@ -1,5 +1,9 @@
 var NAVTREEINDEX104 =
 {
+"structImGui__ImplWin32__ViewportData.html#a8efd6bfe614c3593dbb832f4d4566a69":[43,0,181,6],
+"structImGui__ImplWin32__ViewportData.html#a95fd97a8c3df832fd0f207fb43be39b5":[43,0,181,5],
+"structImGui__ImplWin32__ViewportData.html#a9aee71e39e654a81a6bfa395570a26e2":[43,0,181,4],
+"structImNewWrapper.html":[43,0,290],
 "structImPool.html":[43,0,291],
 "structImPool.html#a0129c0e467c287a5a7441f2abe0baf35":[43,0,291,7],
 "structImPool.html#a2434a4efa2eab4aeca8e15ac208c18d8":[43,0,291,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX104 =
 "structIslandOffmeshLinkParams.html":[43,0,309],
 "structIslandOffmeshLinkParams.html#a165e54e91f6d53ec9d26f11b770ada49":[43,0,309,3],
 "structIslandOffmeshLinkParams.html#a53663eda63e4868fec1435403491f300":[43,0,309,6],
-"structIslandOffmeshLinkParams.html#a621db68d6319b1121c5a4e352cdbae5b":[43,0,309,10],
-"structIslandOffmeshLinkParams.html#a9c6063f0bac3dd347bdd55ecc68c304c":[43,0,309,0],
-"structIslandOffmeshLinkParams.html#ab0b451e67128f1229498cda095bb930d":[43,0,309,2],
-"structIslandOffmeshLinkParams.html#ab9eaa7cfdc1eaea0e62048ffb8ae4b2f":[43,0,309,9],
-"structIslandOffmeshLinkParams.html#ae287763927ca253713d2a4068f33d9c5":[43,0,309,8]
+"structIslandOffmeshLinkParams.html#a621db68d6319b1121c5a4e352cdbae5b":[43,0,309,10]
 };
