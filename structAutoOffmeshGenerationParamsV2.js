@@ -8,6 +8,7 @@ var structAutoOffmeshGenerationParamsV2 =
     [ "climbOutwardOffset", "structAutoOffmeshGenerationParamsV2.html#abfdf9672a611a455f51a1e79096d991d", null ],
     [ "climbProbeDown", "structAutoOffmeshGenerationParamsV2.html#af5f85388cce15bec1831b44545588969", null ],
     [ "climbStartInset", "structAutoOffmeshGenerationParamsV2.html#a440c3ddd30765b19d8c04a64720f668b", null ],
+    [ "disableDynamicSeed", "structAutoOffmeshGenerationParamsV2.html#a3026980fe00154318ad53a0bc3dc022f", null ],
     [ "distStep", "structAutoOffmeshGenerationParamsV2.html#a4266fb9377b983213f8f19e0f3c64b07", null ],
     [ "dropArea", "structAutoOffmeshGenerationParamsV2.html#aa855e5af61b836a57cb37fcc56f83829", null ],
     [ "dropOutwardOffset", "structAutoOffmeshGenerationParamsV2.html#a5056679e2c644a9b8475ae40dbb69a5b", null ],

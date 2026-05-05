@@ -123,7 +123,7 @@ var searchData=
   ['maxobstacles_120',['maxObstacles',['../structdtTileCacheParams.html#a30fb34944589db46ad6262748d3f4c0c',1,'dtTileCacheParams']]],
   ['maxobstaclestocheck_121',['maxObstaclesToCheck',['../structPathAvoidParamsFFI.html#a9cca9b7b52ac5e255c165be77f19da3f',1,'PathAvoidParamsFFI']]],
   ['maxpath_122',['maxPath',['../structdtRaycastHit.html#a62b75cb350d9ace5e47887c7c1add9b3',1,'dtRaycastHit']]],
-  ['maxpolys_123',['maxpolys',['../structdtNavMeshParams.html#a4f44babd04fff4f8300ecd15d4237375',1,'dtNavMeshParams::maxPolys'],['../structrcPolyMesh.html#afc6261e7cee3e3ff2a83b6ee8baf14a9',1,'rcPolyMesh::maxpolys']]],
+  ['maxpolys_123',['maxpolys',['../structrcPolyMesh.html#afc6261e7cee3e3ff2a83b6ee8baf14a9',1,'rcPolyMesh::maxpolys'],['../structdtNavMeshParams.html#a4f44babd04fff4f8300ecd15d4237375',1,'dtNavMeshParams::maxPolys']]],
   ['maxrectbounds_124',['MaxRectBounds',['../structImFontAtlasBuilder.html#a1a97f57c58a81c35d8c16e989c72356b',1,'ImFontAtlasBuilder']]],
   ['maxrectsize_125',['MaxRectSize',['../structImFontAtlasBuilder.html#a1b386bcf52c3daa5ce5de749d62417d6',1,'ImFontAtlasBuilder']]],
   ['maxregions_126',['maxRegions',['../structrcCompactHeightfield.html#a6bfb7a2fdb06a64b03f0fffa885edd94',1,'rcCompactHeightfield']]],
@@ -141,7 +141,7 @@ var searchData=
   ['maxtx_138',['maxTx',['../structTileDbStats.html#a280b188866d6360cd3f376dc2ef29394',1,'TileDbStats']]],
   ['maxty_139',['maxTy',['../structTileDbStats.html#a6ebfd2193df37dd43c8f5605ddd1f469',1,'TileDbStats']]],
   ['maxvertsperpoly_140',['maxvertsperpoly',['../structrcConfig.html#a055d0ed71c79c9af29424de5d0cf3d2d',1,'rcConfig::maxVertsPerPoly'],['../structNavmeshGenerationSettings.html#a347e20bd5a4967a5b30326b0da73a60e',1,'NavmeshGenerationSettings::maxVertsPerPoly']]],
-  ['maxx_141',['maxx',['../structrcHeightfieldLayer.html#ab0b3836202050d3a701d2e3cfba8d9ab',1,'rcHeightfieldLayer::maxx'],['../structImGuiTableColumn.html#a934fd6769cb9a4d9c0f081acc78c8c0a',1,'ImGuiTableColumn::MaxX'],['../structdtTileCacheLayerHeader.html#ab675bd252447bcae38a8356b627af383',1,'dtTileCacheLayerHeader::maxx']]],
+  ['maxx_141',['maxx',['../structImGuiTableColumn.html#a934fd6769cb9a4d9c0f081acc78c8c0a',1,'ImGuiTableColumn::MaxX'],['../structdtTileCacheLayerHeader.html#ab675bd252447bcae38a8356b627af383',1,'dtTileCacheLayerHeader::maxx'],['../structrcHeightfieldLayer.html#ab0b3836202050d3a701d2e3cfba8d9ab',1,'rcHeightfieldLayer::maxx']]],
   ['maxy_142',['maxy',['../structrcHeightfieldLayer.html#ad697fc4a8a65c2b1ef1f976097ee2b3f',1,'rcHeightfieldLayer::maxy'],['../structdtTileCacheLayerHeader.html#afcbde7458c37c89801243b98a5aa4674',1,'dtTileCacheLayerHeader::maxy']]],
   ['mem_143',['mem',['../structSDL__RWops.html#aa2f5b6d7a5009c7bb6ae6bb664261df0',1,'SDL_RWops']]],
   ['memory_144',['Memory',['../structImGui__ImplVulkan__Texture.html#adb122f4fa04ccb65ccabb94bc18a6fe6',1,'ImGui_ImplVulkan_Texture']]],
@@ -258,7 +258,7 @@ var searchData=
   ['multiselecttempdata_255',['MultiSelectTempData',['../structImGuiContext.html#aff72b8fa0fa1227e9a164f34e44cb039',1,'ImGuiContext']]],
   ['multiselecttempdatastacked_256',['MultiSelectTempDataStacked',['../structImGuiContext.html#a6e4f74dd237ebedef69f0d97a7a5576d',1,'ImGuiContext']]],
   ['mutex_257',['mutex',['../SDL__mutex_8h.html#a0e2ae8dca74d9f6c2bbe87030b9e7a0c',1,'SDL_mutex.h']]],
-  ['mvp_258',['mvp',['../structUniforms.html#abcb95d428e91e58d46b1da202a39159f',1,'Uniforms::MVP'],['../structVERTEX__CONSTANT__BUFFER__DX12.html#af977128a020d49a3a5478a59e4229274',1,'VERTEX_CONSTANT_BUFFER_DX12::mvp'],['../structVERTEX__CONSTANT__BUFFER__DX11.html#a60d5a5fdfbc0fa9455b591ea77dfb8e7',1,'VERTEX_CONSTANT_BUFFER_DX11::mvp'],['../structVERTEX__CONSTANT__BUFFER__DX10.html#a5b919e7d9d3c0194b05ddd336426aecf',1,'VERTEX_CONSTANT_BUFFER_DX10::mvp']]],
+  ['mvp_258',['mvp',['../structVERTEX__CONSTANT__BUFFER__DX12.html#af977128a020d49a3a5478a59e4229274',1,'VERTEX_CONSTANT_BUFFER_DX12::mvp'],['../structVERTEX__CONSTANT__BUFFER__DX11.html#a60d5a5fdfbc0fa9455b591ea77dfb8e7',1,'VERTEX_CONSTANT_BUFFER_DX11::mvp'],['../structVERTEX__CONSTANT__BUFFER__DX10.html#a5b919e7d9d3c0194b05ddd336426aecf',1,'VERTEX_CONSTANT_BUFFER_DX10::mvp'],['../structUniforms.html#abcb95d428e91e58d46b1da202a39159f',1,'Uniforms::MVP']]],
   ['mx_259',['mx',['../structGuiState.html#a500386b3162aeaaa091381e71e65b872',1,'GuiState']]],
   ['my_260',['my',['../structGuiState.html#aaae100f98cc2247cdd4c9f56e760a55e',1,'GuiState']]]
 ];

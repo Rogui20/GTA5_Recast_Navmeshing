@@ -1,5 +1,6 @@
 var NAVTREEINDEX104 =
 {
+"structImPool.html#a4ec15d734fead5c872ee5e309b2294af":[43,0,291,6],
 "structImPool.html#a519f3e31d5750c6fef15642720f68a6c":[43,0,291,10],
 "structImPool.html#a613b0fa43ad7457ebde2988d4ea5f0be":[43,0,291,3],
 "structImPool.html#a62a34bcb3efcaaa3f4402c0c3cc1d600":[43,0,291,14],
@@ -248,6 +249,5 @@ var NAVTREEINDEX104 =
 "structLinearAllocator.html":[43,0,310],
 "structLinearAllocator.html#a1a09914aba0a50eba2ed752879974f75":[43,0,310,8],
 "structLinearAllocator.html#a2a9dbeeec28bfd75d74cc66ffee80296":[43,0,310,1],
-"structLinearAllocator.html#a3f04785ab8a03ae9be0042d3c5eb059e":[43,0,310,9],
-"structLinearAllocator.html#a8cb5d425605fe6284b00f353e30291c4":[43,0,310,7]
+"structLinearAllocator.html#a3f04785ab8a03ae9be0042d3c5eb059e":[43,0,310,9]
 };

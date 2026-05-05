@@ -1,5 +1,6 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__TextEditingEvent.html#ac6c6a00835d92b12c0ba5b78b5ad676d":[43,0,442,1],
 "structSDL__TextEditingEvent.html#adca95505c0bf212834930df58f6d1aa5":[43,0,442,0],
 "structSDL__TextEditingEvent.html#afc164f40abee6fd8e72e01b589210c75":[43,0,442,3],
 "structSDL__TextEditingExtEvent.html":[43,0,443],
@@ -248,6 +249,5 @@ var NAVTREEINDEX108 =
 "structTileGridDbFileHeader.html#a3ebc670ac4bfd8d3dacb3bdfe2577304":[43,0,492,4],
 "structTileGridDbFileHeader.html#a59fbb64ddd7f4e6081f435be1874e51b":[43,0,492,5],
 "structTileGridDbFileHeader.html#a76ab87bc72d4e15f05b39021ff91905d":[43,0,492,3],
-"structTileGridDbFileHeader.html#aa5f76a0e2d65fb0769faf3e9606595ca":[43,0,492,0],
-"structTileGridDbFileHeader.html#aea7c4b5d34f7329f12b703b550133329":[43,0,492,2]
+"structTileGridDbFileHeader.html#aa5f76a0e2d65fb0769faf3e9606595ca":[43,0,492,0]
 };
