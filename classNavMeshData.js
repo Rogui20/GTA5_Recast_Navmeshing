@@ -29,6 +29,7 @@ var classNavMeshData =
     [ "RebuildSingleTileFromGeometry", "classNavMeshData.html#a568edbb20a527c71732485ba930832bf", null ],
     [ "RebuildSpecificTiles", "classNavMeshData.html#a45dd6cd6c7451cd69d01757fc18765f8", null ],
     [ "RebuildTilesInBounds", "classNavMeshData.html#af793fd5a445cc980578e652d3158447d", null ],
+    [ "RemoveCachedTileHash", "classNavMeshData.html#a69877e02dbdaaaa47fad2dabe82ca3fa", null ],
     [ "RemoveNearestOffmeshLink", "classNavMeshData.html#a8b8e05f3d60b19f63cb29260a3218ca3", null ],
     [ "RemoveTileAt", "classNavMeshData.html#a44c1dfa99e290e495f2e0acbf5888942", null ],
     [ "SetCachedTileHash", "classNavMeshData.html#afdd84f9d161d2f889cdbf72b96498725", null ],

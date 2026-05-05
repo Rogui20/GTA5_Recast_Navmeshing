@@ -1,5 +1,6 @@
 var NAVTREEINDEX71 =
 {
+"dir_85412912e34acb3c02e9319a58ac0558.html":[44,0,5,2,0],
 "dir_8bce4bdd519db91335dbb23d6486467b.html":[44,0,5,0],
 "dir_97c6bac6df0065e0578eb2a70aa0bb50.html":[44,0,1,0],
 "dir_aae01254010af4d99e4d89c1995b4a05.html":[44,0,2,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX71 =
 "functions_y.html":[43,3,0,25],
 "functions_z.html":[43,3,0,26],
 "functions_~.html":[43,3,0,27],
-"gdk.html":[13],
-"gdk.html#autotoc_md1-add-a-gamingdesktopx64-configuration":[13,3,0]
+"gdk.html":[13]
 };
