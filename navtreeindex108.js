@@ -1,5 +1,9 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__TextEditingEvent.html#adca95505c0bf212834930df58f6d1aa5":[43,0,442,0],
+"structSDL__TextEditingEvent.html#afc164f40abee6fd8e72e01b589210c75":[43,0,442,3],
+"structSDL__TextEditingExtEvent.html":[43,0,443],
+"structSDL__TextEditingExtEvent.html#a34e0f54b5388da54bcf946b103e93711":[43,0,443,3],
 "structSDL__TextEditingExtEvent.html#a404d784703abd48fb71e1099bde114a3":[43,0,443,1],
 "structSDL__TextEditingExtEvent.html#a476ffaedf535eb226bb2e405a1672a1e":[43,0,443,4],
 "structSDL__TextEditingExtEvent.html#ab8ab98c13bf8e4528f6734d5db37731a":[43,0,443,5],
@@ -245,9 +249,5 @@ var NAVTREEINDEX108 =
 "structTileGridDbFileHeader.html#a59fbb64ddd7f4e6081f435be1874e51b":[43,0,492,5],
 "structTileGridDbFileHeader.html#a76ab87bc72d4e15f05b39021ff91905d":[43,0,492,3],
 "structTileGridDbFileHeader.html#aa5f76a0e2d65fb0769faf3e9606595ca":[43,0,492,0],
-"structTileGridDbFileHeader.html#aea7c4b5d34f7329f12b703b550133329":[43,0,492,2],
-"structTileGridStats.html":[43,0,493],
-"structTileGridStats.html#a067da053a760ec80c83254da9bc368d3":[43,0,493,3],
-"structTileGridStats.html#a212959d776548c679f2a90b29f5bb9d7":[43,0,493,1],
-"structTileGridStats.html#a87c1adccda7626370b44e8c2b6b65bf0":[43,0,493,0]
+"structTileGridDbFileHeader.html#aea7c4b5d34f7329f12b703b550133329":[43,0,492,2]
 };

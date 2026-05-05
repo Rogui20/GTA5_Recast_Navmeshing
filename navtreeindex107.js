@@ -1,5 +1,9 @@
 var NAVTREEINDEX107 =
 {
+"structSDL__HapticPeriodic.html#a2c4f27d4583187a7a994e79ad49083d3":[43,0,410,4],
+"structSDL__HapticPeriodic.html#a79fc2217fea6db6ab3d89ad905d52ccb":[43,0,410,1],
+"structSDL__HapticPeriodic.html#a8688d1c7ee6270ed290f6b474aef5ec9":[43,0,410,3],
+"structSDL__HapticPeriodic.html#a9e0177354f4a285b8c98e4a31cd31752":[43,0,410,2],
 "structSDL__HapticPeriodic.html#aad0ad2b00c7e6959da627663d91f7b94":[43,0,410,9],
 "structSDL__HapticPeriodic.html#ab35eedce7107edc75640586159fe75bb":[43,0,410,0],
 "structSDL__HapticPeriodic.html#abc7aa9e9c0d546cb54189a7812fbe554":[43,0,410,10],
@@ -245,9 +249,5 @@ var NAVTREEINDEX107 =
 "structSDL__TextEditingEvent.html#a198e6df194a3bf12cf5f82553e84c7cb":[43,0,442,4],
 "structSDL__TextEditingEvent.html#a23b3e414cf7a7ccc547b7595ca930049":[43,0,442,5],
 "structSDL__TextEditingEvent.html#a29848c2e7819ea98ae8fb08543e6d420":[43,0,442,2],
-"structSDL__TextEditingEvent.html#ac6c6a00835d92b12c0ba5b78b5ad676d":[43,0,442,1],
-"structSDL__TextEditingEvent.html#adca95505c0bf212834930df58f6d1aa5":[43,0,442,0],
-"structSDL__TextEditingEvent.html#afc164f40abee6fd8e72e01b589210c75":[43,0,442,3],
-"structSDL__TextEditingExtEvent.html":[43,0,443],
-"structSDL__TextEditingExtEvent.html#a34e0f54b5388da54bcf946b103e93711":[43,0,443,3]
+"structSDL__TextEditingEvent.html#ac6c6a00835d92b12c0ba5b78b5ad676d":[43,0,442,1]
 };
