@@ -1,5 +1,6 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__Surface.html#ac68afc0e3de01e3f40cb8bce2606e71b":[43,0,438,6],
 "structSDL__Surface.html#ae66d973dcb9b57cb34815892e1ee1f31":[43,0,438,10],
 "structSDL__Surface.html#af33bcf87a1f5e10a99b3c7e8626b38c8":[43,0,438,3],
 "structSDL__SysWMEvent.html":[43,0,439],
@@ -248,6 +249,5 @@ var NAVTREEINDEX108 =
 "structTileDbHeader.html#aae7c79de78ddfa405c6f10738b6ed987":[43,0,489,3],
 "structTileDbHeader.html#ae0084755efd91a9e4654bbd013934034":[43,0,489,0],
 "structTileDbIndexEntry.html":[43,0,490],
-"structTileDbIndexEntry.html#a42e6e2b2c6f16450025f06c65b1cf135":[43,0,490,4],
-"structTileDbIndexEntry.html#a714a47e0e0061eeb8228cc3afaa38b8c":[43,0,490,3]
+"structTileDbIndexEntry.html#a42e6e2b2c6f16450025f06c65b1cf135":[43,0,490,4]
 };

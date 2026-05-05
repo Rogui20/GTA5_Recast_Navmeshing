@@ -1,5 +1,6 @@
 var NAVTREEINDEX111 =
 {
+"structstbtt__vertex.html#aa325b3707b88e7e104c0de46bb2bf395":[43,0,479,5],
 "touch.html":[32],
 "touch.html#events":[32,1],
 "touch.html#functions":[32,2],

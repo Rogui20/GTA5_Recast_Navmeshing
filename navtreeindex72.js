@@ -1,5 +1,6 @@
 var NAVTREEINDEX72 =
 {
+"functions_~.html":[43,3,0,27],
 "gdk.html":[13],
 "gdk.html#autotoc_md1-add-a-gamingdesktopx64-configuration":[13,3,0],
 "gdk.html#autotoc_md10-packaging-and-installing-locally":[13,3,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX72 =
 "glad_8h.html#a21a559008d2b880f491f00d72ac20f0d":[44,0,5,0,0,0,0,218],
 "glad_8h.html#a21a9bbbf7f156f7b86a6e60735d18ce7":[44,0,5,0,0,0,0,1183],
 "glad_8h.html#a21f7fd667bd8822adaf1a45cc1c1a116":[44,0,5,0,0,0,0,856],
-"glad_8h.html#a2235d0c1385ca8f93745311a04e05527":[44,0,5,0,0,0,0,431],
-"glad_8h.html#a224db3f62a1b3e4f122071a0e9a023e2":[44,0,5,0,0,0,0,750]
+"glad_8h.html#a2235d0c1385ca8f93745311a04e05527":[44,0,5,0,0,0,0,431]
 };

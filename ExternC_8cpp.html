@@ -219,6 +219,8 @@ Functions</h2></td></tr>
 <tr class="separator:a17287d8a330f468fdbcc46e2bd6714f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8aaacb13c74403920adf973b3ec0bcf4" id="r_a8aaacb13c74403920adf973b3ec0bcf4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a8aaacb13c74403920adf973b3ec0bcf4">SyncQueryContextWorldState</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *builderNavMesh, <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *queryNavMesh)</td></tr>
 <tr class="separator:a8aaacb13c74403920adf973b3ec0bcf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0afdf687da99e03dcb49b9d82557cbf4" id="r_a0afdf687da99e03dcb49b9d82557cbf4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#a0afdf687da99e03dcb49b9d82557cbf4">SyncQueryContextRuntimeTiles</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *builderNavMesh, <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *queryNavMesh, const <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> *tileKeys, int tileCount)</td></tr>
+<tr class="separator:a0afdf687da99e03dcb49b9d82557cbf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc3c8ce991fcc94774a18e53d17838e2" id="r_abc3c8ce991fcc94774a18e53d17838e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#abc3c8ce991fcc94774a18e53d17838e2">InitQueryContextFromWorldContext</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *builderNavMesh, <a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *queryNavMesh)</td></tr>
 <tr class="separator:abc3c8ce991fcc94774a18e53d17838e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac17c6795d9ca84e6bb334384a5740c8b" id="r_ac17c6795d9ca84e6bb334384a5740c8b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ExternC_8cpp.html#ac17c6795d9ca84e6bb334384a5740c8b">ReloadWorldTilesFromCache</a> (<a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *queryNavMesh, const <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> *tileKeys, int tileCount)</td></tr>
@@ -4767,6 +4769,46 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>allowBuildIfMissing</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0afdf687da99e03dcb49b9d82557cbf4" name="a0afdf687da99e03dcb49b9d82557cbf4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0afdf687da99e03dcb49b9d82557cbf4">&#9670;&#160;</a></span>SyncQueryContextRuntimeTiles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ExternC_8h.html#a78a72b9155f5fa56223835dd31be45ec">GTANAVVIEWER_API</a> int SyncQueryContextRuntimeTiles </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>builderNavMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="glad_8h.html#a950fc91edb4504f62f1c577bf4727c29">void</a> *&#160;</td>
+          <td class="paramname"><em>queryNavMesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="SDL__config__ngage_8h.html#aaa5d1cd013383c889537491c3cfd9aad">uint64_t</a> *&#160;</td>
+          <td class="paramname"><em>tileKeys</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>tileCount</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

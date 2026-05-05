@@ -114,6 +114,7 @@ var ExternC_8cpp =
     [ "SimulateAgentsInternal", "ExternC_8cpp.html#ad5122c30db92fec937db5eea90c6bec6", null ],
     [ "StreamTilesAround", "ExternC_8cpp.html#ab32e95f2f92eecf32a69f6249f2845fd", null ],
     [ "StreamTilesForAgents", "ExternC_8cpp.html#a72ff617c0e75e23d2fd13aa6e0259231", null ],
+    [ "SyncQueryContextRuntimeTiles", "ExternC_8cpp.html#a0afdf687da99e03dcb49b9d82557cbf4", null ],
     [ "SyncQueryContextWorldState", "ExternC_8cpp.html#a8aaacb13c74403920adf973b3ec0bcf4", null ],
     [ "UnloadProcessedNonResidentTiles", "ExternC_8cpp.html#adbfb1b0a46a468a525e325c5b7995728", null ],
     [ "UnloadUnusedWorldGeometry", "ExternC_8cpp.html#a47095377b78f1f7ba08f40f42996336e", null ],
