@@ -1,5 +1,9 @@
 var NAVTREEINDEX91 =
 {
+"md_external_2SDL2_2docs_2CONTRIBUTING.html":[7],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#contributing-code":[7,1],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#contributing-to-the-documentation":[7,2],
+"md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-a-function-documentation":[7,2,0],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#editing-the-wiki":[7,2,1],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#filing-a-github-issue":[7,0],
 "md_external_2SDL2_2docs_2CONTRIBUTING.html#following-the-style-guide":[7,1,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX91 =
 "structDynObstacleDescFFI.html#a4cc0142a344721c9dd6f012fcfb9fb80":[43,0,77,8],
 "structDynObstacleDescFFI.html#a519d143c2a020a849cd90b27a56d0201":[43,0,77,7],
 "structDynObstacleDescFFI.html#a818eeec59e648330095826e8c0fa87fd":[43,0,77,5],
-"structDynObstacleDescFFI.html#a8cbfa50fb20647d0e3f4f54b04205276":[43,0,77,1],
-"structDynObstacleDescFFI.html#a9819fe72868b0c06c69f42e4c5e535e1":[43,0,77,2],
-"structDynObstacleDescFFI.html#aa008639554e9bcd6b77627b1b500f6d0":[43,0,77,9],
-"structDynObstacleDescFFI.html#aa85f08638e5014323c3719b8a9bfcc6b":[43,0,77,4],
-"structDynObstacleDescFFI.html#af68fc2f60c898ff49b02304aef388ca0":[43,0,77,3]
+"structDynObstacleDescFFI.html#a8cbfa50fb20647d0e3f4f54b04205276":[43,0,77,1]
 };

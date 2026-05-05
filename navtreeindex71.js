@@ -1,5 +1,9 @@
 var NAVTREEINDEX71 =
 {
+"dir_f989b3d3473f3227bb3c0f171476a0db.html":[44,0,5,0,0,1],
+"dir_fc5ead6dadc041a993e0b7f2ef9bc4fa.html":[44,0,0],
+"dir_fe7f4084ac0458032f1df717ceae8313.html":[44,0,8,1],
+"directfb.html":[10],
 "directfb.html#opengl-support":[10,1],
 "directfb.html#simple-window-manager":[10,0],
 "dollar-gestures.html":[14],
@@ -143,8 +147,8 @@ var NAVTREEINDEX71 =
 "external_2glm_2simd_2vector__relational_8h.html":[44,0,5,1,1,9],
 "external_2glm_2simd_2vector__relational_8h_source.html":[44,0,5,1,1,9],
 "files.html":[44,0],
-"functions.html":[43,3,0],
 "functions.html":[43,3,0,0],
+"functions.html":[43,3,0],
 "functions_a.html":[43,3,0,1],
 "functions_b.html":[43,3,0,2],
 "functions_c.html":[43,3,0,3],
@@ -153,8 +157,8 @@ var NAVTREEINDEX71 =
 "functions_enum.html":[43,3,4],
 "functions_eval.html":[43,3,5],
 "functions_f.html":[43,3,0,6],
-"functions_func.html":[43,3,1],
 "functions_func.html":[43,3,1,0],
+"functions_func.html":[43,3,1],
 "functions_func_a.html":[43,3,1,1],
 "functions_func_b.html":[43,3,1,2],
 "functions_func_c.html":[43,3,1,3],
@@ -195,8 +199,8 @@ var NAVTREEINDEX71 =
 "functions_type.html":[43,3,3],
 "functions_u.html":[43,3,0,21],
 "functions_v.html":[43,3,0,22],
-"functions_vars.html":[43,3,2,0],
 "functions_vars.html":[43,3,2],
+"functions_vars.html":[43,3,2,0],
 "functions_vars_a.html":[43,3,2,1],
 "functions_vars_b.html":[43,3,2,2],
 "functions_vars_c.html":[43,3,2,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX71 =
 "gdk.html#windows-gdk-setup-detailed-steps":[13,3],
 "gdk.html#windows-gdk-status":[13,1],
 "gdk.html#xbox-gdkx-setup":[13,4],
-"git.html":[15],
-"glad_8h.html":[44,0,5,0,0,0,0],
-"glad_8h.html#a0009b9a26c78d29e6ed13cc056edc720":[44,0,5,0,0,0,0,583],
-"glad_8h.html#a000ea5d0091e287efd51a66dcc9e99c6":[44,0,5,0,0,0,0,991],
-"glad_8h.html#a0020a1cdc41fd90c0253586098a6e181":[44,0,5,0,0,0,0,233]
+"git.html":[15]
 };

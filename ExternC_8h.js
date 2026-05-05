@@ -109,6 +109,8 @@ var ExternC_8h =
     [ "SetNavMeshGenSettings", "ExternC_8h.html#a8cffc5e7d98e834d8efad83b0b13a324", null ],
     [ "SetNavMeshSessionId", "ExternC_8h.html#a87a9adba83fdb3bc11375785f1c0a186", null ],
     [ "SetWorldAutoOffmeshEnabled", "ExternC_8h.html#a25c22b76bd1a1ce2963dae266d84c504", null ],
+    [ "SetWorldAutoOffmeshOnlyDynamicAffectedTiles", "ExternC_8h.html#a9831949433da21a477a02928c1ddc2a0", null ],
+    [ "SetWorldAutoOffmeshRequireDynamicEndpoint", "ExternC_8h.html#a35dcc74da562e6addbed163b202bd733", null ],
     [ "SetWorldGeometryMemoryLimitsMB", "ExternC_8h.html#a4082a25afcdffef3e2b65e977357b880", null ],
     [ "SetWorldTileAutoSaveManifest", "ExternC_8h.html#a2995bb91df6e316e4e25c5208f26f713", null ],
     [ "SetWorldTileCacheGridDBEnabled", "ExternC_8h.html#aa7db278ca81ae3b55c423b929b88b94c", null ],

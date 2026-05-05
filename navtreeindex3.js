@@ -1,5 +1,9 @@
 var NAVTREEINDEX3 =
 {
+"GtaNavContext_8h_source.html":[44,0,6,7],
+"GtaNavGeometry_8cpp.html":[44,0,6,8],
+"GtaNavGeometry_8h.html":[44,0,6,9],
+"GtaNavGeometry_8h_source.html":[44,0,6,9],
 "GtaNavProps_8cpp.html":[44,0,6,10],
 "GtaNavProps_8h.html":[44,0,6,11],
 "GtaNavProps_8h_source.html":[44,0,6,11],
@@ -245,9 +249,5 @@ var NAVTREEINDEX3 =
 "GtaNavViewer_2imgui_2imgui_8cpp.html#a42a888a71f6295199994f5c3aa65f9d6":[44,0,7,0,2,82],
 "GtaNavViewer_2imgui_2imgui_8cpp.html#a42ba83efd4d19e4a61898dc8f8632ff1":[44,0,7,0,2,171],
 "GtaNavViewer_2imgui_2imgui_8cpp.html#a42e3a0e8feed1a6b8fb9ffe79af9d706":[44,0,7,0,2,266],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a437d1c54633f2e3c53dd775034be37ae":[44,0,7,0,2,28],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a45a39b3a2cfa3aa899eecb63bac79d1a":[44,0,7,0,2,241],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a486a2f0ac6b8bc3c18f14d08b3c808d6":[44,0,7,0,2,18],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a48d8e4bfb5933e8ccec0e1e5671366d9":[44,0,7,0,2,38],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a48ef1fdc5133fa3ec59365422d44a013":[44,0,7,0,2,251]
+"GtaNavViewer_2imgui_2imgui_8cpp.html#a437d1c54633f2e3c53dd775034be37ae":[44,0,7,0,2,28]
 };

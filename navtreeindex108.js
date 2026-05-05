@@ -1,5 +1,9 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__TouchFingerEvent.html#abde2ab5cb013bbd21e37a65e2f8fa666":[43,0,444,4],
+"structSDL__TouchFingerEvent.html#ac2bb8af638d2927a8e13f6ffe8f9384e":[43,0,444,9],
+"structSDL__TouchFingerEvent.html#ac6acac209d6e2bd659fdb6760081393d":[43,0,444,0],
+"structSDL__TouchFingerEvent.html#ad7a6f39ec9af1bf47b160d18314edd70":[43,0,444,5],
 "structSDL__UserEvent.html":[43,0,445],
 "structSDL__UserEvent.html#aae4dbf65c34d654c9edf519eb061b7cf":[43,0,445,2],
 "structSDL__UserEvent.html#ab2893a12be2f97195f16463a23107913":[43,0,445,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX108 =
 "structVector3.html#a7e2d3237b29a2f29d7b3d8b2934e35f2":[43,0,495,0],
 "structVector3.html#a86eb35a9fa2d5a49e7fad66a35fa9c13":[43,0,495,1],
 "structVector3.html#aa8c9461eb24bd2c364258078811a3e9d":[43,0,495,2],
-"structdtBVNode.html":[43,0,18],
-"structdtBVNode.html#a4f03eda2f4ae838eed627db41ebea292":[43,0,18,1],
-"structdtBVNode.html#aa7de4b9e1151b9f4bf02154cfb24a45a":[43,0,18,2],
-"structdtBVNode.html#aba981174ad61a601f743d986142ee504":[43,0,18,0],
-"structdtCompressedTile.html":[43,0,20]
+"structdtBVNode.html":[43,0,18]
 };

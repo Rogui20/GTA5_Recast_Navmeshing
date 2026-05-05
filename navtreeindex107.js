@@ -1,5 +1,9 @@
 var NAVTREEINDEX107 =
 {
+"structSDL__HapticRamp.html#ad58a8f7cfdf659b45f0503fc56db7436":[43,0,410,6],
+"structSDL__HapticRamp.html#adbcd7ffb05016d442c73e81cc0fcbbd2":[43,0,410,0],
+"structSDL__JoyAxisEvent.html":[43,0,412],
+"structSDL__JoyAxisEvent.html#a0beac2fb161e45771c424bd0b6daeabb":[43,0,412,0],
 "structSDL__JoyAxisEvent.html#a53ee73e7c367934dd6edb69963be5556":[43,0,412,7],
 "structSDL__JoyAxisEvent.html#a604b258940a8cd8beaa5efeb55d6f825":[43,0,412,4],
 "structSDL__JoyAxisEvent.html#a60ecfc70df9eeef8e33b5dd7dc060389":[43,0,412,5],
@@ -245,9 +249,5 @@ var NAVTREEINDEX107 =
 "structSDL__TouchFingerEvent.html#a3dd6c668612f197dcb1e2b69d8c5e0e7":[43,0,444,7],
 "structSDL__TouchFingerEvent.html#a8616d46ed19906e3ee90a4d481d3a284":[43,0,444,2],
 "structSDL__TouchFingerEvent.html#a9c0320c5f18a6b9d10da657e166608c9":[43,0,444,1],
-"structSDL__TouchFingerEvent.html#ab4fca822d0807b5748dbae8d3cc56524":[43,0,444,3],
-"structSDL__TouchFingerEvent.html#abde2ab5cb013bbd21e37a65e2f8fa666":[43,0,444,4],
-"structSDL__TouchFingerEvent.html#ac2bb8af638d2927a8e13f6ffe8f9384e":[43,0,444,9],
-"structSDL__TouchFingerEvent.html#ac6acac209d6e2bd659fdb6760081393d":[43,0,444,0],
-"structSDL__TouchFingerEvent.html#ad7a6f39ec9af1bf47b160d18314edd70":[43,0,444,5]
+"structSDL__TouchFingerEvent.html#ab4fca822d0807b5748dbae8d3cc56524":[43,0,444,3]
 };
