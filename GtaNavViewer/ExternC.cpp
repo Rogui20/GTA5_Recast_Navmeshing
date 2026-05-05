@@ -201,6 +201,8 @@ namespace
         std::unordered_map<uint64_t, std::vector<OffmeshLink>> worldOffmeshLinksByTile;
         std::unordered_set<uint64_t> dirtyWorldOffmeshTiles;
         bool worldAutoGenerateOffmeshLinks = false;
+        bool worldAutoOffmeshOnlyDynamicAffectedTiles = true;
+        bool worldAutoOffmeshRequireDynamicEndpoint = true;
         int runtimeOffmeshMaxLinksPerTile = 64;
         int runtimeOffmeshMaxTriCount = 100000;
         std::deque<uint64_t> pendingTileBuildQueue;
@@ -3962,6 +3964,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
     int emptied = 0;
     int failed = 0;
     std::unordered_set<uint64_t> processedTileKeys;
+    std::unordered_set<uint64_t> successfullyBuiltTileKeys;
     std::unordered_set<uint64_t> tilesToSave;
     ctx->lastBuiltWorldTileKeys.clear();
 
@@ -3977,6 +3980,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         const uint64_t tileKey = ctx->pendingTileBuildQueue.front();
         ctx->pendingTileBuildQueue.pop_front();
         ctx->pendingTileBuildSet.erase(tileKey);
+        const bool wasRuntimeDirty = ctx->runtimeDirtyWorldTiles.count(tileKey) > 0;
         ctx->dirtyWorldTiles.erase(tileKey);
         ctx->runtimeDirtyWorldTiles.erase(tileKey);
         InvalidateAgentProfileTileCaches(*ctx, tileKey);
@@ -4031,20 +4035,46 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         }
 
         std::vector<OffmeshLink> tileLinks;
-        if (ctx->worldAutoGenerateOffmeshLinks && (ctx->dirtyWorldOffmeshTiles.count(tileKey) > 0))
+        const bool shouldGenerateOffmesh =
+            ctx->worldAutoGenerateOffmeshLinks &&
+            ctx->dirtyWorldOffmeshTiles.count(tileKey) > 0 &&
+            (!ctx->worldAutoOffmeshOnlyDynamicAffectedTiles || tileHasDynamicGeom || wasRuntimeDirty);
+        if (shouldGenerateOffmesh)
         {
             AutoOffmeshGenerationParamsV2 offmeshParams = ctx->autoOffmeshParamsV2;
             const size_t triCount = indices.size() / 3;
             if (runtimeDynamicOnly)
-                offmeshParams.maxLinksPerTile = std::min(offmeshParams.maxLinksPerTile, std::max(0, ctx->runtimeOffmeshMaxLinksPerTile));
+            {
+                const int cap = std::max(0, ctx->runtimeOffmeshMaxLinksPerTile);
+                if (cap > 0)
+                {
+                    if (offmeshParams.maxLinksPerTile <= 0)
+                        offmeshParams.maxLinksPerTile = cap;
+                    else
+                        offmeshParams.maxLinksPerTile = std::min(offmeshParams.maxLinksPerTile, cap);
+                }
+            }
 
-            if (runtimeDynamicOnly && static_cast<int>(triCount) > ctx->runtimeOffmeshMaxTriCount)
+            if (ctx->worldAutoOffmeshRequireDynamicEndpoint && !tileHasDynamicGeom)
+            {
+                printf("[WorldOffmesh] tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireDynamicEndpoint=%d triCount=%zu links=%zu note=skipped_no_dynamic_endpoint\n",
+                    tx, ty, tileHasDynamicGeom ? 1 : 0, wasRuntimeDirty ? 1 : 0,
+                    ctx->worldAutoOffmeshOnlyDynamicAffectedTiles ? 1 : 0,
+                    ctx->worldAutoOffmeshRequireDynamicEndpoint ? 1 : 0, triCount, tileLinks.size());
+            }
+            else if (runtimeDynamicOnly && static_cast<int>(triCount) > ctx->runtimeOffmeshMaxTriCount)
             {
                 printf("[WorldOffmesh] skipped tile %d,%d triCount=%zu reason=too_dense_runtime\n", tx, ty, triCount);
             }
             else
             {
+                if (ctx->worldAutoOffmeshRequireDynamicEndpoint)
+                    printf("[WorldOffmesh] TODO endpoint dynamic/static filtering requires per-triangle source metadata.\n");
                 GenerateWorldOffmeshLinksForTileFromGeometry(*ctx, tx, ty, offmeshParams, verts, indices, runtimeDynamicOnly, tileLinks);
+                printf("[WorldOffmesh] tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireDynamicEndpoint=%d triCount=%zu links=%zu\n",
+                    tx, ty, tileHasDynamicGeom ? 1 : 0, wasRuntimeDirty ? 1 : 0,
+                    ctx->worldAutoOffmeshOnlyDynamicAffectedTiles ? 1 : 0,
+                    ctx->worldAutoOffmeshRequireDynamicEndpoint ? 1 : 0, triCount, tileLinks.size());
             }
 
             if (!tileLinks.empty())
@@ -4052,6 +4082,15 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
             else
                 ctx->worldOffmeshLinksByTile.erase(tileKey);
             ctx->dirtyWorldOffmeshTiles.erase(tileKey);
+        }
+        else
+        {
+            if (ctx->dirtyWorldOffmeshTiles.count(tileKey) > 0 &&
+                ctx->worldAutoOffmeshOnlyDynamicAffectedTiles)
+            {
+                ctx->dirtyWorldOffmeshTiles.erase(tileKey);
+                ctx->worldOffmeshLinksByTile.erase(tileKey);
+            }
         }
 
         bool builtTile = false;
@@ -4085,6 +4124,8 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
                 ctx->failedWorldTiles.erase(tileKey);
             }
         }
+        if (builtTile || emptyTile)
+            successfullyBuiltTileKeys.insert(tileKey);
 
         ++built;
         printf("[WorldTile] Build tile %d,%d geomCount=%zu triCount=%zu built=%d failed=%d hash=%llu\n",
@@ -4164,13 +4205,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
            aggressive ? 1 : 0);
 
     EnsureNavQuery(*ctx);
-    std::unordered_set<uint64_t> builtTileKeys;
-    for (uint64_t key : processedTileKeys)
-    {
-        if (ctx->failedWorldTiles.count(key) == 0)
-            builtTileKeys.insert(key);
-    }
-    ctx->lastBuiltWorldTileKeys.assign(builtTileKeys.begin(), builtTileKeys.end());
+    ctx->lastBuiltWorldTileKeys.assign(successfullyBuiltTileKeys.begin(), successfullyBuiltTileKeys.end());
     std::sort(ctx->lastBuiltWorldTileKeys.begin(), ctx->lastBuiltWorldTileKeys.end());
     printf("[WorldTile] lastBuilt keys=%zu\n", ctx->lastBuiltWorldTileKeys.size());
 
@@ -4209,6 +4244,24 @@ GTANAVVIEWER_API bool SetWorldAutoOffmeshEnabled(void* navMesh, bool enabled)
         return false;
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
     ctx->worldAutoGenerateOffmeshLinks = enabled;
+    return true;
+}
+
+GTANAVVIEWER_API bool SetWorldAutoOffmeshOnlyDynamicAffectedTiles(void* navMesh, bool enabled)
+{
+    if (!navMesh)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->worldAutoOffmeshOnlyDynamicAffectedTiles = enabled;
+    return true;
+}
+
+GTANAVVIEWER_API bool SetWorldAutoOffmeshRequireDynamicEndpoint(void* navMesh, bool enabled)
+{
+    if (!navMesh)
+        return false;
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    ctx->worldAutoOffmeshRequireDynamicEndpoint = enabled;
     return true;
 }
 
@@ -4279,6 +4332,8 @@ GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, voi
     queryCtx->autoOffmeshParams = builderCtx->autoOffmeshParams;
     queryCtx->autoOffmeshParamsV2 = builderCtx->autoOffmeshParamsV2;
     queryCtx->worldAutoGenerateOffmeshLinks = builderCtx->worldAutoGenerateOffmeshLinks;
+    queryCtx->worldAutoOffmeshOnlyDynamicAffectedTiles = builderCtx->worldAutoOffmeshOnlyDynamicAffectedTiles;
+    queryCtx->worldAutoOffmeshRequireDynamicEndpoint = builderCtx->worldAutoOffmeshRequireDynamicEndpoint;
 
     const float forcedMin[3]{ queryCtx->bboxMin.x, queryCtx->bboxMin.y, queryCtx->bboxMin.z };
     const float forcedMax[3]{ queryCtx->bboxMax.x, queryCtx->bboxMax.y, queryCtx->bboxMax.z };
