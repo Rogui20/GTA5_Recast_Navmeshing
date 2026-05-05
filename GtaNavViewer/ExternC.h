@@ -345,6 +345,7 @@ GTANAVVIEWER_API bool HasWorldTileManifest(void* navMesh);
 GTANAVVIEWER_API bool SetWorldTileAutoSaveManifest(void* navMesh, bool enabled);
 GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, void* queryNavMesh);
 GTANAVVIEWER_API bool SyncQueryContextWorldState(void* builderNavMesh, void* queryNavMesh);
+GTANAVVIEWER_API int SyncQueryContextRuntimeTiles(void* builderNavMesh, void* queryNavMesh, const uint64_t* tileKeys, int tileCount);
 GTANAVVIEWER_API int ReloadWorldTilesFromCache(void* queryNavMesh, const uint64_t* tileKeys, int tileCount);
 GTANAVVIEWER_API int ReloadResidentWorldTilesFromCache(void* queryNavMesh);
 GTANAVVIEWER_API int GetLastBuiltWorldTileKeys(void* navMesh, uint64_t* outKeys, int maxKeys, int* outCount);
