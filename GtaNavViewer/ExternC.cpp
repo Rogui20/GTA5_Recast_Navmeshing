@@ -227,7 +227,7 @@ namespace
         bool worldAutoOffmeshOnlyDynamicAffectedTiles = true;
         bool worldAutoOffmeshRequireDynamicEndpoint = false;
         bool worldAutoOffmeshGenerateFullTileWhenDynamicPresent = true;
-        int runtimeOffmeshMaxLinksPerTile = 64;
+        int runtimeOffmeshMaxLinksPerTile = 4096;
         int runtimeOffmeshRawMaxLinksPerTile = 4096;
         bool worldOffmeshDebugEnabled = false;
         int offmeshDebugMaxLines = 20000;
@@ -4285,69 +4285,111 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
             ctx->worldAutoGenerateOffmeshLinks &&
             ctx->dirtyWorldOffmeshTiles.count(tileKey) > 0 &&
             (!ctx->worldAutoOffmeshOnlyDynamicAffectedTiles || tileHasDynamicGeom || wasRuntimeDirty);
+
+        bool builtTile = false;
+        bool emptyTile = false;
+
         if (shouldGenerateOffmesh)
         {
-            AutoOffmeshGenerationParamsV2 offmeshParams = ctx->autoOffmeshParamsV2;
-            const size_t triCount = indices.size() / 3;
-            const bool modeFullDynamicTile = ctx->worldAutoOffmeshGenerateFullTileWhenDynamicPresent && tileHasDynamicGeom;
-            if (runtimeDynamicOnly)
+            bool builtBase = false;
+            bool emptyBase = false;
+            if (!ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings,
+                nullptr, worldHash, &builtBase, &emptyBase))
             {
-                const int cap = std::max(0, ctx->runtimeOffmeshMaxLinksPerTile);
-                if (cap > 0)
+                ++failed;
+                if (persistTileState)
+                    ctx->failedWorldTiles.insert(tileKey);
+            }
+            else
+            {
+                builtTile = builtBase;
+                emptyTile = emptyBase;
+
+                AutoOffmeshGenerationParamsV2 offmeshParams = ctx->autoOffmeshParamsV2;
+                const size_t triCount = indices.size() / 3;
+                const bool modeFullDynamicTile = ctx->worldAutoOffmeshGenerateFullTileWhenDynamicPresent && tileHasDynamicGeom;
+                if (runtimeDynamicOnly)
                 {
-                    if (offmeshParams.maxLinksPerTile <= 0)
-                        offmeshParams.maxLinksPerTile = cap;
-                    else
-                        offmeshParams.maxLinksPerTile = std::min(offmeshParams.maxLinksPerTile, cap);
+                    const int cap = std::max(0, ctx->runtimeOffmeshMaxLinksPerTile);
+                    if (cap > 0)
+                    {
+                        if (offmeshParams.maxLinksPerTile <= 0)
+                            offmeshParams.maxLinksPerTile = cap;
+                        else
+                            offmeshParams.maxLinksPerTile = std::min(offmeshParams.maxLinksPerTile, cap);
+                    }
                 }
-            }
 
-            if (ctx->worldAutoOffmeshRequireDynamicEndpoint && !tileHasDynamicGeom && !modeFullDynamicTile)
-            {
-                printf("[WorldOffmesh] mode=skipped tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireDynamicEndpoint=%d triCount=%zu links=%zu note=skipped_no_dynamic_endpoint\n",
-                    tx, ty, tileHasDynamicGeom ? 1 : 0, wasRuntimeDirty ? 1 : 0,
-                    ctx->worldAutoOffmeshOnlyDynamicAffectedTiles ? 1 : 0,
-                    ctx->worldAutoOffmeshRequireDynamicEndpoint ? 1 : 0, triCount, tileLinks.size());
-            }
-            else if (runtimeDynamicOnly && static_cast<int>(triCount) > ctx->runtimeOffmeshMaxTriCount)
-            {
-                printf("[WorldOffmesh] skipped tile %d,%d triCount=%zu reason=too_dense_runtime\n", tx, ty, triCount);
-            }
-            else
-            {
-                const bool requireDynamicEndpointForThisTile = ctx->worldAutoOffmeshRequireDynamicEndpoint && !modeFullDynamicTile;
-                GenerateWorldOffmeshLinksForTileFromGeometry(*ctx, tx, ty, offmeshParams, verts, indices, runtimeDynamicOnly, tileLinks, &triIsDynamic, requireDynamicEndpointForThisTile);
-                printf("[WorldOffmesh] mode=%s tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireEndpointThisTile=%d ctxRequireEndpoint=%d triCount=%zu links=%zu\n",
-                    modeFullDynamicTile ? "full_dynamic_tile" : "endpoint_dynamic_filter",
-                    tx, ty, tileHasDynamicGeom ? 1 : 0, wasRuntimeDirty ? 1 : 0,
-                    ctx->worldAutoOffmeshOnlyDynamicAffectedTiles ? 1 : 0,
-                    requireDynamicEndpointForThisTile ? 1 : 0, ctx->worldAutoOffmeshRequireDynamicEndpoint ? 1 : 0, triCount, tileLinks.size());
-            }
+                bool generatedLinks = false;
+                if (ctx->worldAutoOffmeshRequireDynamicEndpoint && !tileHasDynamicGeom && !modeFullDynamicTile)
+                {
+                    printf("[WorldOffmesh] mode=skipped tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireDynamicEndpoint=%d triCount=%zu links=%zu note=skipped_no_dynamic_endpoint\n",
+                        tx, ty, tileHasDynamicGeom ? 1 : 0, wasRuntimeDirty ? 1 : 0,
+                        ctx->worldAutoOffmeshOnlyDynamicAffectedTiles ? 1 : 0,
+                        ctx->worldAutoOffmeshRequireDynamicEndpoint ? 1 : 0, triCount, tileLinks.size());
+                }
+                else if (runtimeDynamicOnly && static_cast<int>(triCount) > ctx->runtimeOffmeshMaxTriCount)
+                {
+                    printf("[WorldOffmesh] skipped tile %d,%d triCount=%zu reason=too_dense_runtime\n", tx, ty, triCount);
+                }
+                else
+                {
+                    const bool requireDynamicEndpointForThisTile = ctx->worldAutoOffmeshRequireDynamicEndpoint && !modeFullDynamicTile;
+                    generatedLinks = GenerateWorldOffmeshLinksForTileFromGeometry(*ctx, tx, ty, offmeshParams, verts, indices, runtimeDynamicOnly, tileLinks, &triIsDynamic, requireDynamicEndpointForThisTile);
+                    printf("[WorldOffmesh] mode=%s tile %d,%d dynamic=%d runtimeDirty=%d onlyDynamicTiles=%d requireEndpointThisTile=%d ctxRequireEndpoint=%d triCount=%zu links=%zu\n",
+                        modeFullDynamicTile ? "full_dynamic_tile" : "endpoint_dynamic_filter",
+                        tx, ty, tileHasDynamicGeom ? 1 : 0, wasRuntimeDirty ? 1 : 0,
+                        ctx->worldAutoOffmeshOnlyDynamicAffectedTiles ? 1 : 0,
+                        requireDynamicEndpointForThisTile ? 1 : 0, ctx->worldAutoOffmeshRequireDynamicEndpoint ? 1 : 0, triCount, tileLinks.size());
+                }
 
-            if (!tileLinks.empty())
-                ctx->worldOffmeshLinksByTile[tileKey] = tileLinks;
-            else
-                ctx->worldOffmeshLinksByTile.erase(tileKey);
+                if (generatedLinks && !tileLinks.empty())
+                {
+                    bool builtFinal = false;
+                    bool emptyFinal = false;
+                    if (!ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings,
+                        &tileLinks, worldHash, &builtFinal, &emptyFinal))
+                    {
+                        ++failed;
+                        if (persistTileState)
+                            ctx->failedWorldTiles.insert(tileKey);
+                    }
+                    else
+                    {
+                        builtTile = builtFinal;
+                        emptyTile = emptyFinal;
+                    }
+                }
+
+                if (generatedLinks && !tileLinks.empty() && builtTile)
+                    ctx->worldOffmeshLinksByTile[tileKey] = tileLinks;
+                else
+                    ctx->worldOffmeshLinksByTile.erase(tileKey);
+
+                const dtMeshTile* navTile = nav->getTileAt(tx, ty, 0);
+                const int navTileOffmesh = (navTile && navTile->header) ? navTile->header->offMeshConCount : 0;
+                printf("[WorldOffmeshVerify] tile %d,%d generatedLinks=%zu navTileOffmesh=%d worldMapLinks=%zu\n",
+                    tx, ty, tileLinks.size(), navTileOffmesh,
+                    ctx->worldOffmeshLinksByTile.count(tileKey) > 0 ? ctx->worldOffmeshLinksByTile[tileKey].size() : 0);
+            }
             ctx->dirtyWorldOffmeshTiles.erase(tileKey);
         }
         else
         {
+            if (!ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings,
+                nullptr, worldHash, &builtTile, &emptyTile))
+            {
+                ++failed;
+                if (persistTileState)
+                    ctx->failedWorldTiles.insert(tileKey);
+            }
+
             if (ctx->dirtyWorldOffmeshTiles.count(tileKey) > 0 &&
                 ctx->worldAutoOffmeshOnlyDynamicAffectedTiles)
             {
                 ctx->dirtyWorldOffmeshTiles.erase(tileKey);
                 ctx->worldOffmeshLinksByTile.erase(tileKey);
             }
-        }
-
-        bool builtTile = false;
-        bool emptyTile = false;
-        if (!ctx->navData.RebuildSingleTileFromGeometry(tx, ty, verts, indices, ctx->genSettings,
-            tileLinks.empty() ? nullptr : &tileLinks, worldHash, &builtTile, &emptyTile))
-        {
-            ++failed;
-            if (persistTileState)
-                ctx->failedWorldTiles.insert(tileKey);
         }
 
         if (emptyTile)
