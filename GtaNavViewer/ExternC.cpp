@@ -204,7 +204,7 @@ namespace
         bool worldAutoOffmeshOnlyDynamicAffectedTiles = true;
         bool worldAutoOffmeshRequireDynamicEndpoint = true;
         int runtimeOffmeshMaxLinksPerTile = 64;
-        int runtimeOffmeshRawMaxLinksPerTile = 0;
+        int runtimeOffmeshRawMaxLinksPerTile = 512;
         int runtimeOffmeshMaxTriCount = 100000;
         std::deque<uint64_t> pendingTileBuildQueue;
         std::unordered_set<uint64_t> pendingTileBuildSet;
@@ -2135,9 +2135,11 @@ namespace
                                IsPointNearDynamicTriangleXZ(c.link.end, verts, indices, *triIsDynamic, maxXZDist, maxYDist, nullptr);
             }
         }
-        for (size_t i = 0; i < generated.size(); ++i)
+        const bool useCandidates = !candidates.empty();
+        const size_t n = useCandidates ? candidates.size() : generated.size();
+        for (size_t i = 0; i < n; ++i)
         {
-            const OffmeshLink& link = generated[i];
+            const OffmeshLink& link = useCandidates ? candidates[i].link : generated[i];
             const uint64_t h = QuantHashOffmeshLink(link, params.quantizePos);
             if (!dedupe.insert(h).second)
                 continue;
@@ -2145,10 +2147,10 @@ namespace
             {
                 DynamicTriDistanceDebug startDebug{};
                 DynamicTriDistanceDebug endDebug{};
-                bool sDyn = i < candidates.size() ? candidates[i].startDynamic : false;
-                bool eDyn = i < candidates.size() ? candidates[i].endDynamic : false;
-                if (!sDyn) sDyn = IsPointNearDynamicTriangleXZ(i < candidates.size() ? candidates[i].rawStart : link.start, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &startDebug);
-                if (!eDyn) eDyn = IsPointNearDynamicTriangleXZ(i < candidates.size() ? candidates[i].rawEnd : link.end, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &endDebug);
+                bool sDyn = useCandidates ? candidates[i].startDynamic : false;
+                bool eDyn = useCandidates ? candidates[i].endDynamic : false;
+                if (!sDyn) sDyn = IsPointNearDynamicTriangleXZ(useCandidates ? candidates[i].rawStart : link.start, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &startDebug);
+                if (!eDyn) eDyn = IsPointNearDynamicTriangleXZ(useCandidates ? candidates[i].rawEnd : link.end, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &endDebug);
                 if (sDyn) ++startDyn;
                 if (eDyn) ++endDyn;
                 if (!(sDyn || eDyn))
@@ -2174,8 +2176,8 @@ namespace
             if (acceptedCap > 0 && static_cast<int>(outLinks.size()) >= acceptedCap)
                 break;
         }
-        printf("[WorldOffmesh] tile %d,%d generatedRaw=%zu accepted=%zu rejectedStaticStatic=%zu startDyn=%zu endDyn=%zu fallback=%d rawCap=%d acceptedCap=%d runtimeDynamic=%d\n",
-               tx, ty, rawCount, outLinks.size(), rejectedStaticStatic, startDyn, endDyn, fallbackNoTriMetadata ? 1 : 0,
+        printf("[WorldOffmesh] tile %d,%d rawGenerated=%zu candidatesCount=%zu accepted=%zu rejectedStaticStatic=%zu startDyn=%zu endDyn=%zu fallbackNoTriMetadata=%d rawCap=%d acceptedCap=%d runtimeDynamic=%d\n",
+               tx, ty, rawCount, candidates.size(), outLinks.size(), rejectedStaticStatic, startDyn, endDyn, fallbackNoTriMetadata ? 1 : 0,
                genParams.maxLinksPerTile, acceptedCap, runtimeDynamic ? 1 : 0);
         if (fallbackNoTriMetadata)
             printf("[WorldOffmesh] tile %d,%d note=fallback_no_tri_source_metadata\n", tx, ty);
