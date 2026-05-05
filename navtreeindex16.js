@@ -1,5 +1,7 @@
 var NAVTREEINDEX16 =
 {
+"SDL__config__os2_8h.html#a57ecbd1638a8fd89373c41c933e973ec":[44,0,5,2,1,16,33],
+"SDL__config__os2_8h.html#a5807a152fd68558b1eac13d9e3c94e59":[44,0,5,2,1,16,106],
 "SDL__config__os2_8h.html#a58f2f97ed90ddf8c4e3cfffc42c3ed42":[44,0,5,2,1,16,90],
 "SDL__config__os2_8h.html#a5d1948f54475325c483e4e487435c543":[44,0,5,2,1,16,78],
 "SDL__config__os2_8h.html#a5ee471ebb5f6d8326f2ab128a9396898":[44,0,5,2,1,16,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX16 =
 "SDL__config__wingdk_8h.html#aa00422d97152cd195da32409fac61200":[44,0,5,2,1,19,10],
 "SDL__config__wingdk_8h.html#aaa1d89b554b1ab7b6ee1b563fb13cbdd":[44,0,5,2,1,19,5],
 "SDL__config__wingdk_8h.html#aad939a445a2185034c228c5ef388b0b4":[44,0,5,2,1,19,46],
-"SDL__config__wingdk_8h.html#ab51950b727f094c8c6bc870a89924ceb":[44,0,5,2,1,19,22],
-"SDL__config__wingdk_8h.html#ab5fea56647f25333c758d1b174e44534":[44,0,5,2,1,19,16],
-"SDL__config__wingdk_8h.html#ab6cd6d1c63c1e26ea2d4537b77148354":[44,0,5,2,1,19,13]
+"SDL__config__wingdk_8h.html#ab51950b727f094c8c6bc870a89924ceb":[44,0,5,2,1,19,22]
 };

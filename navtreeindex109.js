@@ -1,5 +1,7 @@
 var NAVTREEINDEX109 =
 {
+"structTileDbStats.html#a0320c71f49ec3e1f8d798b0d51d9f341":[43,0,491,2],
+"structTileDbStats.html#a222e56be389e54da6c43e20f11962f3f":[43,0,491,7],
 "structTileDbStats.html#a233e47e260849ae3bae8f3bc3810efa6":[43,0,491,1],
 "structTileDbStats.html#a280b188866d6360cd3f376dc2ef29394":[43,0,491,4],
 "structTileDbStats.html#a6ebfd2193df37dd43c8f5605ddd1f469":[43,0,491,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX109 =
 "structgladGLversionStruct.html#ac7f9db11d2679df12ef0313b728554db":[43,0,92,0],
 "structgladGLversionStruct.html#acc2bff1c8966c6866f2ad6f5a4e475b2":[43,0,92,1],
 "structimguiGfxCmd.html":[43,0,204],
-"structimguiGfxCmd.html#a3508ea30366854eae1909484cc179338":[43,0,204,6],
-"structimguiGfxCmd.html#a79777935f7150173eba508835942bb42":[43,0,204,0],
-"structimguiGfxCmd.html#a7cc3675a387e8714dd2a2f6d6303a12d":[43,0,204,2]
+"structimguiGfxCmd.html#a3508ea30366854eae1909484cc179338":[43,0,204,6]
 };

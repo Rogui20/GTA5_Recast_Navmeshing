@@ -126,6 +126,10 @@ Functions</h2></td></tr>
 <tr class="separator:a514c9fadc4ffefad9988c86baea675a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2485332b8d6a4d1e6e9bad9ff3660e9f" id="r_a2485332b8d6a4d1e6e9bad9ff3660e9f"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMeshData_8cpp.html#a2485332b8d6a4d1e6e9bad9ff3660e9f">IsReachableByNormalNavmesh</a> (<a class="el" href="classdtNavMeshQuery.html">dtNavMeshQuery</a> *<a class="el" href="SDL__opengl__glext_8h.html#a142beaaf360375a3437a83a5aa8ecf06">query</a>, <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> startRef, <a class="el" href="group__detour.html#gab4e0b2257a670c1a800057999612b466">dtPolyRef</a> endRef, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac55adc720a3098c1b454d2a4647f4361">start</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a432111147038972f06e049e18a837002">end</a>, const <a class="el" href="classdtQueryFilter.html">dtQueryFilter</a> *<a class="el" href="glad_8h.html#a8bed50656d87c3eeed9d8f5e539c6b3e">filter</a>)</td></tr>
 <tr class="separator:a2485332b8d6a4d1e6e9bad9ff3660e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a152824027cd3c3f3469a65e529d57eea" id="r_a152824027cd3c3f3469a65e529d57eea"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMeshData_8cpp.html#a152824027cd3c3f3469a65e529d57eea">IsCandidateInOutwardDirection</a> (const glm::vec3 &amp;from, const glm::vec3 &amp;to, const glm::vec3 &amp;outwardXZ, float minDot)</td></tr>
+<tr class="separator:a152824027cd3c3f3469a65e529d57eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16e9efdd9be8957407db87ab7cf3dd79" id="r_a16e9efdd9be8957407db87ab7cf3dd79"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMeshData_8cpp.html#a16e9efdd9be8957407db87ab7cf3dd79">IsNearTileBoundaryXZ</a> (const <a class="el" href="structdtMeshTile.html">dtMeshTile</a> *tile, const glm::vec3 &amp;<a class="el" href="SDL__opengl__glext_8h.html#aa5367c14d90f462230c2611b81b41d23">p</a>, float eps)</td></tr>
+<tr class="separator:a16e9efdd9be8957407db87ab7cf3dd79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a514c9fadc4ffefad9988c86baea675a0" name="a514c9fadc4ffefad9988c86baea675a0"></a>
@@ -148,6 +152,96 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">const glm::vec3 &amp;&#160;</td>
           <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a152824027cd3c3f3469a65e529d57eea" name="a152824027cd3c3f3469a65e529d57eea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a152824027cd3c3f3469a65e529d57eea">&#9670;&#160;</a></span>IsCandidateInOutwardDirection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool IsCandidateInOutwardDirection </td>
+          <td>(</td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>from</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>to</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>outwardXZ</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>minDot</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a16e9efdd9be8957407db87ab7cf3dd79" name="a16e9efdd9be8957407db87ab7cf3dd79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16e9efdd9be8957407db87ab7cf3dd79">&#9670;&#160;</a></span>IsNearTileBoundaryXZ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool IsNearTileBoundaryXZ </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structdtMeshTile.html">dtMeshTile</a> *&#160;</td>
+          <td class="paramname"><em>tile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>eps</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
