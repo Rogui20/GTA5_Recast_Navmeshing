@@ -126,6 +126,7 @@ var ExternC_8h =
     [ "SimulateAgentsFramesBatch", "ExternC_8h.html#a25a0f943b6c23a4b076503a970e95b10", null ],
     [ "StreamTilesAround", "ExternC_8h.html#ab32e95f2f92eecf32a69f6249f2845fd", null ],
     [ "StreamTilesForAgents", "ExternC_8h.html#a72ff617c0e75e23d2fd13aa6e0259231", null ],
+    [ "SyncQueryContextRuntimeTiles", "ExternC_8h.html#a0afdf687da99e03dcb49b9d82557cbf4", null ],
     [ "SyncQueryContextWorldState", "ExternC_8h.html#a8aaacb13c74403920adf973b3ec0bcf4", null ],
     [ "UnloadUnusedWorldGeometry", "ExternC_8h.html#a47095377b78f1f7ba08f40f42996336e", null ],
     [ "UpdateGeometry", "ExternC_8h.html#aa3194b4fb64ba867ccee52233e3a84e1", null ],
