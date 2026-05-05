@@ -2112,7 +2112,8 @@ namespace
             genParams.maxLinksPerTile = ctx.runtimeOffmeshRawMaxLinksPerTile > 0 ? ctx.runtimeOffmeshRawMaxLinksPerTile : 0;
 
         std::vector<OffmeshLink> generated;
-        if (!ctx.navData.GenerateAutomaticOffmeshLinksForTileV2(tx, ty, genParams, verts, indices, generated))
+        std::vector<GeneratedOffmeshCandidate> candidates;
+        if (!ctx.navData.GenerateAutomaticOffmeshLinksForTileV2(tx, ty, genParams, verts, indices, generated, &candidates))
             return false;
         std::unordered_set<uint64_t> dedupe;
         const size_t rawCount = generated.size();
@@ -2124,8 +2125,19 @@ namespace
         const bool fallbackNoTriMetadata = ctx.worldAutoOffmeshRequireDynamicEndpoint && !useEndpointFilter;
         const float maxXZDist = std::max(0.25f, params.agentRadius + 0.15f);
         const float maxYDist = std::max(0.75f, params.agentHeight);
-        for (const auto& link : generated)
+        if (useEndpointFilter)
         {
+            for (auto& c : candidates)
+            {
+                c.startDynamic = IsPointNearDynamicTriangleXZ(c.rawStart, verts, indices, *triIsDynamic, maxXZDist, maxYDist, nullptr) ||
+                                 IsPointNearDynamicTriangleXZ(c.link.start, verts, indices, *triIsDynamic, maxXZDist, maxYDist, nullptr);
+                c.endDynamic = IsPointNearDynamicTriangleXZ(c.rawEnd, verts, indices, *triIsDynamic, maxXZDist, maxYDist, nullptr) ||
+                               IsPointNearDynamicTriangleXZ(c.link.end, verts, indices, *triIsDynamic, maxXZDist, maxYDist, nullptr);
+            }
+        }
+        for (size_t i = 0; i < generated.size(); ++i)
+        {
+            const OffmeshLink& link = generated[i];
             const uint64_t h = QuantHashOffmeshLink(link, params.quantizePos);
             if (!dedupe.insert(h).second)
                 continue;
@@ -2133,8 +2145,10 @@ namespace
             {
                 DynamicTriDistanceDebug startDebug{};
                 DynamicTriDistanceDebug endDebug{};
-                const bool sDyn = IsPointNearDynamicTriangleXZ(link.start, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &startDebug);
-                const bool eDyn = IsPointNearDynamicTriangleXZ(link.end, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &endDebug);
+                bool sDyn = i < candidates.size() ? candidates[i].startDynamic : false;
+                bool eDyn = i < candidates.size() ? candidates[i].endDynamic : false;
+                if (!sDyn) sDyn = IsPointNearDynamicTriangleXZ(i < candidates.size() ? candidates[i].rawStart : link.start, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &startDebug);
+                if (!eDyn) eDyn = IsPointNearDynamicTriangleXZ(i < candidates.size() ? candidates[i].rawEnd : link.end, verts, indices, *triIsDynamic, maxXZDist, maxYDist, &endDebug);
                 if (sDyn) ++startDyn;
                 if (eDyn) ++endDyn;
                 if (!(sDyn || eDyn))
