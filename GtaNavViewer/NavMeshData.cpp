@@ -1136,6 +1136,42 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationPar
     return true;
 }
 
+static float DistXZ(const glm::vec3& a, const glm::vec3& b)
+{
+    const float dx = a.x - b.x;
+    const float dz = a.z - b.z;
+    return std::sqrt(dx * dx + dz * dz);
+}
+
+static bool IsReachableByNormalNavmesh(dtNavMeshQuery* query,
+                                       dtPolyRef startRef,
+                                       dtPolyRef endRef,
+                                       const glm::vec3& start,
+                                       const glm::vec3& end,
+                                       const dtQueryFilter* filter)
+{
+    if (!query || !filter || !startRef || !endRef)
+        return false;
+    if (startRef == endRef)
+        return true;
+
+    float t = 0.0f;
+    float hitNormal[3]{};
+    dtPolyRef path[32]{};
+    int pathCount = 0;
+    const dtStatus rayStatus = query->raycast(startRef, &start.x, &end.x, filter, &t, hitNormal, path, &pathCount, 32);
+    if (dtStatusSucceed(rayStatus) && t >= 1.0f)
+        return true;
+
+    dtPolyRef polys[16]{};
+    int polyCount = 0;
+    const dtStatus pathStatus = query->findPath(startRef, endRef, &start.x, &end.x, filter, polys, &polyCount, 16);
+    if (dtStatusSucceed(pathStatus) && polyCount > 0 && polyCount <= 3)
+        return true;
+
+    return false;
+}
+
 bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
                                                          int ty,
                                                          const AutoOffmeshGenerationParamsV2& params,
@@ -1179,7 +1215,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
     const float climbInset = params.climbStartInset>0?params.climbStartInset:jumpInset;
     const float maxRayDistance = params.maxDropHeight + params.raycastExtraHeight + std::max(dropUp,0.0f);
 
-    struct RejectCounters{size_t dy=0,distance=0,obstruction=0,slope=0,snapFail=0,dedupe=0,perTileLimit=0,sweepBlocked=0; } rejected;
+    struct RejectCounters{size_t dy=0,distance=0,obstruction=0,slope=0,snapFail=0,dedupe=0,perTileLimit=0,sweepBlocked=0,normalReachable=0,tooClose=0; } rejected;
     size_t openEdges=0,samples=0,dropHits=0;
     size_t dynamicSeedSkippedEdges=0,dynamicSeedSkippedSamples=0,dynamicSeedAcceptedSamples=0;
     size_t dynamicTrisCount=0;
@@ -1219,18 +1255,18 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
           
           if(includeDrop){ if(!SnapToNavmesh(query,takeoffDrop,snapExtents,&filter,takeoffDropRef,takeoffDropSnapped)){ ++rejected.snapFail; } else { glm::vec3 sweepStartDrop = takeoffDropSnapped + up*params.sweepUp; glm::vec3 probe=p + frame.outwardXZ*dropOut + up*dropUp; glm::vec3 hit{},hitNormal{};
             if(RaycastDown(rayVerts,rayTris,probe,maxRayDistance,hit,hitNormal)){ ++dropHits; float drop=probe.y-hit.y;
-              if(drop>=params.minDropThreshold && drop<=params.maxDropHeight){ if(glm::dot(hitNormal,up)>=slopeCos){ bool clear=true; if(enableSweep) clear=SweepRay3(rayVerts,rayTris,sweepStartDrop,hit+up*params.sweepUp,params.sweepSideOffset,0.0f); else {glm::vec3 hh{},hn{}; clear=!RaycastTo(rayVerts,rayTris,sweepStartDrop,hit+up*params.sweepUp,hh,hn);} if(clear){ dtPolyRef hr=0; glm::vec3 snapped{}; if(SnapToNavmesh(query,hit,snapExtents,&filter,hr,snapped)){ GeneratedOffmeshCandidate c{}; c.link.start=takeoffDropSnapped; c.link.end=snapped; c.rawStart=takeoffDrop; c.rawEnd=hit; c.link.radius=std::max(params.agentRadius,0.1f); c.link.bidirectional=false; c.link.area=params.dropArea; c.link.flags=1; c.link.userId=params.userIdBase+ (uint32_t)outLinks.size(); c.link.ownerTx=tx; c.link.ownerTy=ty; tryAppend(c,0u,dropCount);} else ++rejected.snapFail;} else {++rejected.obstruction; ++rejected.sweepBlocked;}} else ++rejected.slope;} else ++rejected.dy; }} }
+              if(drop>=params.minDropThreshold && drop<=params.maxDropHeight){ if(glm::dot(hitNormal,up)>=slopeCos){ bool clear=true; if(enableSweep) clear=SweepRay3(rayVerts,rayTris,sweepStartDrop,hit+up*params.sweepUp,params.sweepSideOffset,0.0f); else {glm::vec3 hh{},hn{}; clear=!RaycastTo(rayVerts,rayTris,sweepStartDrop,hit+up*params.sweepUp,hh,hn);} if(clear){ dtPolyRef hr=0; glm::vec3 snapped{}; if(SnapToNavmesh(query,hit,snapExtents,&filter,hr,snapped)){ if(DistXZ(takeoffDropSnapped,snapped)<params.minDist){ ++rejected.distance; ++rejected.tooClose; } else if(IsReachableByNormalNavmesh(query,takeoffDropRef,hr,takeoffDropSnapped,snapped,&filter)){ ++rejected.dedupe; ++rejected.normalReachable; } else { GeneratedOffmeshCandidate c{}; c.link.start=takeoffDropSnapped; c.link.end=snapped; c.rawStart=takeoffDrop; c.rawEnd=hit; c.link.radius=std::max(params.agentRadius,0.1f); c.link.bidirectional=false; c.link.area=params.dropArea; c.link.flags=1; c.link.userId=params.userIdBase+ (uint32_t)outLinks.size(); c.link.ownerTx=tx; c.link.ownerTy=ty; tryAppend(c,0u,dropCount);} } else ++rejected.snapFail;} else {++rejected.obstruction; ++rejected.sweepBlocked;}} else ++rejected.slope;} else ++rejected.dy; }} }
           if(includeJump){ if(!SnapToNavmesh(query,takeoffJump,snapExtents,&filter,takeoffJumpRef,takeoffJumpSnapped)){ ++rejected.snapFail; } else { glm::vec3 sweepStartJump = takeoffJumpSnapped + up*params.sweepUp;
-            for(float d=params.minDist; d<=params.maxDist+1e-3f; d+=params.distStep){ glm::vec3 candRaw=p + frame.outwardXZ*d + up*jumpUp; dtPolyRef cr=0; glm::vec3 cand{}; if(!SnapToNavmesh(query,candRaw,snapExtents,&filter,cr,cand)){++rejected.snapFail; continue;} if(cr==takeoffJumpRef){++rejected.dedupe; continue;} float dy=cand.y-takeoffJumpSnapped.y; if(dy<-params.maxJumpDown||dy>params.maxJumpUp){++rejected.dy; continue;} bool clear= enableSweep? SweepRay3(rayVerts,rayTris,sweepStartJump,cand+up*params.sweepUp,params.sweepSideOffset,0.1f):true; if(!clear){glm::vec3 dir=cand-takeoffJumpSnapped; dir.y=0; if(glm::dot(dir,dir)>1e-6f){dir=glm::normalize(dir); glm::vec3 adj=cand; dtPolyRef ar=cr; for(int it=0;it<6 && !clear;++it){adj -= dir*std::max(0.25f,params.distStep*0.5f); if(!SnapToNavmesh(query,adj,snapExtents,&filter,ar,adj) || ar==takeoffJumpRef) break; clear= enableSweep? SweepRay3(rayVerts,rayTris,sweepStartJump,adj+up*params.sweepUp,params.sweepSideOffset,0.1f):true; if(clear){cand=adj; cr=ar;}}}} if(!clear){++rejected.obstruction; continue;} GeneratedOffmeshCandidate c{}; c.link.start=takeoffJumpSnapped; c.link.end=cand; c.rawStart=takeoffJump; c.rawEnd=candRaw; c.link.radius=std::max(params.agentRadius,0.1f); c.link.bidirectional=true; c.link.area=params.jumpArea; c.link.flags=1; c.link.userId=params.userIdBase+(uint32_t)outLinks.size(); c.link.ownerTx=tx; c.link.ownerTy=ty; if(tryAppend(c,1u,jumpCount)) break; }
+            for(float d=params.minDist; d<=params.maxDist+1e-3f; d+=params.distStep){ glm::vec3 candRaw=p + frame.outwardXZ*d + up*jumpUp; dtPolyRef cr=0; glm::vec3 cand{}; if(!SnapToNavmesh(query,candRaw,snapExtents,&filter,cr,cand)){++rejected.snapFail; continue;} if(cr==takeoffJumpRef){++rejected.dedupe; continue;} if(DistXZ(takeoffJumpSnapped,cand)<params.minDist){++rejected.distance; ++rejected.tooClose; continue;} if(IsReachableByNormalNavmesh(query,takeoffJumpRef,cr,takeoffJumpSnapped,cand,&filter)){++rejected.dedupe; ++rejected.normalReachable; continue;} float dy=cand.y-takeoffJumpSnapped.y; if(dy<-params.maxJumpDown||dy>params.maxJumpUp){++rejected.dy; continue;} bool clear= enableSweep? SweepRay3(rayVerts,rayTris,sweepStartJump,cand+up*params.sweepUp,params.sweepSideOffset,0.1f):true; if(!clear){glm::vec3 dir=cand-takeoffJumpSnapped; dir.y=0; if(glm::dot(dir,dir)>1e-6f){dir=glm::normalize(dir); glm::vec3 adj=cand; dtPolyRef ar=cr; for(int it=0;it<6 && !clear;++it){adj -= dir*std::max(0.25f,params.distStep*0.5f); if(!SnapToNavmesh(query,adj,snapExtents,&filter,ar,adj) || ar==takeoffJumpRef) break; clear= enableSweep? SweepRay3(rayVerts,rayTris,sweepStartJump,adj+up*params.sweepUp,params.sweepSideOffset,0.1f):true; if(clear){cand=adj; cr=ar;}}}} if(!clear){++rejected.obstruction; continue;} GeneratedOffmeshCandidate c{}; c.link.start=takeoffJumpSnapped; c.link.end=cand; c.rawStart=takeoffJump; c.rawEnd=candRaw; c.link.radius=std::max(params.agentRadius,0.1f); c.link.bidirectional=true; c.link.area=params.jumpArea; c.link.flags=1; c.link.userId=params.userIdBase+(uint32_t)outLinks.size(); c.link.ownerTx=tx; c.link.ownerTy=ty; if(tryAppend(c,1u,jumpCount)) break; }
           } }
           if(includeClimb){ if(!SnapToNavmesh(query,takeoffClimb,snapExtents,&filter,takeoffClimbRef,takeoffClimbSnapped)){ ++rejected.snapFail; } else { float minH=params.climbMinHeight; float maxH=params.climbMaxHeight>0?params.climbMaxHeight:params.maxJumpUp;
-            for(float d=params.minDist; d<=params.maxDist+1e-3f; d+=params.distStep){ glm::vec3 front = p + frame.outwardXZ*d + up*params.maxJumpUp; glm::vec3 topHit{},topN{}; if(!RaycastDown(rayVerts,rayTris,front, std::max(params.climbProbeDown,0.25f)+params.maxJumpUp, topHit, topN)){++rejected.snapFail; continue;} dtPolyRef cr=0; glm::vec3 cand{}; if(!SnapToNavmesh(query,topHit,snapExtents,&filter,cr,cand)){++rejected.snapFail; continue;} float dy=cand.y-takeoffClimbSnapped.y; if(dy<minH || dy>maxH){++rejected.dy; continue;} GeneratedOffmeshCandidate c{}; c.link.start=takeoffClimbSnapped; c.link.end=cand; c.rawStart=takeoffClimb; c.rawEnd=front; c.link.radius=std::max(params.agentRadius,0.1f); c.link.bidirectional=false; c.link.area=params.climbArea; c.link.flags=1; c.link.userId=params.userIdBase+(uint32_t)outLinks.size(); c.link.ownerTx=tx; c.link.ownerTy=ty; if(tryAppend(c,2u,climbCount)) break; }
+            for(float d=params.minDist; d<=params.maxDist+1e-3f; d+=params.distStep){ glm::vec3 front = p + frame.outwardXZ*d + up*params.maxJumpUp; glm::vec3 topHit{},topN{}; if(!RaycastDown(rayVerts,rayTris,front, std::max(params.climbProbeDown,0.25f)+params.maxJumpUp, topHit, topN)){++rejected.snapFail; continue;} dtPolyRef cr=0; glm::vec3 cand{}; if(!SnapToNavmesh(query,topHit,snapExtents,&filter,cr,cand)){++rejected.snapFail; continue;} if(DistXZ(takeoffClimbSnapped,cand)<params.minDist){++rejected.distance; ++rejected.tooClose; continue;} if(IsReachableByNormalNavmesh(query,takeoffClimbRef,cr,takeoffClimbSnapped,cand,&filter)){++rejected.dedupe; ++rejected.normalReachable; continue;} float dy=cand.y-takeoffClimbSnapped.y; if(dy<minH || dy>maxH){++rejected.dy; continue;} GeneratedOffmeshCandidate c{}; c.link.start=takeoffClimbSnapped; c.link.end=cand; c.rawStart=takeoffClimb; c.rawEnd=front; c.link.radius=std::max(params.agentRadius,0.1f); c.link.bidirectional=false; c.link.area=params.climbArea; c.link.flags=1; c.link.userId=params.userIdBase+(uint32_t)outLinks.size(); c.link.ownerTx=tx; c.link.ownerTy=ty; if(tryAppend(c,2u,climbCount)) break; }
           } }
         }
       }
     }
-    printf("[AutoOffmeshV2][tile %d,%d] openEdges=%zu samples=%zu dropHits=%zu snapFail=%zu sweepBlocked=%zu accepted(drop/jump/climb)=%zu/%zu/%zu perTileLimit=%zu cap=%d\n",
-           tx, ty, openEdges, samples, dropHits, rejected.snapFail, rejected.sweepBlocked, dropCount, jumpCount, climbCount, rejected.perTileLimit, params.maxLinksPerTile);
+    printf("[AutoOffmeshV2][tile %d,%d] openEdges=%zu samples=%zu dropHits=%zu snapFail=%zu sweepBlocked=%zu tooClose=%zu normalReachable=%zu accepted(drop/jump/climb)=%zu/%zu/%zu perTileLimit=%zu cap=%d\n",
+           tx, ty, openEdges, samples, dropHits, rejected.snapFail, rejected.sweepBlocked, rejected.tooClose, rejected.normalReachable, dropCount, jumpCount, climbCount, rejected.perTileLimit, params.maxLinksPerTile);
     printf("[AutoOffmeshV2][tile %d,%d] openEdges=%zu samples=%zu dynamicSeedSkippedEdges=%zu dynamicSeedSkippedSamples=%zu dynamicSeedAcceptedSamples=%zu dropHits=%zu snapFail=%zu sweepBlocked=%zu rawGenerated=%zu dynamicTris=%zu\n",
            tx, ty, openEdges, samples, dynamicSeedSkippedEdges, dynamicSeedSkippedSamples, dynamicSeedAcceptedSamples, dropHits, rejected.snapFail, rejected.sweepBlocked, outLinks.size(), dynamicTrisCount);
     return true;
