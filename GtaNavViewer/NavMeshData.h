@@ -130,6 +130,10 @@ struct AutoOffmeshGenerationParamsV2
 
     int maxLinksPerTile = 64;
     float quantizePos = 0.25f;
+    float dynamicSeedMaxXZDist = 2.0f;
+    float dynamicSeedMaxYDist = 3.0f;
+    float dynamicEndpointMaxXZDist = 1.5f;
+    float dynamicEndpointMaxYDist = 3.0f;
 
     uint32_t userIdBase = 0xAFAF0000u;
     uint8_t dropArea = 4;
@@ -273,7 +277,11 @@ public:
                                                 const std::vector<glm::vec3>& localVerts,
                                                 const std::vector<unsigned int>& localIndices,
                                                 std::vector<OffmeshLink>& outLinks,
-                                                std::vector<GeneratedOffmeshCandidate>* outCandidates = nullptr) const;
+                                                std::vector<GeneratedOffmeshCandidate>* outCandidates = nullptr,
+                                                const std::vector<uint8_t>* triIsDynamic = nullptr,
+                                                bool requireDynamicSeed = false,
+                                                float dynamicSeedMaxXZDist = 2.0f,
+                                                float dynamicSeedMaxYDist = 3.0f) const;
     bool AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& params,
                                         std::vector<OffmeshLink>& outLinks);
 
