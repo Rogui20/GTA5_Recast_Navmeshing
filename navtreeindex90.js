@@ -1,5 +1,6 @@
 var NAVTREEINDEX90 =
 {
+"imgui__widgets_8cpp.html#a83e389662fe9b33435229a9ed61e8aaf":[44,0,7,0,8,45],
 "imgui__widgets_8cpp.html#a86649bcd5a713ef6ebc40271b8d33448":[44,0,7,0,8,12],
 "imgui__widgets_8cpp.html#a89fd525472d581e3f4c48ceb770d2df5":[44,0,7,0,8,5],
 "imgui__widgets_8cpp.html#a912c66d17cb3b09d5daac6e6b992a9a2":[44,0,7,0,8,38],
@@ -248,6 +249,5 @@ var NAVTREEINDEX90 =
 "md_Docs_2__2__BuildingAndIntegrating.html#source-integration":[1,3,0],
 "md_Docs_2__2__BuildingAndIntegrating.html#windows":[1,0,0],
 "md_Docs_2__3__FAQ.html":[2],
-"md_Docs_2__3__FAQ.html#does-recast-do-any-logging":[2,5],
-"md_Docs_2__3__FAQ.html#how-do-i-use-recast-to-build-a-navmesh":[2,3]
+"md_Docs_2__3__FAQ.html#does-recast-do-any-logging":[2,5]
 };

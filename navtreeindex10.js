@@ -127,9 +127,10 @@ var NAVTREEINDEX10 =
 "NavMeshBuild_8h.html#abef178e9026b2092c69014ad09006ab5":[44,0,7,21,2],
 "NavMeshBuild_8h_source.html":[44,0,7,21],
 "NavMeshData_8cpp.html":[44,0,7,22],
-"NavMeshData_8cpp.html#a152824027cd3c3f3469a65e529d57eea":[44,0,7,22,1],
-"NavMeshData_8cpp.html#a16e9efdd9be8957407db87ab7cf3dd79":[44,0,7,22,2],
-"NavMeshData_8cpp.html#a2485332b8d6a4d1e6e9bad9ff3660e9f":[44,0,7,22,3],
+"NavMeshData_8cpp.html#a1494fea12600ff3da63c28d3b946bf82":[44,0,7,22,1],
+"NavMeshData_8cpp.html#a152824027cd3c3f3469a65e529d57eea":[44,0,7,22,2],
+"NavMeshData_8cpp.html#a16e9efdd9be8957407db87ab7cf3dd79":[44,0,7,22,3],
+"NavMeshData_8cpp.html#a2485332b8d6a4d1e6e9bad9ff3660e9f":[44,0,7,22,4],
 "NavMeshData_8cpp.html#a514c9fadc4ffefad9988c86baea675a0":[44,0,7,22,0],
 "NavMeshData_8h.html":[44,0,7,23],
 "NavMeshData_8h.html#a86ffc47e831e94fbc35d5babfb168fe3":[44,0,7,23,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "RecastAlloc_8h.html#ae3f9da3566ad0877b9e4c9e92f8e1a15":[44,0,8,0,1,15],
 "RecastAlloc_8h_source.html":[44,0,8,0,1],
 "RecastArea_8cpp.html":[44,0,8,1,2],
-"RecastArea_8cpp.html#a1499638887cce3274469f05084c60f5d":[44,0,8,1,2,1],
-"RecastArea_8cpp.html#a544f2c39b38253edc9d12e2f6567ae11":[44,0,8,1,2,0]
+"RecastArea_8cpp.html#a1499638887cce3274469f05084c60f5d":[44,0,8,1,2,1]
 };

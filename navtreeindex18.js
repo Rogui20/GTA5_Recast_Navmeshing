@@ -1,5 +1,6 @@
 var NAVTREEINDEX18 =
 {
+"SDL__events_8h.html#a276c50ba90bfed63c8c3129551c65a43":[44,0,5,2,1,27,65],
 "SDL__events_8h.html#a2d625e2a888e6b6e21dcfdda571ff6d5":[44,0,5,2,1,27,70],
 "SDL__events_8h.html#a33fcc6aa445cb781bfca881e39e5333e":[44,0,5,2,1,27,50],
 "SDL__events_8h.html#a358109832ab4b458758f71e0a474b67c":[44,0,5,2,1,27,78],
@@ -248,6 +249,5 @@ var NAVTREEINDEX18 =
 "SDL__gesture_8h.html#acef0242f4c4b7401509bc533864629ad":[44,0,5,2,1,30,4],
 "SDL__gesture_8h.html#ad06776e2e199d5d48e466a0ecbbb06c3":[44,0,5,2,1,30,2],
 "SDL__gesture_8h.html#ad37b554c91a5fffe3fc1dc3094db1b89":[44,0,5,2,1,30,3],
-"SDL__gesture_8h_source.html":[44,0,5,2,1,30],
-"SDL__guid_8h.html":[44,0,5,2,1,31]
+"SDL__gesture_8h_source.html":[44,0,5,2,1,30]
 };

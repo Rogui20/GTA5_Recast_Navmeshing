@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"RecastArea_8cpp.html#a544f2c39b38253edc9d12e2f6567ae11":[44,0,8,1,2,0],
 "RecastArea_8cpp.html#ab84b0a39a5bcd3e4bd1a2d19b015bde9":[44,0,8,1,2,9],
 "RecastArea_8cpp.html#ac4b52279afe6cd37e7e3213e62fb1bab":[44,0,8,1,2,8],
 "RecastAssert_8cpp.html":[44,0,8,1,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "RecastMeshDetail_8cpp.html#a0e67f4996b610668123b58620dae5a4f":[44,0,8,1,8,29],
 "RecastMeshDetail_8cpp.html#a127f1eddaf7db32655955561199a064f":[44,0,8,1,8,20],
 "RecastMeshDetail_8cpp.html#a16c4ee55e57347991da140a8cd13c313":[44,0,8,1,8,12],
-"RecastMeshDetail_8cpp.html#a17129b9465fbc4a0d5b375870f751ff2":[44,0,8,1,8,34],
-"RecastMeshDetail_8cpp.html#a185eb97e9f8ab6642bea84844254a56b":[44,0,8,1,8,10]
+"RecastMeshDetail_8cpp.html#a17129b9465fbc4a0d5b375870f751ff2":[44,0,8,1,8,34]
 };

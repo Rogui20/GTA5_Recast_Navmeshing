@@ -1,5 +1,6 @@
 var NAVTREEINDEX105 =
 {
+"structImVector.html#aab5df48e0711a48bd12f3206e08c4108":[43,0,307,36],
 "structImVector.html#ab46e61c71932385c2ee96d1dfc94546a":[43,0,307,8],
 "structImVector.html#ab48ae48675fa779e29c9ae5892bb99f4":[43,0,307,9],
 "structImVector.html#abbfd157947f66280d27b21d70a16df8d":[43,0,307,48],
@@ -248,6 +249,5 @@ var NAVTREEINDEX105 =
 "structRasterizationContext.html#aec39fae70c6dc870ea044eb2c8bf6c05":[43,0,337,6],
 "structRasterizationContext.html#afd127baddc666d46e474217dde4eabe7":[43,0,337,0],
 "structRay.html":[43,0,338],
-"structRay.html#a666e66ac32a5462ae95161a361e91951":[43,0,338,0],
-"structRay.html#af86f612d19416f116ad658c8f1a11e43":[43,0,338,1]
+"structRay.html#a666e66ac32a5462ae95161a361e91951":[43,0,338,0]
 };

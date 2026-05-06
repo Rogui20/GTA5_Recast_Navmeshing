@@ -130,6 +130,8 @@ Functions</h2></td></tr>
 <tr class="separator:a152824027cd3c3f3469a65e529d57eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16e9efdd9be8957407db87ab7cf3dd79" id="r_a16e9efdd9be8957407db87ab7cf3dd79"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMeshData_8cpp.html#a16e9efdd9be8957407db87ab7cf3dd79">IsNearTileBoundaryXZ</a> (const <a class="el" href="structdtMeshTile.html">dtMeshTile</a> *tile, const glm::vec3 &amp;<a class="el" href="SDL__opengl__glext_8h.html#aa5367c14d90f462230c2611b81b41d23">p</a>, float eps)</td></tr>
 <tr class="separator:a16e9efdd9be8957407db87ab7cf3dd79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1494fea12600ff3da63c28d3b946bf82" id="r_a1494fea12600ff3da63c28d3b946bf82"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NavMeshData_8cpp.html#a1494fea12600ff3da63c28d3b946bf82">HasClearBidirectionalLine</a> (const std::vector&lt; float &gt; &amp;rayVerts, const std::vector&lt; int &gt; &amp;rayTris, const glm::vec3 &amp;<a class="el" href="glad_8h.html#ac8729153468b5dcf13f971b21d84d4e5">a</a>, const glm::vec3 &amp;<a class="el" href="glad_8h.html#a6eba317e3cf44d6d26c04a5a8f197dcb">b</a>, float upOffset, float sideOffset, bool useSweep)</td></tr>
+<tr class="separator:a1494fea12600ff3da63c28d3b946bf82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a514c9fadc4ffefad9988c86baea675a0" name="a514c9fadc4ffefad9988c86baea675a0"></a>
@@ -152,6 +154,72 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">const glm::vec3 &amp;&#160;</td>
           <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1494fea12600ff3da63c28d3b946bf82" name="a1494fea12600ff3da63c28d3b946bf82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1494fea12600ff3da63c28d3b946bf82">&#9670;&#160;</a></span>HasClearBidirectionalLine()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool HasClearBidirectionalLine </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rayVerts</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rayTris</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>upOffset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>sideOffset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>useSweep</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
