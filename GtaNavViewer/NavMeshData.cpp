@@ -1207,6 +1207,40 @@ static bool IsNearTileBoundaryXZ(const dtMeshTile *tile, const glm::vec3 &p, flo
            std::fabs(p.z - bmax[2]) <= eps;
 }
 
+static bool HasClearBidirectionalLine(
+    const std::vector<float>& rayVerts,
+    const std::vector<int>& rayTris,
+    const glm::vec3& a,
+    const glm::vec3& b,
+    float upOffset,
+    float sideOffset,
+    bool useSweep)
+{
+    glm::vec3 ah = a + glm::vec3(0, upOffset, 0);
+    glm::vec3 bh = b + glm::vec3(0, upOffset, 0);
+
+    if (useSweep)
+    {
+        if (!SweepRay3(rayVerts, rayTris, ah, bh, sideOffset, 0.0f))
+            return false;
+
+        if (!SweepRay3(rayVerts, rayTris, bh, ah, sideOffset, 0.0f))
+            return false;
+
+        return true;
+    }
+
+    glm::vec3 hit{}, n{};
+
+    if (RaycastTo(rayVerts, rayTris, ah, bh, hit, n))
+        return false;
+
+    if (RaycastTo(rayVerts, rayTris, bh, ah, hit, n))
+        return false;
+
+    return true;
+}
+
 bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
                                                          int ty,
                                                          const AutoOffmeshGenerationParamsV2 &params,
@@ -1259,11 +1293,11 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
     const float slopeCos = cosf(glm::radians(params.maxSlopeDegrees));
     const glm::vec3 snapExtents(std::max(params.agentRadius, 0.2f), std::max(params.agentHeight + params.maxJumpUp + 0.5f, 0.5f), std::max(params.agentRadius, 0.2f));
     const float dropOut = params.dropOutwardOffset > 0 ? params.dropOutwardOffset : params.outwardOffset;
-    const float dropInset = params.dropStartInset > 0 ? params.dropStartInset : params.startInset;
+    const float dropInset  = params.dropStartInset  >= 0.0f ? params.dropStartInset  : params.startInset;
     const float dropUp = params.dropUpOffset != 0 ? params.dropUpOffset : params.upOffset;
-    const float jumpInset = params.jumpStartInset > 0 ? params.jumpStartInset : params.startInset;
+    const float jumpInset  = params.jumpStartInset  >= 0.0f ? params.jumpStartInset  : params.startInset;
     const float jumpUp = params.jumpUpOffset != 0 ? params.jumpUpOffset : params.upOffset;
-    const float climbInset = params.climbStartInset > 0 ? params.climbStartInset : jumpInset;
+    const float climbInset = params.climbStartInset >= 0.0f ? params.climbStartInset : params.startInset;
     const float maxRayDistance = params.maxDropHeight + params.raycastExtraHeight + std::max(dropUp, 0.0f);
 
     struct RejectCounters
@@ -1327,13 +1361,13 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
                     }
                     ++dynamicSeedAcceptedSamples;
                 }
-                glm::vec3 takeoffDrop = p - frame.outward3D * dropInset;
+                glm::vec3 takeoffDrop  = p - frame.outwardXZ * dropInset;
                 dtPolyRef takeoffDropRef = 0;
                 glm::vec3 takeoffDropSnapped{};
-                glm::vec3 takeoffJump = p - frame.outward3D * jumpInset;
+                glm::vec3 takeoffJump  = p - frame.outwardXZ * jumpInset;
                 dtPolyRef takeoffJumpRef = 0;
                 glm::vec3 takeoffJumpSnapped{};
-                glm::vec3 takeoffClimb = p - frame.outward3D * climbInset;
+                glm::vec3 takeoffClimb = p - frame.outwardXZ * climbInset;
                 dtPolyRef takeoffClimbRef = 0;
                 glm::vec3 takeoffClimbSnapped{};
 
@@ -1373,6 +1407,19 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
                                             ++rejected.dy;
                                             continue;
                                         }
+                                        if (!HasClearBidirectionalLine(
+                                                rayVerts,
+                                                rayTris,
+                                                takeoffDropSnapped,
+                                                snapped,
+                                                params.sweepUp,
+                                                params.sweepSideOffset,
+                                                enableSweep))
+                                        {
+                                            ++rejected.obstruction;
+                                            ++rejected.sweepBlocked;
+                                            continue;
+                                        }
                                         if (DistXZ(takeoffDropSnapped, snapped) < params.minDist)
                                         {
                                             ++rejected.distance;
@@ -1382,10 +1429,10 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
                                         {
                                             ++rejected.wrongDirection;
                                         }
-                                        else if (IsReachableByNormalNavmesh(query, takeoffDropRef, hr, takeoffDropSnapped, snapped, &filter))
-                                        {
-                                            ++rejected.normalReachable;
-                                        }
+                                        //else if (IsReachableByNormalNavmesh(query, takeoffDropRef, hr, takeoffDropSnapped, snapped, &filter))
+                                        //{
+                                        //    ++rejected.normalReachable;
+                                        //}
                                         else
                                         {
                                             GeneratedOffmeshCandidate c{};
@@ -1499,6 +1546,19 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
                                 ++rejected.sweepBlocked;
                                 continue;
                             }
+                            if (!HasClearBidirectionalLine(
+                                    rayVerts,
+                                    rayTris,
+                                    takeoffJumpSnapped,
+                                    cand,
+                                    params.sweepUp,
+                                    params.sweepSideOffset,
+                                    enableSweep))
+                            {
+                                ++rejected.obstruction;
+                                ++rejected.sweepBlocked;
+                                continue;
+                            }
                             GeneratedOffmeshCandidate c{};
                             c.link.start = takeoffJumpSnapped;
                             c.link.end = cand;
@@ -1518,7 +1578,15 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
                 }
                 if (includeClimb)
                 {
-                    if (!SnapToNavmesh(query, takeoffClimb, snapExtents, &filter, takeoffClimbRef, takeoffClimbSnapped))
+                    const float climbOut = params.climbOutwardOffset > 0.0f ? params.climbOutwardOffset : std::max(params.outwardOffset, 0.4f);
+                    const float topInset = params.climbStartInset > 0.0f ? params.climbStartInset : 0.25f;
+
+                    // Para climb:
+                    // start = fora/baixo da borda
+                    // end   = topo, um pouco para dentro da borda
+                    glm::vec3 climbStartRaw = p + frame.outwardXZ * climbOut;
+
+                    if (!SnapToNavmesh(query, climbStartRaw, snapExtents, &filter, takeoffClimbRef, takeoffClimbSnapped))
                     {
                         ++rejected.snapFail;
                     }
@@ -1526,71 +1594,107 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
                     {
                         float minH = params.climbMinHeight;
                         float maxH = params.climbMaxHeight > 0 ? params.climbMaxHeight : params.maxJumpUp;
-                        for (float d = params.minDist; d <= params.maxDist + 1e-3f; d += params.distStep)
+
+                        const float climbProbeUp = std::max(maxH, params.maxJumpUp) + 0.25f;
+                        const float downDist = climbProbeUp + std::max(params.climbProbeDown, 0.25f);
+
+                        // Procura o topo para DENTRO da plataforma/contêiner, não para fora.
+                        glm::vec3 topProbe = p - frame.outwardXZ * topInset + up * climbProbeUp;
+
+                        glm::vec3 topHit{}, topN{};
+                        if (!RaycastDown(rayVerts, rayTris, topProbe, downDist, topHit, topN))
                         {
-                            glm::vec3 front = p + frame.outwardXZ * d + up * params.maxJumpUp;
-                            glm::vec3 topHit{}, topN{};
-                            if (!RaycastDown(rayVerts, rayTris, front, std::max(params.climbProbeDown, 0.25f) + params.maxJumpUp, topHit, topN))
-                            {
-                                ++rejected.snapFail;
-                                continue;
-                            }
+                            ++rejected.snapFail;
+                        }
+                        else if (glm::dot(topN, up) < slopeCos)
+                        {
+                            ++rejected.slope;
+                        }
+                        else
+                        {
                             dtPolyRef cr = 0;
                             glm::vec3 cand{};
                             if (!SnapToNavmesh(query, topHit, snapExtents, &filter, cr, cand))
                             {
                                 ++rejected.snapFail;
-                                continue;
                             }
-                            float horiz = DistXZ(takeoffClimbSnapped, cand);
-                            if (horiz < params.minDist)
+                            else
                             {
-                                ++rejected.distance;
-                                ++rejected.tooClose;
-                                continue;
+                                float horiz = DistXZ(takeoffClimbSnapped, cand);
+                                if (horiz < params.minDist)
+                                {
+                                    ++rejected.distance;
+                                    ++rejected.tooClose;
+                                }
+                                else if (horiz > params.maxDist)
+                                {
+                                    ++rejected.distance;
+                                }
+                                else
+                                {
+                                    float dy = cand.y - takeoffClimbSnapped.y;
+                                    if (dy < minH || dy > maxH)
+                                    {
+                                        ++rejected.dy;
+                                    }
+                                    else
+                                    {
+                                        // Agora o candidato fica no sentido oposto ao outward, porque o topo está para dentro.
+                                        if (!IsCandidateInOutwardDirection(takeoffClimbSnapped, cand, -frame.outwardXZ, params.minOutwardDot))
+                                        {
+                                            ++rejected.wrongDirection;
+                                        }
+                                        else
+                                        {
+                                            bool clear = enableSweep
+                                                ? SweepRay3(
+                                                    rayVerts,
+                                                    rayTris,
+                                                    takeoffClimbSnapped + up * params.sweepUp,
+                                                    cand + up * params.sweepUp,
+                                                    params.sweepSideOffset,
+                                                    0.1f
+                                                )
+                                                : true;
+                                                if (!HasClearBidirectionalLine(
+                                                    rayVerts,
+                                                    rayTris,
+                                                    takeoffClimbSnapped,
+                                                    cand,
+                                                    params.sweepUp,
+                                                    params.sweepSideOffset,
+                                                    enableSweep))
+                                            {
+                                                ++rejected.obstruction;
+                                                ++rejected.sweepBlocked;
+                                                continue;
+                                            }
+                                            if (!clear)
+                                            {
+                                                ++rejected.obstruction;
+                                                ++rejected.sweepBlocked;
+                                            }
+                                            else
+                                            {
+                                                GeneratedOffmeshCandidate c{};
+                                                c.link.start = takeoffClimbSnapped;
+                                                c.link.end = cand;
+                                                c.rawStart = climbStartRaw;
+                                                c.rawEnd = topHit;
+                                                c.link.radius = std::max(params.agentRadius, 0.1f);
+                                                c.link.bidirectional = false;
+                                                c.link.area = params.climbArea;
+                                                c.link.flags = 1;
+                                                c.link.userId = params.userIdBase + (uint32_t)outLinks.size();
+                                                c.link.ownerTx = tx;
+                                                c.link.ownerTy = ty;
+
+                                                tryAppend(c, 2u, climbCount);
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            if (horiz > params.maxDist)
-                            {
-                                ++rejected.distance;
-                                continue;
-                            }
-                            float dy = cand.y - takeoffClimbSnapped.y;
-                            if (dy < minH || dy > maxH)
-                            {
-                                ++rejected.dy;
-                                continue;
-                            }
-                            if (!IsCandidateInOutwardDirection(takeoffClimbSnapped, cand, frame.outwardXZ, params.minOutwardDot))
-                            {
-                                ++rejected.wrongDirection;
-                                continue;
-                            }
-                            if (IsReachableByNormalNavmesh(query, takeoffClimbRef, cr, takeoffClimbSnapped, cand, &filter))
-                            {
-                                ++rejected.normalReachable;
-                                continue;
-                            }
-                            bool clear = enableSweep ? SweepRay3(rayVerts, rayTris, takeoffClimbSnapped + up * params.sweepUp, cand + up * params.sweepUp, params.sweepSideOffset, 0.1f) : true;
-                            if (!clear)
-                            {
-                                ++rejected.obstruction;
-                                ++rejected.sweepBlocked;
-                                continue;
-                            }
-                            GeneratedOffmeshCandidate c{};
-                            c.link.start = takeoffClimbSnapped;
-                            c.link.end = cand;
-                            c.rawStart = takeoffClimb;
-                            c.rawEnd = front;
-                            c.link.radius = std::max(params.agentRadius, 0.1f);
-                            c.link.bidirectional = false;
-                            c.link.area = params.climbArea;
-                            c.link.flags = 1;
-                            c.link.userId = params.userIdBase + (uint32_t)outLinks.size();
-                            c.link.ownerTx = tx;
-                            c.link.ownerTy = ty;
-                            if (tryAppend(c, 2u, climbCount))
-                                break;
                         }
                     }
                 }
