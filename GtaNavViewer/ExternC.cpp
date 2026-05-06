@@ -666,6 +666,12 @@ namespace
         return true;
     }
 
+    static void MarkBuiltRuntimeTileResident(ExternNavmeshContext& ctx, uint64_t tileKey)
+    {
+        ctx.residentTiles.insert(tileKey);
+        ctx.residentStamp[tileKey] = ++ctx.stampCounter;
+    }
+
     void UpdateWorldBounds(GeometryInstance& instance)
     {
         glm::vec3 bmin(FLT_MAX);
@@ -4482,6 +4488,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         }
         else if (builtTile)
         {
+            MarkBuiltRuntimeTileResident(*ctx, tileKey);
             if (persistTileState)
             {
                 tilesToSave.insert(tileKey);
@@ -4490,6 +4497,9 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
                 ctx->failedWorldTiles.erase(tileKey);
             }
         }
+        printf("[WorldTile][RuntimeDebug] tile %d,%d builtTile=%d emptyTile=%d hasGeom=%d tileHasDynamic=%d tileHasPersistent=%d wasRuntimeDirty=%d runtimeDynamicOnly=%d residentBeforeOrAfter=%zu lastBuiltPending=%zu saveToCache=%d\n",
+               tx, ty, builtTile ? 1 : 0, emptyTile ? 1 : 0, hasGeom ? 1 : 0, tileHasDynamicGeom ? 1 : 0, tileHasPersistentGeom ? 1 : 0,
+               wasRuntimeDirty ? 1 : 0, runtimeDynamicOnly ? 1 : 0, ctx->residentTiles.size(), successfullyBuiltTileKeys.size(), saveToCache ? 1 : 0);
         if (builtTile || emptyTile)
             successfullyBuiltTileKeys.insert(tileKey);
 
@@ -4574,6 +4584,12 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
     ctx->lastBuiltWorldTileKeys.assign(successfullyBuiltTileKeys.begin(), successfullyBuiltTileKeys.end());
     std::sort(ctx->lastBuiltWorldTileKeys.begin(), ctx->lastBuiltWorldTileKeys.end());
     printf("[WorldTile] lastBuilt keys=%zu\n", ctx->lastBuiltWorldTileKeys.size());
+    printf("[WorldTile][RuntimeDebug] final lastBuilt=%zu resident=%zu runtimeDirtyRemaining=%zu dirtyStaticRemaining=%zu pendingBuild=%zu\n",
+           ctx->lastBuiltWorldTileKeys.size(),
+           ctx->residentTiles.size(),
+           ctx->runtimeDirtyWorldTiles.size(),
+           ctx->dirtyWorldTiles.size(),
+           ctx->pendingTileBuildQueue.size());
 
     printf("[WorldTile] BuildQueuedWorldTiles: processed=%zu tilesToSave=%zu failed=%d saveToCache=%d\n",
         processedTileKeys.size(), tilesToSave.size(), failed, saveToCache ? 1 : 0);
@@ -4833,10 +4849,18 @@ GTANAVVIEWER_API bool ExportRuntimeTileRevision(void* builderNavMesh, const char
 
     std::vector<uint64_t> tileKeys;
     if (onlyLastBuiltTiles)
+    {
         tileKeys = ctx->lastBuiltWorldTileKeys;
+        if (tileKeys.empty())
+        {
+            printf("[RuntimeSync] export fallback: lastBuilt empty, using residentTiles. revision=%llu resident=%zu\n",
+                   static_cast<unsigned long long>(revision), ctx->residentTiles.size());
+            tileKeys.assign(ctx->residentTiles.begin(), ctx->residentTiles.end());
+        }
+    }
     else
         tileKeys.assign(ctx->residentTiles.begin(), ctx->residentTiles.end());
-    if (onlyLastBuiltTiles && tileKeys.empty())
+    if (tileKeys.empty())
     {
         printf("[RuntimeSync] export skipped: no tile keys revision=%llu\n", static_cast<unsigned long long>(revision));
         return false;
@@ -4874,6 +4898,12 @@ GTANAVVIEWER_API bool ExportRuntimeTileRevision(void* builderNavMesh, const char
     int exportedCount = 0;
     int removedCount = 0;
     int skippedCount = 0;
+    printf("[RuntimeSync] export begin revision=%llu onlyLastBuilt=%d tileKeys=%zu lastBuilt=%zu resident=%zu\n",
+           static_cast<unsigned long long>(revision),
+           onlyLastBuiltTiles ? 1 : 0,
+           tileKeys.size(),
+           ctx->lastBuiltWorldTileKeys.size(),
+           ctx->residentTiles.size());
     for (uint64_t key : tileKeys)
     {
         const int tx = static_cast<int>(key >> 32);
@@ -4881,6 +4911,8 @@ GTANAVVIEWER_API bool ExportRuntimeTileRevision(void* builderNavMesh, const char
         const dtTileRef ref = nav->getTileRefAt(tx, ty, 0);
         if (ref == 0)
         {
+            printf("[RuntimeSync] export tile missing nav ref tx=%d ty=%d key=%llu\n",
+                   tx, ty, static_cast<unsigned long long>(key));
             nlohmann::json removedMeta;
             removedMeta["removed"] = true;
             removedMeta["tileKey"] = key;
@@ -4918,6 +4950,23 @@ GTANAVVIEWER_API bool ExportRuntimeTileRevision(void* builderNavMesh, const char
         tileMeta["file"] = blobName;
         j["tiles"].push_back(std::move(tileMeta));
         ++exportedCount;
+        printf("[RuntimeSync] export tile tx=%d ty=%d polys=%d offmesh=%d dataSize=%d file=%s\n",
+               tx, ty, tile->header->polyCount, tile->header->offMeshConCount, tile->dataSize, blobName.c_str());
+    }
+
+    if (exportedCount == 0)
+    {
+        if (removedCount > 0)
+        {
+            printf("[RuntimeSync][warn] export revision=%llu produced only removals removed=%d skipped=%d\n",
+                   static_cast<unsigned long long>(revision), removedCount, skippedCount);
+        }
+        else
+        {
+            printf("[RuntimeSync][warn] export revision=%llu produced no tiles and no removals skipped=%d\n",
+                   static_cast<unsigned long long>(revision), skippedCount);
+            return fail("no tiles exported");
+        }
     }
 
     std::ofstream stateOut(tmpPath / "state_update.json");
