@@ -349,6 +349,11 @@ GTANAVVIEWER_API int SyncQueryContextRuntimeTiles(void* builderNavMesh, void* qu
 GTANAVVIEWER_API int ReloadWorldTilesFromCache(void* queryNavMesh, const uint64_t* tileKeys, int tileCount);
 GTANAVVIEWER_API int ReloadResidentWorldTilesFromCache(void* queryNavMesh);
 GTANAVVIEWER_API int GetLastBuiltWorldTileKeys(void* navMesh, uint64_t* outKeys, int maxKeys, int* outCount);
+GTANAVVIEWER_API bool ExportRuntimeTileRevision(void* builderNavMesh, const char* syncRoot, uint64_t revision, bool onlyLastBuiltTiles);
+GTANAVVIEWER_API int ImportRuntimeTileRevision(void* queryNavMesh, const char* syncRoot, uint64_t revision);
+GTANAVVIEWER_API int ImportLatestRuntimeTileRevision(void* queryNavMesh, const char* syncRoot, uint64_t* outRevision);
+GTANAVVIEWER_API uint64_t GetContextRevision(void* navMesh);
+GTANAVVIEWER_API bool SetContextRevision(void* navMesh, uint64_t revision);
 
 // Pathfind
 GTANAVVIEWER_API int FindPath(void* navMesh,
