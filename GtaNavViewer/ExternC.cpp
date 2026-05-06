@@ -291,6 +291,7 @@ namespace
         std::unordered_map<std::string, AgentProfile> agentProfiles;
         std::unordered_map<std::string, std::unordered_map<std::uint64_t, AgentProfileTileCache>> agentProfileTileCaches;
         std::vector<uint64_t> lastBuiltWorldTileKeys;
+        std::uint64_t runtimeRevision = 0;
     };
 
     uint64_t WorldHashCombine64(uint64_t seed, uint64_t v)
@@ -504,6 +505,21 @@ namespace
             return false;
         }
         return true;
+    }
+
+    static bool DecodeRuntimeTileBlob(const std::filesystem::path& blobPath, std::vector<unsigned char>& outData)
+    {
+        std::ifstream in(blobPath, std::ios::binary);
+        if (!in.is_open())
+            return false;
+        in.seekg(0, std::ios::end);
+        const std::streamoff sz = in.tellg();
+        if (sz <= 0)
+            return false;
+        in.seekg(0, std::ios::beg);
+        outData.resize(static_cast<size_t>(sz));
+        in.read(reinterpret_cast<char*>(outData.data()), sz);
+        return in.good();
     }
 
     
@@ -4669,10 +4685,6 @@ GTANAVVIEWER_API bool SyncQueryContextWorldState(void* builderNavMesh, void* que
     queryCtx->useTileCacheGridDB = builderCtx->useTileCacheGridDB;
     queryCtx->cacheRoot = builderCtx->cacheRoot;
     queryCtx->sessionId = builderCtx->sessionId;
-    queryCtx->residentTiles = builderCtx->residentTiles;
-    queryCtx->residentStamp = builderCtx->residentStamp;
-    queryCtx->agentResidentTiles = builderCtx->agentResidentTiles;
-    queryCtx->stampCounter = builderCtx->stampCounter;
     queryCtx->maxResidentTiles = builderCtx->maxResidentTiles;
     queryCtx->worldAutoGenerateOffmeshLinks = builderCtx->worldAutoGenerateOffmeshLinks;
     queryCtx->worldAutoOffmeshOnlyDynamicAffectedTiles = builderCtx->worldAutoOffmeshOnlyDynamicAffectedTiles;
@@ -4769,6 +4781,244 @@ GTANAVVIEWER_API int SyncQueryContextRuntimeTiles(void* builderNavMesh, void* qu
     printf("[QueryCtx] runtime tile sync: requested=%d copied=%d removed=%d failed=%d resident=%zu\n",
            tileCount, copied, removed, failed, queryCtx->residentTiles.size());
     return copied;
+}
+
+GTANAVVIEWER_API uint64_t GetContextRevision(void* navMesh)
+{
+    const auto* ctx = static_cast<const ExternNavmeshContext*>(navMesh);
+    if (!ctx)
+        return 0;
+    return ctx->runtimeRevision;
+}
+
+GTANAVVIEWER_API bool SetContextRevision(void* navMesh, uint64_t revision)
+{
+    auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
+    if (!ctx)
+        return false;
+    ctx->runtimeRevision = revision;
+    return true;
+}
+
+GTANAVVIEWER_API bool ExportRuntimeTileRevision(void* builderNavMesh, const char* syncRoot, uint64_t revision, bool onlyLastBuiltTiles)
+{
+    auto* ctx = static_cast<ExternNavmeshContext*>(builderNavMesh);
+    if (!ctx || !syncRoot || !*syncRoot || ctx->sessionId.empty())
+        return false;
+    dtNavMesh* nav = ctx->navData.GetNavMesh();
+    if (!nav)
+        return false;
+
+    std::vector<uint64_t> tileKeys;
+    if (onlyLastBuiltTiles)
+        tileKeys = ctx->lastBuiltWorldTileKeys;
+    else
+        tileKeys.assign(ctx->residentTiles.begin(), ctx->residentTiles.end());
+    std::sort(tileKeys.begin(), tileKeys.end());
+    tileKeys.erase(std::unique(tileKeys.begin(), tileKeys.end()), tileKeys.end());
+
+    const std::filesystem::path sessionPath = std::filesystem::path(syncRoot) / ctx->sessionId;
+    const std::filesystem::path finalPath = sessionPath / ("rev_" + std::to_string(revision));
+    const std::filesystem::path tmpPath = sessionPath / ("rev_" + std::to_string(revision) + ".tmp");
+    std::error_code ec;
+    std::filesystem::create_directories(sessionPath, ec);
+    if (ec)
+        return false;
+    std::filesystem::remove_all(tmpPath, ec);
+    ec.clear();
+    std::filesystem::create_directories(tmpPath, ec);
+    if (ec)
+        return false;
+
+    nlohmann::json j;
+    j["revision"] = revision;
+    j["sessionId"] = ctx->sessionId;
+    j["tiles"] = nlohmann::json::array();
+    const auto& hashes = ctx->navData.GetCachedTileHashes();
+    int exportedCount = 0;
+    int removedCount = 0;
+    for (uint64_t key : tileKeys)
+    {
+        const int tx = static_cast<int>(key >> 32);
+        const int ty = static_cast<int>(key & 0xffffffffu);
+        const dtTileRef ref = nav->getTileRefAt(tx, ty, 0);
+        if (ref == 0)
+        {
+            nlohmann::json removedMeta;
+            removedMeta["removed"] = true;
+            removedMeta["tileKey"] = key;
+            removedMeta["tx"] = tx;
+            removedMeta["ty"] = ty;
+            j["tiles"].push_back(std::move(removedMeta));
+            ++removedCount;
+            continue;
+        }
+        const dtMeshTile* tile = nav->getTileByRef(ref);
+        if (!tile || !tile->header || !tile->data || tile->dataSize <= 0)
+            continue;
+
+        const std::string blobName = "tile_" + std::to_string(tx) + "_" + std::to_string(ty) + ".bin";
+        const std::filesystem::path blobPath = tmpPath / blobName;
+        std::ofstream out(blobPath, std::ios::binary);
+        if (!out.is_open())
+            return false;
+        out.write(reinterpret_cast<const char*>(tile->data), tile->dataSize);
+        if (!out.good())
+            return false;
+
+        nlohmann::json tileMeta;
+        tileMeta["tileKey"] = key;
+        tileMeta["tx"] = tx;
+        tileMeta["ty"] = ty;
+        const auto itHash = hashes.find(key);
+        tileMeta["tileHash"] = itHash != hashes.end() ? itHash->second : 0;
+        tileMeta["polyCount"] = tile->header->polyCount;
+        tileMeta["offMeshConCount"] = tile->header->offMeshConCount;
+        tileMeta["dataSize"] = tile->dataSize;
+        tileMeta["file"] = blobName;
+        j["tiles"].push_back(std::move(tileMeta));
+        ++exportedCount;
+    }
+
+    std::ofstream stateOut(tmpPath / "state_update.json");
+    if (!stateOut.is_open())
+        return false;
+    stateOut << j.dump(2);
+    stateOut.close();
+
+    std::filesystem::remove_all(finalPath, ec);
+    ec.clear();
+    std::filesystem::rename(tmpPath, finalPath, ec);
+    if (ec)
+        return false;
+
+    nlohmann::json latest;
+    latest["revision"] = revision;
+    latest["sessionId"] = ctx->sessionId;
+    std::ofstream latestOut(sessionPath / "latest.json");
+    if (!latestOut.is_open())
+        return false;
+    latestOut << latest.dump(2);
+    ctx->runtimeRevision = revision;
+    printf("[RuntimeSync] export revision=%llu tiles=%d removed=%d path=%s\n",
+           static_cast<unsigned long long>(revision),
+           exportedCount,
+           removedCount,
+           finalPath.string().c_str());
+    return true;
+}
+
+GTANAVVIEWER_API int ImportRuntimeTileRevision(void* queryNavMesh, const char* syncRoot, uint64_t revision)
+{
+    auto* ctx = static_cast<ExternNavmeshContext*>(queryNavMesh);
+    if (!ctx || !syncRoot || !*syncRoot || ctx->sessionId.empty())
+        return 0;
+    dtNavMesh* nav = ctx->navData.GetNavMesh();
+    if (!nav)
+        return 0;
+    const std::filesystem::path revPath = std::filesystem::path(syncRoot) / ctx->sessionId / ("rev_" + std::to_string(revision));
+    std::ifstream in(revPath / "state_update.json");
+    if (!in.is_open())
+        return 0;
+    nlohmann::json j;
+    in >> j;
+    int imported = 0;
+    int removed = 0;
+    int failed = 0;
+    for (const auto& tileMeta : j.value("tiles", nlohmann::json::array()))
+    {
+        const uint64_t key = tileMeta.value("tileKey", 0ull);
+        const int tx = tileMeta.value("tx", 0);
+        const int ty = tileMeta.value("ty", 0);
+        const bool isRemoved = tileMeta.value("removed", false);
+        const std::string blobName = tileMeta.value("file", std::string{});
+        if (key == 0)
+            continue;
+
+        const dtTileRef oldRef = nav->getTileRefAt(tx, ty, 0);
+        if (oldRef != 0)
+        {
+            unsigned char* oldData = nullptr;
+            int oldSize = 0;
+            const dtStatus rm = nav->removeTile(oldRef, &oldData, &oldSize);
+            if (dtStatusSucceed(rm) && oldData) dtFree(oldData);
+        }
+        if (isRemoved)
+        {
+            ctx->navData.RemoveCachedTileHash(key);
+            ctx->residentTiles.erase(key);
+            ctx->residentStamp.erase(key);
+            InvalidateAgentProfileTileCaches(*ctx, key);
+            ++removed;
+            continue;
+        }
+        if (blobName.empty())
+        {
+            ++failed;
+            continue;
+        }
+
+        std::vector<unsigned char> blob;
+        if (!DecodeRuntimeTileBlob(revPath / blobName, blob))
+        {
+            ++failed;
+            continue;
+        }
+        unsigned char* copy = static_cast<unsigned char*>(dtAlloc(static_cast<int>(blob.size()), DT_ALLOC_PERM));
+        if (!copy)
+        {
+            ++failed;
+            continue;
+        }
+        std::memcpy(copy, blob.data(), blob.size());
+        dtTileRef addedRef = 0;
+        const dtStatus add = nav->addTile(copy, static_cast<int>(blob.size()), DT_TILE_FREE_DATA, 0, &addedRef);
+        if (dtStatusFailed(add) || addedRef == 0)
+        {
+            dtFree(copy);
+            ++failed;
+            continue;
+        }
+
+        ctx->navData.SetCachedTileHash(key, tileMeta.value("tileHash", 0ull));
+        ctx->residentTiles.insert(key);
+        ctx->residentStamp[key] = ++ctx->stampCounter;
+        InvalidateAgentProfileTileCaches(*ctx, key);
+        ++imported;
+        printf("[RuntimeSync] imported tile tx=%d ty=%d polys=%d offmesh=%d dataSize=%d\n",
+               tx,
+               ty,
+               tileMeta.value("polyCount", 0),
+               tileMeta.value("offMeshConCount", 0),
+               static_cast<int>(blob.size()));
+    }
+    EnsureNavQuery(*ctx);
+    ctx->runtimeRevision = revision;
+    printf("[RuntimeSync] import revision=%llu imported=%d removed=%d failed=%d resident=%zu\n",
+           static_cast<unsigned long long>(revision),
+           imported,
+           removed,
+           failed,
+           ctx->residentTiles.size());
+    return imported;
+}
+
+GTANAVVIEWER_API int ImportLatestRuntimeTileRevision(void* queryNavMesh, const char* syncRoot, uint64_t* outRevision)
+{
+    auto* ctx = static_cast<ExternNavmeshContext*>(queryNavMesh);
+    if (!ctx || !syncRoot || !*syncRoot || ctx->sessionId.empty())
+        return 0;
+    const std::filesystem::path latestPath = std::filesystem::path(syncRoot) / ctx->sessionId / "latest.json";
+    std::ifstream in(latestPath);
+    if (!in.is_open())
+        return 0;
+    nlohmann::json j;
+    in >> j;
+    const uint64_t revision = j.value("revision", 0ull);
+    if (outRevision) *outRevision = revision;
+    if (revision == 0 || revision == ctx->runtimeRevision)
+        return 0;
+    return ImportRuntimeTileRevision(queryNavMesh, syncRoot, revision);
 }
 
 GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, void* queryNavMesh)
