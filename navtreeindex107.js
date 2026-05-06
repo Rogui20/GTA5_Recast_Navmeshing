@@ -1,5 +1,15 @@
 var NAVTREEINDEX107 =
 {
+"structSDL__HapticConstant.html#a907bade68ab53fb24e7d2651d19b767f":[43,0,405,0],
+"structSDL__HapticConstant.html#aa65321f1b002adaab6e629d5bed556e9":[43,0,405,2],
+"structSDL__HapticConstant.html#ab1f7f0df856f4cf1fdf937cb886226b4":[43,0,405,7],
+"structSDL__HapticConstant.html#aeb994c356b1d236b060f277d157e98ec":[43,0,405,8],
+"structSDL__HapticCustom.html":[43,0,406],
+"structSDL__HapticCustom.html#a018b35d89398c26e10d1fb4315d1dda1":[43,0,406,0],
+"structSDL__HapticCustom.html#a094229466ff4cf695860db664100a2b0":[43,0,406,5],
+"structSDL__HapticCustom.html#a560215762e9096d583d75867d9227cf5":[43,0,406,3],
+"structSDL__HapticCustom.html#a5905ea1b6182da846535ca8c80b4fa33":[43,0,406,12],
+"structSDL__HapticCustom.html#a73a522581eb514d032e500ec6294fe50":[43,0,406,8],
 "structSDL__HapticCustom.html#a98a8995c94492069dc007502ed97eed2":[43,0,406,13],
 "structSDL__HapticCustom.html#aa4fbaf7220f3197aa6631b3e64ad6562":[43,0,406,2],
 "structSDL__HapticCustom.html#ab47fac94baeba28a3acd6c706e0b6a5c":[43,0,406,7],
@@ -239,15 +249,5 @@ var NAVTREEINDEX107 =
 "structSDL__SensorEvent.html#a7de6c2b4d4791f5553b5de225293ceb5":[43,0,437,1],
 "structSDL__SensorEvent.html#aa1c130192bad9b316f811f2d138b3b22":[43,0,437,4],
 "structSDL__SensorEvent.html#ab08c166baa755f66b13df0d66ed6d29b":[43,0,437,0],
-"structSDL__SensorEvent.html#abbe1f3b481092e73a4df4e9e9be4ad0a":[43,0,437,2],
-"structSDL__Surface.html":[43,0,438],
-"structSDL__Surface.html#a03d10628a359c0674f5ceffd574f1641":[43,0,438,9],
-"structSDL__Surface.html#a0a90721f947c10c3b79e02ccb419ca62":[43,0,438,2],
-"structSDL__Surface.html#a17294cb1ec1ef7f77f75cdad26ac795f":[43,0,438,4],
-"structSDL__Surface.html#a5022edaeea1c0a055fa5d6dccba41de2":[43,0,438,5],
-"structSDL__Surface.html#a5fa37325d77d65b2ed64ffc7cd01bb6c":[43,0,438,7],
-"structSDL__Surface.html#a86d78b665d5dfd7aa1dd9696b067641b":[43,0,438,1],
-"structSDL__Surface.html#a9b0ec7185dcdb2a3530a9160a6ea83d9":[43,0,438,11],
-"structSDL__Surface.html#aa9a0da3b38261dad6cf0cc4e3bb5b0c3":[43,0,438,0],
-"structSDL__Surface.html#abd9597e0e084b8ef33fe0397bc26d911":[43,0,438,8]
+"structSDL__SensorEvent.html#abbe1f3b481092e73a4df4e9e9be4ad0a":[43,0,437,2]
 };

@@ -1,5 +1,15 @@
 var NAVTREEINDEX19 =
 {
+"SDL__guid_8h.html#a6f92bf2814a2cf08758836ab52110cb2":[44,0,5,2,1,31,1],
+"SDL__guid_8h.html#ab432a2a76d325f885dfcd45344c6384b":[44,0,5,2,1,31,2],
+"SDL__guid_8h.html#ac45f2a78da7a4ac7beae6f3ded687b58":[44,0,5,2,1,31,3],
+"SDL__guid_8h_source.html":[44,0,5,2,1,31],
+"SDL__haptic_8h.html":[44,0,5,2,1,32],
+"SDL__haptic_8h.html#a0b0d63aa4513fc1b12939500cb3f8a76":[44,0,5,2,1,32,59],
+"SDL__haptic_8h.html#a0bb35fea7c4c08c9bcb80e0bcfa1799f":[44,0,5,2,1,32,39],
+"SDL__haptic_8h.html#a0ebf54334ce8dbdd0f8711ca70f141a7":[44,0,5,2,1,32,36],
+"SDL__haptic_8h.html#a14b807471589120395aec28293cf6642":[44,0,5,2,1,32,15],
+"SDL__haptic_8h.html#a176c52ff4b77b63cb94ea83f8f4183ad":[44,0,5,2,1,32,44],
 "SDL__haptic_8h.html#a1cd1294768bb00f35b77f67031a8a9cb":[44,0,5,2,1,32,58],
 "SDL__haptic_8h.html#a1fcf7cb0eaf3c39b16ba266054e25aff":[44,0,5,2,1,32,24],
 "SDL__haptic_8h.html#a24d8f221d4b2eae5c3c663752fc0d66a":[44,0,5,2,1,32,49],
@@ -239,15 +249,5 @@ var NAVTREEINDEX19 =
 "SDL__hints_8h.html#ab7f0a88d892fa213527436ce2eebe016":[44,0,5,2,1,34,204],
 "SDL__hints_8h.html#ab85f3099d9bb0445b0c6b5002cfaa7ed":[44,0,5,2,1,34,200],
 "SDL__hints_8h.html#ab85f3099d9bb0445b0c6b5002cfaa7eda3dd1382c2b23c690411c1aacfac9b634":[44,0,5,2,1,34,200,0],
-"SDL__hints_8h.html#ab85f3099d9bb0445b0c6b5002cfaa7edac85d90168e4a0cd4cd52ba38a68bcebf":[44,0,5,2,1,34,200,2],
-"SDL__hints_8h.html#ab85f3099d9bb0445b0c6b5002cfaa7edaef363821cdc9c74e84d79cfea42e32b9":[44,0,5,2,1,34,200,1],
-"SDL__hints_8h.html#abc592ad47225c77acdec3d778782a37e":[44,0,5,2,1,34,167],
-"SDL__hints_8h.html#abcb7bc98e366325985e96815d6ee8b60":[44,0,5,2,1,34,65],
-"SDL__hints_8h.html#abd14c21ef70948eb382153916e1481b7":[44,0,5,2,1,34,47],
-"SDL__hints_8h.html#abdeb9ded1da2d71324d4a60b048521b3":[44,0,5,2,1,34,68],
-"SDL__hints_8h.html#abe9410e8b6809c9fdcb1f69e6894a2e8":[44,0,5,2,1,34,38],
-"SDL__hints_8h.html#abeeb244e7cc4610e45235e41039c8211":[44,0,5,2,1,34,27],
-"SDL__hints_8h.html#abf565db22ddc2f8a3842d42db9a71e8b":[44,0,5,2,1,34,176],
-"SDL__hints_8h.html#ac0deec953ae4635131cbe321192236ff":[44,0,5,2,1,34,2],
-"SDL__hints_8h.html#ac25a4eba109ed065d639f6054d2b842c":[44,0,5,2,1,34,129]
+"SDL__hints_8h.html#ab85f3099d9bb0445b0c6b5002cfaa7edac85d90168e4a0cd4cd52ba38a68bcebf":[44,0,5,2,1,34,200,2]
 };

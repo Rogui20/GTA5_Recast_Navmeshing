@@ -1,5 +1,15 @@
 var NAVTREEINDEX96 =
 {
+"structImGuiContext.html#af0f1975cb1e779ac3c0049ad1ed798f1":[43,0,185,211],
+"structImGuiContext.html#af1fa9ff1a1315592ff9ddf1802579411":[43,0,185,246],
+"structImGuiContext.html#af4022d1866887cdc400131fc6a65b200":[43,0,185,126],
+"structImGuiContext.html#af4797d5b38c5c659d1aa0160d46549d8":[43,0,185,101],
+"structImGuiContext.html#af533c63d15c334b863f9e95f11aca78a":[43,0,185,185],
+"structImGuiContext.html#af5761a79ad40a0b0fbdb1376ce0af4a1":[43,0,185,84],
+"structImGuiContext.html#af58aa479f6c97819694f1709b62c70d8":[43,0,185,14],
+"structImGuiContext.html#af8641ca16b62736c6af16364e65666ab":[43,0,185,107],
+"structImGuiContext.html#af98791565876933c63b1db9df4118116":[43,0,185,286],
+"structImGuiContext.html#afa89de5570c1f262572801c455ec8ec8":[43,0,185,163],
 "structImGuiContext.html#afcb35365c06419ca0238224ea124d6fc":[43,0,185,67],
 "structImGuiContext.html#aff72b8fa0fa1227e9a164f34e44cb039":[43,0,185,200],
 "structImGuiContextHook.html":[43,0,186],
@@ -239,15 +249,5 @@ var NAVTREEINDEX96 =
 "structImGuiIO.html#a25bed9de908b086e583854438ca7927d":[43,0,221,120],
 "structImGuiIO.html#a2e5a1f09b30325a1912a567b8c977746":[43,0,221,29],
 "structImGuiIO.html#a331554b7c7eab1bbc5d415baba9d9730":[43,0,221,56],
-"structImGuiIO.html#a38bd9f6e8b3dcdb31c4e0fa9766cddf1":[43,0,221,58],
-"structImGuiIO.html#a390537e7cba21b98a8f89df857ea59fb":[43,0,221,84],
-"structImGuiIO.html#a3a1d88ad955ae36def01b4d77af3696f":[43,0,221,63],
-"structImGuiIO.html#a3a2e7d52289eecfdbe8571e034e41b53":[43,0,221,116],
-"structImGuiIO.html#a3c5ad00141194e3a01c9efbcb53cd5a1":[43,0,221,11],
-"structImGuiIO.html#a3c7642214f88862af5b8467f98ac35c9":[43,0,221,87],
-"structImGuiIO.html#a402bca8838011fc4518c0895f24ffc92":[43,0,221,109],
-"structImGuiIO.html#a458e4ca98d896adb16e3a41ec6d2b811":[43,0,221,127],
-"structImGuiIO.html#a4740dc94f803920e809747d2c602d571":[43,0,221,80],
-"structImGuiIO.html#a4d9fb1151f10f1f6f7597bb3a21e1447":[43,0,221,79],
-"structImGuiIO.html#a5068d5414a19c2a1bf58029bd732a7c7":[43,0,221,68]
+"structImGuiIO.html#a38bd9f6e8b3dcdb31c4e0fa9766cddf1":[43,0,221,58]
 };

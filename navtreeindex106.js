@@ -1,5 +1,15 @@
 var NAVTREEINDEX106 =
 {
+"structRenderResources.html":[43,0,372],
+"structRenderResources.html#a022d689ce72006f56225836c1d56931b":[43,0,372,2],
+"structRenderResources.html#a4d79ab9a299fa9cf584e9741d810ea1e":[43,0,372,3],
+"structRenderResources.html#a4dac394ca31925180b5bf88a584597c8":[43,0,372,1],
+"structRenderResources.html#aa349d070b674f599df50ed6d1799a308":[43,0,372,4],
+"structRenderResources.html#abc590a25596f9e66e6a345cfd0ed851f":[43,0,372,0],
+"structSDLTest__CommonState.html":[43,0,453],
+"structSDLTest__CommonState.html#a083f7381809b23f0ac3a9a8de562f70c":[43,0,453,22],
+"structSDLTest__CommonState.html#a0a054f0c45eb9d21f9561d701e721106":[43,0,453,52],
+"structSDLTest__CommonState.html#a0f792d6f2c15c60567bc4641e9f44f70":[43,0,453,44],
 "structSDLTest__CommonState.html#a1fcd61cbe37c2bb563e7b2f1c6853d29":[43,0,453,51],
 "structSDLTest__CommonState.html#a2710657ef2a0c8aabebc5fceb01c71b5":[43,0,453,16],
 "structSDLTest__CommonState.html#a2b6e86fd695d84f12db148dcf3b2fcb5":[43,0,453,13],
@@ -239,15 +249,5 @@ var NAVTREEINDEX106 =
 "structSDL__HapticConstant.html#a49f6499c89f3e494efbe92f12277c949":[43,0,405,6],
 "structSDL__HapticConstant.html#a5b095eea77464623ed57af15f29f4ca6":[43,0,405,9],
 "structSDL__HapticConstant.html#a5cb31202803a8bc1be95fcede5ac8afb":[43,0,405,10],
-"structSDL__HapticConstant.html#a647a6b761ac6ba16160d0892a12806bc":[43,0,405,5],
-"structSDL__HapticConstant.html#a907bade68ab53fb24e7d2651d19b767f":[43,0,405,0],
-"structSDL__HapticConstant.html#aa65321f1b002adaab6e629d5bed556e9":[43,0,405,2],
-"structSDL__HapticConstant.html#ab1f7f0df856f4cf1fdf937cb886226b4":[43,0,405,7],
-"structSDL__HapticConstant.html#aeb994c356b1d236b060f277d157e98ec":[43,0,405,8],
-"structSDL__HapticCustom.html":[43,0,406],
-"structSDL__HapticCustom.html#a018b35d89398c26e10d1fb4315d1dda1":[43,0,406,0],
-"structSDL__HapticCustom.html#a094229466ff4cf695860db664100a2b0":[43,0,406,5],
-"structSDL__HapticCustom.html#a560215762e9096d583d75867d9227cf5":[43,0,406,3],
-"structSDL__HapticCustom.html#a5905ea1b6182da846535ca8c80b4fa33":[43,0,406,12],
-"structSDL__HapticCustom.html#a73a522581eb514d032e500ec6294fe50":[43,0,406,8]
+"structSDL__HapticConstant.html#a647a6b761ac6ba16160d0892a12806bc":[43,0,405,5]
 };

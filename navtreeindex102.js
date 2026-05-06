@@ -1,5 +1,15 @@
 var NAVTREEINDEX102 =
 {
+"structImGuiWindowSettings.html#a5ae7316219230c82a05618c227e5a7b7":[43,0,287,6],
+"structImGuiWindowSettings.html#a694e496dba59b5aaabe14cce66309acd":[43,0,287,0],
+"structImGuiWindowSettings.html#a79308182bdab97cb87b3d6284f22c1d2":[43,0,287,3],
+"structImGuiWindowSettings.html#a7a480e4ccc61ce5b8a4ac92d28ff5fd1":[43,0,287,1],
+"structImGuiWindowSettings.html#a7e4a26f4e4bfaf97a379641dcdbb6d14":[43,0,287,9],
+"structImGuiWindowSettings.html#a84a5493ff2f7e75a26e6909cc1bc6b97":[43,0,287,5],
+"structImGuiWindowSettings.html#ac15f967d69f83ca76b37b9403db73e1b":[43,0,287,2],
+"structImGuiWindowSettings.html#ad55031a983d16773d5a903c228ea2a1f":[43,0,287,4],
+"structImGuiWindowSettings.html#af82c14a41e90d62cbd6d8d5177cbe5a5":[43,0,287,7],
+"structImGuiWindowSettings.html#afe2e8f97751166b10042bfd537e77c89":[43,0,287,8],
 "structImGuiWindowStackData.html":[43,0,288],
 "structImGuiWindowStackData.html#a17e0b0c67ef7780e41d4a0aaea9ab59e":[43,0,288,2],
 "structImGuiWindowStackData.html#a279ab24e0cb12929bf53542806dbed21":[43,0,288,1],
@@ -239,15 +249,5 @@ var NAVTREEINDEX102 =
 "structImGui__ImplOpenGL3__Data.html#a2778e5caad83bc7b69981c53d5e9ed5e":[43,0,150,14],
 "structImGui__ImplOpenGL3__Data.html#a29c0f955e5c0f2b183bc67a11169a43c":[43,0,150,17],
 "structImGui__ImplOpenGL3__Data.html#a2c1913777648318ae2e5b2d25b897549":[43,0,150,15],
-"structImGui__ImplOpenGL3__Data.html#a471c9bee70d528144387b4f9dc44c240":[43,0,150,9],
-"structImGui__ImplOpenGL3__Data.html#a4fff755aff6cc130aab106a8b20e3041":[43,0,150,16],
-"structImGui__ImplOpenGL3__Data.html#a509c50b6469ce2b9a6db8b70acf49199":[43,0,150,7],
-"structImGui__ImplOpenGL3__Data.html#a53b57a562a470fa751e2f8fe78576ebd":[43,0,150,21],
-"structImGui__ImplOpenGL3__Data.html#a6bc713060002e1ac64f1daa7b7cecb59":[43,0,150,0],
-"structImGui__ImplOpenGL3__Data.html#a7e52bd10bd4d2688df2fbdc915f0e075":[43,0,150,20],
-"structImGui__ImplOpenGL3__Data.html#a836fce172a5b586aa755d6a111fa15f0":[43,0,150,19],
-"structImGui__ImplOpenGL3__Data.html#a87f73a98eed8bef47bf268113ab1e487":[43,0,150,8],
-"structImGui__ImplOpenGL3__Data.html#a8f348c0ed41f34ec5ca6032537526491":[43,0,150,22],
-"structImGui__ImplOpenGL3__Data.html#a9b6dcb44ef2b2bcfaa1415973b8bbe0b":[43,0,150,4],
-"structImGui__ImplOpenGL3__Data.html#aa32b349732369524312429a49cedd7d6":[43,0,150,6]
+"structImGui__ImplOpenGL3__Data.html#a471c9bee70d528144387b4f9dc44c240":[43,0,150,9]
 };

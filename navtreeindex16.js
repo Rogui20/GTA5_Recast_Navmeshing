@@ -1,5 +1,15 @@
 var NAVTREEINDEX16 =
 {
+"SDL__config__os2_8h.html#a3a3f8c7f8da8cac799fb620a2dbf2b15":[44,0,5,2,1,16,56],
+"SDL__config__os2_8h.html#a3df52e9809253860c385be6f3a160607":[44,0,5,2,1,16,44],
+"SDL__config__os2_8h.html#a3f7e8b5e13d96d1de1a0848f7aa80157":[44,0,5,2,1,16,36],
+"SDL__config__os2_8h.html#a405d10d46190bcb0320524c54eafc850":[44,0,5,2,1,16,66],
+"SDL__config__os2_8h.html#a494d1ecf5a4567ccbf7901e3be337bc7":[44,0,5,2,1,16,51],
+"SDL__config__os2_8h.html#a4ac6a60cb19181437136206238f16497":[44,0,5,2,1,16,81],
+"SDL__config__os2_8h.html#a4d775103dbaf3364eaf0f99dd6c22cca":[44,0,5,2,1,16,49],
+"SDL__config__os2_8h.html#a4e31ef0be24f881a3a13e42723db7095":[44,0,5,2,1,16,28],
+"SDL__config__os2_8h.html#a52de22f2e81bce94222ff968b2b3c8c1":[44,0,5,2,1,16,15],
+"SDL__config__os2_8h.html#a550e5c272cc3cf3814651721167dcd23":[44,0,5,2,1,16,109],
 "SDL__config__os2_8h.html#a561075a6afb23894833fc887a1552928":[44,0,5,2,1,16,52],
 "SDL__config__os2_8h.html#a575cd33d7c103a84b4d54759e71ea78d":[44,0,5,2,1,16,26],
 "SDL__config__os2_8h.html#a57ecbd1638a8fd89373c41c933e973ec":[44,0,5,2,1,16,33],
@@ -239,15 +249,5 @@ var NAVTREEINDEX16 =
 "SDL__config__wingdk_8h.html#a5d9fc2fdf33db890fd8f9917272f8513":[44,0,5,2,1,19,18],
 "SDL__config__wingdk_8h.html#a608eed28b615f1a30639b34756ffb4f2":[44,0,5,2,1,19,45],
 "SDL__config__wingdk_8h.html#a6519f9e54112877b9fb27320a281793d":[44,0,5,2,1,19,2],
-"SDL__config__wingdk_8h.html#a691b4de9c04ba8c81568575cfd55867a":[44,0,5,2,1,19,1],
-"SDL__config__wingdk_8h.html#a6ba924613e4ef2c39b349122b91e327e":[44,0,5,2,1,19,27],
-"SDL__config__wingdk_8h.html#a7046fe28598b86353856ead0fe114143":[44,0,5,2,1,19,36],
-"SDL__config__wingdk_8h.html#a792eb7500d8f9deb7e5c7fa6fb7834dc":[44,0,5,2,1,19,6],
-"SDL__config__wingdk_8h.html#a83cefad440f49f68aa7a8d1af68fa855":[44,0,5,2,1,19,37],
-"SDL__config__wingdk_8h.html#a85ebf90b8506421be1533adc82144f98":[44,0,5,2,1,19,23],
-"SDL__config__wingdk_8h.html#a8bcdbb0550d2cf79483efdfb3fe9013f":[44,0,5,2,1,19,50],
-"SDL__config__wingdk_8h.html#a8c93ace115b3d8d8163359820370a780":[44,0,5,2,1,19,43],
-"SDL__config__wingdk_8h.html#a8d7bd872a83eee6dc2a5a6132767efde":[44,0,5,2,1,19,32],
-"SDL__config__wingdk_8h.html#aa00422d97152cd195da32409fac61200":[44,0,5,2,1,19,10],
-"SDL__config__wingdk_8h.html#aaa1d89b554b1ab7b6ee1b563fb13cbdd":[44,0,5,2,1,19,5]
+"SDL__config__wingdk_8h.html#a691b4de9c04ba8c81568575cfd55867a":[44,0,5,2,1,19,1]
 };

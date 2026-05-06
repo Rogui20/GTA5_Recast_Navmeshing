@@ -1,5 +1,15 @@
 var NAVTREEINDEX101 =
 {
+"structImGuiTextFilter_1_1ImGuiTextRange.html":[43,0,277,0],
+"structImGuiTextFilter_1_1ImGuiTextRange.html#a1861f25905e1f19f979998faf5349b5a":[43,0,277,0,2],
+"structImGuiTextFilter_1_1ImGuiTextRange.html#a18a2df587336eecc6ba62c4275a4b7c8":[43,0,277,0,4],
+"structImGuiTextFilter_1_1ImGuiTextRange.html#a39c1ebebef36566bfec95d2cc4fccc4c":[43,0,277,0,0],
+"structImGuiTextFilter_1_1ImGuiTextRange.html#aa522cbb493ad3e02646938661c37ec0e":[43,0,277,0,5],
+"structImGuiTextFilter_1_1ImGuiTextRange.html#aa6912a579ec0907976635b89a9a23da0":[43,0,277,0,1],
+"structImGuiTextFilter_1_1ImGuiTextRange.html#ace58f9b4795033f695344a0e660ee2af":[43,0,277,0,3],
+"structImGuiTextIndex.html":[43,0,278],
+"structImGuiTextIndex.html#a016978541a00f3901b19327296fd4934":[43,0,278,4],
+"structImGuiTextIndex.html#a03cf4acbf117083d322d5115aa62702c":[43,0,278,6],
 "structImGuiTextIndex.html#a17115775633756615910747494e81a8c":[43,0,278,3],
 "structImGuiTextIndex.html#a4c4f61227f86144ae9c054cc865eecb3":[43,0,278,1],
 "structImGuiTextIndex.html#a885f884d458a6309a1a524a20670c426":[43,0,278,5],
@@ -239,15 +249,5 @@ var NAVTREEINDEX101 =
 "structImGuiWindowSettings.html#a1ef1f80540846d7b4615cc874129a5dd":[43,0,287,11],
 "structImGuiWindowSettings.html#a32947006984447ddcd00b8db25b7bc6b":[43,0,287,10],
 "structImGuiWindowSettings.html#a438bfa18932d7eafb67bf0894d13c762":[43,0,287,13],
-"structImGuiWindowSettings.html#a4426a1fdde8c99e0bb2b155a9073de93":[43,0,287,12],
-"structImGuiWindowSettings.html#a5ae7316219230c82a05618c227e5a7b7":[43,0,287,6],
-"structImGuiWindowSettings.html#a694e496dba59b5aaabe14cce66309acd":[43,0,287,0],
-"structImGuiWindowSettings.html#a79308182bdab97cb87b3d6284f22c1d2":[43,0,287,3],
-"structImGuiWindowSettings.html#a7a480e4ccc61ce5b8a4ac92d28ff5fd1":[43,0,287,1],
-"structImGuiWindowSettings.html#a7e4a26f4e4bfaf97a379641dcdbb6d14":[43,0,287,9],
-"structImGuiWindowSettings.html#a84a5493ff2f7e75a26e6909cc1bc6b97":[43,0,287,5],
-"structImGuiWindowSettings.html#ac15f967d69f83ca76b37b9403db73e1b":[43,0,287,2],
-"structImGuiWindowSettings.html#ad55031a983d16773d5a903c228ea2a1f":[43,0,287,4],
-"structImGuiWindowSettings.html#af82c14a41e90d62cbd6d8d5177cbe5a5":[43,0,287,7],
-"structImGuiWindowSettings.html#afe2e8f97751166b10042bfd537e77c89":[43,0,287,8]
+"structImGuiWindowSettings.html#a4426a1fdde8c99e0bb2b155a9073de93":[43,0,287,12]
 };

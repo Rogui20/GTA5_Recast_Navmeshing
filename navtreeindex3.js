@@ -1,5 +1,15 @@
 var NAVTREEINDEX3 =
 {
+"GtaNavAPI_8cpp.html#aad1c0bdb748f6c59de98270787f776b5":[44,0,6,4,4],
+"GtaNavAPI_8cpp.html#adb96a12177dd013ebb620aba3d990ba6":[44,0,6,4,1],
+"GtaNavAPI_8h.html":[44,0,6,5],
+"GtaNavAPI_8h.html#a02f04c1206d1e976a87580ceb348b58b":[44,0,6,5,7],
+"GtaNavAPI_8h.html#a1305af62b1e4043afaab4d7097385db0":[44,0,6,5,4],
+"GtaNavAPI_8h.html#a3f370a288528b476ad9cc4e2f0fede83":[44,0,6,5,6],
+"GtaNavAPI_8h.html#a43d7141a461cf8a4570f7535f656eef7":[44,0,6,5,0],
+"GtaNavAPI_8h.html#a6352ea8dcf8ddac8fc639cb8e157d1a1":[44,0,6,5,3],
+"GtaNavAPI_8h.html#a6a71ad857fedd395ce543b790ddfc1b9":[44,0,6,5,1],
+"GtaNavAPI_8h.html#aad1c0bdb748f6c59de98270787f776b5":[44,0,6,5,5],
 "GtaNavAPI_8h.html#adb96a12177dd013ebb620aba3d990ba6":[44,0,6,5,2],
 "GtaNavAPI_8h_source.html":[44,0,6,5],
 "GtaNavContext_8cpp.html":[44,0,6,6],
@@ -239,15 +249,5 @@ var NAVTREEINDEX3 =
 "GtaNavViewer_2imgui_2imgui_8cpp.html#a2e9fc7cde01f486e4dd9f6b2c458fd4a":[44,0,7,0,2,53],
 "GtaNavViewer_2imgui_2imgui_8cpp.html#a3002b70efdab7dd209a1e018f70c313f":[44,0,7,0,2,278],
 "GtaNavViewer_2imgui_2imgui_8cpp.html#a316580ae3c05306701b597a0fe689c18":[44,0,7,0,2,232],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a338deb537666a886cf3ece08c07e9fa9":[44,0,7,0,2,180],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a33bd8aa74ea9f744055095cca668a978":[44,0,7,0,2,19],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a3524f74d632033bb8b35fce1f0ac3cef":[44,0,7,0,2,125],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a35cee2a16eebdfb722ef537c94ef2625":[44,0,7,0,2,212],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a366bacfdb3fb1c794ac284fa04b78df4":[44,0,7,0,2,271],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a36842ba10ce74d2f0b9c10f8fdfdd82f":[44,0,7,0,2,115],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a36e7f029907108b81ac85fe6b6c0457c":[44,0,7,0,2,236],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a39e46fb2d1c766ea6b5292ecefc17575":[44,0,7,0,2,140],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a3a23f2e8fb3672baff48f0c7f1a4aec2":[44,0,7,0,2,265],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a3c92847eb67e7138e6f9af0ee66d3b33":[44,0,7,0,2,30],
-"GtaNavViewer_2imgui_2imgui_8cpp.html#a3d7cc9d0165dd6653b8a4b99a6e2b9e9":[44,0,7,0,2,52]
+"GtaNavViewer_2imgui_2imgui_8cpp.html#a338deb537666a886cf3ece08c07e9fa9":[44,0,7,0,2,180]
 };

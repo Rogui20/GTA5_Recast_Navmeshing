@@ -1,5 +1,15 @@
 var NAVTREEINDEX90 =
 {
+"imgui__widgets_8cpp.html#a86649bcd5a713ef6ebc40271b8d33448":[44,0,7,0,8,12],
+"imgui__widgets_8cpp.html#a89fd525472d581e3f4c48ceb770d2df5":[44,0,7,0,8,5],
+"imgui__widgets_8cpp.html#a912c66d17cb3b09d5daac6e6b992a9a2":[44,0,7,0,8,38],
+"imgui__widgets_8cpp.html#a9ae4f75e7860b31344c979fb2d3e2e68":[44,0,7,0,8,39],
+"imgui__widgets_8cpp.html#a9c4ced21ac701c0b3e0bb5c3eca4f8f4":[44,0,7,0,8,69],
+"imgui__widgets_8cpp.html#a9f8a8008c81d8597b2831258d8881095":[44,0,7,0,8,97],
+"imgui__widgets_8cpp.html#aa17450e2c20f846067d1aee8dbaaf976":[44,0,7,0,8,80],
+"imgui__widgets_8cpp.html#aa290b3b10a1e760cb4b2537b6ebe2f63":[44,0,7,0,8,35],
+"imgui__widgets_8cpp.html#aa431e20c88d9b014fc4afb59523490b1":[44,0,7,0,8,108],
+"imgui__widgets_8cpp.html#aaa6ceffb1be4ce6d6c32d4f56ac957e1":[44,0,7,0,8,60],
 "imgui__widgets_8cpp.html#aaadd38b7c62661755d9205493a834f1e":[44,0,7,0,8,83],
 "imgui__widgets_8cpp.html#aabfc2cec24f396fb94d03d9f103a910e":[44,0,7,0,8,21],
 "imgui__widgets_8cpp.html#ab1ace264ddcd0f6adf4b93be01e650fe":[44,0,7,0,8,101],
@@ -239,15 +249,5 @@ var NAVTREEINDEX90 =
 "md_Docs_2__2__BuildingAndIntegrating.html#windows":[1,0,0],
 "md_Docs_2__3__FAQ.html":[2],
 "md_Docs_2__3__FAQ.html#does-recast-do-any-logging":[2,5],
-"md_Docs_2__3__FAQ.html#how-do-i-use-recast-to-build-a-navmesh":[2,3],
-"md_Docs_2__3__FAQ.html#how-do-recast-and-detour-handle-memory-allocations":[2,4],
-"md_Docs_2__3__FAQ.html#what-are-the-dependencies-for-recastdemo":[2,6],
-"md_Docs_2__3__FAQ.html#what-coordinate-system-and-triangle-winding-order-does-recast-use":[2,1],
-"md_Docs_2__3__FAQ.html#which-c-version-and-features-do-recast-use":[2,0],
-"md_Docs_2__3__FAQ.html#why-doesnt-recast-use-stlexceptionsrttic11my-favorite-c-feature":[2,2],
-"md_Docs_2__99__Roadmap.html":[3],
-"md_Docs_2__99__Roadmap.html#auto-markup-system":[3,3,4],
-"md_Docs_2__99__Roadmap.html#c-api":[3,2,1],
-"md_Docs_2__99__Roadmap.html#climbing-markup--navigation":[3,3,1],
-"md_Docs_2__99__Roadmap.html#crowd-simulation-and-flowfield-movement-systems":[3,3,7]
+"md_Docs_2__3__FAQ.html#how-do-i-use-recast-to-build-a-navmesh":[2,3]
 };
