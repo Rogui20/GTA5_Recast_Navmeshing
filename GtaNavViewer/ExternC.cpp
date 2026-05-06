@@ -512,16 +512,18 @@ namespace
         std::ifstream in(blobPath, std::ios::binary);
         if (!in.is_open())
             return false;
+
         in.seekg(0, std::ios::end);
         const std::streamoff sz = in.tellg();
         if (sz <= 0)
             return false;
+
         in.seekg(0, std::ios::beg);
         outData.resize(static_cast<size_t>(sz));
-        in.read(reinterpret_cast<char*>(outData.data()), sz);
-        return in.good();
-    }
 
+        in.read(reinterpret_cast<char*>(outData.data()), sz);
+        return in.gcount() == sz;
+    }
     
 
     uint64_t ComputeWorldGeometryHash(const std::string& path,
@@ -3124,11 +3126,26 @@ GTANAVVIEWER_API void SetNavMeshSessionId(void* navMesh, const char* sessionId)
 {
     if (!navMesh)
         return;
+
     auto* ctx = static_cast<ExternNavmeshContext*>(navMesh);
-    ctx->sessionId = sessionId ? sessionId : "";
+
+    const std::string newSessionId = sessionId ? sessionId : "";
+
+    if (ctx->sessionId == newSessionId)
+        return;
+
+    ctx->sessionId = newSessionId;
+
+    ctx->runtimeRevision = 0;
+
     ctx->dbIndexCache.clear();
     ctx->dbIndexLoaded = false;
     ctx->dbMTime = {};
+
+    printf(
+        "[RuntimeSync] SetNavMeshSessionId session=%s\n",
+        ctx->sessionId.c_str()
+    );
 }
 
 GTANAVVIEWER_API void SetMaxResidentTiles(void* navMesh, int maxTiles)
