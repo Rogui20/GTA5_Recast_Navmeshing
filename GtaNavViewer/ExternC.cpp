@@ -4173,8 +4173,13 @@ GTANAVVIEWER_API int ProcessQueuedWorldGeometry(void* navMesh, int maxItems, int
         ++processed;
     }
 
-    printf("[ExternC] ProcessQueuedWorldGeometry: processed=%d pending=%zu indexed=%d dirtyTiles=%zu\n",
-           processed, ctx->pendingWorldGeometryQueue.size(), indexed, ctx->dirtyWorldTiles.size());
+    printf("[ExternC] ProcessQueuedWorldGeometry: processed=%d pending=%zu indexed=%d dirtyStatic=%zu dirtyRuntime=%zu pendingTiles=%zu\n",
+       processed,
+       ctx->pendingWorldGeometryQueue.size(),
+       indexed,
+       ctx->dirtyWorldTiles.size(),
+       ctx->runtimeDirtyWorldTiles.size(),
+       ctx->pendingTileBuildQueue.size());
     if (processed > 0 && ctx->worldAutoSaveManifest)
         SaveWorldTileManifestInternal(*ctx);
     return processed;
@@ -4313,7 +4318,7 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
         const bool tileHasPersistentGeom = TileHasPersistentGeometry(*ctx, tileKey);
         const bool tileHasDynamicGeom = TileHasDynamicGeometry(*ctx, tileKey);
         const bool persistTileState = saveToCache && tileHasPersistentGeom;
-        const bool runtimeDynamicOnly = (!saveToCache && tileHasDynamicGeom);
+        const bool runtimeDynamicOnly = (!saveToCache && (tileHasDynamicGeom || wasRuntimeDirty));
         if (!hasGeom)
         {
             if (abortedByTriLimit)
