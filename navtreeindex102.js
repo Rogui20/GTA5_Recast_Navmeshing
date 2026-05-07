@@ -1,5 +1,6 @@
 var NAVTREEINDEX102 =
 {
+"structImGuiWindowSettings.html#a32947006984447ddcd00b8db25b7bc6b":[43,0,287,10],
 "structImGuiWindowSettings.html#a438bfa18932d7eafb67bf0894d13c762":[43,0,287,13],
 "structImGuiWindowSettings.html#a4426a1fdde8c99e0bb2b155a9073de93":[43,0,287,12],
 "structImGuiWindowSettings.html#a5ae7316219230c82a05618c227e5a7b7":[43,0,287,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX102 =
 "structImGui__ImplOpenGL3__Data.html":[43,0,150],
 "structImGui__ImplOpenGL3__Data.html#a0fe508e011d4b62e6a27883c1fc0b19a":[43,0,150,1],
 "structImGui__ImplOpenGL3__Data.html#a207e0bc0e956f26b8a3279e7242707c5":[43,0,150,11],
-"structImGui__ImplOpenGL3__Data.html#a2778e5caad83bc7b69981c53d5e9ed5e":[43,0,150,14],
-"structImGui__ImplOpenGL3__Data.html#a29c0f955e5c0f2b183bc67a11169a43c":[43,0,150,17]
+"structImGui__ImplOpenGL3__Data.html#a2778e5caad83bc7b69981c53d5e9ed5e":[43,0,150,14]
 };

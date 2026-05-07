@@ -1,5 +1,6 @@
 var NAVTREEINDEX106 =
 {
+"structRay.html":[43,0,338],
 "structRay.html#a666e66ac32a5462ae95161a361e91951":[43,0,338,0],
 "structRay.html#af86f612d19416f116ad658c8f1a11e43":[43,0,338,1],
 "structRenderResources.html":[43,0,372],
@@ -248,6 +249,5 @@ var NAVTREEINDEX106 =
 "structSDL__HapticConstant.html#a0928a37f3fab0e5b7daffc7a1d65744c":[43,0,405,1],
 "structSDL__HapticConstant.html#a16a751009893f5412201e3ce91146b25":[43,0,405,3],
 "structSDL__HapticConstant.html#a3e871debf4e57c35960f019d2605d84f":[43,0,405,4],
-"structSDL__HapticConstant.html#a49f6499c89f3e494efbe92f12277c949":[43,0,405,6],
-"structSDL__HapticConstant.html#a5b095eea77464623ed57af15f29f4ca6":[43,0,405,9]
+"structSDL__HapticConstant.html#a49f6499c89f3e494efbe92f12277c949":[43,0,405,6]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"SDL__gesture_8h.html#ad37b554c91a5fffe3fc1dc3094db1b89":[44,0,5,2,1,30,3],
 "SDL__gesture_8h_source.html":[44,0,5,2,1,30],
 "SDL__guid_8h.html":[44,0,5,2,1,31],
 "SDL__guid_8h.html#a6f92bf2814a2cf08758836ab52110cb2":[44,0,5,2,1,31,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX19 =
 "SDL__hints_8h.html#ab419844280b39c7c713ec7d7246e71a4":[44,0,5,2,1,34,152],
 "SDL__hints_8h.html#ab512fdde4a91d3a271df7b59297fcf98":[44,0,5,2,1,34,137],
 "SDL__hints_8h.html#ab78bba735481c64f25a01799c0266058":[44,0,5,2,1,34,171],
-"SDL__hints_8h.html#ab7f0a88d892fa213527436ce2eebe016":[44,0,5,2,1,34,204],
-"SDL__hints_8h.html#ab85f3099d9bb0445b0c6b5002cfaa7ed":[44,0,5,2,1,34,200]
+"SDL__hints_8h.html#ab7f0a88d892fa213527436ce2eebe016":[44,0,5,2,1,34,204]
 };

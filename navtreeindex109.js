@@ -1,5 +1,6 @@
 var NAVTREEINDEX109 =
 {
+"structTileCacheSetHeader.html#abc363573908ea46bed77e3b0f94e0325":[43,0,487,0],
 "structTileCacheSetHeader.html#af3c63745db5ba90ee080f739b3bea50f":[43,0,487,4],
 "structTileCacheTileHeader.html":[43,0,488],
 "structTileCacheTileHeader.html#a3c4e5c78970a6afe0b5620b0154e843c":[43,0,488,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX109 =
 "structduDebugDraw.html":[43,0,74],
 "structduDebugDraw.html#a0f76c61eb9f274f17c91308c739211eb":[43,0,74,9],
 "structduDebugDraw.html#a2af291d6e63081ce1d3f34e1851ae5e0":[43,0,74,8],
-"structduDebugDraw.html#a6403932173f27503e05cd258f5837d17":[43,0,74,2],
-"structduDebugDraw.html#a711146a2e4be2ef9e0d6de7be8c714bc":[43,0,74,7]
+"structduDebugDraw.html#a6403932173f27503e05cd258f5837d17":[43,0,74,2]
 };

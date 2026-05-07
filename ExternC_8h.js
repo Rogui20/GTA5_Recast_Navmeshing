@@ -82,6 +82,7 @@ var ExternC_8h =
     [ "GetWorldOffmeshStats", "ExternC_8h.html#ad5271257c8aa26e16b6ccd3f1c0fabf5", null ],
     [ "GetWorldTileStreamingStats", "ExternC_8h.html#a92ea1d6158e37bee56bab355da676c99", null ],
     [ "GetWorldTileStreamingStatsEx", "ExternC_8h.html#aa7a3c0224d7accc9aea654ea51226c5c", null ],
+    [ "GetWorldTileStreamingStatsRuntimeV2", "ExternC_8h.html#a7c6416a8b3e3c253a4e0412a5aa0a499", null ],
     [ "HasAgentProfile", "ExternC_8h.html#a763393202a415cd63247ae1f32a55459", null ],
     [ "HasWorldTileManifest", "ExternC_8h.html#aea35414ca81ef765465196dbcd5ed1d5", null ],
     [ "ImportLatestRuntimeTileRevision", "ExternC_8h.html#af86cb3cac80aea34283287eee295242f", null ],

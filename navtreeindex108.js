@@ -1,5 +1,6 @@
 var NAVTREEINDEX108 =
 {
+"structSDL__SensorEvent.html#aa1c130192bad9b316f811f2d138b3b22":[43,0,437,4],
 "structSDL__SensorEvent.html#ab08c166baa755f66b13df0d66ed6d29b":[43,0,437,0],
 "structSDL__SensorEvent.html#abbe1f3b481092e73a4df4e9e9be4ad0a":[43,0,437,2],
 "structSDL__Surface.html":[43,0,438],
@@ -248,6 +249,5 @@ var NAVTREEINDEX108 =
 "structTileCacheSetHeader.html":[43,0,487],
 "structTileCacheSetHeader.html#a11b814554f66b5ae6a20ff4bf5f9599e":[43,0,487,1],
 "structTileCacheSetHeader.html#a1e3660dad6ea670bb0f222c9d02cebb3":[43,0,487,3],
-"structTileCacheSetHeader.html#ab16db6d86e12cbee7fde6e48efe92232":[43,0,487,2],
-"structTileCacheSetHeader.html#abc363573908ea46bed77e3b0f94e0325":[43,0,487,0]
+"structTileCacheSetHeader.html#ab16db6d86e12cbee7fde6e48efe92232":[43,0,487,2]
 };
