@@ -55,6 +55,7 @@ var ExternC_8cpp =
     [ "GetWorldOffmeshStats", "ExternC_8cpp.html#ad5271257c8aa26e16b6ccd3f1c0fabf5", null ],
     [ "GetWorldTileStreamingStats", "ExternC_8cpp.html#a92ea1d6158e37bee56bab355da676c99", null ],
     [ "GetWorldTileStreamingStatsEx", "ExternC_8cpp.html#aa7a3c0224d7accc9aea654ea51226c5c", null ],
+    [ "GetWorldTileStreamingStatsRuntimeV2", "ExternC_8cpp.html#a7c6416a8b3e3c253a4e0412a5aa0a499", null ],
     [ "HasAgentProfile", "ExternC_8cpp.html#a763393202a415cd63247ae1f32a55459", null ],
     [ "HasGroundNeighbourOnEdge", "ExternC_8cpp.html#ae52f298093380d607a5cf860c3b186ae", null ],
     [ "HasWorldTileManifest", "ExternC_8cpp.html#aea35414ca81ef765465196dbcd5ed1d5", null ],

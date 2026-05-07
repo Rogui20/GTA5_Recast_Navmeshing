@@ -1,5 +1,6 @@
 var NAVTREEINDEX101 =
 {
+"structImGuiTextFilter.html#ad070acb1038199dd4e8f5d010c5cb5ba":[43,0,277,9],
 "structImGuiTextFilter.html#aef362baafaa9dfa62d11bc6101c0f4c1":[43,0,277,2],
 "structImGuiTextFilter_1_1ImGuiTextRange.html":[43,0,277,0],
 "structImGuiTextFilter_1_1ImGuiTextRange.html#a1861f25905e1f19f979998faf5349b5a":[43,0,277,0,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX101 =
 "structImGuiWindowDockStyle.html#a500b1daaf8b8bdbeda0e2064e73beb24":[43,0,286,0],
 "structImGuiWindowSettings.html":[43,0,287],
 "structImGuiWindowSettings.html#a1ef1f80540846d7b4615cc874129a5dd":[43,0,287,11],
-"structImGuiWindowSettings.html#a32947006984447ddcd00b8db25b7bc6b":[43,0,287,10],
-"structImGuiWindowSettings.html#a438bfa18932d7eafb67bf0894d13c762":[43,0,287,13]
+"structImGuiWindowSettings.html#a32947006984447ddcd00b8db25b7bc6b":[43,0,287,10]
 };
