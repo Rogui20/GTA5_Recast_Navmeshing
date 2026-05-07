@@ -1336,6 +1336,35 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
             if (!frame.valid)
                 continue;
             const glm::vec3 edgeCenter = (a + b) * 0.5f;
+
+            const bool useDynamicEdgeFilter =
+                triIsDynamic &&
+                !triIsDynamic->empty() &&
+                dynamicTrisCount > 0 &&
+                !params.disableDynamicSeed;
+
+            if (useDynamicEdgeFilter)
+            {
+                const float edgeMaxXZ = dynamicSeedMaxXZDist > 0.0f
+                    ? dynamicSeedMaxXZDist
+                    : params.dynamicSeedMaxXZDist;
+
+                const float edgeMaxY = dynamicSeedMaxYDist > 0.0f
+                    ? dynamicSeedMaxYDist
+                    : params.dynamicSeedMaxYDist;
+
+                if (!IsPointNearDynamicTriangleXZLocal(
+                        edgeCenter,
+                        localVerts,
+                        localIndices,
+                        *triIsDynamic,
+                        edgeMaxXZ,
+                        edgeMaxY))
+                {
+                    ++dynamicSeedSkippedEdges;
+                    continue;
+                }
+            }
             for (int sample = 0; sample < params.samplesPerEdge; ++sample)
             {
                 ++samples;
