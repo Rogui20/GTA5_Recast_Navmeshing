@@ -3,6 +3,7 @@ var annotated_dup =
     [ "ImGui", "namespaceImGui.html", [
       [ "FileBrowser", "classImGui_1_1FileBrowser.html", "classImGui_1_1FileBrowser" ]
     ] ],
+    [ "AgentProfileFFI", "structAgentProfileFFI.html", "structAgentProfileFFI" ],
     [ "AutoOffmeshGenerationParams", "structAutoOffmeshGenerationParams.html", "structAutoOffmeshGenerationParams" ],
     [ "AutoOffmeshGenerationParamsV2", "structAutoOffmeshGenerationParamsV2.html", "structAutoOffmeshGenerationParamsV2" ],
     [ "BoundsItem", "structBoundsItem.html", "structBoundsItem" ],
@@ -91,6 +92,7 @@ var annotated_dup =
     [ "FastLZCompressor", "structFastLZCompressor.html", "structFastLZCompressor" ],
     [ "FileIO", "classFileIO.html", "classFileIO" ],
     [ "FrameResources", "structFrameResources.html", "structFrameResources" ],
+    [ "GeneratedOffmeshCandidate", "structGeneratedOffmeshCandidate.html", "structGeneratedOffmeshCandidate" ],
     [ "gladGLversionStruct", "structgladGLversionStruct.html", "structgladGLversionStruct" ],
     [ "GLCheckerTexture", "classGLCheckerTexture.html", "classGLCheckerTexture" ],
     [ "GraphParams", "structGraphParams.html", "structGraphParams" ],
@@ -484,6 +486,8 @@ var annotated_dup =
     [ "TileCacheTileHeader", "structTileCacheTileHeader.html", "structTileCacheTileHeader" ],
     [ "TileDbHeader", "structTileDbHeader.html", "structTileDbHeader" ],
     [ "TileDbIndexEntry", "structTileDbIndexEntry.html", "structTileDbIndexEntry" ],
+    [ "TileDbStats", "structTileDbStats.html", "structTileDbStats" ],
+    [ "TileGridDbFileHeader", "structTileGridDbFileHeader.html", "structTileGridDbFileHeader" ],
     [ "TileGridStats", "structTileGridStats.html", "structTileGridStats" ],
     [ "Uniforms", "structUniforms.html", "structUniforms" ],
     [ "ValueHistory", "classValueHistory.html", "classValueHistory" ],

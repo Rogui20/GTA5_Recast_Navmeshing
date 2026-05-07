@@ -9,5 +9,7 @@ var searchData=
   ['tilecachetileheader_6',['TileCacheTileHeader',['../structTileCacheTileHeader.html',1,'']]],
   ['tiledbheader_7',['TileDbHeader',['../structTileDbHeader.html',1,'']]],
   ['tiledbindexentry_8',['TileDbIndexEntry',['../structTileDbIndexEntry.html',1,'']]],
-  ['tilegridstats_9',['TileGridStats',['../structTileGridStats.html',1,'']]]
+  ['tiledbstats_9',['TileDbStats',['../structTileDbStats.html',1,'']]],
+  ['tilegriddbfileheader_10',['TileGridDbFileHeader',['../structTileGridDbFileHeader.html',1,'']]],
+  ['tilegridstats_11',['TileGridStats',['../structTileGridStats.html',1,'']]]
 ];

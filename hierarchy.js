@@ -1,5 +1,6 @@
 var hierarchy =
 [
+    [ "AgentProfileFFI", "structAgentProfileFFI.html", null ],
     [ "AutoOffmeshGenerationParams", "structAutoOffmeshGenerationParams.html", null ],
     [ "AutoOffmeshGenerationParamsV2", "structAutoOffmeshGenerationParamsV2.html", null ],
     [ "MemoryHandler::BoundingBoxSlot", "structMemoryHandler_1_1BoundingBoxSlot.html", null ],
@@ -95,6 +96,7 @@ var hierarchy =
     [ "ExampleTreeNode", "structExampleTreeNode.html", null ],
     [ "ImGui::FileBrowser", "classImGui_1_1FileBrowser.html", null ],
     [ "FrameResources", "structFrameResources.html", null ],
+    [ "GeneratedOffmeshCandidate", "structGeneratedOffmeshCandidate.html", null ],
     [ "MemoryHandler::GeometrySlot", "structMemoryHandler_1_1GeometrySlot.html", null ],
     [ "gladGLversionStruct", "structgladGLversionStruct.html", null ],
     [ "GLCheckerTexture", "classGLCheckerTexture.html", null ],
@@ -601,6 +603,8 @@ var hierarchy =
     [ "TileCacheTileHeader", "structTileCacheTileHeader.html", null ],
     [ "TileDbHeader", "structTileDbHeader.html", null ],
     [ "TileDbIndexEntry", "structTileDbIndexEntry.html", null ],
+    [ "TileDbStats", "structTileDbStats.html", null ],
+    [ "TileGridDbFileHeader", "structTileGridDbFileHeader.html", null ],
     [ "TileGridStats", "structTileGridStats.html", null ],
     [ "Uniforms", "structUniforms.html", null ],
     [ "ValueHistory", "classValueHistory.html", null ],
