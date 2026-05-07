@@ -1248,6 +1248,9 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
                                                          const std::vector<unsigned int> &localIndices,
                                                          std::vector<OffmeshLink> &outLinks,
                                                          std::vector<GeneratedOffmeshCandidate> *outCandidates,
+                                                         const std::vector<std::pair<glm::vec3, glm::vec3>> *dirtyOffmeshBounds,
+                                                         size_t *outEdgesSkippedOutsideDirtyBounds,
+                                                         size_t *outEdgesTestedInsideDirtyBounds,
                                                          const std::vector<uint8_t> *triIsDynamic,
                                                          bool requireDynamicSeed,
                                                          float dynamicSeedMaxXZDist,
@@ -1305,6 +1308,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
         size_t dy = 0, distance = 0, obstruction = 0, slope = 0, snapFail = 0, dedupe = 0, perTileLimit = 0, sweepBlocked = 0, normalReachable = 0, tooClose = 0, wrongDirection = 0, tileBoundary = 0;
     } rejected;
     size_t openEdges = 0, samples = 0, dropHits = 0;
+    size_t edgesSkippedOutsideDirtyBounds = 0, edgesTestedInsideDirtyBounds = 0;
     size_t dynamicSeedSkippedEdges = 0, dynamicSeedSkippedSamples = 0, dynamicSeedAcceptedSamples = 0;
     size_t dynamicTrisCount = 0;
     size_t dynamicSeedDebugLogs = 0;
@@ -1336,6 +1340,25 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
             if (!frame.valid)
                 continue;
             const glm::vec3 edgeCenter = (a + b) * 0.5f;
+            if (dirtyOffmeshBounds && !dirtyOffmeshBounds->empty())
+            {
+                bool insideDirtyBounds = false;
+                for (const auto& bb : *dirtyOffmeshBounds)
+                {
+                    if (edgeCenter.x >= bb.first.x && edgeCenter.y >= bb.first.y && edgeCenter.z >= bb.first.z &&
+                        edgeCenter.x <= bb.second.x && edgeCenter.y <= bb.second.y && edgeCenter.z <= bb.second.z)
+                    {
+                        insideDirtyBounds = true;
+                        break;
+                    }
+                }
+                if (!insideDirtyBounds)
+                {
+                    ++edgesSkippedOutsideDirtyBounds;
+                    continue;
+                }
+                ++edgesTestedInsideDirtyBounds;
+            }
 
             const bool useDynamicEdgeFilter =
                 triIsDynamic &&
@@ -1734,6 +1757,10 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
            tx, ty, openEdges, samples, dropCount, jumpCount, climbCount, rejected.snapFail, rejected.dy, rejected.distance, rejected.tooClose, rejected.normalReachable, rejected.wrongDirection, rejected.tileBoundary, rejected.obstruction, rejected.sweepBlocked, rejected.dedupe, rejected.perTileLimit, params.maxLinksPerTile);
     printf("[AutoOffmeshV2][tile %d,%d] openEdges=%zu samples=%zu dynamicSeedSkippedEdges=%zu dynamicSeedSkippedSamples=%zu dynamicSeedAcceptedSamples=%zu dropHits=%zu snapFail=%zu sweepBlocked=%zu rawGenerated=%zu dynamicTris=%zu\n",
            tx, ty, openEdges, samples, dynamicSeedSkippedEdges, dynamicSeedSkippedSamples, dynamicSeedAcceptedSamples, dropHits, rejected.snapFail, rejected.sweepBlocked, outLinks.size(), dynamicTrisCount);
+    if (outEdgesSkippedOutsideDirtyBounds)
+        *outEdgesSkippedOutsideDirtyBounds = edgesSkippedOutsideDirtyBounds;
+    if (outEdgesTestedInsideDirtyBounds)
+        *outEdgesTestedInsideDirtyBounds = edgesTestedInsideDirtyBounds;
     return true;
 }
 bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams &params,

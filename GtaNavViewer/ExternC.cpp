@@ -221,6 +221,7 @@ namespace
         std::unordered_map<std::string, std::unordered_set<uint64_t>> geomToTiles;
         std::unordered_set<uint64_t> dirtyWorldTiles;
         std::unordered_set<uint64_t> runtimeDirtyWorldTiles;
+        std::vector<std::pair<glm::vec3, glm::vec3>> runtimeDirtyOffmeshBounds;
         std::unordered_map<uint64_t, std::vector<OffmeshLink>> worldOffmeshLinksByTile;
         std::unordered_set<uint64_t> dirtyWorldOffmeshTiles;
         bool worldAutoGenerateOffmeshLinks = false;
@@ -2063,6 +2064,21 @@ namespace
         ctx.dirtyBounds.emplace_back(inst.worldBMin, inst.worldBMax);
     }
 
+    static std::pair<glm::vec3, glm::vec3> ExpandOffmeshDirtyBounds(const glm::vec3& bmin,
+                                                                     const glm::vec3& bmax,
+                                                                     const AutoOffmeshGenerationParamsV2& p)
+    {
+        const float expandXZ = std::max(0.0f, std::max(p.maxDist, p.maxDropHeight));
+        const float expandY = std::max(0.0f, std::max(p.maxDropHeight, p.climbMaxHeight));
+        return {glm::vec3(bmin.x - expandXZ, bmin.y - expandY, bmin.z - expandXZ),
+                glm::vec3(bmax.x + expandXZ, bmax.y + expandY, bmax.z + expandXZ)};
+    }
+
+    static void RegisterRuntimeDirtyOffmeshBounds(ExternNavmeshContext& ctx, const glm::vec3& bmin, const glm::vec3& bmax)
+    {
+        ctx.runtimeDirtyOffmeshBounds.push_back(ExpandOffmeshDirtyBounds(bmin, bmax, ctx.autoOffmeshParamsV2));
+    }
+
     void EnqueueTileBuild(ExternNavmeshContext& ctx, uint64_t tileKey)
     {
         if (ctx.pendingTileBuildSet.insert(tileKey).second)
@@ -2207,12 +2223,19 @@ namespace
         std::vector<OffmeshLink> generated;
         std::vector<GeneratedOffmeshCandidate> candidates;
         const bool useEndpointFilter = requireDynamicEndpointForThisTile && triIsDynamic && (triIsDynamic->size() == indices.size() / 3);
+        size_t edgesSkippedOutsideDirtyBounds = 0;
+        size_t edgesTestedInsideDirtyBounds = 0;
         if (!ctx.navData.GenerateAutomaticOffmeshLinksForTileV2(tx, ty, genParams, verts, indices, generated, &candidates,
+                                                                 runtimeDynamic ? &ctx.runtimeDirtyOffmeshBounds : nullptr,
+                                                                 &edgesSkippedOutsideDirtyBounds,
+                                                                 &edgesTestedInsideDirtyBounds,
                                                                  triIsDynamic,
                                                                  useEndpointFilter,
                                                                  params.dynamicSeedMaxXZDist,
                                                                  params.dynamicSeedMaxYDist))
             return false;
+        printf("[WorldOffmesh][DirtyBounds] tile %d,%d dirtyOffmeshBounds count=%zu edgesSkippedOutsideDirtyBounds=%zu edgesTestedInsideDirtyBounds=%zu accepted links=%zu\n",
+               tx, ty, ctx.runtimeDirtyOffmeshBounds.size(), edgesSkippedOutsideDirtyBounds, edgesTestedInsideDirtyBounds, generated.size());
         const size_t debugBaseIndex = ctx.lastOffmeshDebugCandidates.size();
         if (ctx.worldOffmeshDebugEnabled)
         {
@@ -3248,6 +3271,8 @@ GTANAVVIEWER_API bool UpdateGeometry(void* navMesh,
         if (!oldTiles.empty())
         {
             const bool oldWasDynamic = (it->second.flags & WORLD_GEOM_DYNAMIC) != 0;
+            if (oldWasDynamic)
+                RegisterRuntimeDirtyOffmeshBounds(*ctx, rec.worldBMin, rec.worldBMax);
             MarkTilesDirty(*ctx, oldTiles, oldWasDynamic);
         }
 
@@ -3271,6 +3296,8 @@ GTANAVVIEWER_API bool UpdateGeometry(void* navMesh,
         if (ctx->pendingWorldGeometrySet.insert(customID).second)
             ctx->pendingWorldGeometryQueue.push_back(customID);
         const bool isDynamic = (rec.flags & WORLD_GEOM_DYNAMIC) != 0;
+        if (isDynamic)
+            RegisterRuntimeDirtyOffmeshBounds(*ctx, rec.worldBMin, rec.worldBMax);
         if (!isDynamic && ctx->worldAutoSaveManifest)
             SaveWorldTileManifestInternal(*ctx);
         return !updateNavMesh || EnsureNavQuery(*ctx);
@@ -3327,6 +3354,8 @@ GTANAVVIEWER_API bool RemoveGeometry(void* navMesh, const char* customID)
         if (!oldTiles.empty())
         {
             const bool oldWasDynamic = isDynamic;
+            if (oldWasDynamic && itGeom != ctx->worldGeometry.end())
+                RegisterRuntimeDirtyOffmeshBounds(*ctx, itGeom->second.worldBMin, itGeom->second.worldBMax);
             MarkTilesDirty(*ctx, oldTiles, oldWasDynamic);
         }
         RemoveGeometryFromWorldIndex(*ctx, id);
@@ -4021,6 +4050,8 @@ GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
 
         RemoveGeometryFromWorldIndex(*ctx, id);
         const bool oldWasDynamic = (it->second.flags & WORLD_GEOM_DYNAMIC) != 0;
+        if (oldWasDynamic)
+            RegisterRuntimeDirtyOffmeshBounds(*ctx, it->second.worldBMin, it->second.worldBMax);
         MarkTilesDirty(*ctx, oldTiles, oldWasDynamic);
 
         oldWasPersistentManifestGeom =
@@ -4043,6 +4074,8 @@ GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
     if ((rec.flags & WORLD_GEOM_DYNAMIC) != 0)
         rec.flags &= ~WORLD_GEOM_PERSISTENT;
     const bool isDynamic = (rec.flags & WORLD_GEOM_DYNAMIC) != 0;
+    if (isDynamic)
+        RegisterRuntimeDirtyOffmeshBounds(*ctx, rec.worldBMin, rec.worldBMax);
     rec.groupId = (groupId && groupId[0] != '\0') ? std::string(groupId) : "default";
     ctx->worldGeometry[id] = std::move(rec);
     if (ctx->pendingWorldGeometrySet.insert(id).second)
@@ -4596,6 +4629,8 @@ GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxM
 
     printf("[ExternC] BuildQueuedWorldTiles: built=%d empty=%d failed=%d saved=%d cache=%s\n",
         built, emptied, failed, saveToCache ? 1 : 0, GetSessionCachePath(*ctx).string().c_str());
+    if (!processedTileKeys.empty())
+        ctx->runtimeDirtyOffmeshBounds.clear();
 
     if (built > 0 && ctx->worldAutoSaveManifest)
         SaveWorldTileManifestInternal(*ctx);
