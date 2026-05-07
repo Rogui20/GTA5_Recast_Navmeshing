@@ -70,6 +70,8 @@ set(GTANAVVIEWER_CORE_SOURCES
     NavMesh_Single.cpp
     NavMesh_TileCacheDB.cpp
     NavMesh_TileCacheDB.h
+    NavMesh_TileCacheGridDB.cpp
+    NavMesh_TileCacheGridDB.h
     NavMesh_Tiled.cpp
     NavMeshData.cpp
     NavMeshData.h

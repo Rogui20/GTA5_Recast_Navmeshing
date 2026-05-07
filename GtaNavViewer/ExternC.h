@@ -12,6 +12,13 @@ struct Vector3
     float z = 0.0f;
 };
 
+enum WorldGeomFlags : std::uint32_t
+{
+    WORLD_GEOM_PERSISTENT = 1u << 0,
+    WORLD_GEOM_DYNAMIC = 1u << 1,
+    WORLD_GEOM_RUNTIME = 1u << 2
+};
+
 struct NavMeshEdgeInfo
 {
     Vector3 vertexA;
@@ -100,6 +107,19 @@ struct PathAvoidParamsFFI
     std::uint8_t useHeightFilter = 1;
     float heightTolerance = 2.5f;
     std::uint8_t _pad[3]{};
+};
+
+struct AgentProfileFFI
+{
+    std::uint32_t profileId = 0;
+    float radius = 0.0f;
+    float pedHeight = 0.0f;
+    float halfWidth = 0.0f;
+    float halfLength = 0.0f;
+    float vehicleHeight = 0.0f;
+    float maxSlopeDeg = 0.0f;
+    float maxStepHeight = 0.0f;
+    float minClearance = 0.0f;
 };
 
 enum SimAgentFlags : std::uint32_t
@@ -241,6 +261,13 @@ GTANAVVIEWER_API int  GetAllGeometries(void* navMesh,
                                        int maxGeometries,
                                        int* outGeometryCount);
 GTANAVVIEWER_API bool ExportMergedGeometriesObj(void* navMesh, const char* outputObjPath);
+GTANAVVIEWER_API bool ExportWorldGeometriesObj(void* navMesh,
+                                               const char* outputObjPath,
+                                               std::uint32_t includeFlags,
+                                               std::uint32_t excludeFlags,
+                                               const char* groupId,
+                                               bool onlyLoaded,
+                                               bool onlyResidentTiles);
 
 // Navmesh lifecycle
 GTANAVVIEWER_API bool BuildNavMesh(void* navMesh);
@@ -251,6 +278,90 @@ GTANAVVIEWER_API bool InitTiledGrid(void* navMesh, Vector3 bmin, Vector3 bmax);
 GTANAVVIEWER_API int  StreamTilesAround(void* navMesh, Vector3 center, float radius, bool allowBuildIfMissing);
 GTANAVVIEWER_API void ClearAllLoadedTiles(void* navMesh);
 GTANAVVIEWER_API bool BakeTilesInBounds(void* navMesh, Vector3 bmin, Vector3 bmax, bool saveToCache);
+GTANAVVIEWER_API bool EnableWorldTileStreaming(void* navMesh, bool enabled);
+GTANAVVIEWER_API bool BeginWorldTileSession(void* navMesh,
+                                            Vector3 worldBMin,
+                                            Vector3 worldBMax,
+                                            const char* cacheRoot,
+                                            const char* sessionId,
+                                            int maxResidentTiles);
+GTANAVVIEWER_API int QueueWorldGeometry(void* navMesh,
+                                        const char* pathToGeometry,
+                                        Vector3 pos,
+                                        Vector3 rot,
+                                        const char* customID,
+                                        bool preferBIN);
+GTANAVVIEWER_API int QueueWorldGeometryEx(void* navMesh,
+                                          const char* pathToGeometry,
+                                          Vector3 pos,
+                                          Vector3 rot,
+                                          const char* customID,
+                                          bool preferBIN,
+                                          std::uint32_t flags,
+                                          const char* groupId);
+GTANAVVIEWER_API int ProcessQueuedWorldGeometry(void* navMesh, int maxItems, int maxMilliseconds);
+GTANAVVIEWER_API void SetWorldUnloadBuiltTilesAfterSave(void* navMesh, bool enabled);
+GTANAVVIEWER_API void SetWorldTileCacheGridDBEnabled(void* navMesh, bool enabled);
+GTANAVVIEWER_API void SetWorldUnloadUnusedGeometryAfterBuild(void* navMesh, bool enabled);
+GTANAVVIEWER_API void SetWorldGeometryMemoryLimitsMB(void* navMesh, uint32_t softLimitMB, uint32_t hardLimitMB);
+GTANAVVIEWER_API uint64_t GetWorldLoadedGeometryMemoryBytes(void* navMesh);
+GTANAVVIEWER_API int UnloadUnusedWorldGeometry(void* navMesh, bool aggressive);
+GTANAVVIEWER_API int BuildQueuedWorldTiles(void* navMesh, int maxTiles, int maxMilliseconds, bool saveToCache);
+GTANAVVIEWER_API bool SetWorldAutoOffmeshEnabled(void* navMesh, bool enabled);
+GTANAVVIEWER_API bool SetWorldAutoOffmeshOnlyDynamicAffectedTiles(void* navMesh, bool enabled);
+GTANAVVIEWER_API bool SetWorldAutoOffmeshRequireDynamicEndpoint(void* navMesh, bool enabled);
+GTANAVVIEWER_API bool SetWorldAutoOffmeshGenerateFullTileWhenDynamicPresent(void* navMesh, bool enabled);
+GTANAVVIEWER_API void SetWorldOffmeshDebugEnabled(void* navMesh, bool enabled);
+GTANAVVIEWER_API void SetWorldOffmeshDebugLimits(void* navMesh, int maxLines, int maxCandidates);
+GTANAVVIEWER_API bool ExportLastOffmeshDebugJson(void* navMesh, const char* path);
+GTANAVVIEWER_API int GenerateWorldOffmeshLinksForQueuedTiles(void* navMesh, int maxTiles, int maxMilliseconds);
+GTANAVVIEWER_API int GetWorldOffmeshStats(void* navMesh, int* outTilesWithLinks, int* outTotalLinks, int* outDirtyOffmeshTiles);
+GTANAVVIEWER_API bool RemoveWorldGeometryGroup(void* navMesh, const char* groupId, bool rebuildOrQueue);
+GTANAVVIEWER_API int StreamTilesForAgents(void* navMesh,
+                                          const Vector3* positions,
+                                          const std::uint32_t* agentIds,
+                                          int agentCount,
+                                          float radius,
+                                          bool allowBuildIfMissing);
+GTANAVVIEWER_API void RemoveStreamingAgent(void* navMesh, std::uint32_t agentId);
+GTANAVVIEWER_API void ClearStreamingAgents(void* navMesh);
+GTANAVVIEWER_API int GetWorldTileStreamingStats(void* navMesh,
+                                                int* outQueuedGeometries,
+                                                int* outIndexedGeometries,
+                                                int* outDirtyTiles,
+                                                int* outPendingBuildTiles,
+                                                int* outResidentTiles);
+GTANAVVIEWER_API int GetWorldTileStreamingStatsEx(void* navMesh,
+                                                  int* outQueuedGeometries,
+                                                  int* outIndexedGeometries,
+                                                  int* outDirtyTiles,
+                                                  int* outPendingBuildTiles,
+                                                  int* outResidentTiles,
+                                                  int* outManifestLoaded,
+                                                  int* outTileDbIndexLoaded);
+GTANAVVIEWER_API int GetWorldTileStreamingStatsRuntimeV2(void* navMesh,
+                                                        int* outQueuedGeometries,
+                                                        int* outIndexedGeometries,
+                                                        int* outDirtyStaticTiles,
+                                                        int* outDirtyRuntimeTiles,
+                                                        int* outPendingBuildTiles,
+                                                        int* outResidentTiles,
+                                                        int* outDirtyOffmeshTiles);
+GTANAVVIEWER_API bool SaveWorldTileManifest(void* navMesh);
+GTANAVVIEWER_API bool LoadWorldTileManifest(void* navMesh);
+GTANAVVIEWER_API bool HasWorldTileManifest(void* navMesh);
+GTANAVVIEWER_API bool SetWorldTileAutoSaveManifest(void* navMesh, bool enabled);
+GTANAVVIEWER_API bool InitQueryContextFromWorldContext(void* builderNavMesh, void* queryNavMesh);
+GTANAVVIEWER_API bool SyncQueryContextWorldState(void* builderNavMesh, void* queryNavMesh);
+GTANAVVIEWER_API int SyncQueryContextRuntimeTiles(void* builderNavMesh, void* queryNavMesh, const uint64_t* tileKeys, int tileCount);
+GTANAVVIEWER_API int ReloadWorldTilesFromCache(void* queryNavMesh, const uint64_t* tileKeys, int tileCount);
+GTANAVVIEWER_API int ReloadResidentWorldTilesFromCache(void* queryNavMesh);
+GTANAVVIEWER_API int GetLastBuiltWorldTileKeys(void* navMesh, uint64_t* outKeys, int maxKeys, int* outCount);
+GTANAVVIEWER_API bool ExportRuntimeTileRevision(void* builderNavMesh, const char* syncRoot, uint64_t revision, bool onlyLastBuiltTiles);
+GTANAVVIEWER_API int ImportRuntimeTileRevision(void* queryNavMesh, const char* syncRoot, uint64_t revision);
+GTANAVVIEWER_API int ImportLatestRuntimeTileRevision(void* queryNavMesh, const char* syncRoot, uint64_t* outRevision);
+GTANAVVIEWER_API uint64_t GetContextRevision(void* navMesh);
+GTANAVVIEWER_API bool SetContextRevision(void* navMesh, uint64_t revision);
 
 // Pathfind
 GTANAVVIEWER_API int FindPath(void* navMesh,
@@ -266,6 +377,20 @@ GTANAVVIEWER_API int FindPathWithMinEdge(void* navMesh,
                                          int maxPoints,
                                          float minEdge,
                                          float* outPath, int options);
+GTANAVVIEWER_API bool RegisterAgentProfile(void* navMesh, const char* profileName, AgentProfileFFI profile);
+GTANAVVIEWER_API bool RemoveAgentProfile(void* navMesh, const char* profileName);
+GTANAVVIEWER_API bool HasAgentProfile(void* navMesh, const char* profileName);
+GTANAVVIEWER_API int BuildAgentProfileCacheForTiles(void* navMesh, const char* profileName, const std::uint64_t* tileKeys, int tileCount);
+GTANAVVIEWER_API int BuildAgentProfileCacheForResidentTiles(void* navMesh, const char* profileName);
+GTANAVVIEWER_API int FindPathWithAgentProfile(void* navMesh,
+                                              const char* profileName,
+                                              Vector3 start,
+                                              Vector3 target,
+                                              int flags,
+                                              int maxPoints,
+                                              float* outPath,
+                                              int options,
+                                              NodeInfo* outNodeInfo);
 
 GTANAVVIEWER_API int FindPathAvoidingDynamicObstacles(
     void* navMesh,
@@ -311,6 +436,16 @@ GTANAVVIEWER_API int GetOffMeshLinks(void* navMesh,
                                      OffMeshLinkInfo* outLinks,
                                      int maxLinks,
                                      int* outLinkCount);
+GTANAVVIEWER_API int GetWorldOffMeshLinks(void* navMesh,
+                                          OffMeshLinkInfo* outLinks,
+                                          int maxLinks,
+                                          int* outLinkCount,
+                                          const uint64_t* tileKeys,
+                                          int tileKeyCount);
+GTANAVVIEWER_API int GetWorldOffMeshLinkTileKeys(void* navMesh,
+                                                 uint64_t* outKeys,
+                                                 int maxKeys,
+                                                 int* outCount);
 GTANAVVIEWER_API int RemoveOffMeshLinksInRadius(void* navMesh,
                                                 Vector3 center,
                                                 float radius,

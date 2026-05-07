@@ -27,23 +27,30 @@ namespace
 {
     struct LoggingRcContext : public rcContext
     {
-        void doLog(const rcLogCategory category, const char* msg, const int len) override
+        void doLog(const rcLogCategory category, const char *msg, const int len) override
         {
             rcIgnoreUnused(len);
-            const char* prefix = "[Recast]";
+            const char *prefix = "[Recast]";
             switch (category)
             {
-            case RC_LOG_PROGRESS: prefix = "[Recast][info]"; break;
-            case RC_LOG_WARNING:  prefix = "[Recast][warn]"; break;
-            case RC_LOG_ERROR:    prefix = "[Recast][error]"; break;
-            default: break;
+            case RC_LOG_PROGRESS:
+                prefix = "[Recast][info]";
+                break;
+            case RC_LOG_WARNING:
+                prefix = "[Recast][warn]";
+                break;
+            case RC_LOG_ERROR:
+                prefix = "[Recast][error]";
+                break;
+            default:
+                break;
             }
 
             printf("%s %s\n", prefix, msg);
         }
     };
 
-    void FillBaseConfig(const NavmeshGenerationSettings& settings, rcConfig& cfg)
+    void FillBaseConfig(const NavmeshGenerationSettings &settings, rcConfig &cfg)
     {
         cfg = {};
         cfg.cs = std::max(0.01f, settings.cellSize);
@@ -52,23 +59,23 @@ namespace
         const float minRegionSizeCells = std::max(0.0f, settings.minRegionSize) / cfg.cs;
         const float mergeRegionSizeCells = std::max(0.0f, settings.mergeRegionSize) / cfg.cs;
 
-        cfg.walkableSlopeAngle   = settings.agentMaxSlope;
-        cfg.walkableHeight       = (int)ceilf(settings.agentHeight / cfg.ch);
-        cfg.walkableClimb        = (int)floorf(settings.agentMaxClimb / cfg.ch);
-        cfg.walkableRadius       = (int)ceilf(settings.agentRadius / cfg.cs);
-        cfg.maxEdgeLen           = std::max(0, (int)std::ceil(settings.maxEdgeLen / cfg.cs));
+        cfg.walkableSlopeAngle = settings.agentMaxSlope;
+        cfg.walkableHeight = (int)ceilf(settings.agentHeight / cfg.ch);
+        cfg.walkableClimb = (int)floorf(settings.agentMaxClimb / cfg.ch);
+        cfg.walkableRadius = (int)ceilf(settings.agentRadius / cfg.cs);
+        cfg.maxEdgeLen = std::max(0, (int)std::ceil(settings.maxEdgeLen / cfg.cs));
         cfg.maxSimplificationError = settings.maxSimplificationError;
-        cfg.minRegionArea        = (int)rcSqr(minRegionSizeCells);
-        cfg.mergeRegionArea      = (int)rcSqr(mergeRegionSizeCells);
-        cfg.maxVertsPerPoly      = std::max(3, settings.maxVertsPerPoly);
-        cfg.detailSampleDist     = (settings.detailSampleDist < 0.9f) ? 0.0f : (cfg.cs * settings.detailSampleDist);
+        cfg.minRegionArea = (int)rcSqr(minRegionSizeCells);
+        cfg.mergeRegionArea = (int)rcSqr(mergeRegionSizeCells);
+        cfg.maxVertsPerPoly = std::max(3, settings.maxVertsPerPoly);
+        cfg.detailSampleDist = (settings.detailSampleDist < 0.9f) ? 0.0f : (cfg.cs * settings.detailSampleDist);
         cfg.detailSampleMaxError = cfg.ch * settings.detailSampleMaxError;
     }
 
-    void DumpRcConfig(const char* label, const NavmeshGenerationSettings& settings, const rcConfig& cfg)
+    void DumpRcConfig(const char *label, const NavmeshGenerationSettings &settings, const rcConfig &cfg)
     {
         rcIgnoreUnused(settings);
-        const char* safeLabel = label ? label : "RcConfig";
+        const char *safeLabel = label ? label : "RcConfig";
         printf("[NavMeshData] %s: cs=%.6f ch=%.6f\n", safeLabel, cfg.cs, cfg.ch);
         printf("[NavMeshData] %s: walkableHeight=%d walkableClimb=%d walkableRadius=%d\n",
                safeLabel,
@@ -89,10 +96,10 @@ namespace
                cfg.detailSampleMaxError);
     }
 
-    bool ComputeTiledGridCounts(const NavmeshGenerationSettings& settings,
-                                const float* bmin,
-                                const float* bmax,
-                                TileGridStats& outStats)
+    bool ComputeTiledGridCounts(const NavmeshGenerationSettings &settings,
+                                const float *bmin,
+                                const float *bmax,
+                                TileGridStats &outStats)
     {
         if (!bmin || !bmax)
             return false;
@@ -115,14 +122,14 @@ namespace
         return true;
     }
 
-    glm::vec3 GetPolyVertex(const dtMeshTile* tile, const dtPoly* poly, int index)
+    glm::vec3 GetPolyVertex(const dtMeshTile *tile, const dtPoly *poly, int index)
     {
         const int vertIndex = poly->verts[index];
-        const float* v = &tile->verts[vertIndex * 3];
+        const float *v = &tile->verts[vertIndex * 3];
         return glm::vec3(v[0], v[1], v[2]);
     }
 
-    glm::vec3 ComputePolyNormal(const dtMeshTile* tile, const dtPoly* poly)
+    glm::vec3 ComputePolyNormal(const dtMeshTile *tile, const dtPoly *poly)
     {
         if (!tile || !poly || poly->vertCount < 3)
             return glm::vec3(0.0f, 1.0f, 0.0f);
@@ -130,9 +137,9 @@ namespace
         const int i0 = poly->verts[0];
         const int i1 = poly->verts[1];
         const int i2 = poly->verts[2];
-        const float* v0 = &tile->verts[i0 * 3];
-        const float* v1 = &tile->verts[i1 * 3];
-        const float* v2 = &tile->verts[i2 * 3];
+        const float *v0 = &tile->verts[i0 * 3];
+        const float *v1 = &tile->verts[i1 * 3];
+        const float *v2 = &tile->verts[i2 * 3];
         const glm::vec3 a(v0[0], v0[1], v0[2]);
         const glm::vec3 b(v1[0], v1[1], v1[2]);
         const glm::vec3 c(v2[0], v2[1], v2[2]);
@@ -142,7 +149,7 @@ namespace
         return normal;
     }
 
-    glm::vec3 ComputePolyCentroid(const dtMeshTile* tile, const dtPoly* poly)
+    glm::vec3 ComputePolyCentroid(const dtMeshTile *tile, const dtPoly *poly)
     {
         glm::vec3 sum(0.0f);
         for (int i = 0; i < poly->vertCount; ++i)
@@ -152,10 +159,10 @@ namespace
         return sum;
     }
 
-    glm::vec3 ComputeEdgeOutwardNormal(const glm::vec3& a,
-                                       const glm::vec3& b,
-                                       const glm::vec3& polyCenter,
-                                       const glm::vec3& polyNormal)
+    glm::vec3 ComputeEdgeOutwardNormal(const glm::vec3 &a,
+                                       const glm::vec3 &b,
+                                       const glm::vec3 &polyCenter,
+                                       const glm::vec3 &polyNormal)
     {
         const glm::vec3 edge = b - a;
         const float edgeLenSq = glm::dot(edge, edge);
@@ -196,13 +203,13 @@ namespace
         return outward;
     }
 
-    bool IntersectSegmentTriangle(const glm::vec3& sp,
-                                  const glm::vec3& sq,
-                                  const glm::vec3& a,
-                                  const glm::vec3& b,
-                                  const glm::vec3& c,
-                                  float& tOut,
-                                  glm::vec3& normalOut)
+    bool IntersectSegmentTriangle(const glm::vec3 &sp,
+                                  const glm::vec3 &sq,
+                                  const glm::vec3 &a,
+                                  const glm::vec3 &b,
+                                  const glm::vec3 &c,
+                                  float &tOut,
+                                  glm::vec3 &normalOut)
     {
         glm::vec3 ab = b - a;
         glm::vec3 ac = c - a;
@@ -231,13 +238,13 @@ namespace
         return true;
     }
 
-    bool IntersectSegmentTriangleTwoSided(const glm::vec3& sp,
-                                      const glm::vec3& sq,
-                                      const glm::vec3& a,
-                                      const glm::vec3& b,
-                                      const glm::vec3& c,
-                                      float& tOut,
-                                      glm::vec3& normalOut)
+    bool IntersectSegmentTriangleTwoSided(const glm::vec3 &sp,
+                                          const glm::vec3 &sq,
+                                          const glm::vec3 &a,
+                                          const glm::vec3 &b,
+                                          const glm::vec3 &c,
+                                          float &tOut,
+                                          glm::vec3 &normalOut)
     {
         const glm::vec3 ab = b - a;
         const glm::vec3 ac = c - a;
@@ -277,12 +284,12 @@ namespace
         return true;
     }
 
-    bool RaycastDown(const std::vector<float>& verts,
-                     const std::vector<int>& tris,
-                     const glm::vec3& start,
+    bool RaycastDown(const std::vector<float> &verts,
+                     const std::vector<int> &tris,
+                     const glm::vec3 &start,
                      float maxDistance,
-                     glm::vec3& outHit,
-                     glm::vec3& outNormal)
+                     glm::vec3 &outHit,
+                     glm::vec3 &outNormal)
     {
         if (verts.empty() || tris.empty())
             return false;
@@ -332,12 +339,12 @@ namespace
         return hit;
     }
 
-    bool RaycastTo(const std::vector<float>& verts,
-                     const std::vector<int>& tris,
-                     const glm::vec3& start,
-                     const glm::vec3& end,
-                     glm::vec3& outHit,
-                     glm::vec3& outNormal)
+    bool RaycastTo(const std::vector<float> &verts,
+                   const std::vector<int> &tris,
+                   const glm::vec3 &start,
+                   const glm::vec3 &end,
+                   glm::vec3 &outHit,
+                   glm::vec3 &outNormal)
     {
         if (verts.empty() || tris.empty())
             return false;
@@ -386,10 +393,10 @@ namespace
         return hit;
     }
 
-    dtPolyRef GetNeighbourRef(const dtMeshTile* tile,
-                              const dtPoly* poly,
+    dtPolyRef GetNeighbourRef(const dtMeshTile *tile,
+                              const dtPoly *poly,
                               int edge,
-                              const dtNavMesh* nav)
+                              const dtNavMesh *nav)
     {
         const unsigned short nei = poly->neis[edge];
         if (nei == 0)
@@ -403,7 +410,7 @@ namespace
 
         for (unsigned int linkIndex = poly->firstLink; linkIndex != DT_NULL_LINK; linkIndex = tile->links[linkIndex].next)
         {
-            const dtLink& link = tile->links[linkIndex];
+            const dtLink &link = tile->links[linkIndex];
             if (link.edge == edge)
                 return link.ref;
         }
@@ -413,7 +420,7 @@ namespace
 
     struct Tuple3Hash
     {
-        size_t operator()(const std::tuple<int, int, int>& v) const noexcept
+        size_t operator()(const std::tuple<int, int, int> &v) const noexcept
         {
             const auto [x, y, z] = v;
             size_t seed = 0;
@@ -424,42 +431,73 @@ namespace
         }
     };
 
-    std::tuple<int, int, int> QuantizePosition(const glm::vec3& p, float scale)
+    std::tuple<int, int, int> QuantizePosition(const glm::vec3 &p, float scale)
     {
         return {
             static_cast<int>(std::round(p.x * scale)),
             static_cast<int>(std::round(p.y * scale)),
-            static_cast<int>(std::round(p.z * scale))
-        };
+            static_cast<int>(std::round(p.z * scale))};
     }
 
-
-
-    glm::vec3 LerpVec3(const glm::vec3& a, const glm::vec3& b, float t)
+    glm::vec3 LerpVec3(const glm::vec3 &a, const glm::vec3 &b, float t)
     {
         return a + (b - a) * t;
     }
 
-    bool IsOpenEdge(const dtMeshTile* tile,
-                    const dtPoly* poly,
+    bool IsOpenEdge(const dtMeshTile *tile,
+                    const dtPoly *poly,
                     int edge,
-                    const dtNavMesh* nav)
+                    const dtNavMesh *nav)
     {
         return GetNeighbourRef(tile, poly, edge, nav) == 0;
     }
 
-    glm::vec3 EdgeOutwardXZ(const glm::vec3& a,
-                            const glm::vec3& b,
-                            const glm::vec3& polyCenter
-                            const glm::vec3& normal)
+    glm::vec3 EdgeOutwardXZ(const glm::vec3 &a,
+                            const glm::vec3 &b,
+                            const glm::vec3 &polyCenter,
+                            const glm::vec3 &normal)
     {
         return ComputeEdgeOutwardNormal(a, b, polyCenter, normal);
     }
 
-    bool SweepRay3(const std::vector<float>& verts,
-                   const std::vector<int>& tris,
-                   const glm::vec3& from,
-                   const glm::vec3& to,
+    struct EdgeFrame
+    {
+        glm::vec3 edgeDir{};
+        glm::vec3 surfaceNormal{};
+        glm::vec3 outward3D{};
+        glm::vec3 outwardXZ{};
+        bool valid = false;
+    };
+
+    EdgeFrame ComputeEdgeFrame(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &polyCenter, const glm::vec3 &polyNormal)
+    {
+        EdgeFrame f{};
+        f.outwardXZ = EdgeOutwardXZ(a, b, polyCenter, polyNormal);
+        const glm::vec3 edge = b - a;
+        if (glm::dot(edge, edge) <= 1e-6f || glm::dot(f.outwardXZ, f.outwardXZ) <= 1e-6f)
+            return f;
+        f.edgeDir = glm::normalize(edge);
+        f.surfaceNormal = glm::dot(polyNormal, polyNormal) > 1e-6f ? glm::normalize(polyNormal) : glm::vec3(0, 1, 0);
+        f.outward3D = glm::cross(f.edgeDir, f.surfaceNormal);
+        if (glm::dot(f.outward3D, f.outward3D) <= 1e-6f)
+            return f;
+        f.outward3D = glm::normalize(f.outward3D);
+        const glm::vec3 edgeCenter = (a + b) * 0.5f;
+        const glm::vec3 centerToEdge = edgeCenter - polyCenter;
+        if (glm::dot(centerToEdge, centerToEdge) > 1e-6f && glm::dot(f.outward3D, glm::normalize(centerToEdge)) < 0.0f)
+            f.outward3D = -f.outward3D;
+        if (glm::dot(f.outward3D, f.outwardXZ) < 0.0f)
+            f.outward3D = -f.outward3D;
+        if (!std::isfinite(f.outward3D.x) || !std::isfinite(f.outward3D.y) || !std::isfinite(f.outward3D.z))
+            return f;
+        f.valid = true;
+        return f;
+    }
+
+    bool SweepRay3(const std::vector<float> &verts,
+                   const std::vector<int> &tris,
+                   const glm::vec3 &from,
+                   const glm::vec3 &to,
                    float sideOffset,
                    float upOffset)
     {
@@ -474,10 +512,9 @@ namespace
         const glm::vec3 offsets[3] = {
             up * upOffset,
             side * sideOffset + up * upOffset,
-            -side * sideOffset + up * upOffset
-        };
+            -side * sideOffset + up * upOffset};
 
-        for (const glm::vec3& off : offsets)
+        for (const glm::vec3 &off : offsets)
         {
             glm::vec3 hit{}, normal{};
             if (RaycastTo(verts, tris, from + off, to + off, hit, normal))
@@ -486,12 +523,12 @@ namespace
         return true;
     }
 
-    bool SnapToNavmesh(dtNavMeshQuery* query,
-                       const glm::vec3& pos,
-                       const glm::vec3& ext,
-                       const dtQueryFilter* filter,
-                       dtPolyRef& outRef,
-                       glm::vec3& outPos)
+    bool SnapToNavmesh(dtNavMeshQuery *query,
+                       const glm::vec3 &pos,
+                       const glm::vec3 &ext,
+                       const dtQueryFilter *filter,
+                       dtPolyRef &outRef,
+                       glm::vec3 &outPos)
     {
         if (!query || !filter)
             return false;
@@ -508,8 +545,57 @@ namespace
         return true;
     }
 
-    uint64_t HashLink(const glm::vec3& start,
-                      const glm::vec3& end,
+    static float Dist2PointSegmentXZLocal(const glm::vec3 &p, const glm::vec3 &a, const glm::vec3 &b)
+    {
+        const glm::vec2 pa(p.x - a.x, p.z - a.z), ba(b.x - a.x, b.z - a.z);
+        const float d = glm::dot(ba, ba);
+        const float t = d > 1e-8f ? glm::clamp(glm::dot(pa, ba) / d, 0.0f, 1.0f) : 0.0f;
+        const glm::vec2 q(a.x + ba.x * t, a.z + ba.y * t);
+        const glm::vec2 diff(p.x - q.x, p.z - q.y);
+        return glm::dot(diff, diff);
+    }
+
+    static bool PointInTriangleXZLocal(const glm::vec3 &p, const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c)
+    {
+        auto sign = [](const glm::vec3 &p1, const glm::vec3 &p2, const glm::vec3 &p3)
+        { return (p1.x - p3.x) * (p2.z - p3.z) - (p2.x - p3.x) * (p1.z - p3.z); };
+        const float d1 = sign(p, a, b), d2 = sign(p, b, c), d3 = sign(p, c, a);
+        const bool hasNeg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+        const bool hasPos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+        return !(hasNeg && hasPos);
+    }
+
+    static bool IsPointNearDynamicTriangleXZLocal(const glm::vec3 &p, const std::vector<glm::vec3> &verts, const std::vector<unsigned int> &indices, const std::vector<uint8_t> &triIsDynamic, float maxXZDist, float maxYDist)
+    {
+        const float maxXZ2 = maxXZDist * maxXZDist;
+        const size_t triCount = indices.size() / 3;
+        for (size_t tri = 0; tri < triCount; ++tri)
+        {
+            if (tri >= triIsDynamic.size() || !triIsDynamic[tri])
+                continue;
+            const glm::vec3 &a = verts[indices[tri * 3 + 0]];
+            const glm::vec3 &b = verts[indices[tri * 3 + 1]];
+            const glm::vec3 &c = verts[indices[tri * 3 + 2]];
+            const float triMinY = std::min(a.y, std::min(b.y, c.y));
+            const float triMaxY = std::max(a.y, std::max(b.y, c.y));
+            const float yDist = p.y < triMinY ? (triMinY - p.y) : (p.y > triMaxY ? (p.y - triMaxY) : 0.0f);
+            if (yDist > maxYDist)
+                continue;
+            float xzDist2 = 0.0f;
+            if (!PointInTriangleXZLocal(p, a, b, c))
+            {
+                xzDist2 = Dist2PointSegmentXZLocal(p, a, b);
+                xzDist2 = std::min(xzDist2, Dist2PointSegmentXZLocal(p, b, c));
+                xzDist2 = std::min(xzDist2, Dist2PointSegmentXZLocal(p, c, a));
+            }
+            if (xzDist2 <= maxXZ2)
+                return true;
+        }
+        return false;
+    }
+
+    uint64_t HashLink(const glm::vec3 &start,
+                      const glm::vec3 &end,
                       uint32_t type,
                       float quantize)
     {
@@ -542,7 +628,7 @@ namespace
         float sinAngle = 0.0f;
         float cosAngle = 1.0f;
 
-        bool Contains(const glm::vec3& p) const
+        bool Contains(const glm::vec3 &p) const
         {
             const float dx = p.x - center.x;
             const float dz = p.z - center.z;
@@ -575,8 +661,8 @@ NavMeshData::~NavMeshData()
     }
 }
 
-void NavMeshData::AddOffmeshLink(const glm::vec3& start,
-                                 const glm::vec3& end,
+void NavMeshData::AddOffmeshLink(const glm::vec3 &start,
+                                 const glm::vec3 &end,
                                  float radius,
                                  bool bidirectional)
 {
@@ -590,12 +676,12 @@ void NavMeshData::AddOffmeshLink(const glm::vec3& start,
     m_offmeshLinks.push_back(link);
 }
 
-bool NavMeshData::RemoveNearestOffmeshLink(const glm::vec3& point)
+bool NavMeshData::RemoveNearestOffmeshLink(const glm::vec3 &point)
 {
     if (m_offmeshLinks.empty())
         return false;
 
-    const auto pointToSegmentDistSq = [](const glm::vec3& p, const glm::vec3& a, const glm::vec3& b)
+    const auto pointToSegmentDistSq = [](const glm::vec3 &p, const glm::vec3 &a, const glm::vec3 &b)
     {
         const glm::vec3 ab = b - a;
         const float denom = glm::dot(ab, ab);
@@ -613,7 +699,7 @@ bool NavMeshData::RemoveNearestOffmeshLink(const glm::vec3& point)
 
     for (size_t i = 0; i < m_offmeshLinks.size(); ++i)
     {
-        const auto& link = m_offmeshLinks[i];
+        const auto &link = m_offmeshLinks[i];
         float distSq = pointToSegmentDistSq(point, link.start, link.end);
         if (distSq < nearestDistSq)
         {
@@ -636,8 +722,8 @@ void NavMeshData::ClearOffmeshLinks()
     m_offmeshLinks.clear();
 }
 
-bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParams& params,
-                                                std::vector<OffmeshLink>& outLinks) const
+bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParams &params,
+                                                std::vector<OffmeshLink> &outLinks) const
 {
     AutoOffmeshGenerationParamsV2 v2{};
     const bool oldDropJump = (params.linksGenFlags & 1) != 0;
@@ -676,10 +762,8 @@ bool NavMeshData::GenerateAutomaticOffmeshLinks(const AutoOffmeshGenerationParam
     return GenerateAutomaticOffmeshLinksV2(v2, outLinks);
 }
 
-
-
-bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationParamsV2& params,
-                                                  std::vector<OffmeshLink>& outLinks) const
+bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationParamsV2 &params,
+                                                  std::vector<OffmeshLink> &outLinks) const
 {
     const auto t0 = std::chrono::high_resolution_clock::now();
     outLinks.clear();
@@ -714,10 +798,10 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationPar
         return false;
     }
 
-    dtNavMeshQuery* query = dtAllocNavMeshQuery();
+    dtNavMeshQuery *query = dtAllocNavMeshQuery();
     if (!query)
         return false;
-    const std::unique_ptr<dtNavMeshQuery, void(*)(dtNavMeshQuery*)> queryGuard(query, dtFreeNavMeshQuery);
+    const std::unique_ptr<dtNavMeshQuery, void (*)(dtNavMeshQuery *)> queryGuard(query, dtFreeNavMeshQuery);
     if (dtStatusFailed(query->init(m_nav, 4096)))
         return false;
 
@@ -757,7 +841,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationPar
         return (static_cast<uint64_t>(static_cast<uint32_t>(tx)) << 32) | static_cast<uint32_t>(ty);
     };
 
-    const auto resolveTileCoords = [&](const dtMeshTile* tile, const glm::vec3& pos) -> std::pair<int, int>
+    const auto resolveTileCoords = [&](const dtMeshTile *tile, const glm::vec3 &pos) -> std::pair<int, int>
     {
         if (tile && tile->header)
             return {tile->header->x, tile->header->y};
@@ -771,7 +855,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationPar
         return {-1, -1};
     };
 
-    const auto tryAppendLink = [&](const OffmeshLink& link, uint32_t type, int tx, int ty, size_t& outCount) -> bool
+    const auto tryAppendLink = [&](const OffmeshLink &link, uint32_t type, int tx, int ty, size_t &outCount) -> bool
     {
         const uint64_t key = HashLink(link.start, link.end, type, params.quantizePos);
         if (!dedupe.insert(key).second)
@@ -781,7 +865,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationPar
         }
 
         const uint64_t tileKey = makeTileKey(tx, ty);
-        int& tileCount = linksPerTile[tileKey];
+        int &tileCount = linksPerTile[tileKey];
         if (params.maxLinksPerTile > 0 && tileCount >= params.maxLinksPerTile)
         {
             ++rejected.perTileLimit;
@@ -797,13 +881,13 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationPar
     const int maxTiles = m_nav->getMaxTiles();
     for (int tileIndex = 0; tileIndex < maxTiles; ++tileIndex)
     {
-        const dtMeshTile* tile = m_nav->getTile(tileIndex);
+        const dtMeshTile *tile = m_nav->getTile(tileIndex);
         if (!tile || !tile->header)
             continue;
 
         for (int polyIndex = 0; polyIndex < tile->header->polyCount; ++polyIndex)
         {
-            const dtPoly* poly = &tile->polys[polyIndex];
+            const dtPoly *poly = &tile->polys[polyIndex];
             if (poly->getType() != DT_POLYTYPE_GROUND)
                 continue;
 
@@ -858,7 +942,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationPar
                                     if (enableSweep)
                                     {
                                         clear = SweepRay3(m_cachedVerts, m_cachedTris, sweepStart, hit + up * params.sweepUp,
-                                                          params.sweepSideOffset, 0.0f); 
+                                                          params.sweepSideOffset, 0.0f);
                                     }
                                     else
                                     {
@@ -908,13 +992,13 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationPar
 
                     if (includeJump || includeClimb)
                     {
-                        auto isClearSweep = [&](const glm::vec3& s, const glm::vec3& e) -> bool
+                        auto isClearSweep = [&](const glm::vec3 &s, const glm::vec3 &e) -> bool
                         {
                             if (enableSweep)
                             {
                                 // 2 alturas: baixo + alto
                                 return SweepRay3(m_cachedVerts, m_cachedTris, s, e, params.sweepSideOffset, 0.10f) &&
-                                    SweepRay3(m_cachedVerts, m_cachedTris, s, e, params.sweepSideOffset, params.sweepUp);
+                                       SweepRay3(m_cachedVerts, m_cachedTris, s, e, params.sweepSideOffset, params.sweepUp);
                             }
                             glm::vec3 hit{}, normal{};
                             return !RaycastTo(m_cachedVerts, m_cachedTris, s, e, hit, normal);
@@ -1037,7 +1121,7 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationPar
                             link.ownerTx = tx;
                             link.ownerTy = ty;
 
-                            size_t* bucket = (type == 2u) ? &climbCount : &jumpCount;
+                            size_t *bucket = (type == 2u) ? &climbCount : &jumpCount;
                             if (tryAppendLink(link, type, tx, ty, *bucket))
                                 break; // achou um candidato bom pra esse sample -> para o loop de d
                         }
@@ -1057,8 +1141,603 @@ bool NavMeshData::GenerateAutomaticOffmeshLinksV2(const AutoOffmeshGenerationPar
     printf("[AutoOffmeshV2] tempo total: %.3f ms\n", ms);
     return true;
 }
-bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& params,
-                                                 std::vector<OffmeshLink>& outLinks)
+
+static float DistXZ(const glm::vec3 &a, const glm::vec3 &b)
+{
+    const float dx = a.x - b.x;
+    const float dz = a.z - b.z;
+    return std::sqrt(dx * dx + dz * dz);
+}
+
+static bool IsReachableByNormalNavmesh(dtNavMeshQuery *query,
+                                       dtPolyRef startRef,
+                                       dtPolyRef endRef,
+                                       const glm::vec3 &start,
+                                       const glm::vec3 &end,
+                                       const dtQueryFilter *filter)
+{
+    if (!query || !filter || !startRef || !endRef)
+        return false;
+    if (startRef == endRef)
+        return true;
+
+    float s[3] = {start.x, start.y, start.z};
+    float e[3] = {end.x, end.y, end.z};
+    float t = 0.0f;
+    float hitNormal[3]{};
+    dtPolyRef path[32]{};
+    int pathCount = 0;
+    const dtStatus rayStatus = query->raycast(startRef, s, e, filter, &t, hitNormal, path, &pathCount, 32);
+    if (dtStatusSucceed(rayStatus) && t >= 1.0f)
+        return true;
+
+    return false;
+}
+
+static bool IsCandidateInOutwardDirection(const glm::vec3 &from,
+                                          const glm::vec3 &to,
+                                          const glm::vec3 &outwardXZ,
+                                          float minDot)
+{
+    glm::vec3 dir = to - from;
+    dir.y = 0.0f;
+    const float lenSq = glm::dot(dir, dir);
+    if (lenSq <= 1e-6f)
+        return false;
+    dir /= std::sqrt(lenSq);
+
+    glm::vec3 out = outwardXZ;
+    out.y = 0.0f;
+    const float outLenSq = glm::dot(out, out);
+    if (outLenSq <= 1e-6f)
+        return false;
+    out /= std::sqrt(outLenSq);
+    return glm::dot(dir, out) >= minDot;
+}
+
+static bool IsNearTileBoundaryXZ(const dtMeshTile *tile, const glm::vec3 &p, float eps)
+{
+    if (!tile || !tile->header || eps <= 0.0f)
+        return false;
+    const float *bmin = tile->header->bmin;
+    const float *bmax = tile->header->bmax;
+    return std::fabs(p.x - bmin[0]) <= eps ||
+           std::fabs(p.x - bmax[0]) <= eps ||
+           std::fabs(p.z - bmin[2]) <= eps ||
+           std::fabs(p.z - bmax[2]) <= eps;
+}
+
+static bool HasClearBidirectionalLine(
+    const std::vector<float>& rayVerts,
+    const std::vector<int>& rayTris,
+    const glm::vec3& a,
+    const glm::vec3& b,
+    float upOffset,
+    float sideOffset,
+    bool useSweep)
+{
+    glm::vec3 ah = a + glm::vec3(0, upOffset, 0);
+    glm::vec3 bh = b + glm::vec3(0, upOffset, 0);
+
+    if (useSweep)
+    {
+        if (!SweepRay3(rayVerts, rayTris, ah, bh, sideOffset, 0.0f))
+            return false;
+
+        if (!SweepRay3(rayVerts, rayTris, bh, ah, sideOffset, 0.0f))
+            return false;
+
+        return true;
+    }
+
+    glm::vec3 hit{}, n{};
+
+    if (RaycastTo(rayVerts, rayTris, ah, bh, hit, n))
+        return false;
+
+    if (RaycastTo(rayVerts, rayTris, bh, ah, hit, n))
+        return false;
+
+    return true;
+}
+
+bool NavMeshData::GenerateAutomaticOffmeshLinksForTileV2(int tx,
+                                                         int ty,
+                                                         const AutoOffmeshGenerationParamsV2 &params,
+                                                         const std::vector<glm::vec3> &localVerts,
+                                                         const std::vector<unsigned int> &localIndices,
+                                                         std::vector<OffmeshLink> &outLinks,
+                                                         std::vector<GeneratedOffmeshCandidate> *outCandidates,
+                                                         const std::vector<uint8_t> *triIsDynamic,
+                                                         bool requireDynamicSeed,
+                                                         float dynamicSeedMaxXZDist,
+                                                         float dynamicSeedMaxYDist) const
+{
+    outLinks.clear();
+    if (outCandidates)
+        outCandidates->clear();
+    if (!m_nav)
+        return false;
+    const dtMeshTile *tile = m_nav->getTileAt(tx, ty, 0);
+    if (!tile || !tile->header || localVerts.empty() || localIndices.empty())
+        return true;
+
+    std::vector<float> rayVerts;
+    std::vector<int> rayTris;
+    rayVerts.reserve(localVerts.size() * 3);
+    for (auto &v : localVerts)
+    {
+        rayVerts.push_back(v.x);
+        rayVerts.push_back(v.y);
+        rayVerts.push_back(v.z);
+    }
+    rayTris.reserve(localIndices.size());
+    for (auto i : localIndices)
+        rayTris.push_back((int)i);
+
+    dtNavMeshQuery *query = dtAllocNavMeshQuery();
+    if (!query)
+        return false;
+    const std::unique_ptr<dtNavMeshQuery, void (*)(dtNavMeshQuery *)> queryGuard(query, dtFreeNavMeshQuery);
+    if (dtStatusFailed(query->init(m_nav, 4096)))
+        return false;
+    dtQueryFilter filter{};
+    filter.setIncludeFlags(0xffff);
+    filter.setExcludeFlags(0);
+
+    const bool includeDrop = (params.genFlags & AUTO_OFFMESH_V2_INCLUDE_DROP) != 0;
+    const bool includeJump = (params.genFlags & AUTO_OFFMESH_V2_INCLUDE_JUMP) != 0;
+    const bool includeClimb = (params.genFlags & AUTO_OFFMESH_V2_INCLUDE_CLIMB) != 0;
+    const bool enableSweep = (params.genFlags & AUTO_OFFMESH_V2_ENABLE_SWEEP_RAYS) != 0;
+    const glm::vec3 up(0, 1, 0);
+    const float slopeCos = cosf(glm::radians(params.maxSlopeDegrees));
+    const glm::vec3 snapExtents(std::max(params.agentRadius, 0.2f), std::max(params.agentHeight + params.maxJumpUp + 0.5f, 0.5f), std::max(params.agentRadius, 0.2f));
+    const float dropOut = params.dropOutwardOffset > 0 ? params.dropOutwardOffset : params.outwardOffset;
+    const float dropInset  = params.dropStartInset  >= 0.0f ? params.dropStartInset  : params.startInset;
+    const float dropUp = params.dropUpOffset != 0 ? params.dropUpOffset : params.upOffset;
+    const float jumpInset  = params.jumpStartInset  >= 0.0f ? params.jumpStartInset  : params.startInset;
+    const float jumpUp = params.jumpUpOffset != 0 ? params.jumpUpOffset : params.upOffset;
+    const float climbInset = params.climbStartInset >= 0.0f ? params.climbStartInset : params.startInset;
+    const float maxRayDistance = params.maxDropHeight + params.raycastExtraHeight + std::max(dropUp, 0.0f);
+
+    struct RejectCounters
+    {
+        size_t dy = 0, distance = 0, obstruction = 0, slope = 0, snapFail = 0, dedupe = 0, perTileLimit = 0, sweepBlocked = 0, normalReachable = 0, tooClose = 0, wrongDirection = 0, tileBoundary = 0;
+    } rejected;
+    size_t openEdges = 0, samples = 0, dropHits = 0;
+    size_t dynamicSeedSkippedEdges = 0, dynamicSeedSkippedSamples = 0, dynamicSeedAcceptedSamples = 0;
+    size_t dynamicTrisCount = 0;
+    size_t dynamicSeedDebugLogs = 0;
+    if (triIsDynamic)
+        for (uint8_t v : *triIsDynamic)
+            if (v)
+                ++dynamicTrisCount;
+    size_t dropCount = 0, jumpCount = 0, climbCount = 0;
+    std::unordered_set<uint64_t> dedupe;
+    auto tryAppend = [&](const GeneratedOffmeshCandidate &c, uint32_t type, size_t &bucket)
+    { if(params.maxLinksPerTile>0 && static_cast<int>(outLinks.size())>=params.maxLinksPerTile){ ++rejected.perTileLimit; return false; } uint64_t h=HashLink(c.link.start,c.link.end,type,params.quantizePos); if(!dedupe.insert(h).second){++rejected.dedupe;return false;} ++bucket; if(outCandidates) outCandidates->push_back(c); outLinks.push_back(c.link); return true; };
+
+    for (int polyIndex = 0; polyIndex < tile->header->polyCount; ++polyIndex)
+    {
+        const dtPoly *poly = &tile->polys[polyIndex];
+        if (poly->getType() != DT_POLYTYPE_GROUND)
+            continue;
+        glm::vec3 polyNormal = ComputePolyNormal(tile, poly);
+        if (polyNormal.y < slopeCos)
+            continue;
+        glm::vec3 polyCenter = ComputePolyCentroid(tile, poly);
+        for (int edge = 0; edge < poly->vertCount; ++edge)
+        {
+            if (!IsOpenEdge(tile, poly, edge, m_nav))
+                continue;
+            ++openEdges;
+            glm::vec3 a = GetPolyVertex(tile, poly, edge), b = GetPolyVertex(tile, poly, (edge + 1) % poly->vertCount);
+            EdgeFrame frame = ComputeEdgeFrame(a, b, polyCenter, polyNormal);
+            if (!frame.valid)
+                continue;
+            const glm::vec3 edgeCenter = (a + b) * 0.5f;
+
+            const bool useDynamicEdgeFilter =
+                triIsDynamic &&
+                !triIsDynamic->empty() &&
+                dynamicTrisCount > 0 &&
+                !params.disableDynamicSeed;
+
+            if (useDynamicEdgeFilter)
+            {
+                const float edgeMaxXZ = dynamicSeedMaxXZDist > 0.0f
+                    ? dynamicSeedMaxXZDist
+                    : params.dynamicSeedMaxXZDist;
+
+                const float edgeMaxY = dynamicSeedMaxYDist > 0.0f
+                    ? dynamicSeedMaxYDist
+                    : params.dynamicSeedMaxYDist;
+
+                if (!IsPointNearDynamicTriangleXZLocal(
+                        edgeCenter,
+                        localVerts,
+                        localIndices,
+                        *triIsDynamic,
+                        edgeMaxXZ,
+                        edgeMaxY))
+                {
+                    ++dynamicSeedSkippedEdges;
+                    continue;
+                }
+            }
+            for (int sample = 0; sample < params.samplesPerEdge; ++sample)
+            {
+                ++samples;
+                float t = float(sample + 1) / float(params.samplesPerEdge + 1);
+                glm::vec3 p = LerpVec3(a, b, t);
+                if (params.tileBorderRejectEpsilon > 0.0f && IsNearTileBoundaryXZ(tile, p, params.tileBorderRejectEpsilon))
+                {
+                    ++rejected.tileBoundary;
+                    continue;
+                }
+                if (requireDynamicSeed && !params.disableDynamicSeed && triIsDynamic && !triIsDynamic->empty())
+                {
+                    if (!IsPointNearDynamicTriangleXZLocal(p, localVerts, localIndices, *triIsDynamic, dynamicSeedMaxXZDist, dynamicSeedMaxYDist))
+                    {
+                        ++dynamicSeedSkippedSamples;
+                        if (dynamicSeedDebugLogs < 10)
+                        {
+                            printf("[AutoOffmeshV2][dynSeedReject] tile %d,%d p=(%.2f,%.2f,%.2f) edgeCenter=(%.2f,%.2f,%.2f) polyCenter=(%.2f,%.2f,%.2f)\n",
+                                   tx, ty, p.x, p.y, p.z, edgeCenter.x, edgeCenter.y, edgeCenter.z, polyCenter.x, polyCenter.y, polyCenter.z);
+                            ++dynamicSeedDebugLogs;
+                        }
+                        continue;
+                    }
+                    ++dynamicSeedAcceptedSamples;
+                }
+                glm::vec3 takeoffDrop  = p - frame.outwardXZ * dropInset;
+                dtPolyRef takeoffDropRef = 0;
+                glm::vec3 takeoffDropSnapped{};
+                glm::vec3 takeoffJump  = p - frame.outwardXZ * jumpInset;
+                dtPolyRef takeoffJumpRef = 0;
+                glm::vec3 takeoffJumpSnapped{};
+                glm::vec3 takeoffClimb = p - frame.outwardXZ * climbInset;
+                dtPolyRef takeoffClimbRef = 0;
+                glm::vec3 takeoffClimbSnapped{};
+
+                if (includeDrop)
+                {
+                    if (!SnapToNavmesh(query, takeoffDrop, snapExtents, &filter, takeoffDropRef, takeoffDropSnapped))
+                    {
+                        ++rejected.snapFail;
+                    }
+                    else
+                    {
+                        glm::vec3 sweepStartDrop = takeoffDropSnapped + up * params.sweepUp;
+                        glm::vec3 probe = p + frame.outwardXZ * dropOut + up * dropUp;
+                        glm::vec3 hit{}, hitNormal{};
+                        if (RaycastDown(rayVerts, rayTris, probe, maxRayDistance, hit, hitNormal))
+                        {
+                            ++dropHits;
+                            if (glm::dot(hitNormal, up) >= slopeCos)
+                            {
+                                bool clear = true;
+                                if (enableSweep)
+                                    clear = SweepRay3(rayVerts, rayTris, sweepStartDrop, hit + up * params.sweepUp, params.sweepSideOffset, 0.0f);
+                                else
+                                {
+                                    glm::vec3 hh{}, hn{};
+                                    clear = !RaycastTo(rayVerts, rayTris, sweepStartDrop, hit + up * params.sweepUp, hh, hn);
+                                }
+                                if (clear)
+                                {
+                                    dtPolyRef hr = 0;
+                                    glm::vec3 snapped{};
+                                    if (SnapToNavmesh(query, hit, snapExtents, &filter, hr, snapped))
+                                    {
+                                        const float drop = takeoffDropSnapped.y - snapped.y;
+                                        if (drop < params.minDropThreshold || drop > params.maxDropHeight)
+                                        {
+                                            ++rejected.dy;
+                                            continue;
+                                        }
+                                        if (!HasClearBidirectionalLine(
+                                                rayVerts,
+                                                rayTris,
+                                                takeoffDropSnapped,
+                                                snapped,
+                                                params.sweepUp,
+                                                params.sweepSideOffset,
+                                                enableSweep))
+                                        {
+                                            ++rejected.obstruction;
+                                            ++rejected.sweepBlocked;
+                                            continue;
+                                        }
+                                        if (DistXZ(takeoffDropSnapped, snapped) < params.minDist)
+                                        {
+                                            ++rejected.distance;
+                                            ++rejected.tooClose;
+                                        }
+                                        else if (!IsCandidateInOutwardDirection(takeoffDropSnapped, snapped, frame.outwardXZ, params.minOutwardDot))
+                                        {
+                                            ++rejected.wrongDirection;
+                                        }
+                                        //else if (IsReachableByNormalNavmesh(query, takeoffDropRef, hr, takeoffDropSnapped, snapped, &filter))
+                                        //{
+                                        //    ++rejected.normalReachable;
+                                        //}
+                                        else
+                                        {
+                                            GeneratedOffmeshCandidate c{};
+                                            c.link.start = takeoffDropSnapped;
+                                            c.link.end = snapped;
+                                            c.rawStart = takeoffDrop;
+                                            c.rawEnd = hit;
+                                            c.link.radius = std::max(params.agentRadius, 0.1f);
+                                            c.link.bidirectional = false;
+                                            c.link.area = params.dropArea;
+                                            c.link.flags = 1;
+                                            c.link.userId = params.userIdBase + (uint32_t)outLinks.size();
+                                            c.link.ownerTx = tx;
+                                            c.link.ownerTy = ty;
+                                            tryAppend(c, 0u, dropCount);
+                                        }
+                                    }
+                                    else
+                                        ++rejected.snapFail;
+                                }
+                                else
+                                {
+                                    ++rejected.obstruction;
+                                    ++rejected.sweepBlocked;
+                                }
+                            }
+                            else
+                                ++rejected.slope;
+                        }
+                    }
+                }
+                if (includeJump)
+                {
+                    if (!SnapToNavmesh(query, takeoffJump, snapExtents, &filter, takeoffJumpRef, takeoffJumpSnapped))
+                    {
+                        ++rejected.snapFail;
+                    }
+                    else
+                    {
+                        glm::vec3 sweepStartJump = takeoffJumpSnapped + up * params.sweepUp;
+                        for (float d = params.minDist; d <= params.maxDist + 1e-3f; d += params.distStep)
+                        {
+                            glm::vec3 candRaw = p + frame.outwardXZ * d + up * jumpUp;
+                            dtPolyRef cr = 0;
+                            glm::vec3 cand{};
+                            if (!SnapToNavmesh(query, candRaw, snapExtents, &filter, cr, cand))
+                            {
+                                ++rejected.snapFail;
+                                continue;
+                            }
+                            if (cr == takeoffJumpRef)
+                            {
+                                ++rejected.dedupe;
+                                continue;
+                            }
+                            float horiz = DistXZ(takeoffJumpSnapped, cand);
+                            if (horiz < params.minDist)
+                            {
+                                ++rejected.distance;
+                                ++rejected.tooClose;
+                                continue;
+                            }
+                            if (horiz > params.maxDist)
+                            {
+                                ++rejected.distance;
+                                continue;
+                            }
+                            float dy = cand.y - takeoffJumpSnapped.y;
+                            if (dy < -params.maxJumpDown || dy > params.maxJumpUp)
+                            {
+                                ++rejected.dy;
+                                continue;
+                            }
+                            if (!IsCandidateInOutwardDirection(takeoffJumpSnapped, cand, frame.outwardXZ, params.minOutwardDot))
+                            {
+                                ++rejected.wrongDirection;
+                                continue;
+                            }
+                            if (IsReachableByNormalNavmesh(query, takeoffJumpRef, cr, takeoffJumpSnapped, cand, &filter))
+                            {
+                                ++rejected.normalReachable;
+                                continue;
+                            }
+                            bool clear = enableSweep ? SweepRay3(rayVerts, rayTris, sweepStartJump, cand + up * params.sweepUp, params.sweepSideOffset, 0.1f) : true;
+                            if (!clear)
+                            {
+                                glm::vec3 dir = cand - takeoffJumpSnapped;
+                                dir.y = 0;
+                                if (glm::dot(dir, dir) > 1e-6f)
+                                {
+                                    dir = glm::normalize(dir);
+                                    glm::vec3 adj = cand;
+                                    dtPolyRef ar = cr;
+                                    for (int it = 0; it < 6 && !clear; ++it)
+                                    {
+                                        adj -= dir * std::max(0.25f, params.distStep * 0.5f);
+                                        if (!SnapToNavmesh(query, adj, snapExtents, &filter, ar, adj) || ar == takeoffJumpRef)
+                                            break;
+                                        clear = enableSweep ? SweepRay3(rayVerts, rayTris, sweepStartJump, adj + up * params.sweepUp, params.sweepSideOffset, 0.1f) : true;
+                                        if (clear)
+                                        {
+                                            cand = adj;
+                                            cr = ar;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!clear)
+                            {
+                                ++rejected.obstruction;
+                                ++rejected.sweepBlocked;
+                                continue;
+                            }
+                            if (!HasClearBidirectionalLine(
+                                    rayVerts,
+                                    rayTris,
+                                    takeoffJumpSnapped,
+                                    cand,
+                                    params.sweepUp,
+                                    params.sweepSideOffset,
+                                    enableSweep))
+                            {
+                                ++rejected.obstruction;
+                                ++rejected.sweepBlocked;
+                                continue;
+                            }
+                            GeneratedOffmeshCandidate c{};
+                            c.link.start = takeoffJumpSnapped;
+                            c.link.end = cand;
+                            c.rawStart = takeoffJump;
+                            c.rawEnd = candRaw;
+                            c.link.radius = std::max(params.agentRadius, 0.1f);
+                            c.link.bidirectional = true;
+                            c.link.area = params.jumpArea;
+                            c.link.flags = 1;
+                            c.link.userId = params.userIdBase + (uint32_t)outLinks.size();
+                            c.link.ownerTx = tx;
+                            c.link.ownerTy = ty;
+                            if (tryAppend(c, 1u, jumpCount))
+                                break;
+                        }
+                    }
+                }
+                if (includeClimb)
+                {
+                    const float climbOut = params.climbOutwardOffset > 0.0f ? params.climbOutwardOffset : std::max(params.outwardOffset, 0.4f);
+                    const float topInset = params.climbStartInset > 0.0f ? params.climbStartInset : 0.25f;
+
+                    // Para climb:
+                    // start = fora/baixo da borda
+                    // end   = topo, um pouco para dentro da borda
+                    glm::vec3 climbStartRaw = p + frame.outwardXZ * climbOut;
+
+                    if (!SnapToNavmesh(query, climbStartRaw, snapExtents, &filter, takeoffClimbRef, takeoffClimbSnapped))
+                    {
+                        ++rejected.snapFail;
+                    }
+                    else
+                    {
+                        float minH = params.climbMinHeight;
+                        float maxH = params.climbMaxHeight > 0 ? params.climbMaxHeight : params.maxJumpUp;
+
+                        const float climbProbeUp = std::max(maxH, params.maxJumpUp) + 0.25f;
+                        const float downDist = climbProbeUp + std::max(params.climbProbeDown, 0.25f);
+
+                        // Procura o topo para DENTRO da plataforma/contêiner, não para fora.
+                        glm::vec3 topProbe = p - frame.outwardXZ * topInset + up * climbProbeUp;
+
+                        glm::vec3 topHit{}, topN{};
+                        if (!RaycastDown(rayVerts, rayTris, topProbe, downDist, topHit, topN))
+                        {
+                            ++rejected.snapFail;
+                        }
+                        else if (glm::dot(topN, up) < slopeCos)
+                        {
+                            ++rejected.slope;
+                        }
+                        else
+                        {
+                            dtPolyRef cr = 0;
+                            glm::vec3 cand{};
+                            if (!SnapToNavmesh(query, topHit, snapExtents, &filter, cr, cand))
+                            {
+                                ++rejected.snapFail;
+                            }
+                            else
+                            {
+                                float horiz = DistXZ(takeoffClimbSnapped, cand);
+                                if (horiz < params.minDist)
+                                {
+                                    ++rejected.distance;
+                                    ++rejected.tooClose;
+                                }
+                                else if (horiz > params.maxDist)
+                                {
+                                    ++rejected.distance;
+                                }
+                                else
+                                {
+                                    float dy = cand.y - takeoffClimbSnapped.y;
+                                    if (dy < minH || dy > maxH)
+                                    {
+                                        ++rejected.dy;
+                                    }
+                                    else
+                                    {
+                                        // Agora o candidato fica no sentido oposto ao outward, porque o topo está para dentro.
+                                        if (!IsCandidateInOutwardDirection(takeoffClimbSnapped, cand, -frame.outwardXZ, params.minOutwardDot))
+                                        {
+                                            ++rejected.wrongDirection;
+                                        }
+                                        else
+                                        {
+                                            bool clear = enableSweep
+                                                ? SweepRay3(
+                                                    rayVerts,
+                                                    rayTris,
+                                                    takeoffClimbSnapped + up * params.sweepUp,
+                                                    cand + up * params.sweepUp,
+                                                    params.sweepSideOffset,
+                                                    0.1f
+                                                )
+                                                : true;
+                                                if (!HasClearBidirectionalLine(
+                                                    rayVerts,
+                                                    rayTris,
+                                                    takeoffClimbSnapped,
+                                                    cand,
+                                                    params.sweepUp,
+                                                    params.sweepSideOffset,
+                                                    enableSweep))
+                                            {
+                                                ++rejected.obstruction;
+                                                ++rejected.sweepBlocked;
+                                                continue;
+                                            }
+                                            if (!clear)
+                                            {
+                                                ++rejected.obstruction;
+                                                ++rejected.sweepBlocked;
+                                            }
+                                            else
+                                            {
+                                                GeneratedOffmeshCandidate c{};
+                                                c.link.start = takeoffClimbSnapped;
+                                                c.link.end = cand;
+                                                c.rawStart = climbStartRaw;
+                                                c.rawEnd = topHit;
+                                                c.link.radius = std::max(params.agentRadius, 0.1f);
+                                                c.link.bidirectional = false;
+                                                c.link.area = params.climbArea;
+                                                c.link.flags = 1;
+                                                c.link.userId = params.userIdBase + (uint32_t)outLinks.size();
+                                                c.link.ownerTx = tx;
+                                                c.link.ownerTy = ty;
+
+                                                tryAppend(c, 2u, climbCount);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    printf("[AutoOffmeshV2][tile %d,%d] openEdges=%zu samples=%zu accepted(drop/jump/climb)=%zu/%zu/%zu reject: snapFail=%zu dy=%zu distance=%zu tooClose=%zu normalReachable=%zu wrongDirection=%zu tileBoundary=%zu obstruction=%zu sweepBlocked=%zu dedupe=%zu perTileLimit=%zu cap=%d\n",
+           tx, ty, openEdges, samples, dropCount, jumpCount, climbCount, rejected.snapFail, rejected.dy, rejected.distance, rejected.tooClose, rejected.normalReachable, rejected.wrongDirection, rejected.tileBoundary, rejected.obstruction, rejected.sweepBlocked, rejected.dedupe, rejected.perTileLimit, params.maxLinksPerTile);
+    printf("[AutoOffmeshV2][tile %d,%d] openEdges=%zu samples=%zu dynamicSeedSkippedEdges=%zu dynamicSeedSkippedSamples=%zu dynamicSeedAcceptedSamples=%zu dropHits=%zu snapFail=%zu sweepBlocked=%zu rawGenerated=%zu dynamicTris=%zu\n",
+           tx, ty, openEdges, samples, dynamicSeedSkippedEdges, dynamicSeedSkippedSamples, dynamicSeedAcceptedSamples, dropHits, rejected.snapFail, rejected.sweepBlocked, outLinks.size(), dynamicTrisCount);
+    return true;
+}
+bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams &params,
+                                                 std::vector<OffmeshLink> &outLinks)
 {
     outLinks.clear();
 
@@ -1081,10 +1760,10 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
         return false;
     }
 
-    dtNavMeshQuery* query = dtAllocNavMeshQuery();
+    dtNavMeshQuery *query = dtAllocNavMeshQuery();
     if (!query)
         return false;
-    const std::unique_ptr<dtNavMeshQuery, void(*)(dtNavMeshQuery*)> queryGuard(query, dtFreeNavMeshQuery);
+    const std::unique_ptr<dtNavMeshQuery, void (*)(dtNavMeshQuery *)> queryGuard(query, dtFreeNavMeshQuery);
 
     if (dtStatusFailed(query->init(m_nav, 2048)))
         return false;
@@ -1096,10 +1775,9 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
     const float searchExtents[3] = {
         std::max(params.searchExtents.x, 0.1f),
         std::max(params.searchExtents.y, 0.1f),
-        std::max(params.searchExtents.z, 0.1f)
-    };
+        std::max(params.searchExtents.z, 0.1f)};
 
-    const float targetPos[3] = { params.targetPosition.x, params.targetPosition.y, params.targetPosition.z };
+    const float targetPos[3] = {params.targetPosition.x, params.targetPosition.y, params.targetPosition.z};
     dtPolyRef targetRef = 0;
     float targetNearest[3]{};
     bool targetOver = false;
@@ -1112,8 +1790,8 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
 
     int targetTileX = -1;
     int targetTileY = -1;
-    const dtMeshTile* targetTile = nullptr;
-    const dtPoly* targetPoly = nullptr;
+    const dtMeshTile *targetTile = nullptr;
+    const dtPoly *targetPoly = nullptr;
     if (dtStatusSucceed(m_nav->getTileAndPolyByRef(targetRef, &targetTile, &targetPoly)))
     {
         if (targetTile && targetTile->header)
@@ -1136,8 +1814,8 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
             continue;
         islandPolys.insert(ref);
 
-        const dtMeshTile* tile = nullptr;
-        const dtPoly* poly = nullptr;
+        const dtMeshTile *tile = nullptr;
+        const dtPoly *poly = nullptr;
         if (dtStatusFailed(m_nav->getTileAndPolyByRef(ref, &tile, &poly)))
             continue;
         if (!tile || !poly)
@@ -1166,13 +1844,11 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
     const float queryCenter[3] = {
         (queryBMin[0] + queryBMax[0]) * 0.5f,
         (queryBMin[1] + queryBMax[1]) * 0.5f,
-        (queryBMin[2] + queryBMax[2]) * 0.5f
-    };
+        (queryBMin[2] + queryBMax[2]) * 0.5f};
     const float queryHalfExtents[3] = {
         (queryBMax[0] - queryBMin[0]) * 0.5f,
         (queryBMax[1] - queryBMin[1]) * 0.5f,
-        (queryBMax[2] - queryBMin[2]) * 0.5f
-    };
+        (queryBMax[2] - queryBMin[2]) * 0.5f};
 
     const int maxPolys = 1 << 16;
     dtPolyRef polys[maxPolys];
@@ -1194,7 +1870,7 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
     std::vector<Candidate> candidates;
     candidates.reserve(static_cast<size_t>(polyCount));
 
-    auto resolveTileCoords = [&](const dtMeshTile* tile, const glm::vec3& pos) -> std::pair<int, int>
+    auto resolveTileCoords = [&](const dtMeshTile *tile, const glm::vec3 &pos) -> std::pair<int, int>
     {
         if (tile && tile->header)
             return {tile->header->x, tile->header->y};
@@ -1223,8 +1899,8 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
         if (islandPolys.find(pref) != islandPolys.end())
             continue;
 
-        const dtMeshTile* tile = nullptr;
-        const dtPoly* poly = nullptr;
+        const dtMeshTile *tile = nullptr;
+        const dtPoly *poly = nullptr;
         if (dtStatusFailed(m_nav->getTileAndPolyByRef(pref, &tile, &poly)))
             continue;
         if (!tile || !poly || poly->getType() != DT_POLYTYPE_GROUND)
@@ -1268,17 +1944,15 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
     if (candidates.empty())
         return true;
 
-    std::sort(candidates.begin(), candidates.end(), [](const Candidate& a, const Candidate& b)
-    {
-        return a.distance < b.distance;
-    });
+    std::sort(candidates.begin(), candidates.end(), [](const Candidate &a, const Candidate &b)
+              { return a.distance < b.distance; });
 
     const int desiredLinks = 1 + std::max(0, params.moreLinks);
     std::vector<Candidate> selected;
-    for (const auto& cand : candidates)
+    for (const auto &cand : candidates)
     {
         bool tooClose = false;
-        for (const auto& chosen : selected)
+        for (const auto &chosen : selected)
         {
             if (glm::length(chosen.mid - cand.mid) < params.minDistance)
             {
@@ -1297,7 +1971,7 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
         return true;
 
     size_t generated = 0;
-    for (const auto& cand : selected)
+    for (const auto &cand : selected)
     {
         glm::vec3 hit;
         glm::vec3 normal;
@@ -1338,12 +2012,12 @@ bool NavMeshData::AddOffmeshLinksToNavMeshIsland(const IslandOffmeshLinkParams& 
     printf("[IslandOffmesh] Links generated = %zu\n", generated);
     return true;
 }
-NavMeshData::NavMeshData(NavMeshData&& other) noexcept
+NavMeshData::NavMeshData(NavMeshData &&other) noexcept
 {
     *this = std::move(other);
 }
 
-NavMeshData& NavMeshData::operator=(NavMeshData&& other) noexcept
+NavMeshData &NavMeshData::operator=(NavMeshData &&other) noexcept
 {
     if (this != &other)
     {
@@ -1383,9 +2057,9 @@ NavMeshData& NavMeshData::operator=(NavMeshData&& other) noexcept
     return *this;
 }
 
-bool NavMeshData::Load(const char* path)
+bool NavMeshData::Load(const char *path)
 {
-    FILE* f = fopen(path, "rb");
+    FILE *f = fopen(path, "rb");
     if (!f)
     {
         printf("[NavMeshData] Failed to open: %s\n", path);
@@ -1429,7 +2103,7 @@ bool NavMeshData::Load(const char* path)
         if (dataSize == 0)
             continue;
 
-        unsigned char* data = (unsigned char*)dtAlloc(dataSize, DT_ALLOC_PERM);
+        unsigned char *data = (unsigned char *)dtAlloc(dataSize, DT_ALLOC_PERM);
         fread(data, dataSize, 1, f);
 
         if (dtStatusFailed(m_nav->addTile(data, dataSize, DT_TILE_FREE_DATA, 0, NULL)))
@@ -1443,10 +2117,10 @@ bool NavMeshData::Load(const char* path)
     return true;
 }
 
-bool NavMeshData::BuildTileAt(const glm::vec3& worldPos,
-                              const NavmeshGenerationSettings& settings,
-                              int& outTileX,
-                              int& outTileY)
+bool NavMeshData::BuildTileAt(const glm::vec3 &worldPos,
+                              const NavmeshGenerationSettings &settings,
+                              int &outTileX,
+                              int &outTileY)
 {
     outTileX = -1;
     outTileY = -1;
@@ -1511,9 +2185,9 @@ bool NavMeshData::BuildTileAt(const glm::vec3& worldPos,
     return true;
 }
 
-bool NavMeshData::RemoveTileAt(const glm::vec3& worldPos,
-                               int& outTileX,
-                               int& outTileY)
+bool NavMeshData::RemoveTileAt(const glm::vec3 &worldPos,
+                               int &outTileX,
+                               int &outTileY)
 {
     outTileX = -1;
     outTileY = -1;
@@ -1548,7 +2222,7 @@ bool NavMeshData::RemoveTileAt(const glm::vec3& worldPos,
         return false;
     }
 
-    unsigned char* tileData = nullptr;
+    unsigned char *tileData = nullptr;
     int tileDataSize = 0;
     const dtStatus status = m_nav->removeTile(tileRef, &tileData, &tileDataSize);
     if (dtStatusFailed(status))
@@ -1566,11 +2240,11 @@ bool NavMeshData::RemoveTileAt(const glm::vec3& worldPos,
     return true;
 }
 
-bool NavMeshData::RebuildTilesInBounds(const glm::vec3& bmin,
-                                       const glm::vec3& bmax,
-                                       const NavmeshGenerationSettings& settings,
+bool NavMeshData::RebuildTilesInBounds(const glm::vec3 &bmin,
+                                       const glm::vec3 &bmax,
+                                       const NavmeshGenerationSettings &settings,
                                        bool onlyExistingTiles,
-                                       std::vector<std::pair<int, int>>* outTiles)
+                                       std::vector<std::pair<int, int>> *outTiles)
 {
     std::vector<std::pair<int, int>> tiles;
     if (!CollectTilesInBounds(bmin, bmax, onlyExistingTiles, tiles))
@@ -1579,10 +2253,10 @@ bool NavMeshData::RebuildTilesInBounds(const glm::vec3& bmin,
     return RebuildSpecificTiles(tiles, settings, onlyExistingTiles, outTiles);
 }
 
-bool NavMeshData::CollectTilesInBounds(const glm::vec3& bmin,
-                                       const glm::vec3& bmax,
+bool NavMeshData::CollectTilesInBounds(const glm::vec3 &bmin,
+                                       const glm::vec3 &bmax,
                                        bool onlyExistingTiles,
-                                       std::vector<std::pair<int, int>>& outTiles) const
+                                       std::vector<std::pair<int, int>> &outTiles) const
 {
     outTiles.clear();
 
@@ -1635,10 +2309,10 @@ bool NavMeshData::CollectTilesInBounds(const glm::vec3& bmin,
     return true;
 }
 
-bool NavMeshData::RebuildSpecificTiles(const std::vector<std::pair<int, int>>& tiles,
-                                       const NavmeshGenerationSettings& settings,
+bool NavMeshData::RebuildSpecificTiles(const std::vector<std::pair<int, int>> &tiles,
+                                       const NavmeshGenerationSettings &settings,
                                        bool onlyExistingTiles,
-                                       std::vector<std::pair<int, int>>* outTiles)
+                                       std::vector<std::pair<int, int>> *outTiles)
 {
     if (outTiles)
         outTiles->clear();
@@ -1674,7 +2348,7 @@ bool NavMeshData::RebuildSpecificTiles(const std::vector<std::pair<int, int>>& t
 
     bool anyTouched = false;
 
-    for (const auto& tile : tiles)
+    for (const auto &tile : tiles)
     {
         const int tx = tile.first;
         const int ty = tile.second;
@@ -1711,17 +2385,82 @@ bool NavMeshData::RebuildSpecificTiles(const std::vector<std::pair<int, int>>& t
     return true;
 }
 
-bool NavMeshData::EstimateTileGrid(const NavmeshGenerationSettings& settings,
-                                   const float* bmin,
-                                   const float* bmax,
-                                   TileGridStats& outStats)
+bool NavMeshData::RebuildSingleTileFromGeometry(int tx,
+                                                int ty,
+                                                const std::vector<glm::vec3> &verts,
+                                                const std::vector<unsigned int> &indices,
+                                                const NavmeshGenerationSettings &settings,
+                                                const std::vector<OffmeshLink> *tileOffmeshOverride,
+                                                uint64_t tileHash,
+                                                bool *outBuilt,
+                                                bool *outEmpty)
+{
+    if (outBuilt)
+        *outBuilt = false;
+    if (outEmpty)
+        *outEmpty = false;
+
+    if (!m_nav || !m_hasTiledCache)
+        return false;
+    if (tx < 0 || ty < 0 || tx >= m_cachedTileWidthCount || ty >= m_cachedTileHeightCount)
+        return false;
+
+    if (settings.mode != NavmeshBuildMode::Tiled ||
+        fabsf(settings.cellSize - m_cachedSettings.cellSize) > 1e-3f ||
+        fabsf(settings.cellHeight - m_cachedSettings.cellHeight) > 1e-3f ||
+        settings.tileSize != m_cachedSettings.tileSize)
+    {
+        printf("[NavMeshData] RebuildSingleTileFromGeometry: configuracao atual difere da cacheada.\n");
+    }
+
+    std::vector<float> localVerts;
+    std::vector<int> localTris;
+    localVerts.reserve(verts.size() * 3);
+    for (const auto &v : verts)
+    {
+        localVerts.push_back(v.x);
+        localVerts.push_back(v.y);
+        localVerts.push_back(v.z);
+    }
+    localTris.reserve(indices.size());
+    for (unsigned int i : indices)
+        localTris.push_back(static_cast<int>(i));
+
+    LoggingRcContext ctx;
+    NavmeshBuildInput input{ctx, localVerts, localTris};
+    input.nverts = static_cast<int>(localVerts.size() / 3);
+    input.ntris = static_cast<int>(localTris.size() / 3);
+    rcVcopy(input.meshBMin, m_gridBMin);
+    rcVcopy(input.meshBMax, m_gridBMax);
+    input.baseCfg = m_cachedBaseCfg;
+    input.offmeshLinks = tileOffmeshOverride ? tileOffmeshOverride : &m_offmeshLinks;
+
+    bool built = false;
+    bool empty = false;
+    const bool ok = BuildSingleTile(input, m_cachedSettings, tx, ty, m_nav, built, empty);
+    if (!ok)
+        return false;
+
+    const uint64_t tileKey = (static_cast<uint64_t>(static_cast<uint32_t>(tx)) << 32) | static_cast<uint32_t>(ty);
+    m_cachedTileHashes[tileKey] = tileHash;
+    if (outBuilt)
+        *outBuilt = built;
+    if (outEmpty)
+        *outEmpty = empty;
+    return true;
+}
+
+bool NavMeshData::EstimateTileGrid(const NavmeshGenerationSettings &settings,
+                                   const float *bmin,
+                                   const float *bmax,
+                                   TileGridStats &outStats)
 {
     return ComputeTiledGridCounts(settings, bmin, bmax, outStats);
 }
 
-bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
-                                const float* forcedBMin,
-                                const float* forcedBMax)
+bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings &settings,
+                                const float *forcedBMin,
+                                const float *forcedBMax)
 {
     if (settings.mode != NavmeshBuildMode::Tiled)
     {
@@ -1749,15 +2488,29 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
     }
 
     const int maxAllowedTiles = 32768;
-    if (stats.tileCountTotal > maxAllowedTiles)
+    const int maxAllowedWorldTiles = 500000;
+    if (stats.tileCountTotal > maxAllowedWorldTiles)
     {
         const float area = std::max(0.0f, stats.boundsWidth * stats.boundsHeight);
         const float minTileWorld = area > 0.0f
-            ? std::sqrt(area / static_cast<float>(maxAllowedTiles))
-            : stats.tileWorld;
+                                       ? std::sqrt(area / static_cast<float>(maxAllowedWorldTiles))
+                                       : stats.tileWorld;
         const int suggestedTileSize = static_cast<int>(std::ceil(minTileWorld / std::max(0.001f, settings.cellSize)));
 
         printf("[NavMeshData] InitTiledGrid: quantidade de tiles (%d) excede limite seguro (%d). tileWorld=%.2f. Sugestao: tileWorld >= %.2f (tileSize >= %d com cellSize=%.3f).\n",
+               stats.tileCountTotal, maxAllowedWorldTiles, stats.tileWorld, minTileWorld, suggestedTileSize, settings.cellSize);
+        return false;
+    }
+
+    if (settings.maxTilesOverride <= 0 && stats.tileCountTotal > maxAllowedTiles)
+    {
+        const float area = std::max(0.0f, stats.boundsWidth * stats.boundsHeight);
+        const float minTileWorld = area > 0.0f
+                                       ? std::sqrt(area / static_cast<float>(maxAllowedTiles))
+                                       : stats.tileWorld;
+        const int suggestedTileSize = static_cast<int>(std::ceil(minTileWorld / std::max(0.001f, settings.cellSize)));
+
+        printf("[NavMeshData] InitTiledGrid: quantidade de tiles (%d) excede limite seguro (%d) sem maxTilesOverride. tileWorld=%.2f. Sugestao: tileWorld >= %.2f (tileSize >= %d com cellSize=%.3f).\n",
                stats.tileCountTotal, maxAllowedTiles, stats.tileWorld, minTileWorld, suggestedTileSize, settings.cellSize);
         return false;
     }
@@ -1775,7 +2528,7 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
     const int tileWidthCount = (baseCfg.width + settings.tileSize - 1) / settings.tileSize;
     const int tileHeightCount = (baseCfg.height + settings.tileSize - 1) / settings.tileSize;
 
-    dtNavMesh* nav = dtAllocNavMesh();
+    dtNavMesh *nav = dtAllocNavMesh();
     if (!nav)
     {
         printf("[NavMeshData] InitTiledGrid: dtAllocNavMesh falhou.\n");
@@ -1786,15 +2539,19 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
     rcVcopy(navParams.orig, forcedBMin);
     navParams.tileWidth = settings.tileSize * baseCfg.cs;
     navParams.tileHeight = settings.tileSize * baseCfg.cs;
-    navParams.maxTiles = tileWidthCount * tileHeightCount;
 
-    const unsigned int desiredMaxPolys = 1 << 16;
+    const int computedMaxTiles = tileWidthCount * tileHeightCount;
+    navParams.maxTiles = settings.maxTilesOverride > 0
+                             ? settings.maxTilesOverride
+                             : computedMaxTiles;
+
+    const unsigned int desiredMaxPolys = static_cast<unsigned int>(std::max(16, settings.desiredMaxPolysPerTile));
     const unsigned int tileBits = static_cast<unsigned int>(dtIlog2(dtNextPow2(static_cast<unsigned int>(navParams.maxTiles))));
     const unsigned int desiredPolyBits = static_cast<unsigned int>(dtIlog2(dtNextPow2(desiredMaxPolys)));
     const unsigned int maxPolyBitsAllowed = tileBits >= 22 ? 0u : (22u - tileBits);
     if (maxPolyBitsAllowed == 0)
     {
-        printf("[NavMeshData] InitTiledGrid: maxTiles=%u consome todos os bits de ref (tileBits=%u). Ajuste tileSize ou reduza a area.\n",
+        printf("[NavMeshData] InitTiledGrid: maxTiles=%u consome todos os bits de ref (tileBits=%u). Ajuste tileSize maior ou reduza os bounds.\n",
                static_cast<unsigned int>(navParams.maxTiles), tileBits);
         dtFreeNavMesh(nav);
         return false;
@@ -1802,10 +2559,31 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
 
     const unsigned int chosenPolyBits = std::min(desiredPolyBits, maxPolyBitsAllowed);
     navParams.maxPolys = 1u << chosenPolyBits;
+
+    printf("[NavMeshData] InitTiledGrid: worldTiles=%d residentCapacity=%d tileWidthCount=%d tileHeightCount=%d tileWorld=%.3f tileBits=%u polyBits=%u maxPolys=%d desiredMaxPolys=%u tileSize=%d\n",
+           computedMaxTiles,
+           navParams.maxTiles,
+           tileWidthCount,
+           tileHeightCount,
+           navParams.tileWidth,
+           tileBits,
+           chosenPolyBits,
+           navParams.maxPolys,
+           desiredMaxPolys,
+           settings.tileSize);
+
     if (navParams.maxPolys != desiredMaxPolys)
     {
-        printf("[NavMeshData] InitTiledGrid: Clamp maxPolys para %u (tileBits=%u polyBits=%u). Numero de tiles=%u\n",
+        printf("[NavMeshData] InitTiledGrid: Clamp maxPolys para %u (tileBits=%u polyBits=%u). Numero de tiles=%u.\n",
                static_cast<unsigned int>(navParams.maxPolys), tileBits, chosenPolyBits, static_cast<unsigned int>(navParams.maxTiles));
+    }
+
+    if (navParams.maxPolys < 4096)
+    {
+        printf("[NavMeshData] InitTiledGrid: ERRO de configuracao: maxPolys=%d (<4096). Ajuste tileSize maior, bounds menores, ou reduza maxTilesOverride.\n",
+               navParams.maxPolys);
+        dtFreeNavMesh(nav);
+        return false;
     }
 
     const dtStatus initStatus = nav->init(&navParams);
@@ -1835,8 +2613,8 @@ bool NavMeshData::InitTiledGrid(const NavmeshGenerationSettings& settings,
     return true;
 }
 
-bool NavMeshData::UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
-                                       const std::vector<unsigned int>& indices)
+bool NavMeshData::UpdateCachedGeometry(const std::vector<glm::vec3> &verts,
+                                       const std::vector<unsigned int> &indices)
 {
     if (!m_nav || !m_hasTiledCache)
     {
@@ -1866,17 +2644,23 @@ bool NavMeshData::UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
         convertedTris[i] = static_cast<int>(indices[i]);
     }
 
-    float meshBMin[3] = { convertedVerts[0], convertedVerts[1], convertedVerts[2] };
-    float meshBMax[3] = { convertedVerts[0], convertedVerts[1], convertedVerts[2] };
+    float meshBMin[3] = {convertedVerts[0], convertedVerts[1], convertedVerts[2]};
+    float meshBMax[3] = {convertedVerts[0], convertedVerts[1], convertedVerts[2]};
     for (size_t i = 1; i < nverts; ++i)
     {
-        const float* v = &convertedVerts[i * 3];
-        if (v[0] < meshBMin[0]) meshBMin[0] = v[0];
-        if (v[1] < meshBMin[1]) meshBMin[1] = v[1];
-        if (v[2] < meshBMin[2]) meshBMin[2] = v[2];
-        if (v[0] > meshBMax[0]) meshBMax[0] = v[0];
-        if (v[1] > meshBMax[1]) meshBMax[1] = v[1];
-        if (v[2] > meshBMax[2]) meshBMax[2] = v[2];
+        const float *v = &convertedVerts[i * 3];
+        if (v[0] < meshBMin[0])
+            meshBMin[0] = v[0];
+        if (v[1] < meshBMin[1])
+            meshBMin[1] = v[1];
+        if (v[2] < meshBMin[2])
+            meshBMin[2] = v[2];
+        if (v[0] > meshBMax[0])
+            meshBMax[0] = v[0];
+        if (v[1] > meshBMax[1])
+            meshBMax[1] = v[1];
+        if (v[2] > meshBMax[2])
+            meshBMax[2] = v[2];
     }
     rcVcopy(m_cachedBMin, meshBMin);
     rcVcopy(m_cachedBMax, meshBMax);
@@ -1892,7 +2676,7 @@ bool NavMeshData::UpdateCachedGeometry(const std::vector<glm::vec3>& verts,
     return true;
 }
 
-bool NavMeshData::GetCachedBounds(float* outBMin, float* outBMax) const
+bool NavMeshData::GetCachedBounds(float *outBMin, float *outBMax) const
 {
     if (!m_nav)
         return false;
@@ -1903,14 +2687,13 @@ bool NavMeshData::GetCachedBounds(float* outBMin, float* outBMax) const
     return true;
 }
 
-
 // ----------------------------------------------------------------------------
 // ExtractDebugMesh()
 // Converte polys em triângulos para renderizar no ViewerGL
 // ----------------------------------------------------------------------------
 void NavMeshData::ExtractDebugMesh(
-    std::vector<glm::vec3>& outVerts,
-    std::vector<glm::vec3>& outLines )
+    std::vector<glm::vec3> &outVerts,
+    std::vector<glm::vec3> &outLines)
 {
     outVerts.clear();
     outLines.clear();
@@ -1920,17 +2703,19 @@ void NavMeshData::ExtractDebugMesh(
 
     for (int t = 0; t < m_nav->getMaxTiles(); t++)
     {
-        const dtMeshTile* tile = m_nav->getTile(t);
-        if (!tile || !tile->header) continue;
+        const dtMeshTile *tile = m_nav->getTile(t);
+        if (!tile || !tile->header)
+            continue;
 
-        const dtPoly* polys = tile->polys;
-        const float* verts = tile->verts;
-        const dtMeshHeader* header = tile->header;
+        const dtPoly *polys = tile->polys;
+        const float *verts = tile->verts;
+        const dtMeshHeader *header = tile->header;
 
         for (int i = 0; i < header->polyCount; i++)
         {
-            const dtPoly& p = polys[i];
-            if (p.getType() != DT_POLYTYPE_GROUND) continue;
+            const dtPoly &p = polys[i];
+            if (p.getType() != DT_POLYTYPE_GROUND)
+                continue;
 
             for (int j = 2; j < p.vertCount; j++)
             {
@@ -1958,20 +2743,18 @@ void NavMeshData::ExtractDebugMesh(
         }
     }
     printf("ExtractDebugMesh: verts=%zu  lines=%zu\n",
-    outVerts.size(), outLines.size());
-
+           outVerts.size(), outLines.size());
 }
 
-
-bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
-                               const std::vector<unsigned int>& idxIn,
-                               const NavmeshGenerationSettings& settings,
-                               bool buildTilesNow,
-                               const std::atomic_bool* cancelFlag,
-                               bool useCache,
-                               const char* cachePath,
-                               const float* forcedBMin,
-                               const float* forcedBMax)
+bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3> &vertsIn,
+                                const std::vector<unsigned int> &idxIn,
+                                const NavmeshGenerationSettings &settings,
+                                bool buildTilesNow,
+                                const std::atomic_bool *cancelFlag,
+                                bool useCache,
+                                const char *cachePath,
+                                const float *forcedBMin,
+                                const float *forcedBMax)
 {
     m_hasTiledCache = false;
     m_cachedTileHashes.clear();
@@ -2009,7 +2792,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     }
 
     const int nverts = (int)vertsIn.size();
-    const int ntris  = (int)(idxIn.size() / 3);
+    const int ntris = (int)(idxIn.size() / 3);
 
     for (size_t i = 0; i < idxIn.size(); ++i)
     {
@@ -2034,9 +2817,9 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
             printf("[NavMeshData] BuildFromMesh abortado durante copia de vertices.\n");
             return false;
         }
-        verts[i*3+0] = vertsIn[i].x;
-        verts[i*3+1] = vertsIn[i].y;
-        verts[i*3+2] = vertsIn[i].z;
+        verts[i * 3 + 0] = vertsIn[i].x;
+        verts[i * 3 + 1] = vertsIn[i].y;
+        verts[i * 3 + 2] = vertsIn[i].z;
     }
 
     std::vector<int> tris(ntris * 3);
@@ -2049,20 +2832,26 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
         return false;
     }
 
-    float geomBMin[3] = { verts[0], verts[1], verts[2] };
-    float geomBMax[3] = { verts[0], verts[1], verts[2] };
+    float geomBMin[3] = {verts[0], verts[1], verts[2]};
+    float geomBMax[3] = {verts[0], verts[1], verts[2]};
     for (int i = 1; i < nverts; ++i)
     {
-        const float* v = &verts[i*3];
-        if (v[0] < geomBMin[0]) geomBMin[0] = v[0];
-        if (v[1] < geomBMin[1]) geomBMin[1] = v[1];
-        if (v[2] < geomBMin[2]) geomBMin[2] = v[2];
-        if (v[0] > geomBMax[0]) geomBMax[0] = v[0];
-        if (v[1] > geomBMax[1]) geomBMax[1] = v[1];
-        if (v[2] > geomBMax[2]) geomBMax[2] = v[2];
+        const float *v = &verts[i * 3];
+        if (v[0] < geomBMin[0])
+            geomBMin[0] = v[0];
+        if (v[1] < geomBMin[1])
+            geomBMin[1] = v[1];
+        if (v[2] < geomBMin[2])
+            geomBMin[2] = v[2];
+        if (v[0] > geomBMax[0])
+            geomBMax[0] = v[0];
+        if (v[1] > geomBMax[1])
+            geomBMax[1] = v[1];
+        if (v[2] > geomBMax[2])
+            geomBMax[2] = v[2];
     }
-    float gridBMin[3] = { geomBMin[0], geomBMin[1], geomBMin[2] };
-    float gridBMax[3] = { geomBMax[0], geomBMax[1], geomBMax[2] };
+    float gridBMin[3] = {geomBMin[0], geomBMin[1], geomBMin[2]};
+    float gridBMax[3] = {geomBMax[0], geomBMax[1], geomBMax[2]};
     const bool useForcedGrid = (settings.mode == NavmeshBuildMode::Tiled && forcedBMin && forcedBMax);
     if (useForcedGrid)
     {
@@ -2074,8 +2863,8 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     FillBaseConfig(settings, baseCfg);
     DumpRcConfig("BaseCfg", settings, baseCfg);
 
-    const float* gridMin = (settings.mode == NavmeshBuildMode::Tiled) ? gridBMin : geomBMin;
-    const float* gridMax = (settings.mode == NavmeshBuildMode::Tiled) ? gridBMax : geomBMax;
+    const float *gridMin = (settings.mode == NavmeshBuildMode::Tiled) ? gridBMin : geomBMin;
+    const float *gridMax = (settings.mode == NavmeshBuildMode::Tiled) ? gridBMax : geomBMax;
     rcCalcGridSize(gridMin, gridMax, baseCfg.cs, &baseCfg.width, &baseCfg.height);
     if (baseCfg.width == 0 || baseCfg.height == 0)
     {
@@ -2090,7 +2879,7 @@ bool NavMeshData::BuildFromMesh(const std::vector<glm::vec3>& vertsIn,
     buildInput.baseCfg = baseCfg;
     buildInput.offmeshLinks = &m_offmeshLinks;
 
-    dtNavMesh* newNav = nullptr;
+    dtNavMesh *newNav = nullptr;
     bool ok = false;
     if (settings.mode == NavmeshBuildMode::SingleMesh)
     {
