@@ -1,14 +1,10 @@
 var searchData=
 [
-  ['generatedoffmeshcandidate_0',['GeneratedOffmeshCandidate',['../structGeneratedOffmeshCandidate.html',1,'']]],
-  ['geometryslot_1',['GeometrySlot',['../structMemoryHandler_1_1GeometrySlot.html',1,'MemoryHandler']]],
-  ['gladglversionstruct_2',['gladGLversionStruct',['../structgladGLversionStruct.html',1,'']]],
-  ['glcheckertexture_3',['GLCheckerTexture',['../classGLCheckerTexture.html',1,'']]],
-  ['graphparams_4',['GraphParams',['../structGraphParams.html',1,'']]],
-  ['gtahandler_5',['GtaHandler',['../classGtaHandler.html',1,'']]],
-  ['gtahandlermenu_6',['GtaHandlerMenu',['../classGtaHandlerMenu.html',1,'']]],
-  ['gtanavgeometry_7',['GtaNavGeometry',['../classGtaNavGeometry.html',1,'']]],
-  ['gtanavprops_8',['GtaNavProps',['../classGtaNavProps.html',1,'']]],
-  ['gtanavtiles_9',['GtaNavTiles',['../classGtaNavTiles.html',1,'']]],
-  ['guistate_10',['GuiState',['../structGuiState.html',1,'']]]
+  ['geometryslot_0',['GeometrySlot',['../structMemoryHandler_1_1GeometrySlot.html',1,'MemoryHandler']]],
+  ['gladglversionstruct_1',['gladGLversionStruct',['../structgladGLversionStruct.html',1,'']]],
+  ['glcheckertexture_2',['GLCheckerTexture',['../classGLCheckerTexture.html',1,'']]],
+  ['graphparams_3',['GraphParams',['../structGraphParams.html',1,'']]],
+  ['gtahandler_4',['GtaHandler',['../classGtaHandler.html',1,'']]],
+  ['gtahandlermenu_5',['GtaHandlerMenu',['../classGtaHandlerMenu.html',1,'']]],
+  ['guistate_6',['GuiState',['../structGuiState.html',1,'']]]
 ];

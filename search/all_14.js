@@ -14,8 +14,5 @@ var searchData=
   ['joysticks_20in_20sdl2_3a_11',['Joysticks in SDL2:',['../simple-directmedia-layer-2-for-os2--ecomstation.html#joysticks-in-sdl2',1,'']]],
   ['jumparea_12',['jumpArea',['../structAutoOffmeshGenerationParamsV2.html#af703a3e04e94601f4e8d131fe0d1e074',1,'AutoOffmeshGenerationParamsV2']]],
   ['jumpheight_13',['jumpHeight',['../structAutoOffmeshGenerationParams.html#a456cea994e8ba6daaaee2c1f05d33280',1,'AutoOffmeshGenerationParams']]],
-  ['jumpoutwardoffset_14',['jumpOutwardOffset',['../structAutoOffmeshGenerationParamsV2.html#af4009748e460d100d42c8ff9099222ac',1,'AutoOffmeshGenerationParamsV2']]],
-  ['jumpstartinset_15',['jumpStartInset',['../structAutoOffmeshGenerationParamsV2.html#a3f9e802f55fd21336017f04253e5e2b5',1,'AutoOffmeshGenerationParamsV2']]],
-  ['jumptype_16',['jumpType',['../structSimEventFFI.html#a337d45342a42263366de5120b7f745ad',1,'SimEventFFI']]],
-  ['jumpupoffset_17',['jumpUpOffset',['../structAutoOffmeshGenerationParamsV2.html#a83a538ca5e5fd3e295a1fb7e0fb4d54e',1,'AutoOffmeshGenerationParamsV2']]]
+  ['jumptype_14',['jumpType',['../structSimEventFFI.html#a337d45342a42263366de5120b7f745ad',1,'SimEventFFI']]]
 ];

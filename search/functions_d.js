@@ -9,7 +9,7 @@ var searchData=
   ['navhighlightactivated_6',['NavHighlightActivated',['../namespaceImGui.html#a3ea169ace83f149ae2b8c1a6d0f6d457',1,'ImGui']]],
   ['navinitrequestapplyresult_7',['NavInitRequestApplyResult',['../namespaceImGui.html#a51e560cdb17a961810d557df80a4eaaa',1,'ImGui']]],
   ['navinitwindow_8',['NavInitWindow',['../namespaceImGui.html#ae46a79d836c4b223c7030ea432e3ec15',1,'ImGui']]],
-  ['navmeshdata_9',['navmeshdata',['../classNavMeshData.html#aab236c694841433fad2b123c7d67f8f5',1,'NavMeshData::NavMeshData(const NavMeshData &amp;)=delete'],['../classNavMeshData.html#a47e2aa1ad45af8f6684054e2996a5db9',1,'NavMeshData::NavMeshData()=default'],['../classNavMeshData.html#ad78beb7092a0cad7a0412fb48b5e665f',1,'NavMeshData::NavMeshData(NavMeshData &amp;&amp;other) noexcept']]],
+  ['navmeshdata_9',['navmeshdata',['../classNavMeshData.html#a47e2aa1ad45af8f6684054e2996a5db9',1,'NavMeshData::NavMeshData()=default'],['../classNavMeshData.html#ad78beb7092a0cad7a0412fb48b5e665f',1,'NavMeshData::NavMeshData(NavMeshData &amp;&amp;other) noexcept'],['../classNavMeshData.html#aab236c694841433fad2b123c7d67f8f5',1,'NavMeshData::NavMeshData(const NavMeshData &amp;)=delete']]],
   ['navmeshflags_10',['NavmeshFlags',['../classNavmeshFlags.html#a060c944fac648d5085ad1934671a2932',1,'NavmeshFlags']]],
   ['navmeshprunetool_11',['NavMeshPruneTool',['../classNavMeshPruneTool.html#a304902339a20adafa5e57ed648c884ed',1,'NavMeshPruneTool']]],
   ['navmeshtestertool_12',['NavMeshTesterTool',['../classNavMeshTesterTool.html#afa92228fae1154929e4819bb9119062d',1,'NavMeshTesterTool']]],
@@ -50,9 +50,8 @@ var searchData=
   ['next_5fchunk_47',['next_chunk',['../structImChunkStream.html#a3a99f21ce1867d694104d740ac7ab133',1,'ImChunkStream']]],
   ['nextcolumn_48',['NextColumn',['../namespaceImGui.html#a8f97746d6a9d59c8400c26fb7613a2ff',1,'ImGui']]],
   ['nextpow2_49',['nextPow2',['../Sample__TileMesh_8cpp.html#a34ed4a57db9ff4dce4be2b8282c5f51a',1,'Sample_TileMesh.cpp']]],
-  ['nextpow2i_50',['nextPow2i',['../GtaNavContext_8cpp.html#a1d818df51148286225bf1c71f5bd651d',1,'GtaNavContext.cpp']]],
-  ['normalizearray_51',['normalizeArray',['../DetourObstacleAvoidance_8cpp.html#ad5691e317bdbe68d51526215952a2227',1,'DetourObstacleAvoidance.cpp']]],
-  ['normalizesamples_52',['normalizeSamples',['../classdtObstacleAvoidanceDebugData.html#aae878af7168a5683cf05cd6f3f9b4cfe',1,'dtObstacleAvoidanceDebugData']]],
-  ['notifyofdocumentsclosedelsewhere_53',['NotifyOfDocumentsClosedElsewhere',['../structExampleAppDocuments.html#a0076259aa5b47ed3cc40adf63416dab6',1,'ExampleAppDocuments']]],
-  ['numcollected_54',['numCollected',['../classdtCollectPolysQuery.html#af9a58ba3aff58aa0910d9446dcf8cb3b',1,'dtCollectPolysQuery']]]
+  ['normalizearray_50',['normalizeArray',['../DetourObstacleAvoidance_8cpp.html#ad5691e317bdbe68d51526215952a2227',1,'DetourObstacleAvoidance.cpp']]],
+  ['normalizesamples_51',['normalizeSamples',['../classdtObstacleAvoidanceDebugData.html#aae878af7168a5683cf05cd6f3f9b4cfe',1,'dtObstacleAvoidanceDebugData']]],
+  ['notifyofdocumentsclosedelsewhere_52',['NotifyOfDocumentsClosedElsewhere',['../structExampleAppDocuments.html#a0076259aa5b47ed3cc40adf63416dab6',1,'ExampleAppDocuments']]],
+  ['numcollected_53',['numCollected',['../classdtCollectPolysQuery.html#af9a58ba3aff58aa0910d9446dcf8cb3b',1,'dtCollectPolysQuery']]]
 ];
