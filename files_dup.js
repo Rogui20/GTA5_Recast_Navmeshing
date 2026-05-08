@@ -6,6 +6,7 @@ var files_dup =
     [ "DetourTileCache", "dir_76ba9689d458e28c6a6af5e586a54235.html", "dir_76ba9689d458e28c6a6af5e586a54235" ],
     [ "Docs", "dir_5baf679cf4943df8904dce5d41d4d3dc.html", "dir_5baf679cf4943df8904dce5d41d4d3dc" ],
     [ "external", "dir_397d9aeee4af8edecac90968d93b57df.html", "dir_397d9aeee4af8edecac90968d93b57df" ],
+    [ "GtaNavRuntime", "dir_6c9d2ca142a56a0b99817d83a1904a1f.html", "dir_6c9d2ca142a56a0b99817d83a1904a1f" ],
     [ "GtaNavViewer", "dir_f73acc4eb87dae63dd8b26467f028b41.html", "dir_f73acc4eb87dae63dd8b26467f028b41" ],
     [ "Recast", "dir_e6cf54c9d4d29ff4a28752d861cf44fa.html", "dir_e6cf54c9d4d29ff4a28752d861cf44fa" ],
     [ "RecastDemo", "dir_bd8164545b6b3da3c53f0f7457fcb102.html", "dir_bd8164545b6b3da3c53f0f7457fcb102" ]

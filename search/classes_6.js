@@ -7,5 +7,8 @@ var searchData=
   ['graphparams_4',['GraphParams',['../structGraphParams.html',1,'']]],
   ['gtahandler_5',['GtaHandler',['../classGtaHandler.html',1,'']]],
   ['gtahandlermenu_6',['GtaHandlerMenu',['../classGtaHandlerMenu.html',1,'']]],
-  ['guistate_7',['GuiState',['../structGuiState.html',1,'']]]
+  ['gtanavgeometry_7',['GtaNavGeometry',['../classGtaNavGeometry.html',1,'']]],
+  ['gtanavprops_8',['GtaNavProps',['../classGtaNavProps.html',1,'']]],
+  ['gtanavtiles_9',['GtaNavTiles',['../classGtaNavTiles.html',1,'']]],
+  ['guistate_10',['GuiState',['../structGuiState.html',1,'']]]
 ];
