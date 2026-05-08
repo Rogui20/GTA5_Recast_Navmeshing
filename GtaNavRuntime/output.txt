@@ -1,0 +1,3659 @@
+=== ChunkyTriMesh.cpp ===
+//
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
+//
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+//
+
+#include "ChunkyTriMesh.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+struct BoundsItem
+{
+	float bmin[2];
+	float bmax[2];
+	int i;
+};
+
+static int compareItemX(const void* va, const void* vb)
+{
+	const BoundsItem* a = (const BoundsItem*)va;
+	const BoundsItem* b = (const BoundsItem*)vb;
+	if (a->bmin[0] < b->bmin[0])
+		return -1;
+	if (a->bmin[0] > b->bmin[0])
+		return 1;
+	return 0;
+}
+
+static int compareItemY(const void* va, const void* vb)
+{
+	const BoundsItem* a = (const BoundsItem*)va;
+	const BoundsItem* b = (const BoundsItem*)vb;
+	if (a->bmin[1] < b->bmin[1])
+		return -1;
+	if (a->bmin[1] > b->bmin[1])
+		return 1;
+	return 0;
+}
+
+static void calcExtends(const BoundsItem* items, const int /*nitems*/,
+						const int imin, const int imax,
+						float* bmin, float* bmax)
+{
+	bmin[0] = items[imin].bmin[0];
+	bmin[1] = items[imin].bmin[1];
+	
+	bmax[0] = items[imin].bmax[0];
+	bmax[1] = items[imin].bmax[1];
+	
+	for (int i = imin+1; i < imax; ++i)
+	{
+		const BoundsItem& it = items[i];
+		if (it.bmin[0] < bmin[0]) bmin[0] = it.bmin[0];
+		if (it.bmin[1] < bmin[1]) bmin[1] = it.bmin[1];
+		
+		if (it.bmax[0] > bmax[0]) bmax[0] = it.bmax[0];
+		if (it.bmax[1] > bmax[1]) bmax[1] = it.bmax[1];
+	}
+}
+
+inline int longestAxis(float x, float y)
+{
+	return y > x ? 1 : 0;
+}
+
+static void subdivide(BoundsItem* items, int nitems, int imin, int imax, int trisPerChunk,
+					  int& curNode, rcChunkyTriMeshNode* nodes, const int maxNodes,
+					  int& curTri, int* outTris, const int* inTris)
+{
+	int inum = imax - imin;
+	int icur = curNode;
+	
+	if (curNode >= maxNodes)
+		return;
+
+	rcChunkyTriMeshNode& node = nodes[curNode++];
+	
+	if (inum <= trisPerChunk)
+	{
+		// Leaf
+		calcExtends(items, nitems, imin, imax, node.bmin, node.bmax);
+		
+		// Copy triangles.
+		node.i = curTri;
+		node.n = inum;
+		
+		for (int i = imin; i < imax; ++i)
+		{
+			const int* src = &inTris[items[i].i*3];
+			int* dst = &outTris[curTri*3];
+			curTri++;
+			dst[0] = src[0];
+			dst[1] = src[1];
+			dst[2] = src[2];
+		}
+	}
+	else
+	{
+		// Split
+		calcExtends(items, nitems, imin, imax, node.bmin, node.bmax);
+		
+		int	axis = longestAxis(node.bmax[0] - node.bmin[0],
+							   node.bmax[1] - node.bmin[1]);
+		
+		if (axis == 0)
+		{
+			// Sort along x-axis
+			qsort(items+imin, static_cast<size_t>(inum), sizeof(BoundsItem), compareItemX);
+		}
+		else if (axis == 1)
+		{
+			// Sort along y-axis
+			qsort(items+imin, static_cast<size_t>(inum), sizeof(BoundsItem), compareItemY);
+		}
+		
+		int isplit = imin+inum/2;
+		
+		// Left
+		subdivide(items, nitems, imin, isplit, trisPerChunk, curNode, nodes, maxNodes, curTri, outTris, inTris);
+		// Right
+		subdivide(items, nitems, isplit, imax, trisPerChunk, curNode, nodes, maxNodes, curTri, outTris, inTris);
+		
+		int iescape = curNode - icur;
+		// Negative index means escape.
+		node.i = -iescape;
+	}
+}
+
+bool rcCreateChunkyTriMesh(const float* verts, const int* tris, int ntris,
+						   int trisPerChunk, rcChunkyTriMesh* cm)
+{
+	int nchunks = (ntris + trisPerChunk-1) / trisPerChunk;
+
+	cm->nodes = new rcChunkyTriMeshNode[nchunks*4];
+	if (!cm->nodes)
+		return false;
+		
+	cm->tris = new int[ntris*3];
+	if (!cm->tris)
+		return false;
+		
+	cm->ntris = ntris;
+
+	// Build tree
+	BoundsItem* items = new BoundsItem[ntris];
+	if (!items)
+		return false;
+
+	for (int i = 0; i < ntris; i++)
+	{
+		const int* t = &tris[i*3];
+		BoundsItem& it = items[i];
+		it.i = i;
+		// Calc triangle XZ bounds.
+		it.bmin[0] = it.bmax[0] = verts[t[0]*3+0];
+		it.bmin[1] = it.bmax[1] = verts[t[0]*3+2];
+		for (int j = 1; j < 3; ++j)
+		{
+			const float* v = &verts[t[j]*3];
+			if (v[0] < it.bmin[0]) it.bmin[0] = v[0]; 
+			if (v[2] < it.bmin[1]) it.bmin[1] = v[2]; 
+
+			if (v[0] > it.bmax[0]) it.bmax[0] = v[0]; 
+			if (v[2] > it.bmax[1]) it.bmax[1] = v[2]; 
+		}
+	}
+
+	int curTri = 0;
+	int curNode = 0;
+	subdivide(items, ntris, 0, ntris, trisPerChunk, curNode, cm->nodes, nchunks*4, curTri, cm->tris, tris);
+	
+	delete [] items;
+	
+	cm->nnodes = curNode;
+	
+	// Calc max tris per node.
+	cm->maxTrisPerChunk = 0;
+	for (int i = 0; i < cm->nnodes; ++i)
+	{
+		rcChunkyTriMeshNode& node = cm->nodes[i];
+		const bool isLeaf = node.i >= 0;
+		if (!isLeaf) continue;
+		if (node.n > cm->maxTrisPerChunk)
+			cm->maxTrisPerChunk = node.n;
+	}
+	 
+	return true;
+}
+
+
+inline bool checkOverlapRect(const float amin[2], const float amax[2],
+							 const float bmin[2], const float bmax[2])
+{
+	bool overlap = true;
+	overlap = (amin[0] > bmax[0] || amax[0] < bmin[0]) ? false : overlap;
+	overlap = (amin[1] > bmax[1] || amax[1] < bmin[1]) ? false : overlap;
+	return overlap;
+}
+
+int rcGetChunksOverlappingRect(const rcChunkyTriMesh* cm,
+							   float bmin[2], float bmax[2],
+							   int* ids, const int maxIds)
+{
+	// Traverse tree
+	int i = 0;
+	int n = 0;
+	while (i < cm->nnodes)
+	{
+		const rcChunkyTriMeshNode* node = &cm->nodes[i];
+		const bool overlap = checkOverlapRect(bmin, bmax, node->bmin, node->bmax);
+		const bool isLeafNode = node->i >= 0;
+		
+		if (isLeafNode && overlap)
+		{
+			if (n < maxIds)
+			{
+				ids[n] = i;
+				n++;
+			}
+		}
+		
+		if (overlap || isLeafNode)
+			i++;
+		else
+		{
+			const int escapeIndex = -node->i;
+			i += escapeIndex;
+		}
+	}
+	
+	return n;
+}
+
+
+
+static bool checkOverlapSegment(const float p[2], const float q[2],
+								const float bmin[2], const float bmax[2])
+{
+	static const float EPSILON = 1e-6f;
+
+	float tmin = 0;
+	float tmax = 1;
+	float d[2];
+	d[0] = q[0] - p[0];
+	d[1] = q[1] - p[1];
+	
+	for (int i = 0; i < 2; i++)
+	{
+		if (fabsf(d[i]) < EPSILON)
+		{
+			// Ray is parallel to slab. No hit if origin not within slab
+			if (p[i] < bmin[i] || p[i] > bmax[i])
+				return false;
+		}
+		else
+		{
+			// Compute intersection t value of ray with near and far plane of slab
+			float ood = 1.0f / d[i];
+			float t1 = (bmin[i] - p[i]) * ood;
+			float t2 = (bmax[i] - p[i]) * ood;
+			if (t1 > t2) { float tmp = t1; t1 = t2; t2 = tmp; }
+			if (t1 > tmin) tmin = t1;
+			if (t2 < tmax) tmax = t2;
+			if (tmin > tmax) return false;
+		}
+	}
+	return true;
+}
+
+int rcGetChunksOverlappingSegment(const rcChunkyTriMesh* cm,
+								  float p[2], float q[2],
+								  int* ids, const int maxIds)
+{
+	// Traverse tree
+	int i = 0;
+	int n = 0;
+	while (i < cm->nnodes)
+	{
+		const rcChunkyTriMeshNode* node = &cm->nodes[i];
+		const bool overlap = checkOverlapSegment(p, q, node->bmin, node->bmax);
+		const bool isLeafNode = node->i >= 0;
+		
+		if (isLeafNode && overlap)
+		{
+			if (n < maxIds)
+			{
+				ids[n] = i;
+				n++;
+			}
+		}
+		
+		if (overlap || isLeafNode)
+			i++;
+		else
+		{
+			const int escapeIndex = -node->i;
+			i += escapeIndex;
+		}
+	}
+	
+	return n;
+}
+
+void rcFreeChunkyTriMesh(rcChunkyTriMesh* cm)
+{
+	if (!cm) return;
+
+	if (cm->nodes)
+	{
+		delete[] cm->nodes;
+		cm->nodes = nullptr;
+	}
+
+	if (cm->tris)
+	{
+		delete[] cm->tris;
+		cm->tris = nullptr;
+	}
+
+	cm->nnodes = 0;
+	cm->ntris = 0;
+	cm->maxTrisPerChunk = 0;
+}
+
+
+=== ChunkyTriMesh.h ===
+//
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
+//
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+//
+
+#ifndef CHUNKYTRIMESH_H
+#define CHUNKYTRIMESH_H
+
+struct rcChunkyTriMeshNode
+{
+	float bmin[2];
+	float bmax[2];
+	int i;
+	int n;
+};
+
+struct rcChunkyTriMesh
+{
+	inline rcChunkyTriMesh() : nodes(0), nnodes(0), tris(0), ntris(0), maxTrisPerChunk(0) {}
+	inline ~rcChunkyTriMesh() { delete [] nodes; delete [] tris; }
+
+	rcChunkyTriMeshNode* nodes;
+	int nnodes;
+	int* tris;
+	int ntris;
+	int maxTrisPerChunk;
+
+private:
+	// Explicitly disabled copy constructor and copy assignment operator.
+	rcChunkyTriMesh(const rcChunkyTriMesh&);
+	rcChunkyTriMesh& operator=(const rcChunkyTriMesh&);
+};
+
+/// Creates partitioned triangle mesh (AABB tree),
+/// where each node contains at max trisPerChunk triangles.
+bool rcCreateChunkyTriMesh(const float* verts, const int* tris, int ntris,
+						   int trisPerChunk, rcChunkyTriMesh* cm);
+
+/// Returns the chunk indices which overlap the input rectable.
+int rcGetChunksOverlappingRect(const rcChunkyTriMesh* cm, float bmin[2], float bmax[2], int* ids, const int maxIds);
+
+/// Returns the chunk indices which overlap the input segment.
+int rcGetChunksOverlappingSegment(const rcChunkyTriMesh* cm, float p[2], float q[2], int* ids, const int maxIds);
+
+void rcFreeChunkyTriMesh(rcChunkyTriMesh* cm);
+
+#endif // CHUNKYTRIMESH_H
+
+
+=== GtaNav.cpp ===
+// GtaNav.cpp - Fachada principal da DLL de navmesh para GTA
+
+#include <cstdio>
+#include <cstring>
+
+#include "GtaNavContext.h"
+#include "GtaNavTiles.h"   // módulo de tiles novo (BuildTile / BuildTilesInBounds / RebuildTilesAffectedByDynamic)
+
+// -----------------------------------------------------------------------------
+// Forward declarations de funções que já existem no seu código (Sample.cpp)
+// -----------------------------------------------------------------------------
+
+// Gerenciamento de estáticos / props
+extern "C" {
+
+bool BuildStaticMergedData(NavMeshContext* ctx);
+bool BuildDynamicMergedData(NavMeshContext* ctx);
+bool RebuildCombinedGeometry(NavMeshContext* ctx);
+
+bool AddStatic(NavMeshContext* ctx, const char* objPathNoExt);
+bool RemoveStatic(NavMeshContext* ctx, const char* objPathNoExt, bool clearCache);
+void ClearAllStatics(NavMeshContext* ctx, bool clearCache);
+
+int  AddProp(NavMeshContext* ctx, const char* modelName, const float* pos, const float* rot);
+bool RemovePropByID(NavMeshContext* ctx, int propID, bool clearCache);
+void ClearAllProps(NavMeshContext* ctx, bool clearCache);
+
+// Contexto dinâmico (tile-based)
+bool InitDynamicContext(NavMeshContext* ctx, const float* bmin, const float* bmax);
+bool IsDynamicContextReady(NavMeshContext* ctx);
+
+// Limpeza geral
+void FreeNavMeshResources(NavMeshContext* ctx);
+}
+
+// -----------------------------------------------------------------------------
+// Helpers internos
+// -----------------------------------------------------------------------------
+
+static void ZeroVec3(float v[3])
+{
+    v[0] = v[1] = v[2] = 0.0f;
+}
+
+// -----------------------------------------------------------------------------
+// 1) Criação / destruição de contexto
+// -----------------------------------------------------------------------------
+// ⚠️ REMOVIDO: essas funções já são implementadas em GtaNavContext.cpp
+// e declaradas em GtaNavContext.h:
+//   NavMeshContext* GtaNav_CreateContext();
+//   void            GtaNav_DestroyContext(NavMeshContext* ctx);
+//
+// O export C (extern "C" __declspec(dllexport)) é feito por GtaNavAPI.cpp
+// via GtaNav_InitNavMesh / GtaNav_FreeNavMesh.
+// -----------------------------------------------------------------------------
+
+
+// -----------------------------------------------------------------------------
+// 2) Definições de navmesh (NavMeshDefinition)
+// -----------------------------------------------------------------------------
+
+extern "C" __declspec(dllexport)
+void GtaNav_SetDefinition(NavMeshContext* ctx, const NavMeshDefinition* def)
+{
+    if (!ctx || !def)
+        return;
+
+    ctx->navDef = *def;
+
+    printf("[GtaNav] NavMeshDefinition aplicada: cellSize=%.3f radius=%.3f tileSize=%.1f\n",
+           def->navDef_m_cellSize,
+           def->navDef_m_agentRadius,
+           def->navDef_m_tileSize);
+}
+
+// -----------------------------------------------------------------------------
+// 3) Estáticos (mapa estático em disco)
+// -----------------------------------------------------------------------------
+
+extern "C" __declspec(dllexport)
+bool GtaNav_AddStatic(NavMeshContext* ctx, const char* basePathNoExt)
+{
+    if (!ctx || !basePathNoExt)
+        return false;
+
+    bool ok = AddStatic(ctx, basePathNoExt);
+    if (ok)
+        printf("[GtaNav] Static adicionado: %s\n", basePathNoExt);
+    else
+        printf("[GtaNav] ERRO ao adicionar static: %s\n", basePathNoExt);
+
+    return ok;
+}
+
+extern "C" __declspec(dllexport)
+bool GtaNav_RemoveStatic(NavMeshContext* ctx, const char* basePathNoExt, bool clearCache)
+{
+    if (!ctx || !basePathNoExt)
+        return false;
+
+    bool ok = RemoveStatic(ctx, basePathNoExt, clearCache);
+    if (ok)
+        printf("[GtaNav] Static removido: %s (clearCache=%d)\n", basePathNoExt, (int)clearCache);
+    else
+        printf("[GtaNav] ERRO ao remover static: %s\n", basePathNoExt);
+
+    return ok;
+}
+
+extern "C" __declspec(dllexport)
+void GtaNav_ClearStatics(NavMeshContext* ctx, bool clearCache)
+{
+    if (!ctx) return;
+
+    ClearAllStatics(ctx, clearCache);
+    printf("[GtaNav] Todos os estaticos limpos (clearCache=%d)\n", (int)clearCache);
+}
+
+// -----------------------------------------------------------------------------
+// 4) Props dinâmicos (veículos, aviões, objetos móveis)
+// -----------------------------------------------------------------------------
+
+extern "C" __declspec(dllexport)
+int GtaNav_AddProp(NavMeshContext* ctx, const char* modelNameNoExt,
+                   const float* pos3, const float* rot3)
+{
+    if (!ctx || !modelNameNoExt || !pos3 || !rot3)
+        return -1;
+
+    int id = AddProp(ctx, modelNameNoExt, pos3, rot3);
+    if (id > 0)
+    {
+        printf("[GtaNav] Prop adicionado: %s (id=%d)\n", modelNameNoExt, id);
+    }
+    else
+    {
+        printf("[GtaNav] ERRO ao adicionar prop: %s\n", modelNameNoExt);
+    }
+    return id;
+}
+
+extern "C" __declspec(dllexport)
+bool GtaNav_RemoveProp(NavMeshContext* ctx, int propID, bool clearCache)
+{
+    if (!ctx)
+        return false;
+
+    bool ok = RemovePropByID(ctx, propID, clearCache);
+    if (ok)
+        printf("[GtaNav] Prop removido (id=%d, clearCache=%d)\n", propID, (int)clearCache);
+    else
+        printf("[GtaNav] ERRO ao remover prop (id=%d)\n", propID);
+
+    return ok;
+}
+
+extern "C" __declspec(dllexport)
+void GtaNav_ClearProps(NavMeshContext* ctx, bool clearCache)
+{
+    if (!ctx) return;
+
+    ClearAllProps(ctx, clearCache);
+    printf("[GtaNav] Todos os props limpos (clearCache=%d)\n", (int)clearCache);
+}
+
+// -----------------------------------------------------------------------------
+// 5) Build de geometria (STATIC / DYNAMIC / COMBINED)
+// -----------------------------------------------------------------------------
+
+// Monta geometria APENAS estática, jogando em ctx->staticVerts/staticTris
+extern "C" __declspec(dllexport)
+bool GtaNav_BuildStaticGeometry(NavMeshContext* ctx)
+{
+    if (!ctx)
+        return false;
+
+    if (!BuildStaticMergedData(ctx))
+    {
+        printf("[GtaNav] ERRO em BuildStaticMergedData.\n");
+        return false;
+    }
+
+    printf("[GtaNav] BuildStaticGeometry OK. StaticBuilt=%d, Verts=%zu Tris=%zu\n",
+           (int)ctx->staticBuilt,
+           ctx->staticVerts.size() / 3,
+           ctx->staticTris.size() / 3);
+    return true;
+}
+
+// Monta geometria APENAS dos props dinâmicos, em ctx->dynamicVerts/dynamicTris
+extern "C" __declspec(dllexport)
+bool GtaNav_BuildDynamicGeometry(NavMeshContext* ctx)
+{
+    if (!ctx)
+        return false;
+
+    if (!BuildDynamicMergedData(ctx))
+    {
+        printf("[GtaNav] ERRO em BuildDynamicMergedData.\n");
+        return false;
+    }
+
+    printf("[GtaNav] BuildDynamicGeometry OK. Verts=%zu Tris=%zu\n",
+           ctx->dynamicVerts.size() / 3,
+           ctx->dynamicTris.size() / 3);
+    return true;
+}
+
+// Combina STATIC + DYNAMIC (ou só um deles) em ctx->geom via initMeshFromArrays
+extern "C" __declspec(dllexport)
+bool GtaNav_BuildCombinedGeometry(NavMeshContext* ctx)
+{
+    if (!ctx)
+        return false;
+
+    if (!RebuildCombinedGeometry(ctx))
+    {
+        printf("[GtaNav] ERRO em RebuildCombinedGeometry.\n");
+        return false;
+    }
+
+    printf("[GtaNav] BuildCombinedGeometry OK.\n");
+    return true;
+}
+
+// Conveniência: build completo (static + dynamic + combined)
+extern "C" __declspec(dllexport)
+bool GtaNav_BuildFullGeometry(NavMeshContext* ctx)
+{
+    if (!ctx)
+        return false;
+
+    if (!GtaNav_BuildStaticGeometry(ctx))
+        return false;
+
+    if (!GtaNav_BuildDynamicGeometry(ctx))
+        return false;
+
+    if (!GtaNav_BuildCombinedGeometry(ctx))
+        return false;
+
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+// 6) Inicializar navmesh tile-based (Detour) para um AABB
+// -----------------------------------------------------------------------------
+
+extern "C" __declspec(dllexport)
+bool GtaNav_InitTiledNavMesh(NavMeshContext* ctx,
+                             const float* worldBMin,
+                             const float* worldBMax)
+{
+    if (!ctx || !worldBMin || !worldBMax)
+        return false;
+
+    // Reaproveita sua função já estável, que configura dtNavMesh e dtNavMeshQuery
+    if (!InitDynamicContext(ctx, worldBMin, worldBMax))
+    {
+        printf("[GtaNav] ERRO em InitDynamicContext.\n");
+        return false;
+    }
+
+    printf("[GtaNav] InitTiledNavMesh OK.\n");
+    return true;
+}
+
+// -----------------------------------------------------------------------------
+// 7) Build de tiles (bounds, posição, dinâmicos)
+// -----------------------------------------------------------------------------
+
+// Build tiles em uma região do mundo (AABB em coordenadas Recast)
+extern "C" __declspec(dllexport)
+bool GtaNav_BuildTilesInBounds(NavMeshContext* ctx,
+                               const float* bmin3,
+                               const float* bmax3)
+{
+    if (!ctx || !bmin3 || !bmax3)
+        return false;
+
+    if (!ctx->navMesh || !ctx->geom)
+    {
+        printf("[GtaNav] BuildTilesInBounds: navMesh ou geom nulo.\n");
+        return false;
+    }
+
+    return GtaNavTiles::BuildTilesInBounds(ctx, bmin3, bmax3);
+}
+
+// Build tiles ao redor de uma posição + raio (coordenadas Recast)
+extern "C" __declspec(dllexport)
+bool GtaNav_BuildTilesAroundPosition(NavMeshContext* ctx,
+                                     const float* recastPos3,
+                                     float radiusMeters)
+{
+    if (!ctx || !recastPos3)
+        return false;
+
+    if (!ctx->navMesh || !ctx->geom)
+    {
+        printf("[GtaNav] BuildTilesAroundPosition: navMesh ou geom nulo.\n");
+        return false;
+    }
+
+    return GtaNavTiles::BuildTilesAroundPosition(ctx, recastPos3, radiusMeters);
+}
+
+// Rebuild apenas os tiles afetados pela geometria dinâmica (ctx->dynamicBMin/BMax)
+extern "C" __declspec(dllexport)
+bool GtaNav_RebuildTilesAffectedByDynamic(NavMeshContext* ctx)
+{
+    if (!ctx)
+        return false;
+
+    if (!ctx->navMesh || !ctx->geom)
+    {
+        printf("[GtaNav] RebuildTilesAffectedByDynamic: navMesh ou geom nulo.\n");
+        return false;
+    }
+
+    return GtaNavTiles::RebuildTilesAffectedByDynamic(ctx);
+}
+
+
+=== GtaNavAPI.h ===
+#pragma once
+
+#include "GtaNavContext.h"
+
+#ifdef _WIN32
+  #define GTANAV_API extern "C" __declspec(dllexport)
+#else
+  #define GTANAV_API extern "C"
+#endif
+
+// Cria/destroi contexto
+GTANAV_API NavMeshContext* GtaNav_InitNavMesh();
+GTANAV_API void            GtaNav_FreeNavMesh(NavMeshContext* ctx);
+
+// Define parâmetros (equivalente ao seu antigo SetNavMeshDefinition)
+GTANAV_API void GtaNav_DefineNavMesh(NavMeshContext* ctx,
+                                     const NavMeshDefinition* def,
+                                     int navmeshType,
+                                     int mapID);
+
+// Inicializa contexto dinâmico (AABB, tile grid)
+GTANAV_API bool GtaNav_InitDynamicContext(NavMeshContext* ctx,
+                                          const float* bmin,
+                                          const float* bmax);
+
+// Consulta se está pronto
+GTANAV_API bool GtaNav_IsDynamicContextReady(NavMeshContext* ctx);
+
+// Geometria (por enquanto só um stub pra você ligar no seu pipeline atual)
+GTANAV_API bool GtaNav_SetCombinedGeometry(NavMeshContext* ctx,
+                                           const float* verts,
+                                           int nverts,
+                                           const int* tris,
+                                           int ntris);
+
+// Tiles
+GTANAV_API bool GtaNav_BuildTilesAroundPositionAPI(NavMeshContext* ctx,
+                                                   const float* pos,
+                                                   int numTilesX,
+                                                   int numTilesZ);
+
+
+=== GtaNavAPI.cpp ===
+#include "GtaNavAPI.h"
+#include "InputGeom.h"
+#include "GtaNavTiles.h"
+
+GTANAV_API NavMeshContext* GtaNav_InitNavMesh()
+{
+    return GtaNav_CreateContext();
+}
+
+GTANAV_API void GtaNav_FreeNavMesh(NavMeshContext* ctx)
+{
+    GtaNav_DestroyContext(ctx);
+}
+
+GTANAV_API void GtaNav_DefineNavMesh(NavMeshContext* ctx,
+                                     const NavMeshDefinition* def,
+                                     int navmeshType,
+                                     int mapID)
+{
+    if (!ctx || !def) return;
+    GtaNav_SetNavMeshDefinition(ctx, *def, navmeshType, mapID);
+}
+
+GTANAV_API bool GtaNav_InitDynamicContext(NavMeshContext* ctx,
+                                          const float* bmin,
+                                          const float* bmax)
+{
+    return GtaNav_InitDynamicNavMesh(ctx, bmin, bmax);
+}
+
+GTANAV_API bool GtaNav_IsDynamicContextReady(NavMeshContext* ctx)
+{
+    if (!ctx) return false;
+    return ctx->navMesh != nullptr && ctx->navQuery != nullptr;
+}
+
+GTANAV_API bool GtaNav_SetCombinedGeometry(NavMeshContext* ctx,
+                                           const float* verts,
+                                           int nverts,
+                                           const int* tris,
+                                           int ntris)
+{
+    if (!ctx || !verts || !tris || nverts <= 0 || ntris <= 0)
+        return false;
+
+    if (!ctx->geom)
+        ctx->geom = new InputGeom();
+
+    if (!ctx->geom->initMeshFromArrays(&ctx->buildCtx, verts, nverts, tris, ntris))
+    {
+        printf("[GtaNav] GtaNav_SetCombinedGeometry: initMeshFromArrays falhou.\n");
+        return false;
+    }
+
+    return true;
+}
+
+GTANAV_API bool GtaNav_BuildTilesAroundPositionAPI(NavMeshContext* ctx,
+                                                   const float* pos,
+                                                   int numTilesX,
+                                                   int numTilesZ)
+{
+    if (!ctx || !ctx->navMesh || !ctx->geom)
+        return false;
+
+    // Converte "quantidade de tiles" para metros
+    // (usamos o tamanho de tile definido na navDef)
+    float tileSize = ctx->navDef.navDef_m_tileSize;
+
+    // Usa X e Z — mas pegamos o maior para cobrir um retângulo como um círculo
+    float radiusMeters = (float)(std::max(numTilesX, numTilesZ)) * tileSize;
+
+    return GtaNavTiles::BuildTilesAroundPosition(ctx, pos, radiusMeters);
+}
+
+
+=== GtaNavContext.cpp ===
+#include "GtaNavContext.h"
+#include <cstdio>
+#include <cmath>
+#include "DetourCommon.h"
+
+NavMeshContext* GtaNav_CreateContext()
+{
+    NavMeshContext* ctx = new NavMeshContext();
+    if (!ctx)
+        return nullptr;
+
+    // Bounds zerados por padrão
+    dtVset(ctx->dynamicBMin, 0, 0, 0);
+    dtVset(ctx->dynamicBMax, 0, 0, 0);
+    dtVset(ctx->staticBMin, 0, 0, 0);
+    dtVset(ctx->staticBMax, 0, 0, 0);
+
+    return ctx;
+}
+
+void GtaNav_DestroyContext(NavMeshContext* ctx)
+{
+    if (!ctx) return;
+
+    if (ctx->navQuery)
+    {
+        dtFreeNavMeshQuery(ctx->navQuery);
+        ctx->navQuery = nullptr;
+    }
+
+    if (ctx->navMesh)
+    {
+        dtFreeNavMesh(ctx->navMesh);
+        ctx->navMesh = nullptr;
+    }
+
+    if (ctx->geom)
+    {
+        delete ctx->geom;
+        ctx->geom = nullptr;
+    }
+
+    delete ctx;
+}
+
+void GtaNav_SetNavMeshDefinition(NavMeshContext* ctx, const NavMeshDefinition& def, int navmeshType, int mapID)
+{
+    if (!ctx) return;
+    ctx->navDef = def;
+    ctx->navmeshType = navmeshType;
+    ctx->mapID = mapID;
+}
+
+// Helpers internos para bits
+static int ilog2i(int v)
+{
+    int r = 0;
+    while ((v >>= 1) != 0) r++;
+    return r;
+}
+
+static int nextPow2i(int v)
+{
+    v--;
+    v |= v >> 1;
+    v |= v >> 2;
+    v |= v >> 4;
+    v |= v >> 8;
+    v |= v >> 16;
+    v++;
+    return v;
+}
+
+bool GtaNav_InitDynamicNavMesh(NavMeshContext* ctx, const float* bmin, const float* bmax)
+{
+    if (!ctx || !bmin || !bmax)
+        return false;
+
+    if (bmax[0] <= bmin[0] || bmax[2] <= bmin[2])
+    {
+        printf("[GtaNav] InitDynamicNavMesh: AABB invalido.\n");
+        return false;
+    }
+
+    // Libera navmesh/query antigos se houver
+    if (ctx->navQuery)
+    {
+        dtFreeNavMeshQuery(ctx->navQuery);
+        ctx->navQuery = nullptr;
+    }
+    if (ctx->navMesh)
+    {
+        dtFreeNavMesh(ctx->navMesh);
+        ctx->navMesh = nullptr;
+    }
+
+    ctx->navMesh = dtAllocNavMesh();
+    if (!ctx->navMesh)
+    {
+        printf("[GtaNav] Falha ao alocar dtNavMesh.\n");
+        return false;
+    }
+
+    const float cellSize   = ctx->navDef.navDef_m_cellSize;
+    const float tileCells  = ctx->navDef.navDef_m_tileSize;  // ex: 64
+    const float tileWorld  = tileCells * cellSize;
+
+    const float width  = bmax[0] - bmin[0];
+    const float depth  = bmax[2] - bmin[2];
+
+    const int gw = rcMax(1, (int)ceilf(width  / tileWorld));
+    const int gh = rcMax(1, (int)ceilf(depth / tileWorld));
+
+    const int totalTiles = gw * gh;
+    int tileBits = rcMin(ilog2i(nextPow2i(totalTiles)), 14);
+    int polyBits = 22 - tileBits;
+
+    dtNavMeshParams params{};
+    // Origem do grid – você pode usar bmin pra alinhar com o AABB
+    params.orig[0] = bmin[0];
+    params.orig[1] = bmin[1];
+    params.orig[2] = bmin[2];
+
+    params.tileWidth  = tileWorld;
+    params.tileHeight = tileWorld;
+
+    params.maxTiles = 1 << tileBits;
+    params.maxPolys = 1 << polyBits;
+
+    if (dtStatusFailed(ctx->navMesh->init(&params)))
+    {
+        printf("[GtaNav] Falha ao inicializar dtNavMesh.\n");
+        dtFreeNavMesh(ctx->navMesh);
+        ctx->navMesh = nullptr;
+        return false;
+    }
+
+    ctx->navQuery = new dtNavMeshQuery();
+    if (!ctx->navQuery || dtStatusFailed(ctx->navQuery->init(ctx->navMesh, 2048)))
+    {
+        printf("[GtaNav] Falha ao inicializar dtNavMeshQuery.\n");
+        if (ctx->navQuery) delete ctx->navQuery;
+        ctx->navQuery = nullptr;
+        dtFreeNavMesh(ctx->navMesh);
+        ctx->navMesh = nullptr;
+        return false;
+    }
+
+    ctx->navmeshGenerated = true;
+
+    printf("[GtaNav] InitDynamicNavMesh OK. grid=%dx%d maxTiles=%d tileWorld=%.2f\n",
+           gw, gh, params.maxTiles, tileWorld);
+
+    return true;
+}
+
+
+=== GtaNavContext.h ===
+#pragma once
+
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <cstdint>
+
+#include "Recast.h"
+#include "DetourNavMesh.h"
+#include "DetourNavMeshQuery.h"
+
+// Se o NavMeshDefinition NÃO estiver mais em Sample.h, pode deixar aqui.
+// Se você ainda tiver uma cópia em Sample.h, comente uma delas para evitar redefinition.
+struct NavMeshDefinition
+{
+    float navDef_m_cellSize;
+    float navDef_m_cellHeight;
+    float navDef_m_agentHeight;
+    float navDef_m_agentRadius;
+    float navDef_m_agentMaxClimb;
+    float navDef_m_agentMaxSlope;
+    float navDef_m_regionMinSize;
+    float navDef_m_regionMergeSize;
+    float navDef_m_edgeMaxLen;
+    float navDef_m_edgeMaxError;
+    float navDef_m_vertsPerPoly;
+    float navDef_m_detailSampleDist;
+    float navDef_m_detailSampleMaxError;
+    int   navDef_m_partitionType;
+    float navDef_m_tileSize;
+};
+
+// Mesh cache básico (props / estáticos em espaço local)
+struct CachedModel
+{
+    std::vector<float> baseVerts; // local-space
+    std::vector<int>   baseTris;
+};
+
+// Descreve uma instância de prop (modelo + transform)
+struct PropInstance
+{
+    int         id;
+    std::string modelName;
+    float       pos[3]; // world-space
+    float       rot[3]; // Euler ZYX em world-space
+};
+
+struct NavMeshContext
+{
+    // ------------------------------
+    // Núcleo Recast/Detour
+    // ------------------------------
+    NavMeshDefinition navDef{};          // parâmetros da navmesh
+    dtNavMesh*        navMesh  = nullptr;
+    dtNavMeshQuery*   navQuery = nullptr;
+
+    // Contexto de build (pode ser rcContext ou BuildContext, conforme seu projeto)
+    // Se você já tem BuildContext em Sample.h, pode usar:
+    //   BuildContext buildCtx;
+    rcContext         buildCtx;
+
+    // Geometria combinada que o InputGeom enxerga
+    class InputGeom*  geom     = nullptr;
+
+    // Tipo / estado
+    int  navmeshType      = 0;
+    bool navmeshGenerated = false;
+    int  mapID            = 0;
+
+    // ------------------------------
+    // Props dinâmicos
+    // ------------------------------
+    std::vector<PropInstance>                props;
+    int                                      nextPropID = 1;
+    std::unordered_map<std::string, CachedModel> propCache;
+    std::unordered_map<std::string, CachedModel> staticCache;
+
+    // ------------------------------
+    // Estáticos
+    // ------------------------------
+    std::vector<std::string> staticList;   // caminhos base sem extensão
+
+    std::vector<float> staticVerts;
+    std::vector<int>   staticTris;
+    float staticBMin[3] = {FLT_MAX,FLT_MAX,FLT_MAX};
+    float staticBMax[3] = {-FLT_MAX,-FLT_MAX,-FLT_MAX};
+    bool               staticBuilt = false;
+
+    // ------------------------------
+    // Dinâmicos (props instanciados)
+    // ------------------------------
+    std::vector<float> dynamicVerts;
+    std::vector<int>   dynamicTris;
+    float dynamicBMin[3] = {FLT_MAX,FLT_MAX,FLT_MAX};
+    float dynamicBMax[3] = {-FLT_MAX,-FLT_MAX,-FLT_MAX};
+
+    // ------------------------------
+    // Buffer combinado (static + dynamic)
+    // ------------------------------
+    std::vector<float> combinedVerts;
+    std::vector<int>   combinedTris;
+};
+
+
+// Funções de infra básica (sem exports ainda)
+NavMeshContext* GtaNav_CreateContext();
+void            GtaNav_DestroyContext(NavMeshContext* ctx);
+
+// Helpers
+void GtaNav_SetNavMeshDefinition(NavMeshContext* ctx, const NavMeshDefinition& def, int navmeshType, int mapID);
+
+// Inicializa navmesh tile-based dentro de um AABB
+bool GtaNav_InitDynamicNavMesh(NavMeshContext* ctx, const float* bmin, const float* bmax);
+
+
+=== GtaNavGeometry.cpp ===
+#include "GtaNavGeometry.h"
+#include "GtaNavTransform.h"
+#include "InputGeom.h"
+#include "RecastAssert.h"
+#include <unordered_map>
+#include <cstdio>
+#include <cfloat>
+#include <cmath>
+
+
+// helpers
+void GtaNavGeometry::ExpandAABB(float* bmin, float* bmax, float x, float y, float z)
+{
+    bmin[0] = std::min(bmin[0], x);
+    bmin[1] = std::min(bmin[1], y);
+    bmin[2] = std::min(bmin[2], z);
+
+    bmax[0] = std::max(bmax[0], x);
+    bmax[1] = std::max(bmax[1], y);
+    bmax[2] = std::max(bmax[2], z);
+}
+
+
+// ============================================================================
+//  STATIC MERGED DATA
+// ============================================================================
+bool GtaNavGeometry::BuildStaticMergedData(NavMeshContext* ctx)
+{
+    if (!ctx) return false;
+    if (ctx->staticList.empty())
+    {
+        printf("[Geom] Nenhum estático definido.\n");
+        ctx->staticBuilt = false;
+        return true;
+    }
+
+    printf("[Geom] BuildStaticMergedData: total=%zu\n", ctx->staticList.size());
+
+    ctx->staticVerts.clear();
+    ctx->staticTris.clear();
+
+    float bmin[3] = {  FLT_MAX,  FLT_MAX,  FLT_MAX };
+    float bmax[3] = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
+
+    int vertOffset = 0;
+
+    for (auto& pathBase : ctx->staticList)
+    {
+        CachedModel* mdl = nullptr;
+
+        auto it = ctx->staticCache.find(pathBase);
+        if (it == ctx->staticCache.end())
+        {
+            rcMeshLoaderObj loader;
+            std::string full = pathBase;
+
+            if (!loader.tryLoadBIN(full))
+            {
+                printf("[Geom] Erro ao carregar estático: %s\n", full.c_str());
+                continue;
+            }
+
+            CachedModel temp;
+            temp.baseVerts.assign(loader.getVerts(),
+                                  loader.getVerts() + loader.getVertCount() * 3);
+            temp.baseTris.assign(loader.getTris(),
+                                 loader.getTris() + loader.getTriCount() * 3);
+
+            ctx->staticCache[pathBase] = std::move(temp);
+            mdl = &ctx->staticCache[pathBase];
+        }
+        else mdl = &it->second;
+
+        int vc = (int)mdl->baseVerts.size() / 3;
+        int tc = (int)mdl->baseTris.size() / 3;
+
+        // copiar vértices
+        for (int i = 0; i < vc; i++)
+        {
+            float x = mdl->baseVerts[i*3+0];
+            float y = mdl->baseVerts[i*3+1];
+            float z = mdl->baseVerts[i*3+2];
+
+            ctx->staticVerts.push_back(x);
+            ctx->staticVerts.push_back(y);
+            ctx->staticVerts.push_back(z);
+
+            ExpandAABB(bmin, bmax, x, y, z);
+        }
+
+        // copiar triângulos
+        for (int i = 0; i < tc; i++)
+        {
+            ctx->staticTris.push_back(mdl->baseTris[i*3+0] + vertOffset);
+            ctx->staticTris.push_back(mdl->baseTris[i*3+1] + vertOffset);
+            ctx->staticTris.push_back(mdl->baseTris[i*3+2] + vertOffset);
+        }
+
+        vertOffset += vc;
+    }
+
+    rcVcopy(ctx->staticBMin, bmin);
+    rcVcopy(ctx->staticBMax, bmax);
+
+    ctx->staticBuilt = true;
+
+    printf("[Geom] BuildStaticMergedData OK. Verts=%zu Tris=%zu\n",
+        ctx->staticVerts.size()/3, ctx->staticTris.size()/3);
+
+    return true;
+}
+
+
+// ============================================================================
+//  DYNAMIC MERGED DATA
+// ============================================================================
+bool GtaNavGeometry::BuildDynamicMergedData(NavMeshContext* ctx)
+{
+    if (!ctx) return false;
+
+    ctx->dynamicVerts.clear();
+    ctx->dynamicTris.clear();
+
+    float bmin[3] = {  FLT_MAX,  FLT_MAX,  FLT_MAX };
+    float bmax[3] = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
+
+    int vertOffset = 0;
+
+    for (auto& inst : ctx->props)
+    {
+        CachedModel* mdl = nullptr;
+
+        auto it = ctx->propCache.find(inst.modelName);
+        if (it == ctx->propCache.end())
+        {
+            rcMeshLoaderObj loader;
+
+            if (!loader.tryLoadBIN(inst.modelName))
+            {
+                printf("[Geom] (Dynamic) Erro ao carregar %s\n", inst.modelName.c_str());
+                continue;
+            }
+
+            CachedModel temp;
+            temp.baseVerts.assign(loader.getVerts(),
+                                  loader.getVerts() + loader.getVertCount()*3);
+            temp.baseTris.assign(loader.getTris(),
+                                 loader.getTris() + loader.getTriCount()*3);
+
+            ctx->propCache[inst.modelName] = std::move(temp);
+            mdl = &ctx->propCache[inst.modelName];
+        }
+        else mdl = &it->second;
+
+        int vc = (int)mdl->baseVerts.size() / 3;
+        int tc = (int)mdl->baseTris.size() / 3;
+
+        // transformar vértices
+        for (int i = 0; i < vc; i++)
+        {
+            float x = mdl->baseVerts[i*3+0];
+            float y = mdl->baseVerts[i*3+1];
+            float z = mdl->baseVerts[i*3+2];
+
+            float xt, yt, zt;
+            TransformVertexZYX(x, y, z, inst.pos, inst.rot, xt, yt, zt);
+
+            ctx->dynamicVerts.push_back(xt);
+            ctx->dynamicVerts.push_back(yt);
+            ctx->dynamicVerts.push_back(zt);
+
+            ExpandAABB(bmin, bmax, xt, yt, zt);
+        }
+
+        for (int i = 0; i < tc; i++)
+        {
+            ctx->dynamicTris.push_back(mdl->baseTris[i*3+0] + vertOffset);
+            ctx->dynamicTris.push_back(mdl->baseTris[i*3+1] + vertOffset);
+            ctx->dynamicTris.push_back(mdl->baseTris[i*3+2] + vertOffset);
+        }
+
+        vertOffset += vc;
+    }
+
+    rcVcopy(ctx->dynamicBMin, bmin);
+    rcVcopy(ctx->dynamicBMax, bmax);
+
+    printf("[Geom] BuildDynamicMergedData OK. Verts=%zu Tris=%zu\n",
+        ctx->dynamicVerts.size()/3, ctx->dynamicTris.size()/3);
+
+    return true;
+}
+
+
+
+// ============================================================================
+//  UNIFICAR STATIC + DYNAMIC
+// ============================================================================
+bool GtaNavGeometry::RebuildCombinedGeometry(NavMeshContext* ctx)
+{
+    if (!ctx) return false;
+
+    const bool hasStatic  = ctx->staticBuilt && !ctx->staticVerts.empty();
+    const bool hasDynamic = !ctx->dynamicVerts.empty();
+
+    ctx->combinedVerts.clear();
+    ctx->combinedTris.clear();
+
+    if (hasStatic)
+    {
+        ctx->combinedVerts.insert(ctx->combinedVerts.end(),
+                                  ctx->staticVerts.begin(),
+                                  ctx->staticVerts.end());
+
+        ctx->combinedTris.insert(ctx->combinedTris.end(),
+                                 ctx->staticTris.begin(),
+                                 ctx->staticTris.end());
+    }
+
+    int staticVertCount = hasStatic ? (int)(ctx->staticVerts.size() / 3) : 0;
+
+    if (hasDynamic)
+    {
+        ctx->combinedVerts.insert(ctx->combinedVerts.end(),
+                                  ctx->dynamicVerts.begin(),
+                                  ctx->dynamicVerts.end());
+
+        for (int t : ctx->dynamicTris)
+            ctx->combinedTris.push_back(t + staticVertCount);
+    }
+
+    if (ctx->combinedVerts.empty() || ctx->combinedTris.empty())
+    {
+        printf("[Geom] RebuildCombinedGeometry: nenhuma geometria presente.\n");
+        return false;
+    }
+
+    if (!ctx->geom)
+        ctx->geom = new InputGeom();
+
+    int totalVerts = (int)ctx->combinedVerts.size() / 3;
+    int totalTris  = (int)ctx->combinedTris.size() / 3;
+
+    bool ok = ctx->geom->initMeshFromArrays(
+        &ctx->buildCtx,
+        ctx->combinedVerts.data(),
+        totalVerts,
+        ctx->combinedTris.data(),
+        totalTris
+    );
+
+    printf("[Geom] RebuildCombinedGeometry -> %s  (verts=%d tris=%d)\n",
+           ok ? "OK" : "FAIL", totalVerts, totalTris);
+
+    return ok;
+}
+
+
+// ============================================================================
+//  SOMENTE DINÂMICO + (estático opcional)
+// ============================================================================
+bool GtaNavGeometry::DynamicOnly_RebuildCombinedGeometry(NavMeshContext* ctx)
+{
+    if (!ctx) return false;
+
+    const bool hasStatic  = ctx->staticBuilt && !ctx->staticVerts.empty();
+    const bool hasDynamic = !ctx->dynamicVerts.empty();
+
+    ctx->combinedVerts.clear();
+    ctx->combinedTris.clear();
+
+    int staticVertCount = 0;
+
+    if (hasStatic)
+    {
+        ctx->combinedVerts.insert(ctx->combinedVerts.end(),
+                                  ctx->staticVerts.begin(),
+                                  ctx->staticVerts.end());
+
+        ctx->combinedTris.insert(ctx->combinedTris.end(),
+                                 ctx->staticTris.begin(),
+                                 ctx->staticTris.end());
+
+        staticVertCount = (int)(ctx->staticVerts.size() / 3);
+    }
+
+    if (hasDynamic)
+    {
+        ctx->combinedVerts.insert(ctx->combinedVerts.end(),
+                                  ctx->dynamicVerts.begin(),
+                                  ctx->dynamicVerts.end());
+
+        for (int t : ctx->dynamicTris)
+            ctx->combinedTris.push_back(t + staticVertCount);
+    }
+
+    if (ctx->combinedVerts.empty() || ctx->combinedTris.empty())
+    {
+        printf("[Geom] DynamicOnly_RebuildCombinedGeometry: sem geometria.\n");
+        return false;
+    }
+
+    if (!ctx->geom)
+        ctx->geom = new InputGeom();
+
+    int totalVerts = (int)ctx->combinedVerts.size() / 3;
+    int totalTris  = (int)ctx->combinedTris.size() / 3;
+
+    bool ok = ctx->geom->initMeshFromArrays(
+        &ctx->buildCtx,
+        ctx->combinedVerts.data(), totalVerts,
+        ctx->combinedTris.data(), totalTris);
+
+    printf("[Geom] DynamicOnly_RebuildCombinedGeometry -> %s\n", ok ? "OK" : "FAIL");
+    return ok;
+}
+
+
+// ============================================================================
+//  pipeline completo
+// ============================================================================
+bool GtaNavGeometry::BuildMergedGeometry(NavMeshContext* ctx)
+{
+    if (!ctx) return false;
+
+    if (!ctx->staticBuilt && !ctx->staticList.empty())
+        if (!BuildStaticMergedData(ctx))
+            return false;
+
+    if (!BuildDynamicMergedData(ctx))
+        return false;
+
+    return RebuildCombinedGeometry(ctx);
+}
+
+bool GtaNavGeometry::BuildTileGeometry(
+    NavMeshContext* ctx,
+    const float* tileBMin,
+    const float* tileBMax,
+    std::vector<float>& outVerts,
+    std::vector<int>&   outTris)
+{
+    outVerts.clear();
+    outTris.clear();
+
+    if (!ctx || !ctx->geom)
+    {
+        std::printf("[GtaNavGeometry] BuildTileGeometry: ctx ou geom nulos.\n");
+        return false;
+    }
+
+    const rcMeshLoaderObj* mesh = ctx->geom->getMesh();
+    const rcChunkyTriMesh* chunky = ctx->geom->getChunkyMesh();
+
+    if (!mesh || !chunky)
+    {
+        std::printf("[GtaNavGeometry] BuildTileGeometry: mesh ou chunkyMesh nulos.\n");
+        return false;
+    }
+
+    const float* verts = mesh->getVerts();
+    const int    nverts = mesh->getVertCount();
+
+    (void)nverts; // só pra não dar warning se não usar
+
+    // Projeção XZ do tile para consulta no ChunkyTriMesh
+    float tbmin[2], tbmax[2];
+    tbmin[0] = tileBMin[0];
+    tbmin[1] = tileBMin[2];
+    tbmax[0] = tileBMax[0];
+    tbmax[1] = tileBMax[2];
+
+    int cid[512];
+    const int ncid = rcGetChunksOverlappingRect(chunky, tbmin, tbmax, cid, 512);
+    if (!ncid)
+    {
+        // Sem triângulos nesse tile — é válido (tile vazio)
+        std::printf("[GtaNavGeometry] BuildTileGeometry: nenhum chunk encontrado para tile.\n");
+        return false;
+    }
+
+    outVerts.reserve(1024);
+    outTris.reserve(2048);
+
+    // Remap globalIndex -> localIndex
+    std::unordered_map<int,int> vertRemap;
+    vertRemap.reserve(1024);
+
+    auto remapVertex = [&](int globalIndex) -> int
+    {
+        auto it = vertRemap.find(globalIndex);
+        if (it != vertRemap.end())
+            return it->second;
+
+        int newIndex = static_cast<int>(outVerts.size() / 3);
+
+        const float* v = &verts[globalIndex * 3];
+        outVerts.push_back(v[0]);
+        outVerts.push_back(v[1]);
+        outVerts.push_back(v[2]);
+
+        vertRemap[globalIndex] = newIndex;
+        return newIndex;
+    };
+
+    // Percorre cada chunk que intersecta o tile
+    for (int i = 0; i < ncid; ++i)
+    {
+        const rcChunkyTriMeshNode& node = chunky->nodes[cid[i]];
+        const int* ctris = &chunky->tris[node.i * 3];
+        const int nctris = node.n;
+
+        for (int t = 0; t < nctris; ++t)
+        {
+            const int ga = ctris[t*3 + 0];
+            const int gb = ctris[t*3 + 1];
+            const int gc = ctris[t*3 + 2];
+
+            // Remap para índices locais
+            const int la = remapVertex(ga);
+            const int lb = remapVertex(gb);
+            const int lc = remapVertex(gc);
+
+            outTris.push_back(la);
+            outTris.push_back(lb);
+            outTris.push_back(lc);
+        }
+    }
+
+    std::printf("[GtaNavGeometry] BuildTileGeometry OK. Verts=%zu Tris=%zu\n",
+        outVerts.size() / 3, outTris.size() / 3);
+
+    return !outTris.empty();
+}
+
+=== GtaNavGeometry.h ===
+#pragma once
+#include "GtaNavContext.h"
+#include "Recast.h"
+#include "DetourNavMesh.h"
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cfloat>
+
+class GtaNavGeometry
+{
+public:
+
+    // --- estático ---
+    static bool BuildStaticMergedData(NavMeshContext* ctx);
+
+    // --- dinâmico ---
+    static bool BuildDynamicMergedData(NavMeshContext* ctx);
+
+    // --- unificação estático + dinâmico ---
+    static bool RebuildCombinedGeometry(NavMeshContext* ctx);
+
+    // --- somente dinâmico (mantém estáticos, se existirem no contexto) ---
+    static bool DynamicOnly_RebuildCombinedGeometry(NavMeshContext* ctx);
+
+    // --- pipeline simples (static + dynamic) ---
+    static bool BuildMergedGeometry(NavMeshContext* ctx);
+    
+    static bool BuildTileGeometry(
+        NavMeshContext* ctx,
+        const float* tileBMin,
+        const float* tileBMax,
+        std::vector<float>& outVerts,
+        std::vector<int>&   outTris);
+
+private:
+    static void ExpandAABB(float* bmin, float* bmax, float x, float y, float z);
+};
+
+
+=== GtaNavProps.cpp ===
+#include "GtaNavProps.h"
+#include <algorithm>
+#include <cstdio>
+#include "DetourCommon.h"
+
+
+bool GtaNavProps::AddStatic(NavMeshContext* ctx, const std::string& pathBase)
+{
+    if (!ctx) return false;
+
+    // Evitar duplicados
+    auto it = std::find(ctx->staticList.begin(), ctx->staticList.end(), pathBase);
+    if (it != ctx->staticList.end())
+    {
+        printf("[Props] Static '%s' já existe, ignorando.\n", pathBase.c_str());
+        return true;
+    }
+
+    ctx->staticList.push_back(pathBase);
+    ctx->staticBuilt = false;  // precisa rebuildar static na próxima chamada
+
+    printf("[Props] Static adicionado: %s\n", pathBase.c_str());
+    return true;
+}
+
+
+bool GtaNavProps::AddProp(
+    NavMeshContext* ctx,
+    const std::string& modelName,
+    const float pos[3],
+    const float rot[3])
+{
+    if (!ctx) return false;
+
+    PropInstance inst;   // <-- CORRETO
+    inst.id = ctx->nextPropID++;
+    inst.modelName = modelName;
+
+    inst.pos[0] = pos[0];
+    inst.pos[1] = pos[1];
+    inst.pos[2] = pos[2];
+
+    inst.rot[0] = rot[0];
+    inst.rot[1] = rot[1];
+    inst.rot[2] = rot[2];
+
+    ctx->props.push_back(inst);
+
+    printf("[Props] Prop adicionado: %s  (pos=%.1f %.1f %.1f)\n",
+           modelName.c_str(), pos[0], pos[1], pos[2]);
+
+    return true;
+}
+
+
+
+// ============================================================================
+// REMOVER TODOS OS ESTÁTICOS
+// ============================================================================
+void GtaNavProps::ClearAllStatics(NavMeshContext* ctx, bool clearCache)
+{
+    if (!ctx) return;
+
+    printf("[Props] Limpando ESTÁTICOS (clearCache=%d)...\n", clearCache);
+
+    ctx->staticList.clear();
+    ctx->staticVerts.clear();
+    ctx->staticTris.clear();
+
+    ctx->staticBuilt = false;
+
+    ctx->staticVerts.shrink_to_fit();
+    ctx->staticTris.shrink_to_fit();
+
+    if (clearCache)
+        ctx->staticCache.clear();
+}
+
+
+// ============================================================================
+// REMOVER TODOS OS PROPS DINÂMICOS
+// ============================================================================
+void GtaNavProps::ClearAllProps(NavMeshContext* ctx, bool clearCache)
+{
+    if (!ctx) return;
+
+    printf("[Props] Limpando PROPS dinâmicos (clearCache=%d)...\n", clearCache);
+
+    ctx->props.clear();
+    ctx->props.shrink_to_fit();
+
+    ctx->dynamicVerts.clear();
+    ctx->dynamicTris.clear();
+    ctx->dynamicVerts.shrink_to_fit();
+    ctx->dynamicTris.shrink_to_fit();
+
+    dtVset(ctx->dynamicBMin, 0,0,0);
+    dtVset(ctx->dynamicBMax, 0,0,0);
+
+    if (clearCache)
+        ctx->propCache.clear();
+}
+
+
+// ============================================================================
+// INSPEÇÃO
+// ============================================================================
+int GtaNavProps::GetStaticCount(const NavMeshContext* ctx)
+{
+    return ctx ? (int)ctx->staticList.size() : 0;
+}
+
+int GtaNavProps::GetPropCount(const NavMeshContext* ctx)
+{
+    return ctx ? (int)ctx->props.size() : 0;
+}
+
+
+=== GtaNavProps.h ===
+#pragma once
+#include "GtaNavContext.h"
+#include <string>
+#include <vector>
+
+class GtaNavProps
+{
+public:
+
+    //
+    // --- ADICIONAR ESTÁTICOS ---
+    //
+    // pathBase → caminho sem extensão (ex: "C:/GTA/Static/airport_01")
+    //
+    static bool AddStatic(NavMeshContext* ctx, const std::string& pathBase);
+
+    //
+    // --- ADICIONAR PROP DINÂMICO ---
+    //
+    static bool AddProp(
+        NavMeshContext* ctx,
+        const std::string& modelName,
+        const float pos[3],
+        const float rot[3]
+    );
+
+    //
+    // --- REMOÇÃO ---
+    //
+    static void ClearAllStatics(NavMeshContext* ctx, bool clearCache = false);
+    static void ClearAllProps(NavMeshContext* ctx, bool clearCache = false);
+
+    //
+    // --- INSPEÇÃO ---
+    //
+    static int GetStaticCount(const NavMeshContext* ctx);
+    static int GetPropCount(const NavMeshContext* ctx);
+};
+
+
+=== GtaNavTiles.cpp ===
+// ======================================================================
+// GtaNavTiles.cpp (versão revisada e otimizada)
+// ======================================================================
+
+#include <vector>
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+
+#include "GtaNavTiles.h"
+#include "GtaNavContext.h"
+#include "GtaNavGeometry.h"
+#include "InputGeom.h"
+
+#include "Recast.h"
+#include "DetourNavMesh.h"
+#include "DetourNavMeshQuery.h"
+#include "DetourCommon.h"
+#include "DetourNavMeshBuilder.h"
+
+
+// =======================================================================
+// CALCULATE TILE BOUNDS
+// =======================================================================
+void GtaNavTiles::CalcTileBounds(
+    const NavMeshContext* ctx,
+    int tx, int tz,
+    float bmin[3], float bmax[3])
+{
+    const dtNavMeshParams* params = ctx->navMesh->getParams();
+    const float* orig = params->orig;
+
+    const float tileW = params->tileWidth;
+    const float tileH = params->tileHeight;
+
+    // Bounds XZ
+    bmin[0] = orig[0] + tx * tileW;
+    bmin[2] = orig[2] + tz * tileH;
+
+    bmax[0] = orig[0] + (tx + 1) * tileW;
+    bmax[2] = orig[2] + (tz + 1) * tileH;
+
+    // Bounds Y = full scene AABB
+    const float* gm = ctx->geom->getMeshBoundsMin();
+    const float* gM = ctx->geom->getMeshBoundsMax();
+
+    bmin[1] = gm[1];
+    bmax[1] = gM[1];
+}
+
+
+// =======================================================================
+// TILE RANGE FROM WORLD AABB
+// =======================================================================
+bool GtaNavTiles::CalcTileRangeForAABB(
+    const NavMeshContext* ctx,
+    const float bmin[3],
+    const float bmax[3],
+    int& tx0, int& tz0, int& tx1, int& tz1)
+{
+    if (!ctx || !ctx->navMesh)
+        return false;
+
+    const dtNavMeshParams* params = ctx->navMesh->getParams();
+    const float* orig = params->orig;
+    const float tileW = params->tileWidth;
+    const float tileH = params->tileHeight;
+
+    tx0 = (int)floorf((bmin[0] - orig[0]) / tileW);
+    tz0 = (int)floorf((bmin[2] - orig[2]) / tileH);
+    tx1 = (int)floorf((bmax[0] - orig[0]) / tileW);
+    tz1 = (int)floorf((bmax[2] - orig[2]) / tileH);
+
+    if (tx1 < tx0 || tz1 < tz0)
+        return false;
+
+    return true;
+}
+
+
+// =======================================================================
+// BUILD 1 TILE
+// =======================================================================
+bool GtaNavTiles::BuildTile(
+    NavMeshContext* ctx,
+    int tx, int tz,
+    const float tileBMin[3],
+    const float tileBMax[3],
+    bool rebuildDetourData)
+{
+    if (!ctx || !ctx->navMesh || !ctx->geom)
+    {
+        printf("[Tiles] BuildTile: contexto/navMesh/geom nulos.\n");
+        return false;
+    }
+
+    // Remove tile antigo se existir
+    if (dtTileRef oldRef = ctx->navMesh->getTileRefAt(tx, tz, 0))
+        ctx->navMesh->removeTile(oldRef, nullptr, nullptr);
+
+    // 1) Obter geometria recortada
+    std::vector<float> verts;
+    std::vector<int>   tris;
+
+    if (!GtaNavGeometry::BuildTileGeometry(
+            ctx,
+            tileBMin,
+            tileBMax,
+            verts,
+            tris))
+    {
+        // Sem geometria → tile vazio (ok)
+        return true;
+    }
+
+    int nverts = (int)verts.size() / 3;
+    int ntris  = (int)tris.size() / 3;
+
+    if (nverts == 0 || ntris == 0)
+        return true;
+
+    // =====================================================================
+    // 2) CONFIG RECAST
+    // =====================================================================
+    const NavMeshDefinition& def = ctx->navDef;
+    const float cs = def.navDef_m_cellSize;
+    const float ch = def.navDef_m_cellHeight;
+
+    const dtNavMeshParams* navParams = ctx->navMesh->getParams();
+
+    rcConfig cfg{};
+    memset(&cfg, 0, sizeof(cfg));
+
+    cfg.cs = cs;
+    cfg.ch = ch;
+    cfg.walkableSlopeAngle = def.navDef_m_agentMaxSlope;
+    cfg.walkableHeight     = (int)ceilf(def.navDef_m_agentHeight / ch);
+    cfg.walkableClimb      = (int)floorf(def.navDef_m_agentMaxClimb / ch);
+    cfg.walkableRadius     = (int)ceilf(def.navDef_m_agentRadius / cs);
+
+    // ⚠ Atenção: def.navDef_m_edgeMaxLen DEVE estar em metros.
+    cfg.maxEdgeLen = (int)(def.navDef_m_edgeMaxLen / cs);
+
+    cfg.maxSimplificationError = def.navDef_m_edgeMaxError;
+    cfg.minRegionArea      = (int)rcSqr(def.navDef_m_regionMinSize);
+    cfg.mergeRegionArea    = (int)rcSqr(def.navDef_m_regionMergeSize);
+    cfg.maxVertsPerPoly    = (int)def.navDef_m_vertsPerPoly;
+
+    // ✔ comportamento estável
+    cfg.detailSampleDist   = def.navDef_m_detailSampleDist;
+    cfg.detailSampleMaxError = ch * def.navDef_m_detailSampleMaxError;
+
+    // Tile size in cells
+    cfg.width  = (int)(navParams->tileWidth  / cs);
+    cfg.height = (int)(navParams->tileHeight / cs);
+
+    rcVcopy(cfg.bmin, tileBMin);
+    rcVcopy(cfg.bmax, tileBMax);
+
+    // =====================================================================
+    // 3) FULL RECAST PIPELINE
+    // =====================================================================
+    rcContext& bc = ctx->buildCtx;
+
+    // Heightfield
+    rcHeightfield* solid = rcAllocHeightfield();
+    if (!solid)
+        return false;
+
+    if (!rcCreateHeightfield(&bc, *solid,
+                             cfg.width, cfg.height,
+                             cfg.bmin, cfg.bmax,
+                             cfg.cs, cfg.ch))
+    {
+        rcFreeHeightField(solid);
+        return false;
+    }
+
+    std::vector<unsigned char> areas(ntris, RC_WALKABLE_AREA);
+
+    if (!rcRasterizeTriangles(&bc,
+                              verts.data(), nverts,
+                              tris.data(), areas.data(),
+                              ntris, *solid,
+                              cfg.walkableClimb))
+    {
+        rcFreeHeightField(solid);
+        return false;
+    }
+
+    rcFilterLowHangingWalkableObstacles(&bc, cfg.walkableClimb, *solid);
+    rcFilterLedgeSpans(&bc, cfg.walkableHeight, cfg.walkableClimb, *solid);
+    rcFilterWalkableLowHeightSpans(&bc, cfg.walkableHeight, *solid);
+
+    // CompactHeightfield
+    rcCompactHeightfield* chf = rcAllocCompactHeightfield();
+    if (!chf)
+    {
+        rcFreeHeightField(solid);
+        return false;
+    }
+
+    if (!rcBuildCompactHeightfield(&bc,
+                                   cfg.walkableHeight, cfg.walkableClimb,
+                                   *solid, *chf))
+    {
+        rcFreeCompactHeightfield(chf);
+        rcFreeHeightField(solid);
+        return false;
+    }
+
+    rcFreeHeightField(solid);
+
+    if (!rcErodeWalkableArea(&bc, cfg.walkableRadius, *chf))
+    {
+        rcFreeCompactHeightfield(chf);
+        return false;
+    }
+
+    if (!rcBuildDistanceField(&bc, *chf))
+    {
+        rcFreeCompactHeightfield(chf);
+        return false;
+    }
+
+    if (!rcBuildRegions(&bc, *chf,
+                        0, cfg.minRegionArea, cfg.mergeRegionArea))
+    {
+        rcFreeCompactHeightfield(chf);
+        return false;
+    }
+
+    // Contours
+    rcContourSet* cset = rcAllocContourSet();
+    if (!cset)
+    {
+        rcFreeCompactHeightfield(chf);
+        return false;
+    }
+
+    if (!rcBuildContours(&bc, *chf, cfg.maxSimplificationError,
+                         cfg.maxEdgeLen, *cset))
+    {
+        rcFreeContourSet(cset);
+        rcFreeCompactHeightfield(chf);
+        return false;
+    }
+
+    // PolyMesh
+    rcPolyMesh* pmesh = rcAllocPolyMesh();
+    if (!pmesh)
+    {
+        rcFreeContourSet(cset);
+        rcFreeCompactHeightfield(chf);
+        return false;
+    }
+
+    if (!rcBuildPolyMesh(&bc, *cset, cfg.maxVertsPerPoly, *pmesh))
+    {
+        rcFreePolyMesh(pmesh);
+        rcFreeContourSet(cset);
+        rcFreeCompactHeightfield(chf);
+        return false;
+    }
+
+    // PolyMeshDetail
+    rcPolyMeshDetail* dmesh = rcAllocPolyMeshDetail();
+    if (!dmesh)
+    {
+        rcFreePolyMesh(pmesh);
+        rcFreeContourSet(cset);
+        rcFreeCompactHeightfield(chf);
+        return false;
+    }
+
+    if (!rcBuildPolyMeshDetail(&bc, *pmesh, *chf,
+                               cfg.detailSampleDist,
+                               cfg.detailSampleMaxError,
+                               *dmesh))
+    {
+        rcFreePolyMeshDetail(dmesh);
+        rcFreePolyMesh(pmesh);
+        rcFreeContourSet(cset);
+        rcFreeCompactHeightfield(chf);
+        return false;
+    }
+
+    rcFreeCompactHeightfield(chf);
+    rcFreeContourSet(cset);
+
+    if (pmesh->nverts == 0 || pmesh->npolys == 0)
+    {
+        rcFreePolyMeshDetail(dmesh);
+        rcFreePolyMesh(pmesh);
+        return true;
+    }
+
+    // =====================================================================
+    // 4) Converter para Detour
+    // =====================================================================
+    std::vector<unsigned short> polyFlags(pmesh->npolys, 1);
+
+    dtNavMeshCreateParams params{};
+    params.verts = pmesh->verts;
+    params.vertCount = pmesh->nverts;
+    params.polys = pmesh->polys;
+    params.polyAreas = pmesh->areas;
+    params.polyFlags = polyFlags.data();
+    params.polyCount = pmesh->npolys;
+    params.nvp = pmesh->nvp;
+
+    params.detailMeshes = dmesh->meshes;
+    params.detailVerts  = dmesh->verts;
+    params.detailVertsCount = dmesh->nverts;
+    params.detailTris   = dmesh->tris;
+    params.detailTriCount = dmesh->ntris;
+
+    params.walkableHeight = def.navDef_m_agentHeight;
+    params.walkableRadius = def.navDef_m_agentRadius;
+    params.walkableClimb  = def.navDef_m_agentMaxClimb;
+
+    rcVcopy(params.bmin, tileBMin);
+    rcVcopy(params.bmax, tileBMax);
+
+    params.cs = cfg.cs;
+    params.ch = cfg.ch;
+    params.tileX = tx;
+    params.tileY = tz;
+    params.tileLayer = 0;
+    params.buildBvTree = true;
+
+    unsigned char* navData = nullptr;
+    int navDataSize = 0;
+
+    if (!dtCreateNavMeshData(&params, &navData, &navDataSize))
+    {
+        printf("[Tiles] dtCreateNavMeshData falhou no tile %d,%d\n", tx, tz);
+        rcFreePolyMeshDetail(dmesh);
+        rcFreePolyMesh(pmesh);
+        return false;
+    }
+
+    rcFreePolyMeshDetail(dmesh);
+    rcFreePolyMesh(pmesh);
+
+    if (!rebuildDetourData)
+    {
+        dtFree(navData);
+        return true;
+    }
+
+    dtStatus status =
+        ctx->navMesh->addTile(navData, navDataSize, DT_TILE_FREE_DATA, 0, nullptr);
+
+    if (dtStatusFailed(status))
+    {
+        printf("[Tiles] addTile falhou (%d,%d)\n", tx, tz);
+        dtFree(navData);
+        return false;
+    }
+
+    return true;
+}
+
+
+// =======================================================================
+// BUILD TILES IN WORLD BOUNDS
+// =======================================================================
+bool GtaNavTiles::BuildTilesInBounds(
+    NavMeshContext* ctx,
+    const float worldBMin[3],
+    const float worldBMax[3])
+{
+    int tx0, tz0, tx1, tz1;
+    if (!CalcTileRangeForAABB(ctx, worldBMin, worldBMax, tx0, tz0, tx1, tz1))
+        return false;
+
+    for (int tz = tz0; tz <= tz1; tz++)
+        for (int tx = tx0; tx <= tx1; tx++)
+        {
+            float tbmin[3], tbmax[3];
+            CalcTileBounds(ctx, tx, tz, tbmin, tbmax);
+            BuildTile(ctx, tx, tz, tbmin, tbmax);
+        }
+
+    return true;
+}
+
+
+// =======================================================================
+// REBUILD TILES AFFECTED BY DYNAMIC GEOMETRY
+// =======================================================================
+bool GtaNavTiles::RebuildTilesAffectedByDynamic(NavMeshContext* ctx)
+{
+    if (ctx->dynamicVerts.empty())
+        return true;
+
+    int tx0, tz0, tx1, tz1;
+    if (!CalcTileRangeForAABB(ctx,
+                              ctx->dynamicBMin, ctx->dynamicBMax,
+                              tx0, tz0, tx1, tz1))
+        return false;
+
+    for (int tz = tz0; tz <= tz1; tz++)
+        for (int tx = tx0; tx <= tx1; tx++)
+        {
+            float tbmin[3], tbmax[3];
+            CalcTileBounds(ctx, tx, tz, tbmin, tbmax);
+            BuildTile(ctx, tx, tz, tbmin, tbmax);
+        }
+
+    return true;
+}
+
+
+// =======================================================================
+// BUILD TILES AROUND POSITION
+// =======================================================================
+bool GtaNavTiles::BuildTilesAroundPosition(
+    NavMeshContext* ctx,
+    const float pos[3],
+    float radiusMeters)
+{
+    float bmin[3], bmax[3];
+
+    bmin[0] = pos[0] - radiusMeters;
+    bmin[2] = pos[2] - radiusMeters;
+    bmax[0] = pos[0] + radiusMeters;
+    bmax[2] = pos[2] + radiusMeters;
+
+    // Y usa AABB global
+    bmin[1] = ctx->geom->getMeshBoundsMin()[1];
+    bmax[1] = ctx->geom->getMeshBoundsMax()[1];
+
+    return BuildTilesInBounds(ctx, bmin, bmax);
+}
+
+
+=== GtaNavTiles.h ===
+#pragma once
+
+#include "GtaNavContext.h"
+
+class GtaNavTiles
+{
+public:
+
+    // ================================================================
+    // 1) Construir 1 tile (tx,tz)
+    // ================================================================
+    static bool BuildTile(
+        NavMeshContext* ctx,
+        int tx, int tz,
+        const float tileBMin[3],
+        const float tileBMax[3],
+        bool rebuildDetourData = true
+    );
+
+    // ================================================================
+    // 2) Rebuild de tiles dentro de um AABB
+    // ================================================================
+    static bool BuildTilesInBounds(
+        NavMeshContext* ctx,
+        const float worldBMin[3],
+        const float worldBMax[3]
+    );
+
+    // ================================================================
+    // 3) Rebuild apenas tiles afetados pelos PROPS
+    // ================================================================
+    static bool RebuildTilesAffectedByDynamic(NavMeshContext* ctx);
+
+    // ================================================================
+    // 4) Build por posição (em metros) e radius
+    // ================================================================
+    static bool BuildTilesAroundPosition(
+        NavMeshContext* ctx,
+        const float recastPos[3],
+        float radiusMeters
+    );
+
+    // ================================================================
+    // 5) Utilitários internos
+    // ================================================================
+    static void CalcTileBounds(
+        const NavMeshContext* ctx,
+        int tx, int tz,
+        float bmin[3], float bmax[3]
+    );
+
+    static bool CalcTileRangeForAABB(
+        const NavMeshContext* ctx,
+        const float bmin[3],
+        const float bmax[3],
+        int& tx0, int& tz0,
+        int& tx1, int& tz1
+    );
+};
+
+
+=== GtaNavTransform.h ===
+#pragma once
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
+
+inline void TransformVertexZYX(
+    float x, float y, float z,
+    const float pos[3],
+    const float rotDeg[3],
+    float& ox, float& oy, float& oz)
+{
+    // Ordem de rotação escolhida: YXZ → Z,Y,X (GTA geralmente usa ZYX)
+    glm::mat4 t =
+        glm::eulerAngleYXZ(
+            glm::radians(rotDeg[2]), // Z
+            glm::radians(rotDeg[0]), // Y
+            glm::radians(rotDeg[1])  // X
+        );
+
+    glm::vec4 v(x, y, z, 1.0f);
+    glm::vec4 r = t * v;
+
+    ox = r.x + pos[0];
+    oy = r.y + pos[1];
+    oz = r.z + pos[2];
+}
+
+
+=== InputGeom.cpp ===
+//
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
+//
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+//
+
+#include <math.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <algorithm>
+#include "Recast.h"
+#include "InputGeom.h"
+#include "ChunkyTriMesh.h"
+#include "MeshLoaderObj.h"
+#include "DebugDraw.h"
+#include "RecastDebugDraw.h"
+#include "DetourNavMesh.h"
+#include "Sample.h"
+
+static bool intersectSegmentTriangle(const float* sp, const float* sq,
+									 const float* a, const float* b, const float* c,
+									 float &t)
+{
+	float v, w;
+	float ab[3], ac[3], qp[3], ap[3], norm[3], e[3];
+	rcVsub(ab, b, a);
+	rcVsub(ac, c, a);
+	rcVsub(qp, sp, sq);
+	
+	// Compute triangle normal. Can be precalculated or cached if
+	// intersecting multiple segments against the same triangle
+	rcVcross(norm, ab, ac);
+	
+	// Compute denominator d. If d <= 0, segment is parallel to or points
+	// away from triangle, so exit early
+	float d = rcVdot(qp, norm);
+	if (d <= 0.0f) return false;
+	
+	// Compute intersection t value of pq with plane of triangle. A ray
+	// intersects iff 0 <= t. Segment intersects iff 0 <= t <= 1. Delay
+	// dividing by d until intersection has been found to pierce triangle
+	rcVsub(ap, sp, a);
+	t = rcVdot(ap, norm);
+	if (t < 0.0f) return false;
+	if (t > d) return false; // For segment; exclude this code line for a ray test
+	
+	// Compute barycentric coordinate components and test if within bounds
+	rcVcross(e, qp, ap);
+	v = rcVdot(ac, e);
+	if (v < 0.0f || v > d) return false;
+	w = -rcVdot(ab, e);
+	if (w < 0.0f || v + w > d) return false;
+	
+	// Segment/ray intersects triangle. Perform delayed division
+	t /= d;
+	
+	return true;
+}
+
+static char* parseRow(char* buf, char* bufEnd, char* row, int len)
+{
+	bool start = true;
+	bool done = false;
+	int n = 0;
+	while (!done && buf < bufEnd)
+	{
+		char c = *buf;
+		buf++;
+		// multirow
+		switch (c)
+		{
+			case '\n':
+				if (start) break;
+				done = true;
+				break;
+			case '\r':
+				break;
+			case '\t':
+			case ' ':
+				if (start) break;
+				// else falls through
+			default:
+				start = false;
+				row[n++] = c;
+				if (n >= len-1)
+					done = true;
+				break;
+		}
+	}
+	row[n] = '\0';
+	return buf;
+}
+
+
+
+InputGeom::InputGeom() :
+	m_chunkyMesh(0),
+	m_mesh(0),
+	m_hasBuildSettings(false),
+	m_offMeshConCount(0),
+	m_volumeCount(0)
+{
+}
+
+InputGeom::~InputGeom()
+{
+	delete m_chunkyMesh;
+	delete m_mesh;
+}
+		
+bool InputGeom::loadMesh(rcContext* ctx, const std::string& filepath)
+{
+	if (m_mesh)
+	{
+		delete m_chunkyMesh;
+		m_chunkyMesh = 0;
+		delete m_mesh;
+		m_mesh = 0;
+	}
+	m_offMeshConCount = 0;
+	m_volumeCount = 0;
+	
+	m_mesh = new rcMeshLoaderObj;
+	if (!m_mesh)
+	{
+		ctx->log(RC_LOG_ERROR, "loadMesh: Out of memory 'm_mesh'.");
+		return false;
+	}
+	if (!m_mesh->load(filepath))
+	{
+		ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Could not load '%s'", filepath.c_str());
+		return false;
+	}
+
+	rcCalcBounds(m_mesh->getVerts(), m_mesh->getVertCount(), m_meshBMin, m_meshBMax);
+
+	m_chunkyMesh = new rcChunkyTriMesh;
+	if (!m_chunkyMesh)
+	{
+		ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'm_chunkyMesh'.");
+		return false;
+	}
+	if (!rcCreateChunkyTriMesh(m_mesh->getVerts(), m_mesh->getTris(), m_mesh->getTriCount(), 256, m_chunkyMesh))
+	{
+		ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Failed to build chunky mesh.");
+		return false;
+	}		
+
+	return true;
+}
+
+bool InputGeom::loadGeomSet(rcContext* ctx, const std::string& filepath)
+{
+	char* buf = 0;
+	FILE* fp = fopen(filepath.c_str(), "rb");
+	if (!fp)
+	{
+		return false;
+	}
+	if (fseek(fp, 0, SEEK_END) != 0)
+	{
+		fclose(fp);
+		return false;
+	}
+
+	long bufSize = ftell(fp);
+	if (bufSize < 0)
+	{
+		fclose(fp);
+		return false;
+	}
+	if (fseek(fp, 0, SEEK_SET) != 0)
+	{
+		fclose(fp);
+		return false;
+	}
+	buf = new char[bufSize];
+	if (!buf)
+	{
+		fclose(fp);
+		return false;
+	}
+	size_t readLen = fread(buf, bufSize, 1, fp);
+	fclose(fp);
+	if (readLen != 1)
+	{
+		delete[] buf;
+		return false;
+	}
+	
+	m_offMeshConCount = 0;
+	m_volumeCount = 0;
+	delete m_mesh;
+	m_mesh = 0;
+
+	char* src = buf;
+	char* srcEnd = buf + bufSize;
+	char row[512];
+	while (src < srcEnd)
+	{
+		// Parse one row
+		row[0] = '\0';
+		src = parseRow(src, srcEnd, row, sizeof(row)/sizeof(char));
+		if (row[0] == 'f')
+		{
+			// File name.
+			const char* name = row+1;
+			// Skip white spaces
+			while (*name && isspace(*name))
+				name++;
+			if (*name)
+			{
+				if (!loadMesh(ctx, name))
+				{
+					delete [] buf;
+					return false;
+				}
+			}
+		}
+		else if (row[0] == 'c')
+		{
+			// Off-mesh connection
+			if (m_offMeshConCount < MAX_OFFMESH_CONNECTIONS)
+			{
+				float* v = &m_offMeshConVerts[m_offMeshConCount*3*2];
+				int bidir, area = 0, flags = 0;
+				float rad;
+				sscanf(row+1, "%f %f %f  %f %f %f %f %d %d %d",
+					   &v[0], &v[1], &v[2], &v[3], &v[4], &v[5], &rad, &bidir, &area, &flags);
+				m_offMeshConRads[m_offMeshConCount] = rad;
+				m_offMeshConDirs[m_offMeshConCount] = (unsigned char)bidir;
+				m_offMeshConAreas[m_offMeshConCount] = (unsigned char)area;
+				m_offMeshConFlags[m_offMeshConCount] = (unsigned short)flags;
+				m_offMeshConCount++;
+			}
+		}
+		else if (row[0] == 'v')
+		{
+			// Convex volumes
+			if (m_volumeCount < MAX_VOLUMES)
+			{
+				ConvexVolume* vol = &m_volumes[m_volumeCount++];
+				sscanf(row+1, "%d %d %f %f", &vol->nverts, &vol->area, &vol->hmin, &vol->hmax);
+				for (int i = 0; i < vol->nverts; ++i)
+				{
+					row[0] = '\0';
+					src = parseRow(src, srcEnd, row, sizeof(row)/sizeof(char));
+					sscanf(row, "%f %f %f", &vol->verts[i*3+0], &vol->verts[i*3+1], &vol->verts[i*3+2]);
+				}
+			}
+		}
+		else if (row[0] == 's')
+		{
+			// Settings
+			m_hasBuildSettings = true;
+			sscanf(row + 1, "%f %f %f %f %f %f %f %f %f %f %f %f %f %d %f %f %f %f %f %f %f",
+							&m_buildSettings.cellSize,
+							&m_buildSettings.cellHeight,
+							&m_buildSettings.agentHeight,
+							&m_buildSettings.agentRadius,
+							&m_buildSettings.agentMaxClimb,
+							&m_buildSettings.agentMaxSlope,
+							&m_buildSettings.regionMinSize,
+							&m_buildSettings.regionMergeSize,
+							&m_buildSettings.edgeMaxLen,
+							&m_buildSettings.edgeMaxError,
+							&m_buildSettings.vertsPerPoly,
+							&m_buildSettings.detailSampleDist,
+							&m_buildSettings.detailSampleMaxError,
+							&m_buildSettings.partitionType,
+							&m_buildSettings.navMeshBMin[0],
+							&m_buildSettings.navMeshBMin[1],
+							&m_buildSettings.navMeshBMin[2],
+							&m_buildSettings.navMeshBMax[0],
+							&m_buildSettings.navMeshBMax[1],
+							&m_buildSettings.navMeshBMax[2],
+							&m_buildSettings.tileSize);
+		}
+	}
+	
+	delete [] buf;
+	
+	return true;
+}
+
+bool InputGeom::load(rcContext* ctx, const std::string& filepath)
+{
+	size_t extensionPos = filepath.find_last_of('.');
+	if (extensionPos == std::string::npos)
+		return false;
+
+	std::string extension = filepath.substr(extensionPos);
+	std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
+
+	if (extension == ".gset")
+		return loadGeomSet(ctx, filepath);
+	if (extension == ".obj")
+		return loadMesh(ctx, filepath);
+
+	return false;
+}
+
+bool InputGeom::saveGeomSet(const BuildSettings* settings)
+{
+	if (!m_mesh) return false;
+	
+	// Change extension
+	std::string filepath = m_mesh->getFileName();
+	size_t extPos = filepath.find_last_of('.');
+	if (extPos != std::string::npos)
+		filepath = filepath.substr(0, extPos);
+
+	filepath += ".gset";
+
+	FILE* fp = fopen(filepath.c_str(), "w");
+	if (!fp) return false;
+	
+	// Store mesh filename.
+	fprintf(fp, "f %s\n", m_mesh->getFileName().c_str());
+
+	// Store settings if any
+	if (settings)
+	{
+		fprintf(fp,
+			"s %f %f %f %f %f %f %f %f %f %f %f %f %f %d %f %f %f %f %f %f %f\n",
+			settings->cellSize,
+			settings->cellHeight,
+			settings->agentHeight,
+			settings->agentRadius,
+			settings->agentMaxClimb,
+			settings->agentMaxSlope,
+			settings->regionMinSize,
+			settings->regionMergeSize,
+			settings->edgeMaxLen,
+			settings->edgeMaxError,
+			settings->vertsPerPoly,
+			settings->detailSampleDist,
+			settings->detailSampleMaxError,
+			settings->partitionType,
+			settings->navMeshBMin[0],
+			settings->navMeshBMin[1],
+			settings->navMeshBMin[2],
+			settings->navMeshBMax[0],
+			settings->navMeshBMax[1],
+			settings->navMeshBMax[2],
+			settings->tileSize);
+	}
+	
+	// Store off-mesh links.
+	for (int i = 0; i < m_offMeshConCount; ++i)
+	{
+		const float* v = &m_offMeshConVerts[i*3*2];
+		const float rad = m_offMeshConRads[i];
+		const int bidir = m_offMeshConDirs[i];
+		const int area = m_offMeshConAreas[i];
+		const int flags = m_offMeshConFlags[i];
+		fprintf(fp, "c %f %f %f  %f %f %f  %f %d %d %d\n",
+				v[0], v[1], v[2], v[3], v[4], v[5], rad, bidir, area, flags);
+	}
+
+	// Convex volumes
+	for (int i = 0; i < m_volumeCount; ++i)
+	{
+		ConvexVolume* vol = &m_volumes[i];
+		fprintf(fp, "v %d %d %f %f\n", vol->nverts, vol->area, vol->hmin, vol->hmax);
+		for (int j = 0; j < vol->nverts; ++j)
+			fprintf(fp, "%f %f %f\n", vol->verts[j*3+0], vol->verts[j*3+1], vol->verts[j*3+2]);
+	}
+	
+	fclose(fp);
+	
+	return true;
+}
+
+static bool isectSegAABB(const float* sp, const float* sq,
+						 const float* amin, const float* amax,
+						 float& tmin, float& tmax)
+{
+	static const float EPS = 1e-6f;
+	
+	float d[3];
+	d[0] = sq[0] - sp[0];
+	d[1] = sq[1] - sp[1];
+	d[2] = sq[2] - sp[2];
+	tmin = 0.0;
+	tmax = 1.0f;
+	
+	for (int i = 0; i < 3; i++)
+	{
+		if (fabsf(d[i]) < EPS)
+		{
+			if (sp[i] < amin[i] || sp[i] > amax[i])
+				return false;
+		}
+		else
+		{
+			const float ood = 1.0f / d[i];
+			float t1 = (amin[i] - sp[i]) * ood;
+			float t2 = (amax[i] - sp[i]) * ood;
+			if (t1 > t2) { float tmp = t1; t1 = t2; t2 = tmp; }
+			if (t1 > tmin) tmin = t1;
+			if (t2 < tmax) tmax = t2;
+			if (tmin > tmax) return false;
+		}
+	}
+	
+	return true;
+}
+
+
+bool InputGeom::raycastMesh(float* src, float* dst, float& tmin)
+{
+	// Prune hit ray.
+	float btmin, btmax;
+	if (!isectSegAABB(src, dst, m_meshBMin, m_meshBMax, btmin, btmax))
+		return false;
+	float p[2], q[2];
+	p[0] = src[0] + (dst[0]-src[0])*btmin;
+	p[1] = src[2] + (dst[2]-src[2])*btmin;
+	q[0] = src[0] + (dst[0]-src[0])*btmax;
+	q[1] = src[2] + (dst[2]-src[2])*btmax;
+	
+	int cid[512];
+	const int ncid = rcGetChunksOverlappingSegment(m_chunkyMesh, p, q, cid, 512);
+	if (!ncid)
+		return false;
+	
+	tmin = 1.0f;
+	bool hit = false;
+	const float* verts = m_mesh->getVerts();
+	
+	for (int i = 0; i < ncid; ++i)
+	{
+		const rcChunkyTriMeshNode& node = m_chunkyMesh->nodes[cid[i]];
+		const int* tris = &m_chunkyMesh->tris[node.i*3];
+		const int ntris = node.n;
+
+		for (int j = 0; j < ntris*3; j += 3)
+		{
+			float t = 1;
+			if (intersectSegmentTriangle(src, dst,
+										 &verts[tris[j]*3],
+										 &verts[tris[j+1]*3],
+										 &verts[tris[j+2]*3], t))
+			{
+				if (t < tmin)
+					tmin = t;
+				hit = true;
+			}
+		}
+	}
+	
+	return hit;
+}
+
+void InputGeom::addOffMeshConnection(const float* spos, const float* epos, const float rad,
+									 unsigned char bidir, unsigned char area, unsigned short flags)
+{
+	if (m_offMeshConCount >= MAX_OFFMESH_CONNECTIONS) return;
+	float* v = &m_offMeshConVerts[m_offMeshConCount*3*2];
+	m_offMeshConRads[m_offMeshConCount] = rad;
+	m_offMeshConDirs[m_offMeshConCount] = bidir;
+	m_offMeshConAreas[m_offMeshConCount] = area;
+	m_offMeshConFlags[m_offMeshConCount] = flags;
+	m_offMeshConId[m_offMeshConCount] = 1000 + m_offMeshConCount;
+	rcVcopy(&v[0], spos);
+	rcVcopy(&v[3], epos);
+	m_offMeshConCount++;
+}
+
+void InputGeom::deleteOffMeshConnection(int i)
+{
+	m_offMeshConCount--;
+	float* src = &m_offMeshConVerts[m_offMeshConCount*3*2];
+	float* dst = &m_offMeshConVerts[i*3*2];
+	rcVcopy(&dst[0], &src[0]);
+	rcVcopy(&dst[3], &src[3]);
+	m_offMeshConRads[i] = m_offMeshConRads[m_offMeshConCount];
+	m_offMeshConDirs[i] = m_offMeshConDirs[m_offMeshConCount];
+	m_offMeshConAreas[i] = m_offMeshConAreas[m_offMeshConCount];
+	m_offMeshConFlags[i] = m_offMeshConFlags[m_offMeshConCount];
+}
+
+void InputGeom::drawOffMeshConnections(duDebugDraw* dd, bool hilight)
+{
+	unsigned int conColor = duRGBA(192,0,128,192);
+	unsigned int baseColor = duRGBA(0,0,0,64);
+	dd->depthMask(false);
+
+	dd->begin(DU_DRAW_LINES, 2.0f);
+	for (int i = 0; i < m_offMeshConCount; ++i)
+	{
+		float* v = &m_offMeshConVerts[i*3*2];
+
+		dd->vertex(v[0],v[1],v[2], baseColor);
+		dd->vertex(v[0],v[1]+0.2f,v[2], baseColor);
+		
+		dd->vertex(v[3],v[4],v[5], baseColor);
+		dd->vertex(v[3],v[4]+0.2f,v[5], baseColor);
+		
+		duAppendCircle(dd, v[0],v[1]+0.1f,v[2], m_offMeshConRads[i], baseColor);
+		duAppendCircle(dd, v[3],v[4]+0.1f,v[5], m_offMeshConRads[i], baseColor);
+
+		if (hilight)
+		{
+			duAppendArc(dd, v[0],v[1],v[2], v[3],v[4],v[5], 0.25f,
+						(m_offMeshConDirs[i]&1) ? 0.6f : 0.0f, 0.6f, conColor);
+		}
+	}	
+	dd->end();
+
+	dd->depthMask(true);
+}
+
+void InputGeom::addConvexVolume(const float* verts, const int nverts,
+								const float minh, const float maxh, unsigned char area)
+{
+	if (m_volumeCount >= MAX_VOLUMES) return;
+	ConvexVolume* vol = &m_volumes[m_volumeCount++];
+	memset(vol, 0, sizeof(ConvexVolume));
+	memcpy(vol->verts, verts, sizeof(float)*3*nverts);
+	vol->hmin = minh;
+	vol->hmax = maxh;
+	vol->nverts = nverts;
+	vol->area = area;
+}
+
+void InputGeom::deleteConvexVolume(int i)
+{
+	m_volumeCount--;
+	m_volumes[i] = m_volumes[m_volumeCount];
+}
+
+void InputGeom::drawConvexVolumes(struct duDebugDraw* dd, bool /*hilight*/)
+{
+	dd->depthMask(false);
+
+	dd->begin(DU_DRAW_TRIS);
+	
+	for (int i = 0; i < m_volumeCount; ++i)
+	{
+		const ConvexVolume* vol = &m_volumes[i];
+		unsigned int col = duTransCol(dd->areaToCol(vol->area), 32);
+		for (int j = 0, k = vol->nverts-1; j < vol->nverts; k = j++)
+		{
+			const float* va = &vol->verts[k*3];
+			const float* vb = &vol->verts[j*3];
+
+			dd->vertex(vol->verts[0],vol->hmax,vol->verts[2], col);
+			dd->vertex(vb[0],vol->hmax,vb[2], col);
+			dd->vertex(va[0],vol->hmax,va[2], col);
+			
+			dd->vertex(va[0],vol->hmin,va[2], duDarkenCol(col));
+			dd->vertex(va[0],vol->hmax,va[2], col);
+			dd->vertex(vb[0],vol->hmax,vb[2], col);
+
+			dd->vertex(va[0],vol->hmin,va[2], duDarkenCol(col));
+			dd->vertex(vb[0],vol->hmax,vb[2], col);
+			dd->vertex(vb[0],vol->hmin,vb[2], duDarkenCol(col));
+		}
+	}
+	
+	dd->end();
+
+	dd->begin(DU_DRAW_LINES, 2.0f);
+	for (int i = 0; i < m_volumeCount; ++i)
+	{
+		const ConvexVolume* vol = &m_volumes[i];
+		unsigned int col = duTransCol(dd->areaToCol(vol->area), 220);
+		for (int j = 0, k = vol->nverts-1; j < vol->nverts; k = j++)
+		{
+			const float* va = &vol->verts[k*3];
+			const float* vb = &vol->verts[j*3];
+			dd->vertex(va[0],vol->hmin,va[2], duDarkenCol(col));
+			dd->vertex(vb[0],vol->hmin,vb[2], duDarkenCol(col));
+			dd->vertex(va[0],vol->hmax,va[2], col);
+			dd->vertex(vb[0],vol->hmax,vb[2], col);
+			dd->vertex(va[0],vol->hmin,va[2], duDarkenCol(col));
+			dd->vertex(va[0],vol->hmax,va[2], col);
+		}
+	}
+	dd->end();
+
+	dd->begin(DU_DRAW_POINTS, 3.0f);
+	for (int i = 0; i < m_volumeCount; ++i)
+	{
+		const ConvexVolume* vol = &m_volumes[i];
+		unsigned int col = duDarkenCol(duTransCol(dd->areaToCol(vol->area), 220));
+		for (int j = 0; j < vol->nverts; ++j)
+		{
+			dd->vertex(vol->verts[j*3+0],vol->verts[j*3+1]+0.1f,vol->verts[j*3+2], col);
+			dd->vertex(vol->verts[j*3+0],vol->hmin,vol->verts[j*3+2], col);
+			dd->vertex(vol->verts[j*3+0],vol->hmax,vol->verts[j*3+2], col);
+		}
+	}
+	dd->end();
+	
+	
+	dd->depthMask(true);
+}
+
+bool InputGeom::initMeshFromArrays(rcContext* ctx,
+                                   const float* verts, int nverts,
+                                   const int* tris,  int ntris)
+{
+	// Libera mesh anterior (se existir)
+	delete m_mesh;
+	m_mesh = 0;
+
+	if (m_chunkyMesh)
+	{
+		rcFreeChunkyTriMesh(m_chunkyMesh);
+		m_chunkyMesh = 0;
+	}
+
+	if (!verts || !tris || nverts <= 0 || ntris <= 0)
+	{
+		if (ctx)
+			ctx->log(RC_LOG_ERROR, "initMeshFromArrays: buffers invalidos.");
+		return false;
+	}
+
+	// Cria novo loader em memória
+	m_mesh = new rcMeshLoaderObj();
+	if (!m_mesh)
+	{
+		if (ctx)
+			ctx->log(RC_LOG_ERROR, "initMeshFromArrays: falha ao alocar rcMeshLoaderObj.");
+		return false;
+	}
+
+	if (!m_mesh->loadFromArrays(verts, nverts, tris, ntris))
+	{
+		if (ctx)
+			ctx->log(RC_LOG_ERROR, "initMeshFromArrays: loadFromArrays falhou.");
+		delete m_mesh;
+		m_mesh = 0;
+		return false;
+	}
+
+	// Atualiza AABB do mesh (usado por buildTileMesh)
+	rcCalcBounds(verts, nverts, m_meshBMin, m_meshBMax);
+
+	// Cria ChunkyTriMesh para queries por tile
+	m_chunkyMesh = new rcChunkyTriMesh;
+	if (!m_chunkyMesh)
+	{
+		if (ctx)
+			ctx->log(RC_LOG_ERROR, "initMeshFromArrays: falha ao alocar rcChunkyTriMesh.");
+		return false;
+	}
+
+	const int trisPerChunk = 256; // pode tunar depois
+	if (!rcCreateChunkyTriMesh(verts, tris, ntris, trisPerChunk, m_chunkyMesh))
+	{
+		if (ctx)
+			ctx->log(RC_LOG_ERROR, "initMeshFromArrays: rcCreateChunkyTriMesh falhou.");
+		rcFreeChunkyTriMesh(m_chunkyMesh);
+		m_chunkyMesh = 0;
+		return false;
+	}
+
+	// Convex volumes / off-mesh connections continuam os mesmos (já estão em m_meshLoaderData)
+	return true;
+}
+
+=== InputGeom.h ===
+//
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
+//
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+//
+
+#ifndef INPUTGEOM_H
+#define INPUTGEOM_H
+
+#include "ChunkyTriMesh.h"
+#include "MeshLoaderObj.h"
+
+static const int MAX_CONVEXVOL_PTS = 12;
+struct ConvexVolume
+{
+	float verts[MAX_CONVEXVOL_PTS*3];
+	float hmin, hmax;
+	int nverts;
+	int area;
+};
+
+struct BuildSettings
+{
+	// Cell size in world units
+	float cellSize;
+	// Cell height in world units
+	float cellHeight;
+	// Agent height in world units
+	float agentHeight;
+	// Agent radius in world units
+	float agentRadius;
+	// Agent max climb in world units
+	float agentMaxClimb;
+	// Agent max slope in degrees
+	float agentMaxSlope;
+	// Region minimum size in voxels.
+	// regionMinSize = sqrt(regionMinArea)
+	float regionMinSize;
+	// Region merge size in voxels.
+	// regionMergeSize = sqrt(regionMergeArea)
+	float regionMergeSize;
+	// Edge max length in world units
+	float edgeMaxLen;
+	// Edge max error in voxels
+	float edgeMaxError;
+	float vertsPerPoly;
+	// Detail sample distance in voxels
+	float detailSampleDist;
+	// Detail sample max error in voxel heights.
+	float detailSampleMaxError;
+	// Partition type, see SamplePartitionType
+	int partitionType;
+	// Bounds of the area to mesh
+	float navMeshBMin[3];
+	float navMeshBMax[3];
+	// Size of the tiles in voxels
+	float tileSize;
+};
+
+class InputGeom
+{
+	rcChunkyTriMesh* m_chunkyMesh;
+	rcMeshLoaderObj* m_mesh;
+	float m_meshBMin[3], m_meshBMax[3];
+	BuildSettings m_buildSettings;
+	bool m_hasBuildSettings;
+	
+	/// @name Off-Mesh connections.
+	///@{
+	static const int MAX_OFFMESH_CONNECTIONS = 256;
+	float m_offMeshConVerts[MAX_OFFMESH_CONNECTIONS*3*2];
+	float m_offMeshConRads[MAX_OFFMESH_CONNECTIONS];
+	unsigned char m_offMeshConDirs[MAX_OFFMESH_CONNECTIONS];
+	unsigned char m_offMeshConAreas[MAX_OFFMESH_CONNECTIONS];
+	unsigned short m_offMeshConFlags[MAX_OFFMESH_CONNECTIONS];
+	unsigned int m_offMeshConId[MAX_OFFMESH_CONNECTIONS];
+	int m_offMeshConCount;
+	///@}
+
+	/// @name Convex Volumes.
+	///@{
+	static const int MAX_VOLUMES = 256;
+	ConvexVolume m_volumes[MAX_VOLUMES];
+	int m_volumeCount;
+	///@}
+	
+	bool loadMesh(class rcContext* ctx, const std::string& filepath);
+	bool loadGeomSet(class rcContext* ctx, const std::string& filepath);
+public:
+	InputGeom();
+	~InputGeom();
+	
+	
+	bool load(class rcContext* ctx, const std::string& filepath);
+	bool saveGeomSet(const BuildSettings* settings);
+	
+	/// Method to return static mesh data.
+	const rcMeshLoaderObj* getMesh() const { return m_mesh; }
+	const float* getMeshBoundsMin() const { return m_meshBMin; }
+	const float* getMeshBoundsMax() const { return m_meshBMax; }
+	const float* getNavMeshBoundsMin() const { return m_hasBuildSettings ? m_buildSettings.navMeshBMin : m_meshBMin; }
+	const float* getNavMeshBoundsMax() const { return m_hasBuildSettings ? m_buildSettings.navMeshBMax : m_meshBMax; }
+	const rcChunkyTriMesh* getChunkyMesh() const { return m_chunkyMesh; }
+	const BuildSettings* getBuildSettings() const { return m_hasBuildSettings ? &m_buildSettings : 0; }
+	bool raycastMesh(float* src, float* dst, float& tmin);
+
+	/// @name Off-Mesh connections.
+	///@{
+	int getOffMeshConnectionCount() const { return m_offMeshConCount; }
+	const float* getOffMeshConnectionVerts() const { return m_offMeshConVerts; }
+	const float* getOffMeshConnectionRads() const { return m_offMeshConRads; }
+	const unsigned char* getOffMeshConnectionDirs() const { return m_offMeshConDirs; }
+	const unsigned char* getOffMeshConnectionAreas() const { return m_offMeshConAreas; }
+	const unsigned short* getOffMeshConnectionFlags() const { return m_offMeshConFlags; }
+	const unsigned int* getOffMeshConnectionId() const { return m_offMeshConId; }
+	void addOffMeshConnection(const float* spos, const float* epos, const float rad,
+							  unsigned char bidir, unsigned char area, unsigned short flags);
+	void deleteOffMeshConnection(int i);
+	void drawOffMeshConnections(struct duDebugDraw* dd, bool hilight = false);
+	///@}
+
+	/// @name Box Volumes.
+	///@{
+	int getConvexVolumeCount() const { return m_volumeCount; }
+	const ConvexVolume* getConvexVolumes() const { return m_volumes; }
+	void addConvexVolume(const float* verts, const int nverts,
+						 const float minh, const float maxh, unsigned char area);
+	void deleteConvexVolume(int i);
+	void drawConvexVolumes(struct duDebugDraw* dd, bool hilight = false);
+	bool initMeshFromArrays(rcContext* ctx,
+						const float* verts, int nverts,
+						const int* tris, int ntris);
+	///@}
+	
+private:
+	// Explicitly disabled copy constructor and copy assignment operator.
+	InputGeom(const InputGeom&);
+	InputGeom& operator=(const InputGeom&);
+};
+
+#endif // INPUTGEOM_H
+
+
+=== MeshLoaderObj.h ===
+//
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
+//
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+//
+
+#ifndef MESHLOADER_OBJ
+#define MESHLOADER_OBJ
+
+#include <string>
+
+class rcMeshLoaderObj
+{
+public:
+	rcMeshLoaderObj();
+	~rcMeshLoaderObj();
+	
+	bool load(const std::string& fileName);
+
+	const float* getVerts() const { return m_verts; }
+	const float* getNormals() const { return m_normals; }
+	const int* getTris() const { return m_tris; }
+	int getVertCount() const { return m_vertCount; }
+	int getTriCount() const { return m_triCount; }
+	const std::string& getFileName() const { return m_filename; }
+
+		// Novo: inicializa dados diretamente sem carregar OBJ
+	bool initFromArrays(const float* verts, int nverts,
+						const int* tris, int ntris);
+
+	// NOVO: carregar diretamente de arrays (sem ler OBJ do disco)
+	bool loadFromArrays(const float* verts, int nverts,
+	                    const int* tris,  int ntris);
+
+	bool tryLoadBIN(const std::string& basePath);
+	bool loadBIN(const std::string& fullPath);
+	bool saveBIN(const std::string& basePath);
+
+private:
+	// Explicitly disabled copy constructor and copy assignment operator.
+	rcMeshLoaderObj(const rcMeshLoaderObj&);
+	rcMeshLoaderObj& operator=(const rcMeshLoaderObj&);
+	
+	void addVertex(float x, float y, float z, int& cap);
+	void addTriangle(int a, int b, int c, int& cap);
+	
+	std::string m_filename;
+	float m_scale;	
+	float* m_verts;
+	int* m_tris;
+	float* m_normals;
+	int m_vertCount;
+	int m_triCount;
+};
+
+#endif // MESHLOADER_OBJ
+
+
+=== MeshLoaderObj.cpp ===
+//
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
+//
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+//
+
+#include "MeshLoaderObj.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <cstring>
+#include <math.h>
+
+rcMeshLoaderObj::rcMeshLoaderObj() :
+	m_scale(1.0f),
+	m_verts(0),
+	m_tris(0),
+	m_normals(0),
+	m_vertCount(0),
+	m_triCount(0)
+{
+}
+
+rcMeshLoaderObj::~rcMeshLoaderObj()
+{
+	delete [] m_verts;
+	delete [] m_normals;
+	delete [] m_tris;
+}
+		
+void rcMeshLoaderObj::addVertex(float x, float y, float z, int& cap)
+{
+	if (m_vertCount+1 > cap)
+	{
+		cap = !cap ? 8 : cap*2;
+		float* nv = new float[cap*3];
+		if (m_vertCount)
+			memcpy(nv, m_verts, m_vertCount*3*sizeof(float));
+		delete [] m_verts;
+		m_verts = nv;
+	}
+	float* dst = &m_verts[m_vertCount*3];
+	*dst++ = x*m_scale;
+	*dst++ = y*m_scale;
+	*dst++ = z*m_scale;
+	m_vertCount++;
+}
+
+void rcMeshLoaderObj::addTriangle(int a, int b, int c, int& cap)
+{
+	if (m_triCount+1 > cap)
+	{
+		cap = !cap ? 8 : cap*2;
+		int* nv = new int[cap*3];
+		if (m_triCount)
+			memcpy(nv, m_tris, m_triCount*3*sizeof(int));
+		delete [] m_tris;
+		m_tris = nv;
+	}
+	int* dst = &m_tris[m_triCount*3];
+	*dst++ = a;
+	*dst++ = b;
+	*dst++ = c;
+	m_triCount++;
+}
+
+static char* parseRow(char* buf, char* bufEnd, char* row, int len)
+{
+	bool start = true;
+	bool done = false;
+	int n = 0;
+	while (!done && buf < bufEnd)
+	{
+		char c = *buf;
+		buf++;
+		// multirow
+		switch (c)
+		{
+			case '\\':
+				break;
+			case '\n':
+				if (start) break;
+				done = true;
+				break;
+			case '\r':
+				break;
+			case '\t':
+			case ' ':
+				if (start) break;
+				// else falls through
+			default:
+				start = false;
+				row[n++] = c;
+				if (n >= len-1)
+					done = true;
+				break;
+		}
+	}
+	row[n] = '\0';
+	return buf;
+}
+
+static int parseFace(char* row, int* data, int n, int vcnt)
+{
+	int j = 0;
+	while (*row != '\0')
+	{
+		// Skip initial white space
+		while (*row != '\0' && (*row == ' ' || *row == '\t'))
+			row++;
+		char* s = row;
+		// Find vertex delimiter and terminated the string there for conversion.
+		while (*row != '\0' && *row != ' ' && *row != '\t')
+		{
+			if (*row == '/') *row = '\0';
+			row++;
+		}
+		if (*s == '\0')
+			continue;
+		int vi = atoi(s);
+		data[j++] = vi < 0 ? vi+vcnt : vi-1;
+		if (j >= n) return j;
+	}
+	return j;
+}
+
+bool rcMeshLoaderObj::load(const std::string& filename)
+{
+	char* buf = 0;
+	FILE* fp = fopen(filename.c_str(), "rb");
+	if (!fp)
+		return false;
+	if (fseek(fp, 0, SEEK_END) != 0)
+	{
+		fclose(fp);
+		return false;
+	}
+	long bufSize = ftell(fp);
+	if (bufSize < 0)
+	{
+		fclose(fp);
+		return false;
+	}
+	if (fseek(fp, 0, SEEK_SET) != 0)
+	{
+		fclose(fp);
+		return false;
+	}
+	buf = new char[bufSize];
+	if (!buf)
+	{
+		fclose(fp);
+		return false;
+	}
+	size_t readLen = fread(buf, bufSize, 1, fp);
+	fclose(fp);
+
+	if (readLen != 1)
+	{
+		delete[] buf;
+		return false;
+	}
+
+	char* src = buf;
+	char* srcEnd = buf + bufSize;
+	char row[512];
+	int face[32];
+	float x,y,z;
+	int nv;
+	int vcap = 0;
+	int tcap = 0;
+	
+	while (src < srcEnd)
+	{
+		// Parse one row
+		row[0] = '\0';
+		src = parseRow(src, srcEnd, row, sizeof(row)/sizeof(char));
+		// Skip comments
+		if (row[0] == '#') continue;
+		if (row[0] == 'v' && row[1] != 'n' && row[1] != 't')
+		{
+			// Vertex pos
+			sscanf(row+1, "%f %f %f", &x, &y, &z);
+			addVertex(x, y, z, vcap);
+		}
+		if (row[0] == 'f')
+		{
+			// Faces
+			nv = parseFace(row+1, face, 32, m_vertCount);
+			for (int i = 2; i < nv; ++i)
+			{
+				const int a = face[0];
+				const int b = face[i-1];
+				const int c = face[i];
+				if (a < 0 || a >= m_vertCount || b < 0 || b >= m_vertCount || c < 0 || c >= m_vertCount)
+					continue;
+				addTriangle(a, b, c, tcap);
+			}
+		}
+	}
+
+	delete [] buf;
+
+	// Calculate normals.
+	m_normals = new float[m_triCount*3];
+	for (int i = 0; i < m_triCount*3; i += 3)
+	{
+		const float* v0 = &m_verts[m_tris[i]*3];
+		const float* v1 = &m_verts[m_tris[i+1]*3];
+		const float* v2 = &m_verts[m_tris[i+2]*3];
+		float e0[3], e1[3];
+		for (int j = 0; j < 3; ++j)
+		{
+			e0[j] = v1[j] - v0[j];
+			e1[j] = v2[j] - v0[j];
+		}
+		float* n = &m_normals[i];
+		n[0] = e0[1]*e1[2] - e0[2]*e1[1];
+		n[1] = e0[2]*e1[0] - e0[0]*e1[2];
+		n[2] = e0[0]*e1[1] - e0[1]*e1[0];
+		float d = sqrtf(n[0]*n[0] + n[1]*n[1] + n[2]*n[2]);
+		if (d > 0)
+		{
+			d = 1.0f/d;
+			n[0] *= d;
+			n[1] *= d;
+			n[2] *= d;
+		}
+	}
+	
+	m_filename = filename;
+	return true;
+}
+
+
+bool rcMeshLoaderObj::loadFromArrays(const float* verts, int nverts,
+                                     const int* tris,  int ntris)
+{
+	// Limpa dados antigos
+	delete [] m_verts;
+	m_verts = 0;
+	delete [] m_tris;
+	m_tris = 0;
+	delete [] m_normals;
+	m_normals = 0;
+
+	m_filename.clear();
+
+	if (!verts || !tris || nverts <= 0 || ntris <= 0)
+		return false;
+
+	m_vertCount = nverts;
+	m_triCount  = ntris;
+
+	// copia vértices
+	m_verts = new float[m_vertCount * 3];
+	memcpy(m_verts, verts, sizeof(float) * m_vertCount * 3);
+
+	// copia indices
+	m_tris = new int[m_triCount * 3];
+	memcpy(m_tris, tris, sizeof(int) * m_triCount * 3);
+
+	// aloca normais (igual ao load normal)
+	m_normals = new float[m_triCount * 3];
+
+	// Calcula normais por triângulo (mesmo esquema do load())
+	for (int i = 0; i < m_triCount * 3; i += 3)
+	{
+		const int* t = &m_tris[i];
+		const float* v0 = &m_verts[t[0] * 3];
+		const float* v1 = &m_verts[t[1] * 3];
+		const float* v2 = &m_verts[t[2] * 3];
+
+		float e1[3], e2[3], n[3];
+		e1[0] = v1[0] - v0[0];
+		e1[1] = v1[1] - v0[1];
+		e1[2] = v1[2] - v0[2];
+		e2[0] = v2[0] - v0[0];
+		e2[1] = v2[1] - v0[1];
+		e2[2] = v2[2] - v0[2];
+		n[0] = e1[1]*e2[2] - e1[2]*e2[1];
+		n[1] = e1[2]*e2[0] - e1[0]*e2[2];
+		n[2] = e1[0]*e2[1] - e1[1]*e2[0];
+
+		const float d = sqrtf(n[0]*n[0] + n[1]*n[1] + n[2]*n[2]);
+		if (d > 0)
+		{
+			n[0] /= d;
+			n[1] /= d;
+			n[2] /= d;
+		}
+
+		m_normals[i + 0] = n[0];
+		m_normals[i + 1] = n[1];
+		m_normals[i + 2] = n[2];
+	}
+
+	return true;
+}
+
+
+bool rcMeshLoaderObj::initFromArrays(const float* verts, int nverts,
+                                     const int* tris, int ntris)
+{
+    // limpar qualquer dado anterior
+    delete[] m_verts;
+    delete[] m_tris;
+    delete[] m_normals;
+
+    m_vertCount = nverts;
+    m_triCount = ntris;
+
+    // copiar vértices
+    m_verts = new float[nverts * 3];
+    memcpy(m_verts, verts, sizeof(float) * nverts * 3);
+
+    // copiar índices
+    m_tris = new int[ntris * 3];
+    memcpy(m_tris, tris, sizeof(int) * ntris * 3);
+
+    // calcular normais igual ao loader original
+    m_normals = new float[ntris * 3];
+    for (int i = 0; i < ntris * 3; i += 3)
+    {
+        const float* v0 = &m_verts[m_tris[i] * 3];
+        const float* v1 = &m_verts[m_tris[i + 1] * 3];
+        const float* v2 = &m_verts[m_tris[i + 2] * 3];
+        float e0[3] = { v1[0]-v0[0], v1[1]-v0[1], v1[2]-v0[2] };
+        float e1[3] = { v2[0]-v0[0], v2[1]-v0[1], v2[2]-v0[2] };
+
+        float* n = &m_normals[i];
+        n[0] = e0[1]*e1[2] - e0[2]*e1[1];
+        n[1] = e0[2]*e1[0] - e0[0]*e1[2];
+        n[2] = e0[0]*e1[1] - e0[1]*e1[0];
+        float d = sqrtf(n[0]*n[0] + n[1]*n[1] + n[2]*n[2]);
+        if (d > 0) { n[0]/=d; n[1]/=d; n[2]/=d; }
+    }
+
+    // filename simbólico, já que não veio de arquivo
+    m_filename = "dynamic_array_mesh";
+
+    return true;
+}
+
+bool rcMeshLoaderObj::loadBIN(const std::string& fullPath)
+{
+    FILE* f = fopen(fullPath.c_str(), "rb");
+    if (!f) return false;
+
+    uint32_t magic = 0;
+    uint32_t version = 0;
+
+    fread(&magic,   sizeof(uint32_t), 1, f);
+    fread(&version, sizeof(uint32_t), 1, f);
+
+    if (magic != 0x4D4F424A) // 'MOBJ'
+    {
+        fclose(f);
+        return false;
+    }
+
+    uint32_t vertCount = 0;
+    uint32_t triCount  = 0;
+
+    fread(&vertCount, sizeof(uint32_t), 1, f);
+    m_vertCount = vertCount;
+
+    m_verts = new float[vertCount * 3];
+    fread(m_verts, sizeof(float), vertCount * 3, f);
+
+    fread(&triCount, sizeof(uint32_t), 1, f);
+    m_triCount = triCount;
+
+    m_tris = new int[triCount * 3];
+    fread(m_tris, sizeof(int), triCount * 3, f);
+
+    // normais
+    m_normals = new float[triCount * 3];
+    fread(m_normals, sizeof(float), triCount * 3, f);
+
+    fclose(f);
+    return true;
+}
+
+
+// ======================================================================
+//  FUNÇÃO: saveBIN()
+// ======================================================================
+bool rcMeshLoaderObj::saveBIN(const std::string& basePath)
+{
+    std::string fullPath = basePath + ".bin";
+    FILE* f = fopen(fullPath.c_str(), "wb");
+    if (!f) return false;
+
+    uint32_t magic = 0x4D4F424A; // "MOBJ"
+    uint32_t version = 1;
+
+    fwrite(&magic,   sizeof(uint32_t), 1, f);
+    fwrite(&version, sizeof(uint32_t), 1, f);
+
+    fwrite(&m_vertCount, sizeof(uint32_t), 1, f);
+    fwrite(m_verts, sizeof(float), m_vertCount * 3, f);
+
+    fwrite(&m_triCount, sizeof(uint32_t), 1, f);
+    fwrite(m_tris, sizeof(int), m_triCount * 3, f);
+
+    fwrite(m_normals, sizeof(float), m_triCount * 3, f);
+
+    fclose(f);
+    return true;
+}
+
+
+// ======================================================================
+//  FUNÇÃO: tryLoadBIN()
+// ======================================================================
+bool rcMeshLoaderObj::tryLoadBIN(const std::string& basePath)
+{
+    // 1) tenta BIN
+    {
+        const std::string binPath = basePath + ".bin";
+        FILE* f = fopen(binPath.c_str(), "rb");
+
+        if (f)
+        {
+            fclose(f);
+            if (loadBIN(binPath))
+            {
+                printf("[MOBJ] Carregado BIN: %s\n", binPath.c_str());
+                return true;
+            }
+        }
+    }
+
+    // 2) tenta OBJ (caminho base → adiciona .obj)
+    const std::string objPath = basePath + ".obj";
+
+    if (!load(objPath))
+    {
+        printf("[MOBJ] Falha OBJ: %s\n", objPath.c_str());
+        return false;
+    }
+
+    // 3) salva BIN recém carregado
+    saveBIN(basePath);
+    printf("[MOBJ] OBJ carregado e BIN gerado: %s.bin\n", basePath.c_str());
+
+    return true;
+}
+
